@@ -6,11 +6,49 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/woningfinder/woningfinder/internal/corporation"
+
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
+const methodLogin = "Login"
+
+type loginResult struct {
+	Code     string `json:"code"`
+	Success  bool   `json:"success"`
+	Userinfo struct {
+		Name     string `json:"fullname"`
+		Gender   string `json:"geslacht"`
+		Age      int    `json:"leeftijd"`
+		Postcode string `json:"postcode"`
+	} `json:"userinfo"`
+}
+
 // Authenticate to De Woonplaats
 func (c *client) Login(username, password string) error {
+	req, err := c.loginRequest(username, password)
+	if err != nil {
+		return err
+	}
+
+	resp, err := c.Send(req)
+	if err != nil {
+		return err
+	}
+
+	result, err := resp.parseLoginResult()
+	if err != nil {
+		return err
+	}
+
+	if !result.Success {
+		return fmt.Errorf("error authentication %s: %w", result.Code, corporation.ErrAuthFailed)
+	}
+
+	return nil
+}
+
+func (c *client) loginRequest(username, password string) (networking.Request, error) {
 	req := request{
 		ID:     1,
 		Method: methodLogin,
@@ -24,23 +62,36 @@ func (c *client) Login(username, password string) error {
 
 	body, err := json.Marshal(req)
 	if err != nil {
-		return fmt.Errorf("error while marshaling %v: %w", req, err)
+		return networking.Request{}, fmt.Errorf("error while marshaling %v: %w", req, err)
 	}
 
 	request := networking.Request{
-		Path:   "wh_services/wrd/auth",
+		Path:   "/wrd/auth",
 		Method: http.MethodPost,
 		Body:   bytes.NewBuffer(body),
 	}
 
-	resp, err := c.networkingClient.Send(&request)
-	if err != nil {
-		return fmt.Errorf("request %v has given an error: %w", req, err)
+	return request, nil
+}
+
+func (r *response) parseLoginResult() (loginResult, error) {
+	result := loginResult{}
+	errMessage := fmt.Errorf("error parsing login result %v", r.Result)
+
+	respResult, ok := r.Result.(map[string]interface{})
+	if !ok {
+		return result, errMessage
 	}
 
-	// TODO
-	b, _ := resp.CopyBody()
-	fmt.Println(string(b))
+	result.Code, ok = respResult["code"].(string)
+	if !ok {
+		return result, errMessage
+	}
 
-	return nil
+	result.Success, ok = respResult["success"].(bool)
+	if !ok {
+		return result, errMessage
+	}
+
+	return result, nil
 }

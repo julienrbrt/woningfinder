@@ -2,4 +2,4 @@ package corporation
 
 import "errors"
 
-var errAuthFailed = errors.New("authentication failed")
+var ErrAuthFailed = errors.New("authentication failed")
