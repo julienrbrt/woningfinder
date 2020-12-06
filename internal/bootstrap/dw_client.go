@@ -12,7 +12,7 @@ import (
 // CreateDWClient creates a client for the De Woonplaats API
 func CreateDWClient() dewoonplaats.Client {
 	client := &http.Client{
-		Timeout: 3 * time.Second,
+		Timeout: 5 * time.Second,
 	}
 	defaultMiddleWare := []networking.ClientMiddleware{
 		middleware.CreateHostMiddleware(dewoonplaats.Host),
