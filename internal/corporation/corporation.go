@@ -29,8 +29,7 @@ type Corporation struct {
 
 // City defines a city where a HousingCorporation operates or when an house offer lies
 type City struct {
-	Name     string
-	Location Location
+	Name string
 }
 
 // Location defines the Longitude and Latidude a city, or offer
@@ -41,8 +40,39 @@ type Location struct {
 // Offer defines a house or an appartement available in a Housing Corporation
 type Offer struct {
 	Housing            Housing
-	URL                url.URL
+	URL                *url.URL
 	StartDate, EndDate time.Time
 	SelectionMethod    SelectionMethod
 	City               City
+}
+
+const (
+	House HousingType = iota
+	Appartement
+	Parking
+	Undefined
+)
+
+// HousingType defines the type of an Housing (appartement, house)
+type HousingType int
+
+// Housing defines an appartement and a house
+type Housing struct {
+	Type                    HousingType
+	Location                Location
+	Address                 string
+	Price                   float64
+	EnergieLabel            string
+	NumberBedroom           int
+	SizeM2                  int
+	BuildingYear            int
+	HousingAllowance        bool // HousingAllowance defines if the house can get housing allowance
+	Garden                  bool
+	Garage                  bool
+	Elevator                bool
+	Balcony                 bool
+	AccessibilityWheelchair bool
+	AccessibilityScooter    bool
+	Attic                   bool
+	Historic                bool // Defines if house is an historical monument
 }

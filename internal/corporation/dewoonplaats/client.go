@@ -1,7 +1,6 @@
 package dewoonplaats
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -11,7 +10,7 @@ import (
 // Client defines De Woonplaats client
 type Client interface {
 	Login(username, password string) error
-	FetchOffer() ([]corporation.Housing, error)
+	FetchOffer(minimumPrice int) ([]corporation.Offer, error)
 }
 
 type client struct {
@@ -26,25 +25,17 @@ func NewClient(c networking.Client) Client {
 }
 
 func (c *client) Send(req networking.Request) (response, error) {
+	// send request to networking client
 	resp, err := c.networkingClient.Send(&req)
 	if err != nil {
 		return response{}, fmt.Errorf("request %v has given an error: %w", req, err)
 	}
 
-	respBody, err := resp.CopyBody()
-	if err != nil {
-		return response{}, fmt.Errorf("error while copying body response %v: %w", resp, err)
-	}
-
 	var r response
-	if err := json.Unmarshal(respBody, &r); err != nil {
-		return response{}, fmt.Errorf("failed unmarshaling response %v: %w", resp, err)
+	err = resp.ReadJSONBody(&r)
+	if err != nil {
+		return response{}, err
 	}
 
-	// check for response error
-	if r.Error() != nil {
-		return response{}, r.Error()
-	}
-
-	return r, nil
+	return r, r.Error()
 }

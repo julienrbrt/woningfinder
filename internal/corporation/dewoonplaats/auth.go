@@ -36,9 +36,9 @@ func (c *client) Login(username, password string) error {
 		return err
 	}
 
-	result, err := resp.parseLoginResult()
-	if err != nil {
-		return err
+	var result loginResult
+	if err := json.Unmarshal(resp.Result, &result); err != nil {
+		return fmt.Errorf("error parsing login result %v: %w", resp.Result, err)
 	}
 
 	if !result.Success {
@@ -72,26 +72,4 @@ func (c *client) loginRequest(username, password string) (networking.Request, er
 	}
 
 	return request, nil
-}
-
-func (r *response) parseLoginResult() (loginResult, error) {
-	result := loginResult{}
-	errMessage := fmt.Errorf("error parsing login result %v", r.Result)
-
-	respResult, ok := r.Result.(map[string]interface{})
-	if !ok {
-		return result, errMessage
-	}
-
-	result.Code, ok = respResult["code"].(string)
-	if !ok {
-		return result, errMessage
-	}
-
-	result.Success, ok = respResult["success"].(bool)
-	if !ok {
-		return result, errMessage
-	}
-
-	return result, nil
 }

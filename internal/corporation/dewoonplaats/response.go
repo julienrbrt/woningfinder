@@ -1,12 +1,15 @@
 package dewoonplaats
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // response corresponds to a De Woonplaats response
 type response struct {
-	Err    interface{} `json:"error"`
-	ID     int         `json:"id"`
-	Result interface{} `json:"result"`
+	Err    interface{}     `json:"error"`
+	ID     int             `json:"id"`
+	Result json.RawMessage `json:"result"`
 }
 
 func (r *response) Error() error {
