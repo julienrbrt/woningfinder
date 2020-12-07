@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-// reverseGeo stores the reverse geocoding of a request to osm
 type reverseGeo struct {
 	Lat         string `json:"lat"`
 	Lon         string `json:"lon"`

@@ -2,6 +2,6 @@
 
 ## Enschede
 
-- De Woonplaats (Random, First-Come First-Served)
-- Domijn (Random)
-- OnsHuis (Random)
+- [x] De Woonplaats (Random, First-Come First-Served)
+- [ ] Domijn (Random)
+- [ ] OnsHuis (Random)
