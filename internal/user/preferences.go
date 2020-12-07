@@ -65,7 +65,7 @@ func matchPrefLocation(actual string, pref []string) bool {
 	for _, p := range pref {
 		// if actual is an empty, then strings.Contains will be return true
 		// so we need to prevent that
-		if actual != "" && strings.Contains(p, actual) {
+		if actual != "" && strings.Contains(actual, p) {
 			return true
 		}
 	}
