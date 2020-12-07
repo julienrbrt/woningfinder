@@ -13,7 +13,7 @@ import (
 const methodApply = "ReageerOpWoning"
 
 func (c *client) ApplyOffer(offer corporation.Offer) error {
-	req, err := c.applyRequest(offer.ExternalID)
+	req, err := applyRequest(offer.ExternalID)
 	if err != nil {
 		return err
 	}
@@ -22,7 +22,7 @@ func (c *client) ApplyOffer(offer corporation.Offer) error {
 	return err
 }
 
-func (c *client) applyRequest(id string) (networking.Request, error) {
+func applyRequest(id string) (networking.Request, error) {
 	req := request{
 		ID:     1,
 		Method: methodApply,

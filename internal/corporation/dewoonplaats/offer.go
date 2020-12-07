@@ -68,7 +68,7 @@ type offerResult struct {
 }
 
 func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
-	req, err := c.offerRequest(minimumPrice)
+	req, err := offerRequest(minimumPrice)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +137,7 @@ func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
 	return offers, nil
 }
 
-func (c *client) offerRequest(minimumPrice float64) (networking.Request, error) {
+func offerRequest(minimumPrice float64) (networking.Request, error) {
 	req := request{
 		ID:     1,
 		Method: methodOffer,
