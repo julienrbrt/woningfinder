@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
-	"time"
+	"net/url"
+	"strconv"
+	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
@@ -13,162 +16,74 @@ import (
 
 const methodOffer = "ZoekWoningen"
 
-// TODO to simplify
 type offerResult struct {
-	Aantal  int    `json:"aantal"`
-	Addhtml string `json:"addhtml"`
-	Latlngs []struct {
-		ID   string  `json:"id"`
-		Lat  float64 `json:"lat"`
-		Lng  float64 `json:"lng"`
-		Type string  `json:"type"`
-	} `json:"latlngs"`
-	Woningen []struct {
-		Aanvaarding       string `json:"aanvaarding"`
-		Aanvaardingsdatum string `json:"aanvaardingsdatum"`
-		Adres             string `json:"adres"`
-		Adrespreview      bool   `json:"adrespreview"`
-		AdresUnpublished  string `json:"adres_unpublished"`
-		Advid             int    `json:"advid"`
-		Balkon            bool   `json:"balkon"`
-		Beschikbaarheid   string `json:"beschikbaarheid"`
-		BeschikbaarheidID string `json:"beschikbaarheid_id"`
-		Beschrijving      string `json:"beschrijving"`
-		Bijzonderheden    string `json:"bijzonderheden"`
-		BogAlgemeen       string `json:"bog_algemeen"`
-		BogHuuraanbieding string `json:"bog_huuraanbieding"`
-		BogLigging        string `json:"bog_ligging"`
-		BogMaxoppervlak   string `json:"bog_maxoppervlak"`
-		BogMinoppervlak   string `json:"bog_minoppervlak"`
-		BogOppervlak      string `json:"bog_oppervlak"`
-		BogOverig         string `json:"bog_overig"`
-		BogParkeren       string `json:"bog_parkeren"`
-		BogPrijs          string `json:"bog_prijs"`
-		Bouw              string `json:"bouw"`
-		Bouwjaar          int    `json:"bouwjaar"`
-		Brutoprijs        string `json:"brutoprijs"`
-		Criteria          struct {
-			CizIndicatieValid     bool   `json:"ciz_indicatie_valid"`
-			FsSettingid           int    `json:"fs_settingid"`
-			KinderenValid         bool   `json:"kinderen_valid"`
-			MaxGezinsgrootte      int    `json:"max_gezinsgrootte"`
-			MaxGezinsgrootteValid bool   `json:"max_gezinsgrootte_valid"`
-			MaxInkomen            int    `json:"max_inkomen"`
-			MaxInkomenValid       bool   `json:"max_inkomen_valid"`
-			MaxLeeftijd           int    `json:"max_leeftijd"`
-			MaxLeeftijdValid      bool   `json:"max_leeftijd_valid"`
-			MinGezinsgrootte      int    `json:"min_gezinsgrootte"`
-			MinGezinsgrootteValid bool   `json:"min_gezinsgrootte_valid"`
-			MinInkomen            int    `json:"min_inkomen"`
-			MinInkomenValid       bool   `json:"min_inkomen_valid"`
-			MinLeeftijd           int    `json:"min_leeftijd"`
-			MinLeeftijdValid      bool   `json:"min_leeftijd_valid"`
-			Omschrijving          string `json:"omschrijving"`
-			PinActief             bool   `json:"pin_actief"`
-			Volgnummer            int    `json:"volgnummer"`
+	Total int `json:"aantal"`
+	Offer []struct {
+		Address      string `json:"adres"`
+		Balcony      bool   `json:"balkon"`
+		BuildingYear int    `json:"bouwjaar"`
+		Criteria     struct {
+			KinderenValid    bool   `json:"kinderen_valid"`
+			MaxGezinsgrootte int    `json:"max_gezinsgrootte"`
+			MaxInkomen       int    `json:"max_inkomen"`
+			MaxLeeftijd      int    `json:"max_leeftijd"`
+			MinGezinsgrootte int    `json:"min_gezinsgrootte"`
+			MinInkomen       int    `json:"min_inkomen"`
+			MinLeeftijd      int    `json:"min_leeftijd"`
+			Omschrijving     string `json:"omschrijving"`
 		} `json:"criteria"`
-		Cv                 bool   `json:"cv"`
-		Datum              string `json:"datum"`
-		DeOgenummer        string `json:"de_ogenummer"`
-		DePublicatienummer string `json:"de_publicatienummer"`
-		Doelgroepen        []struct {
-			Class        string `json:"class"`
-			Omschrijving string `json:"omschrijving"`
-			Tag          string `json:"tag"`
-		} `json:"doelgroepen"`
-		Energieclass            string    `json:"energieclass"`
-		Energielabel            string    `json:"energielabel"`
-		Energievalue            int       `json:"energievalue"`
-		Etage                   string    `json:"etage"`
-		Foto                    string    `json:"foto"`
-		Fotobanner              string    `json:"fotobanner"`
-		Garage                  bool      `json:"garage"`
-		Gemeubileerd            bool      `json:"gemeubileerd"`
-		GereageerdOp            string    `json:"gereageerd_op"`
-		Historic                bool      `json:"historic"`
-		Huisnummer              string    `json:"huisnummer"`
-		Huisnummertoevoeging    string    `json:"huisnummertoevoeging"`
-		Huurdersvereniging      string    `json:"huurdersvereniging"`
-		Huurdersverenigingprijs float64   `json:"huurdersverenigingprijs"`
-		ID                      string    `json:"id"`
-		Indeling                string    `json:"indeling"`
-		Isbog                   bool      `json:"isbog"`
-		Ishuur                  bool      `json:"ishuur"`
-		Ishuurhoog              bool      `json:"ishuurhoog"`
-		Ishuurlaag              bool      `json:"ishuurlaag"`
-		Iskoop                  bool      `json:"iskoop"`
-		Isobject                bool      `json:"isobject"`
-		Keuken                  string    `json:"keuken"`
-		Koopsom                 string    `json:"koopsom"`
-		Koopvoorwaarden         string    `json:"koopvoorwaarden"`
-		Lat                     float64   `json:"lat"`
-		Lift                    bool      `json:"lift"`
-		Ligging                 string    `json:"ligging"`
-		Lng                     float64   `json:"lng"`
-		Loting                  bool      `json:"loting"`
-		Lotingsdatum            time.Time `json:"lotingsdatum"`
-		Magreageren             bool      `json:"magreageren"`
-		Makelaar                int       `json:"makelaar"`
-		Mapslink                string    `json:"mapslink"`
-		Maxoppervlak            string    `json:"maxoppervlak"`
-		Maxreacties             int       `json:"maxreacties"`
-		Minoppervlak            string    `json:"minoppervlak"`
-		Nettoprijs              string    `json:"nettoprijs"`
-		NietReageerbaar         string    `json:"niet_reageerbaar"`
-		Opmerkingen             string    `json:"opmerkingen"`
-		Overview                string    `json:"overview"`
-		ParkeerplaatsHuurprijs  string    `json:"parkeerplaats_huurprijs"`
-		Parkeren                string    `json:"parkeren"`
-		Perdirect               bool      `json:"perdirect"`
-		PinActief               bool      `json:"pin_actief"`
-		Plaats                  string    `json:"plaats"`
-		Pmc                     int       `json:"pmc"`
-		Postcode                string    `json:"postcode"`
-		Preview                 bool      `json:"preview"`
-		Rayoncode               string    `json:"rayoncode"`
-		Reactiedatum            string    `json:"reactiedatum"`
-		Reacties                int       `json:"reacties"`
-		Recreatieruimte         bool      `json:"recreatieruimte"`
-		Rollatortoegankelijk    bool      `json:"rollatortoegankelijk"`
-		Rolstoeltoegankelijk    bool      `json:"rolstoeltoegankelijk"`
-		Servicekosten           string    `json:"servicekosten"`
-		SgWijk                  string    `json:"sg_wijk"`
-		Showenergie             bool      `json:"showenergie"`
-		Slaapkamers             int       `json:"slaapkamers"`
-		SlaapBadBg              bool      `json:"slaap_bad_bg"`
-		Soort                   []string  `json:"soort"`
-		Stookkosten             string    `json:"stookkosten"`
-		Straat                  string    `json:"straat"`
-		Streetviewlink          string    `json:"streetviewlink"`
-		TehuurLuxehuur          bool      `json:"tehuur_luxehuur"`
-		Thumbnail               string    `json:"thumbnail"`
-		Toegankelijk            bool      `json:"toegankelijk"`
-		Toeslagprijs            string    `json:"toeslagprijs"`
-		Tuin                    string    `json:"tuin"`
-		Tweedetoilet            bool      `json:"tweedetoilet"`
-		Type                    string    `json:"type"`
-		Vanafprijs              bool      `json:"vanafprijs"`
-		Verbruikskosten         string    `json:"verbruikskosten"`
-		Verkocht                bool      `json:"verkocht"`
+		Cv                      bool     `json:"cv"`
+		Datum                   string   `json:"datum"`
+		EnergieLabel            string   `json:"energielabel"`
+		Etage                   string   `json:"etage"`
+		Foto                    string   `json:"foto"`
+		Garage                  bool     `json:"garage"`
+		Historic                bool     `json:"historic"`
+		ID                      string   `json:"id"`
+		ForRent                 bool     `json:"ishuur"`
+		HasLowRentPrice         bool     `json:"ishuurlaag"`
+		Keuken                  string   `json:"keuken"`
+		Latitude                float64  `json:"lat"`
+		Lift                    bool     `json:"lift"`
+		Longitude               float64  `json:"lng"`
+		Loting                  bool     `json:"loting"`
+		Lotingsdatum            string   `json:"lotingsdatum"`
+		CanApply                bool     `json:"magreageren"`
+		HasAppliedOn            string   `json:"gereageerd_op"`
+		MapsURL                 string   `json:"mapslink"`
+		City                    string   `json:"plaats"`
+		Postcode                string   `json:"postcode"`
+		Reactiedatum            string   `json:"reactiedatum"`
+		Reacties                int      `json:"reacties"`
+		Recreatieruimte         bool     `json:"recreatieruimte"`
+		RentPrice               float64  `json:"relevante_huurprijs,omitempty"`
+		AccessibilityScooter    bool     `json:"rollatortoegankelijk"`
+		AccessibilityWheelchair bool     `json:"rolstoeltoegankelijk"`
+		Servicekosten           string   `json:"servicekosten"`
+		NumberBedroom           int      `json:"slaapkamers"`
+		HousingType             []string `json:"soort"`
+		Straat                  string   `json:"straat"`
+		TehuurLuxehuur          bool     `json:"tehuur_luxehuur,omitempty"`
+		Thumbnail               string   `json:"thumbnail"`
+		Toeslagprijs            string   `json:"toeslagprijs"`
+		Garden                  string   `json:"tuin"`
+		Verbruikskosten         string   `json:"verbruikskosten"`
 		Vertrekken              []struct {
 			Oppervlak string `json:"oppervlak"`
 			Titel     string `json:"titel"`
 		} `json:"vertrekken"`
 		Verwarming      string `json:"verwarming"`
-		Volgnummer      int    `json:"volgnummer"`
 		Wijk            string `json:"wijk"`
 		Wijkid          int    `json:"wijkid"`
 		Wijzigingsdatum string `json:"wijzigingsdatum"`
-		Woningtype      string `json:"woningtype"`
-		Woonoppervlak   string `json:"woonoppervlak"`
-		WrdID           int    `json:"wrd_id"`
-		Zolder          bool   `json:"zolder"`
-		Zoldertrap      string `json:"zoldertrap"`
+		SizeM2          string `json:"woonoppervlak"`
+		WrdID           int    `json:"wrd_id,omitempty"`
+		Attic           bool   `json:"zolder"`
 	} `json:"woningen"`
 }
 
-func (c *client) FetchOffer() ([]corporation.Housing, error) {
-	req, err := c.offerRequest()
+func (c *client) FetchOffer(minimumPrice int) ([]corporation.Offer, error) {
+	req, err := c.offerRequest(minimumPrice)
 	if err != nil {
 		return nil, err
 	}
@@ -178,20 +93,74 @@ func (c *client) FetchOffer() ([]corporation.Housing, error) {
 		return nil, err
 	}
 
-	//TODO
-	fmt.Println(resp)
+	var result offerResult
+	if err := json.Unmarshal(resp.Result, &result); err != nil {
+		return nil, fmt.Errorf("error parsing login result %v: %w", resp.Result, err)
+	}
 
-	return nil, nil
+	var offers []corporation.Offer
+	for _, house := range result.Offer {
+		houseType := c.getHousingType(house.HousingType)
+
+		if !house.ForRent || houseType == corporation.Undefined || house.RentPrice == 0 {
+			continue
+		}
+
+		houseSizeM2, err := strconv.Atoi(house.SizeM2)
+		if err != nil {
+			log.Printf(fmt.Errorf("error while parsing size of house %v: %w", house, err).Error())
+			houseSizeM2 = 0
+		}
+
+		newHouse := corporation.Housing{
+			Type:    houseType,
+			Address: fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
+			Location: corporation.Location{
+				Latitude:  house.Latitude,
+				Longitude: house.Longitude,
+			},
+			EnergieLabel:            house.EnergieLabel,
+			NumberBedroom:           house.NumberBedroom,
+			SizeM2:                  houseSizeM2,
+			Price:                   house.RentPrice,
+			BuildingYear:            house.BuildingYear,
+			HousingAllowance:        house.HasLowRentPrice && len(house.Toeslagprijs) > 0,
+			Garden:                  len(house.Garden) > 0,
+			Garage:                  house.Garage,
+			Elevator:                house.Lift,
+			Balcony:                 house.Balcony,
+			AccessibilityScooter:    house.AccessibilityScooter,
+			AccessibilityWheelchair: house.AccessibilityWheelchair,
+			Attic:                   house.Attic,
+			Historic:                house.Historic,
+		}
+
+		offer := corporation.Offer{
+			URL:     &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: fmt.Sprintf("ik-zoek-woonruimte/!/woning/%s/", house.ID)},
+			Housing: newHouse,
+			City: corporation.City{
+				Name: house.City,
+			},
+		}
+
+		offers = append(offers, offer)
+	}
+
+	return offers, nil
 }
 
-func (c *client) offerRequest() (networking.Request, error) {
+func (c *client) offerRequest(minimumPrice int) (networking.Request, error) {
 	req := request{
 		ID:     1,
 		Method: methodOffer,
 		Params: []interface{}{
 			struct {
-				Param1 bool `json:"tehuur"`
-			}{Param1: true},
+				MinimumPrice int  `json:"prijsvanaf"`
+				ForRent      bool `json:"tehuur"`
+			}{
+				MinimumPrice: minimumPrice,
+				ForRent:      true,
+			},
 			"",
 			true,
 		},
@@ -209,4 +178,23 @@ func (c *client) offerRequest() (networking.Request, error) {
 	}
 
 	return request, nil
+}
+
+func (c *client) getHousingType(houseType []string) corporation.HousingType {
+	if len(houseType) == 0 {
+		return corporation.Undefined
+	}
+
+	for _, h := range houseType {
+		h = strings.ToLower(h)
+		if h == "parkeren" {
+			return corporation.Parking
+		} else if h == "appartement" {
+			return corporation.Appartement
+		} else if h == "eengezinswoning" {
+			return corporation.House
+		}
+	}
+
+	return corporation.Undefined
 }
