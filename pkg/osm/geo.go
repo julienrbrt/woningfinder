@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
-// stores the reverse geocoding of a request to osm
+// reverseGeo stores the reverse geocoding of a request to osm
 type reverseGeo struct {
 	Lat         string `json:"lat"`
 	Lon         string `json:"lon"`
@@ -20,10 +21,7 @@ type reverseGeo struct {
 		Road        string `json:"road"`
 		Residential string `json:"residential"`
 		City        string `json:"city"`
-		State       string `json:"state"`
-		Region      string `json:"region"`
 		Postcode    string `json:"postcode"`
-		Country     string `json:"country"`
 	} `json:"address"`
 }
 
@@ -47,5 +45,5 @@ func GetResidential(latitude, longitude string) (string, error) {
 		return "", err
 	}
 
-	return reverseGeo.Address.Residential, nil
+	return strings.ToLower(reverseGeo.Address.Residential), nil
 }

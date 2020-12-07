@@ -14,11 +14,11 @@ func (o *Offer) DistrictName() string {
 		return strings.ToLower(o.Housing.District)
 	}
 
+	var district string
 	district, err := osm.GetResidential(fmt.Sprintf("%.5f", o.Housing.Location.Latitude), fmt.Sprintf("%.5f", o.Housing.Location.Longitude))
 	if err != nil {
 		log.Printf(fmt.Errorf("error getting district from %s: %w", o.Housing.Address, err).Error())
-		return ""
 	}
 
-	return strings.ToLower(district)
+	return district
 }

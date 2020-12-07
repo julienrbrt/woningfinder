@@ -26,7 +26,7 @@ type loginResult struct {
 
 // Authenticate to De Woonplaats
 func (c *client) Login(username, password string) error {
-	req, err := c.loginRequest(username, password)
+	req, err := loginRequest(username, password)
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func (c *client) Login(username, password string) error {
 	return nil
 }
 
-func (c *client) loginRequest(username, password string) (networking.Request, error) {
+func loginRequest(username, password string) (networking.Request, error) {
 	req := request{
 		ID:     1,
 		Method: methodLogin,
