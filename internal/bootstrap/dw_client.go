@@ -12,7 +12,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 )
 
-// CreateDWClient creates a client for the De Woonplaats API
+// CreateDWClient creates a client for De Woonplaats
 func CreateDWClient() corporation.Client {
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
