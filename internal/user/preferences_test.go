@@ -72,7 +72,7 @@ func Test_MatchPreferences_Location(t *testing.T) {
 		"hengelo",
 	}
 	a.False(testUser.MatchPreferences(testOffer))
-	testOffer.Housing.District = "roombeek"
+	testOffer.Housing.District = "Enschede - Roombeek"
 	a.False(testUser.MatchPreferences(testOffer))
 	testOffer.City.Name = "enschede"
 	a.True(testUser.MatchPreferences(testOffer))
@@ -110,7 +110,7 @@ func Test_MatchPreferences_HasApplied(t *testing.T) {
 	a.False(testUser.MatchPreferences(testOffer))
 }
 
-func Test_MatchPreferences_Criterias(t *testing.T) {
+func Test_MatchPreferences_Criteria(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()
