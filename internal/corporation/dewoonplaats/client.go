@@ -2,23 +2,21 @@ package dewoonplaats
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
-// Client defines De Woonplaats client
-type Client interface {
-	Login(username, password string) error
-	FetchOffer(minimumPrice int) ([]corporation.Offer, error)
-}
+// Host defines the De Woonplaats API domain
+var Host = &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: "/wh_services"}
 
 type client struct {
 	networkingClient networking.Client
 }
 
 // NewClient creates a client for De Woonplaats
-func NewClient(c networking.Client) Client {
+func NewClient(c networking.Client) corporation.Client {
 	return &client{
 		networkingClient: c,
 	}

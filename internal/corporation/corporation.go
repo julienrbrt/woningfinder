@@ -39,11 +39,14 @@ type Location struct {
 
 // Offer defines a house or an appartement available in a Housing Corporation
 type Offer struct {
-	Housing            Housing
-	URL                *url.URL
-	StartDate, EndDate time.Time
-	SelectionMethod    SelectionMethod
-	City               City
+	ExternalID           string // identifier of the house at the housing coporation in order to react
+	Housing              Housing
+	URL                  *url.URL
+	PictureURL           *url.URL
+	SelectionMethod      SelectionMethod
+	SelectionDate        time.Time
+	City                 City
+	CanApply, HasApplied bool
 }
 
 const (
@@ -61,10 +64,12 @@ type Housing struct {
 	Type                    HousingType
 	Location                Location
 	Address                 string
-	Price                   float64
+	District                string
 	EnergieLabel            string
+	Price                   float64
+	Size                    float64
+	NumberRoom              int
 	NumberBedroom           int
-	SizeM2                  int
 	BuildingYear            int
 	HousingAllowance        bool // HousingAllowance defines if the house can get housing allowance
 	Garden                  bool
@@ -75,4 +80,5 @@ type Housing struct {
 	AccessibilityScooter    bool
 	Attic                   bool
 	Historic                bool // Defines if house is an historical monument
+	CV                      bool // Defines if the house has a central verwarming
 }
