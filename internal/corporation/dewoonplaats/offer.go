@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
@@ -17,12 +17,10 @@ import (
 const methodOffer = "ZoekWoningen"
 
 type offerResult struct {
-	Total int `json:"aantal"`
 	Offer []struct {
-		Address      string `json:"adres"`
-		Balcony      bool   `json:"balkon"`
-		BuildingYear int    `json:"bouwjaar"`
-		Criteria     struct {
+		ID          string   `json:"id"`
+		HousingType []string `json:"soort"`
+		Criteria    struct {
 			KinderenValid    bool   `json:"kinderen_valid"`
 			MaxGezinsgrootte int    `json:"max_gezinsgrootte"`
 			MaxInkomen       int    `json:"max_inkomen"`
@@ -32,57 +30,44 @@ type offerResult struct {
 			MinLeeftijd      int    `json:"min_leeftijd"`
 			Omschrijving     string `json:"omschrijving"`
 		} `json:"criteria"`
-		Cv                      bool     `json:"cv"`
-		Datum                   string   `json:"datum"`
-		EnergieLabel            string   `json:"energielabel"`
-		Etage                   string   `json:"etage"`
-		Foto                    string   `json:"foto"`
-		Garage                  bool     `json:"garage"`
-		Historic                bool     `json:"historic"`
-		ID                      string   `json:"id"`
-		ForRent                 bool     `json:"ishuur"`
-		HasLowRentPrice         bool     `json:"ishuurlaag"`
-		Keuken                  string   `json:"keuken"`
-		Latitude                float64  `json:"lat"`
-		Lift                    bool     `json:"lift"`
-		Longitude               float64  `json:"lng"`
-		Loting                  bool     `json:"loting"`
-		Lotingsdatum            string   `json:"lotingsdatum"`
-		CanApply                bool     `json:"magreageren"`
-		HasAppliedOn            string   `json:"gereageerd_op"`
-		MapsURL                 string   `json:"mapslink"`
-		City                    string   `json:"plaats"`
-		Postcode                string   `json:"postcode"`
-		Reactiedatum            string   `json:"reactiedatum"`
-		Reacties                int      `json:"reacties"`
-		Recreatieruimte         bool     `json:"recreatieruimte"`
-		RentPrice               float64  `json:"relevante_huurprijs,omitempty"`
-		AccessibilityScooter    bool     `json:"rollatortoegankelijk"`
-		AccessibilityWheelchair bool     `json:"rolstoeltoegankelijk"`
-		Servicekosten           string   `json:"servicekosten"`
-		NumberBedroom           int      `json:"slaapkamers"`
-		HousingType             []string `json:"soort"`
-		Straat                  string   `json:"straat"`
-		TehuurLuxehuur          bool     `json:"tehuur_luxehuur,omitempty"`
-		Thumbnail               string   `json:"thumbnail"`
-		Toeslagprijs            string   `json:"toeslagprijs"`
-		Garden                  string   `json:"tuin"`
-		Verbruikskosten         string   `json:"verbruikskosten"`
-		Vertrekken              []struct {
-			Oppervlak string `json:"oppervlak"`
-			Titel     string `json:"titel"`
+		Latitude                float64 `json:"lat"`
+		Longitude               float64 `json:"lng"`
+		Address                 string  `json:"adres"`
+		District                string  `json:"wijk"`
+		City                    string  `json:"plaats"`
+		Postcode                string  `json:"postcode"`
+		RentPrice               float64 `json:"relevante_huurprijs,omitempty"`
+		RentPriceForAllowance   string  `json:"toeslagprijs"`
+		RentLuxe                bool    `json:"tehuur_luxehuur,omitempty"`
+		PictureURL              string  `json:"foto"`
+		MapsURL                 string  `json:"mapslink"`
+		BuildingYear            int     `json:"bouwjaar"`
+		EnergieLabel            string  `json:"energielabel"`
+		NumberBedroom           int     `json:"slaapkamers"`
+		CV                      bool    `json:"cv"`
+		Balcony                 bool    `json:"balkon"`
+		Garage                  bool    `json:"garage"`
+		Historic                bool    `json:"historic"`
+		ForRent                 bool    `json:"ishuur"`
+		HasLowRentPrice         bool    `json:"ishuurlaag"`
+		Lift                    bool    `json:"lift"`
+		AccessibilityScooter    bool    `json:"rollatortoegankelijk"`
+		AccessibilityWheelchair bool    `json:"rolstoeltoegankelijk"`
+		Garden                  string  `json:"tuin"`
+		Attic                   bool    `json:"zolder"`
+		CanApply                bool    `json:"magreageren"`
+		HasAppliedOn            string  `json:"gereageerd_op"`
+		SelectionDate           string  `json:"lotingsdatum"`
+		IsSelectionRandom       bool    `json:"loting"`
+		Size                    string  `json:"woonoppervlak"`
+		RoomSize                []struct {
+			Name string `json:"titel"`
+			Size string `json:"oppervlak"`
 		} `json:"vertrekken"`
-		Verwarming      string `json:"verwarming"`
-		Wijk            string `json:"wijk"`
-		Wijkid          int    `json:"wijkid"`
-		Wijzigingsdatum string `json:"wijzigingsdatum"`
-		SizeM2          string `json:"woonoppervlak"`
-		WrdID           int    `json:"wrd_id,omitempty"`
-		Attic           bool   `json:"zolder"`
 	} `json:"woningen"`
 }
 
-func (c *client) FetchOffer(minimumPrice int) ([]corporation.Offer, error) {
+func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
 	req, err := c.offerRequest(minimumPrice)
 	if err != nil {
 		return nil, err
@@ -100,32 +85,29 @@ func (c *client) FetchOffer(minimumPrice int) ([]corporation.Offer, error) {
 
 	var offers []corporation.Offer
 	for _, house := range result.Offer {
-		houseType := c.getHousingType(house.HousingType)
+		houseType := c.parseHousingType(house.HousingType)
 
 		if !house.ForRent || houseType == corporation.Undefined || house.RentPrice == 0 {
 			continue
 		}
 
-		houseSizeM2, err := strconv.Atoi(house.SizeM2)
-		if err != nil {
-			log.Printf(fmt.Errorf("error while parsing size of house %v: %w", house, err).Error())
-			houseSizeM2 = 0
-		}
-
 		newHouse := corporation.Housing{
-			Type:    houseType,
-			Address: fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
+			Type:     houseType,
+			Address:  fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
+			District: house.District,
 			Location: corporation.Location{
 				Latitude:  house.Latitude,
 				Longitude: house.Longitude,
 			},
 			EnergieLabel:            house.EnergieLabel,
+			NumberRoom:              len(house.RoomSize),
 			NumberBedroom:           house.NumberBedroom,
-			SizeM2:                  houseSizeM2,
+			Size:                    c.parseHouseSize(houseType, house.Size),
 			Price:                   house.RentPrice,
 			BuildingYear:            house.BuildingYear,
-			HousingAllowance:        house.HasLowRentPrice && len(house.Toeslagprijs) > 0,
+			HousingAllowance:        house.HasLowRentPrice && !house.RentLuxe && len(house.RentPriceForAllowance) > 0,
 			Garden:                  len(house.Garden) > 0,
+			CV:                      house.CV,
 			Garage:                  house.Garage,
 			Elevator:                house.Lift,
 			Balcony:                 house.Balcony,
@@ -136,11 +118,17 @@ func (c *client) FetchOffer(minimumPrice int) ([]corporation.Offer, error) {
 		}
 
 		offer := corporation.Offer{
-			URL:     &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: fmt.Sprintf("ik-zoek-woonruimte/!/woning/%s/", house.ID)},
-			Housing: newHouse,
+			ExternalID: house.ID,
+			Housing:    newHouse,
+			URL:        &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: fmt.Sprintf("ik-zoek-woonruimte/!/woning/%s/", house.ID)},
+			PictureURL: &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: house.PictureURL},
 			City: corporation.City{
 				Name: house.City,
 			},
+			SelectionMethod: c.parseSelectionMethod(house.IsSelectionRandom),
+			SelectionDate:   c.parseSelectionDate(house.SelectionDate),
+			CanApply:        house.CanApply,
+			HasApplied:      len(house.HasAppliedOn) > 0,
 		}
 
 		offers = append(offers, offer)
@@ -149,14 +137,14 @@ func (c *client) FetchOffer(minimumPrice int) ([]corporation.Offer, error) {
 	return offers, nil
 }
 
-func (c *client) offerRequest(minimumPrice int) (networking.Request, error) {
+func (c *client) offerRequest(minimumPrice float64) (networking.Request, error) {
 	req := request{
 		ID:     1,
 		Method: methodOffer,
 		Params: []interface{}{
 			struct {
-				MinimumPrice int  `json:"prijsvanaf"`
-				ForRent      bool `json:"tehuur"`
+				MinimumPrice float64 `json:"prijsvanaf"`
+				ForRent      bool    `json:"tehuur"`
 			}{
 				MinimumPrice: minimumPrice,
 				ForRent:      true,
@@ -180,7 +168,7 @@ func (c *client) offerRequest(minimumPrice int) (networking.Request, error) {
 	return request, nil
 }
 
-func (c *client) getHousingType(houseType []string) corporation.HousingType {
+func (c *client) parseHousingType(houseType []string) corporation.HousingType {
 	if len(houseType) == 0 {
 		return corporation.Undefined
 	}
@@ -197,4 +185,34 @@ func (c *client) getHousingType(houseType []string) corporation.HousingType {
 	}
 
 	return corporation.Undefined
+}
+
+func (c *client) parseHouseSize(houseType corporation.HousingType, houseSize string) float64 {
+	var size float64
+	if houseType == corporation.House || houseType == corporation.Appartement {
+		size, _ = strconv.ParseFloat(strings.ReplaceAll(houseSize, ",", "."), 32)
+	}
+
+	return size
+}
+
+func (c *client) parseSelectionDate(str string) time.Time {
+	if len(str) == 0 {
+		return time.Time{}
+	}
+
+	date, err := time.Parse(time.RFC3339, str)
+	if err != nil {
+		return time.Time{}
+	}
+
+	return date
+}
+
+func (c *client) parseSelectionMethod(random bool) corporation.SelectionMethod {
+	if random {
+		return corporation.SelectionRandom
+	}
+
+	return corporation.SelectionFirstComeFirstServed
 }
