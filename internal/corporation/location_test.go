@@ -11,11 +11,9 @@ func getOffer() corporation.Offer {
 	return corporation.Offer{
 		ExternalID: "w758752",
 		Housing: corporation.Housing{
-			Type: corporation.House,
-			Location: corporation.Location{
-				Latitude:  52.133,
-				Longitude: 6.61433,
-			},
+			Type:                    corporation.House,
+			Latitude:                52.133,
+			Longitude:               6.61433,
 			Address:                 "Beatrixstraat 1 R 7161 DJ Neede  A",
 			EnergieLabel:            "A",
 			Price:                   656.39,
@@ -50,7 +48,7 @@ func Test_Offer_DistrictName_FromOSM(t *testing.T) {
 	a := assert.New(t)
 	offer := getOffer()
 	a.Equal("", offer.DistrictName())
-	offer.Housing.Location.Latitude = 52.23148
-	offer.Housing.Location.Longitude = 6.89277
+	offer.Housing.Latitude = 52.23148
+	offer.Housing.Longitude = 6.89277
 	a.Equal("roombeek", offer.DistrictName())
 }

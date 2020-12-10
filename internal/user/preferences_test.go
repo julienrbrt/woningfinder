@@ -12,11 +12,9 @@ func getOffer() corporation.Offer {
 	return corporation.Offer{
 		ExternalID: "w758752",
 		Housing: corporation.Housing{
-			Type: corporation.House,
-			Location: corporation.Location{
-				Latitude:  52.133,
-				Longitude: 6.61433,
-			},
+			Type:                    corporation.House,
+			Latitude:                52.133,
+			Longitude:               6.61433,
 			Address:                 "Beatrixstraat 1 R 7161 DJ Neede  A",
 			EnergieLabel:            "A",
 			Price:                   656.39,

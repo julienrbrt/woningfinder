@@ -2,11 +2,11 @@ package query
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"strconv"
 	"strings"
 
-	"github.com/sirupsen/logrus"
 	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
@@ -116,7 +116,7 @@ func (e encoder) encodeValue(q *Query, key string, value reflect.Value) error {
 		if err != nil {
 			return err
 		}
-		logrus.Infof("Encoded query for key %q: %q", key, q2.Encode())
+		log.Printf("Encoded query for key %s: %s", key, q2.Encode())
 		e.merge(q, key, q2)
 	}
 	return nil

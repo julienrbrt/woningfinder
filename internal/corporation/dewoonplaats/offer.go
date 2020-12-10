@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -39,7 +38,6 @@ type offerResult struct {
 		RentPrice               float64 `json:"relevante_huurprijs,omitempty"`
 		RentPriceForAllowance   string  `json:"toeslagprijs"`
 		RentLuxe                bool    `json:"tehuur_luxehuur,omitempty"`
-		PictureURL              string  `json:"foto"`
 		MapsURL                 string  `json:"mapslink"`
 		BuildingYear            int     `json:"bouwjaar"`
 		EnergieLabel            string  `json:"energielabel"`
@@ -92,13 +90,11 @@ func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
 		}
 
 		newHouse := corporation.Housing{
-			Type:     houseType,
-			Address:  fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
-			District: house.District,
-			Location: corporation.Location{
-				Latitude:  house.Latitude,
-				Longitude: house.Longitude,
-			},
+			Type:                    houseType,
+			Address:                 fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
+			District:                house.District,
+			Latitude:                house.Latitude,
+			Longitude:               house.Longitude,
 			EnergieLabel:            house.EnergieLabel,
 			NumberRoom:              len(house.RoomSize),
 			NumberBedroom:           house.NumberBedroom,
@@ -120,15 +116,16 @@ func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
 		offer := corporation.Offer{
 			ExternalID: house.ID,
 			Housing:    newHouse,
-			URL:        &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: fmt.Sprintf("ik-zoek-woonruimte/!/woning/%s/", house.ID)},
-			PictureURL: &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: house.PictureURL},
+			URL:        fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", house.ID),
 			City: corporation.City{
 				Name: house.City,
 			},
-			SelectionMethod: c.parseSelectionMethod(house.IsSelectionRandom),
-			SelectionDate:   c.parseSelectionDate(house.SelectionDate),
-			CanApply:        house.CanApply,
-			HasApplied:      len(house.HasAppliedOn) > 0,
+			SelectionMethod: corporation.SelectionMethod{
+				Method: c.parseSelectionMethod(house.IsSelectionRandom),
+			},
+			SelectionDate: c.parseSelectionDate(house.SelectionDate),
+			CanApply:      house.CanApply,
+			HasApplied:    len(house.HasAppliedOn) > 0,
 		}
 
 		offers = append(offers, offer)
@@ -209,7 +206,7 @@ func (c *client) parseSelectionDate(str string) time.Time {
 	return date
 }
 
-func (c *client) parseSelectionMethod(random bool) corporation.SelectionMethod {
+func (c *client) parseSelectionMethod(random bool) corporation.Method {
 	if random {
 		return corporation.SelectionRandom
 	}
