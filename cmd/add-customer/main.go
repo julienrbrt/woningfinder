@@ -27,7 +27,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	corporationService := corporation.NewService(bootstrap.DB)
+	corporationService := corporation.NewService(bootstrap.DB, nil)
 	userService := user.NewService(bootstrap.DB, corporationService)
 
 	// define hardcoded user preferences
