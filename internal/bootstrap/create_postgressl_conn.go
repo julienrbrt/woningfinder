@@ -16,13 +16,13 @@ import (
 //DB stores the database connection
 var DB *gorm.DB
 
-// InitDB create a connection to WoningFinder database
+// InitDB create a connection to WoningFinder PostgreSQL database
 func InitDB() error {
 	dbHost := os.Getenv("PSQL_HOST")
+	dbPort := os.Getenv("PSQL_PORT")
+	dbName := os.Getenv("PSQL_NAME")
 	dbUser := os.Getenv("PSQL_USERNAME")
 	dbPassword := os.Getenv("PSQL_PASSWORD")
-	dbName := os.Getenv("PSQL_NAME")
-	dbPort := os.Getenv("PSQL_PORT")
 
 	// build connection string
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require TimeZone=Europe/Amsterdam", dbHost, dbUser, dbPassword, dbName, dbPort)
@@ -37,7 +37,8 @@ func InitDB() error {
 	}
 
 	// Migrate the schema
-	DB.Debug().AutoMigrate(
+	// DB.Debug().AutoMigrate(...) for extensive log
+	DB.AutoMigrate(
 		&corporation.Corporation{},
 		&corporation.SelectionMethod{},
 		&corporation.City{},

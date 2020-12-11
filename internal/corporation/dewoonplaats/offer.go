@@ -65,8 +65,8 @@ type offerResult struct {
 	} `json:"woningen"`
 }
 
-func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
-	req, err := offerRequest(minimumPrice)
+func (c *client) FetchOffer() ([]corporation.Offer, error) {
+	req, err := offerRequest()
 	if err != nil {
 		return nil, err
 	}
@@ -138,17 +138,15 @@ func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
 	return offers, nil
 }
 
-func offerRequest(minimumPrice float64) (networking.Request, error) {
+func offerRequest() (networking.Request, error) {
 	req := request{
 		ID:     1,
 		Method: methodOffer,
 		Params: []interface{}{
 			struct {
-				MinimumPrice float64 `json:"prijsvanaf"`
-				ForRent      bool    `json:"tehuur"`
+				ForRent bool `json:"tehuur"`
 			}{
-				MinimumPrice: minimumPrice,
-				ForRent:      true,
+				ForRent: true,
 			},
 			"",
 			true,

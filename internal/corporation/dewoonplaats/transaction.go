@@ -5,6 +5,13 @@ import (
 	"fmt"
 )
 
+// request builds a De Woonplaats request
+type request struct {
+	ID     int         `json:"id"`
+	Method string      `json:"method"`
+	Params interface{} `json:"params"`
+}
+
 // response corresponds to a De Woonplaats response
 type response struct {
 	Err    interface{}     `json:"error"`

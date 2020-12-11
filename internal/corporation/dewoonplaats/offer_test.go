@@ -8,8 +8,8 @@ import (
 
 func Test_OfferRequest(t *testing.T) {
 	a := assert.New(t)
-	expected := `{"id":1,"method":"ZoekWoningen","params":[{"prijsvanaf":500,"tehuur":true},"",true]}`
-	req, err := offerRequest(500)
+	expected := `{"id":1,"method":"ZoekWoningen","params":[{"tehuur":true},"",true]}`
+	req, err := offerRequest()
 	a.NoError(err)
 	body, err := req.CopyBody()
 	a.NoError(err)
