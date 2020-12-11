@@ -45,6 +45,7 @@ func InitDB() error {
 		&corporation.HousingType{},
 		&user.User{},
 		&user.HousingPreferences{},
+		&user.CorporationCredentials{},
 	)
 
 	return nil

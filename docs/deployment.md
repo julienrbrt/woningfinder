@@ -6,3 +6,4 @@ The environment variables are loaded from the `.env` first. If not present, it w
 
 - _APP\_NAME_ is the name of the application (WoningFinder)
 - _PSQL\_\*_ contains the credentials of the PostgreSQL database
+- _REDIS\_\*_ contains the crendentials of the Redis database

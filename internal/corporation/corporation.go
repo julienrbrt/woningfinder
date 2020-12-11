@@ -12,11 +12,11 @@ import (
 type Corporation struct {
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
-	DeletedAt       gorm.DeletedAt `gorm:"index"`
-	Name            string         `gorm:"primaryKey"`
-	URL             string
-	Cities          []City            `gorm:"primaryKey;many2many:corporation_cities"`
-	SelectionMethod []SelectionMethod `gorm:"many2many:corporation_selection_method"`
+	DeletedAt       gorm.DeletedAt    `gorm:"index"`
+	Name            string            `gorm:"primaryKey"`
+	URL             string            `gorm:"primaryKey"`
+	Cities          []City            `gorm:"many2many:corporations_cities"`
+	SelectionMethod []SelectionMethod `gorm:"many2many:corporations_selection_method"`
 }
 
 // City defines a city where a HousingCorporation operates or when an house offer lies
