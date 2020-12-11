@@ -20,15 +20,3 @@ func NewClient(c networking.Client) corporation.Client {
 		networkingClient: c,
 	}
 }
-
-func (c *client) Login(username, password string) error {
-	return nil
-}
-
-func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
-	return nil, nil
-}
-
-func (c *client) ApplyOffer(offer corporation.Offer) error {
-	return nil
-}

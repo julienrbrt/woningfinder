@@ -5,7 +5,6 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/onshuis"
-	"gorm.io/gorm/clause"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/corporation/dewoonplaats"
@@ -24,31 +23,39 @@ func init() {
 	}
 }
 
+var corporations = []corporation.Corporation{
+	dewoonplaats.Info,
+	onshuis.Info,
+}
+
+var housingTypes = []corporation.HousingType{
+	{
+		Type: corporation.House,
+	},
+	{
+		Type: corporation.Appartement,
+	},
+	{
+		Type: corporation.Parking,
+	},
+	{
+		Type: corporation.Undefined,
+	},
+}
+
 func main() {
 	err := bootstrap.InitDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// initialize corporation
-	corporations := []corporation.Corporation{
-		dewoonplaats.Info,
-		onshuis.Info,
-	}
+	corporationService := corporation.NewService(bootstrap.DB)
 
-	// creates the corporation - on data changes update it
-	result := bootstrap.DB.Clauses(clause.OnConflict{
-		UpdateAll: true,
-	}).Create(&corporations)
-	if result.Error != nil {
+	if _, err := corporationService.Create(&corporations); err != nil {
 		log.Fatal(err)
 	}
 
-	// initialize housing types
-	result = bootstrap.DB.Clauses(clause.OnConflict{
-		UpdateAll: true,
-	}).Create(&corporation.HousingTypeDB)
-	if result.Error != nil {
+	if _, err := corporationService.CreateHousingType(&housingTypes); err != nil {
 		log.Fatal(err)
 	}
 }

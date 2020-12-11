@@ -1,8 +1,6 @@
 package user
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -12,8 +10,9 @@ import (
 type User struct {
 	gorm.Model
 	FullName               string
-	BirthDate              time.Time
-	HousingPreferences     HousingPreferences `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BirthYear              int
+	Email                  string
+	HousingPreferences     HousingPreferences `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CorporationCredentials []CorporationCredentials
 }
 

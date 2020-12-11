@@ -11,22 +11,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// HousingTypeDB permits to create the housing type in the database
-var HousingTypeDB = []HousingType{
-	{
-		Type: House,
-	},
-	{
-		Type: Appartement,
-	},
-	{
-		Type: Parking,
-	},
-	{
-		Type: Undefined,
-	},
-}
-
 const (
 	House       Type = "HOUSE"
 	Appartement      = "APPARTEMENT"
