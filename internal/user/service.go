@@ -22,6 +22,9 @@ type Service interface {
 	CreateCorporationCredentials(u *User, corporation corporation.Corporation) error
 	GetCorporationCredentials(u *User, corporation corporation.Corporation) (CorporationCredentials, error)
 	DeleteCorporationCredentials(u *User, corporation corporation.Corporation) error
+
+	// Matcher
+	MatchOffer(offers corporation.Offer) error
 }
 
 // userService represents a PostgreSQL implementation of Service.
@@ -103,5 +106,40 @@ func (s *userService) GetCorporationCredentials(u *User, corporation corporation
 }
 
 func (s *userService) DeleteCorporationCredentials(u *User, corporation corporation.Corporation) error {
+	return nil
+}
+
+func (s *userService) MatchOffer(offer corporation.Offer) error {
+	fmt.Println("--------")
+	fmt.Println(offer.Housing.Address)
+	fmt.Println("--------")
+
+	// find user with housing preferences matching offer
+
+	// find user with credentials for offer corporation
+
+	// apply to matching offers
+
+	// store in redis
+
+	// send mail
+
+	// var hasApplied int
+	// 	log.Printf("checking %s...\n", offer.Housing.Address)
+	// 	if user.MatchPreferences(offer) && user.MatchCriteria(offer) {
+	// 		err := client.ApplyOffer(offer)
+	// 		if err != nil {
+	// 			log.Fatal(err)
+	// 			continue
+	// 		}
+
+	// 		log.Printf("successfuly applied to %s - view on %s", offer.Housing.Address, offer.URL)
+	// 		hasApplied++
+	// 	}
+
+	// REDIS
+	// when applying store ID, Corporation to check if need to apply again
+	// log.Printf("WoningFinder has applied to %d house(s) on behalf of %s today.", hasApplied, user.FullName)
+
 	return nil
 }

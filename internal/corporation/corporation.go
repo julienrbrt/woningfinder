@@ -10,9 +10,9 @@ import (
 // Corporation defines a housing corporations basic data
 // That data is shared between every housing corporations
 type Corporation struct {
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
-	DeletedAt       gorm.DeletedAt    `gorm:"index"`
+	CreatedAt       time.Time         `json:"-"`
+	UpdatedAt       time.Time         `json:"-"`
+	DeletedAt       gorm.DeletedAt    `json:"-" gorm:"index"`
 	Name            string            `gorm:"primaryKey"`
 	URL             string            `gorm:"primaryKey"`
 	Cities          []City            `gorm:"many2many:corporations_cities"`
@@ -21,9 +21,9 @@ type Corporation struct {
 
 // City defines a city where a HousingCorporation operates or when an house offer lies
 type City struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 	Name      string         `gorm:"primaryKey"`
 	Region    string         `gorm:"primaryKey"`
 	District  []District     `gorm:"many2many:cities_districts"`
@@ -31,20 +31,10 @@ type City struct {
 
 // District is a part of a city
 type District struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 	Name      string         `gorm:"primaryKey"`
-}
-
-// Offer defines a house or an appartement available in a Housing Corporation
-type Offer struct {
-	ExternalID           string // identifier of the house at the housing coporation in order to react
-	Housing              Housing
-	URL                  string
-	SelectionMethod      SelectionMethod
-	SelectionDate        time.Time
-	CanApply, HasApplied bool
 }
 
 const (
@@ -73,8 +63,21 @@ func (u Method) Value() (driver.Value, error) {
 
 // SelectionMethod is the database representation of Method
 type SelectionMethod struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 	Method    Method         `gorm:"primaryKey"`
+}
+
+// Offer defines a house or an appartement available in a Housing Corporation
+type Offer struct {
+	ExternalID                   string // identifier of the house at the housing coporation in order to react
+	Housing                      Housing
+	URL                          string
+	SelectionMethod              SelectionMethod
+	SelectionDate                time.Time
+	MinIncome, MaxIncome         int
+	MinFamilySize, MaxFamilySize int
+	MinAge, MaxAge               int
+	ChildrenAllowed              bool
 }

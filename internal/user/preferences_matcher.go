@@ -8,11 +8,6 @@ import (
 
 // MatchPreferences verifies that an offer match the user preferences
 func (u *User) MatchPreferences(offer corporation.Offer) bool {
-	// verify if not already applied
-	if offer.HasApplied {
-		return false
-	}
-
 	// match price
 	if offer.Housing.Price <= u.HousingPreferences.MinimumPrice || offer.Housing.Price >= u.HousingPreferences.MaximumPrice {
 		return false

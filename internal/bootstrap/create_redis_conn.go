@@ -24,14 +24,14 @@ func InitRedis() error {
 
 	rdb := redis.NewClient(opt)
 
-	pong := rdb.Ping()
-	if pong.Val() != "PONG" {
+	_, err = rdb.Ping().Result()
+	if err != nil {
 		return fmt.Errorf("error connecting to redis with host: %s", redisHost)
 	}
 
 	RDB = rdb
 	if RDB != nil {
-		log.Printf("connected to redis with host: %s\n", redisHost)
+		log.Println("successfully connected to redis")
 	}
 
 	return nil

@@ -10,8 +10,10 @@ import (
 type User struct {
 	gorm.Model
 	FullName               string
-	BirthYear              int
 	Email                  string
+	BirthYear              int
+	YearlyIncome           int
+	FamilySize             int
 	HousingPreferences     HousingPreferences `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CorporationCredentials []CorporationCredentials
 }

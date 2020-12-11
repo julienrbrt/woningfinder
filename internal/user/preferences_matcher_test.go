@@ -35,13 +35,20 @@ func getOffer() corporation.Offer {
 			Historic:                false,
 			CV:                      false,
 		},
-		CanApply:   true,
-		HasApplied: false,
+		MinAge:        18,
+		MaxAge:        35,
+		MinIncome:     20000,
+		MaxIncome:     28000,
+		MinFamilySize: 1,
+		MaxFamilySize: 2,
 	}
 }
 
 func getUser() user.User {
 	return user.User{
+		BirthYear:    1990,
+		YearlyIncome: 30000,
+		FamilySize:   3,
 		HousingPreferences: user.HousingPreferences{
 			Type: []corporation.HousingType{
 				corporation.HousingType{
@@ -104,16 +111,6 @@ func Test_MatchPreferences_Price(t *testing.T) {
 
 	a.True(testUser.MatchPreferences(testOffer))
 	testOffer.Housing.Price = 1000
-	a.False(testUser.MatchPreferences(testOffer))
-}
-
-func Test_MatchPreferences_HasApplied(t *testing.T) {
-	a := assert.New(t)
-	testUser := getUser()
-	testOffer := getOffer()
-
-	a.True(testUser.MatchPreferences(testOffer))
-	testOffer.HasApplied = true
 	a.False(testUser.MatchPreferences(testOffer))
 }
 
