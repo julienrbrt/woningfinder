@@ -53,8 +53,6 @@ type offerResult struct {
 		AccessibilityWheelchair bool    `json:"rolstoeltoegankelijk"`
 		Garden                  string  `json:"tuin"`
 		Attic                   bool    `json:"zolder"`
-		CanApply                bool    `json:"magreageren"`
-		HasAppliedOn            string  `json:"gereageerd_op"`
 		SelectionDate           string  `json:"lotingsdatum"`
 		IsSelectionRandom       bool    `json:"loting"`
 		Size                    string  `json:"woonoppervlak"`
@@ -127,9 +125,14 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 			SelectionMethod: corporation.SelectionMethod{
 				Method: c.parseSelectionMethod(house.IsSelectionRandom),
 			},
-			SelectionDate: c.parseSelectionDate(house.SelectionDate),
-			CanApply:      house.CanApply,
-			HasApplied:    len(house.HasAppliedOn) > 0,
+			SelectionDate:   c.parseSelectionDate(house.SelectionDate),
+			MinIncome:       house.Criteria.MinInkomen,
+			MaxIncome:       house.Criteria.MaxInkomen,
+			MinFamilySize:   house.Criteria.MinGezinsgrootte,
+			MaxFamilySize:   house.Criteria.MaxGezinsgrootte,
+			MinAge:          house.Criteria.MinLeeftijd,
+			MaxAge:          house.Criteria.MaxLeeftijd,
+			ChildrenAllowed: house.Criteria.KinderenValid,
 		}
 
 		offers = append(offers, offer)

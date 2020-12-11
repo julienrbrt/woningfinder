@@ -1,7 +1,12 @@
 package main
 
 import (
+	"log"
+
 	"github.com/joho/godotenv"
+	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/user"
 	"github.com/woningfinder/woningfinder/pkg/env"
 )
 
@@ -16,4 +21,27 @@ func init() {
 }
 
 func main() {
+	err := bootstrap.InitDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = bootstrap.InitRedis()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	corporationService := corporation.NewService(bootstrap.DB, bootstrap.RDB)
+	userService := user.NewService(bootstrap.DB, corporationService)
+
+	offer := make(chan corporation.Offer)
+	// subscribe to pub/sub messages inside a new goroutine
+	go corporationService.SubscribeOffers(offer)
+
+	for o := range offer {
+		if err := userService.MatchOffer(o); err != nil {
+			log.Printf("error while maching offer %s: %v\n", o.Housing.Address, err)
+		}
+	}
+
 }

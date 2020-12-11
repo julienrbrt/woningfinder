@@ -33,7 +33,7 @@ func InitDB() error {
 
 	DB = db
 	if DB != nil {
-		log.Printf("connected to database with host: %s\n", dbHost)
+		log.Println("successfully connected to database")
 	}
 
 	// Migrate the schema

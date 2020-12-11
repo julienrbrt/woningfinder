@@ -34,9 +34,9 @@ func (u Type) Value() (driver.Value, error) {
 
 // HousingType is the database representation of (Housing)Type
 type HousingType struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 	Type      Type           `gorm:"primaryKey"`
 }
 

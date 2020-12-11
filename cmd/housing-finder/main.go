@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"sync"
 
@@ -28,36 +27,34 @@ func main() {
 		log.Fatal(err)
 	}
 
-	corporationService := corporation.NewService(bootstrap.DB)
+	err = bootstrap.InitRedis()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	clientProvider := bootstrap.NewClientProvider()
+
+	corporationService := corporation.NewService(bootstrap.DB, bootstrap.RDB)
 	corporations, err := corporationService.GetCorporations()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var wg sync.WaitGroup
-	ch := make(chan error, len(*corporations))
-	for _, corporation := range *corporations {
-		client, err := corporationService.GetClient(&corporation)
+	wg := sync.WaitGroup{}
+	for _, c := range *corporations {
+		client, err := clientProvider.Get(&c)
 		if err != nil {
-			log.Printf("cannot find client for corporation %s\n", corporation.Name)
+			log.Println(err)
 			continue
 		}
-
 		wg.Add(1)
-		go fetchAndSend(client, &wg, ch, corporation)
+		go func(corporation corporation.Corporation) {
+			defer wg.Done()
+
+			if err := corporationService.PublishOffers(client, corporation); err != nil {
+				log.Println(err)
+			}
+		}(c)
 	}
 	wg.Wait()
-	fmt.Println(<-ch)
-}
-
-func fetchAndSend(client corporation.Client, wg *sync.WaitGroup, ch chan error, corporation corporation.Corporation) {
-	defer wg.Done()
-
-	offers, err := client.FetchOffer()
-	if err != nil {
-		ch <- fmt.Errorf("error while fetching offers for %s: %w", corporation.Name, err)
-	}
-
-	// technically send all fetched offers to redis
-	fmt.Println(offers)
 }
