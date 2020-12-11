@@ -30,18 +30,25 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// initialize corporation
 	corporations := []corporation.Corporation{
 		dewoonplaats.Info,
 		onshuis.Info,
 	}
 
-	for _, c := range corporations {
-		// creates the corporation - on data changes update it
-		result := bootstrap.DB.Clauses(clause.OnConflict{
-			UpdateAll: true,
-		}).Create(&c)
-		if result.Error != nil {
-			log.Fatal(err)
-		}
+	// creates the corporation - on data changes update it
+	result := bootstrap.DB.Clauses(clause.OnConflict{
+		UpdateAll: true,
+	}).Create(&corporations)
+	if result.Error != nil {
+		log.Fatal(err)
+	}
+
+	// initialize housing types
+	result = bootstrap.DB.Clauses(clause.OnConflict{
+		UpdateAll: true,
+	}).Create(&corporation.HousingTypeDB)
+	if result.Error != nil {
+		log.Fatal(err)
 	}
 }
