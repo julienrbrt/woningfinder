@@ -12,7 +12,9 @@ func getOffer() corporation.Offer {
 	return corporation.Offer{
 		ExternalID: "w758752",
 		Housing: corporation.Housing{
-			Type:                    corporation.House,
+			Type: corporation.HousingType{
+				Type: corporation.House,
+			},
 			Latitude:                52.133,
 			Longitude:               6.61433,
 			Address:                 "Beatrixstraat 1 R 7161 DJ Neede  A",
@@ -42,8 +44,10 @@ func getUser() user.User {
 	return user.User{
 		HousingPreferences: user.HousingPreferences{
 			Type: []corporation.HousingType{
-				corporation.House,
-				corporation.Appartement,
+				corporation.HousingType{
+					Type: corporation.House},
+				corporation.HousingType{
+					Type: corporation.Appartement},
 			},
 			MinimumPrice:  400,
 			MaximumPrice:  950,
@@ -59,20 +63,23 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	testOffer := getOffer()
 
 	a.True(testUser.MatchPreferences(testOffer))
-	testUser.HousingPreferences.District = []string{
-		"roombeek",
-		"boddenkamp",
-		"lasonder-zeggelt",
-	}
 
-	testUser.HousingPreferences.City = []string{
-		"enschede",
-		"hengelo",
+	testUser.HousingPreferences.City = []corporation.City{
+		{Name: "Hengelo"},
+		{Name: "Enschede",
+			District: []corporation.District{
+				{Name: "roombeek"},
+				{Name: "boddenkamp"},
+				{Name: "lasonder-zeggelt"},
+			},
+		},
 	}
 	a.False(testUser.MatchPreferences(testOffer))
-	testOffer.Housing.District = "Enschede - Roombeek"
+	testOffer.Housing.City.Name = "Hengelo"
+	a.True(testUser.MatchPreferences(testOffer))
+	testOffer.Housing.City.Name = "enschede"
 	a.False(testUser.MatchPreferences(testOffer))
-	testOffer.City.Name = "enschede"
+	testOffer.Housing.City = corporation.City{Name: "Enschede", District: []corporation.District{{Name: "Enschede - Roombeek"}}}
 	a.True(testUser.MatchPreferences(testOffer))
 }
 
@@ -82,7 +89,9 @@ func Test_MatchPreferences_HousingType(t *testing.T) {
 	testOffer := getOffer()
 
 	a.True(testUser.MatchPreferences(testOffer))
-	testOffer.Housing.Type = corporation.Parking
+	testOffer.Housing.Type = corporation.HousingType{
+		Type: corporation.Parking,
+	}
 	a.False(testUser.MatchPreferences(testOffer))
 	testUser.HousingPreferences.Type = nil
 	a.True(testUser.MatchPreferences(testOffer))

@@ -9,7 +9,7 @@ WoningFinder is splits in two components: _HousingFinder_ and _HousingMatcher_.
 
 There is as well small scrips that are run for special reasons:
 
-- _corporation-creator_ permits to creates the housing corporation in the database. It populates the cities of those housing corporation and their selection method.
+- _db-initiator_ permits to creates the housing corporation in the database as well as other required data (cities, housing types, selection methods...).
 
 ## HousingFinder
 

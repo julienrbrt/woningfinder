@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/woningfinder/woningfinder/internal/user"
+
 	"github.com/woningfinder/woningfinder/internal/corporation"
 
 	"gorm.io/driver/postgres"
@@ -35,7 +37,15 @@ func InitDB() error {
 	}
 
 	// Migrate the schema
-	DB.Debug().AutoMigrate(&corporation.Corporation{}, &corporation.SelectionMethod{}, &corporation.City{})
+	DB.Debug().AutoMigrate(
+		&corporation.Corporation{},
+		&corporation.SelectionMethod{},
+		&corporation.City{},
+		&corporation.District{},
+		&corporation.HousingType{},
+		&user.User{},
+		&user.HousingPreferences{},
+	)
 
 	return nil
 }

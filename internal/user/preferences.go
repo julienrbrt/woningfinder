@@ -24,8 +24,8 @@ func (u *User) MatchPreferences(offer corporation.Offer) bool {
 	}
 
 	// match location
-	district := offer.DistrictName()
-	if !matchPrefLocation(district, u.HousingPreferences.District) || !matchPrefLocation(offer.City.Name, u.HousingPreferences.City) {
+	offer.Housing.SetDistrict()
+	if !matchPrefLocation(offer.Housing.City, u.HousingPreferences.City) {
 		return false
 	}
 
@@ -57,16 +57,23 @@ func (u *User) matchPrefType(actual corporation.HousingType) bool {
 	return false
 }
 
-func matchPrefLocation(actual string, pref []string) bool {
+func matchPrefLocation(actualCity corporation.City, pref []corporation.City) bool {
 	if len(pref) == 0 {
 		return true
 	}
 
 	for _, p := range pref {
-		// if actual is an empty, then strings.Contains will be return true
-		// so we need to prevent that
-		if actual != "" && strings.Contains(actual, p) {
+		// prevent that if actual is an empty, then strings.Contains returns true
+		if p.District == nil && actualCity.Name != "" && strings.Contains(strings.ToLower(actualCity.Name), strings.ToLower(p.Name)) {
 			return true
+		}
+
+		for _, d := range p.District {
+			if len(actualCity.District) > 0 && d.Name != "" &&
+				strings.Contains(strings.ToLower(actualCity.District[0].Name), strings.ToLower(d.Name)) &&
+				strings.Contains(strings.ToLower(actualCity.Name), strings.ToLower(p.Name)) {
+				return true
+			}
 		}
 	}
 

@@ -90,9 +90,16 @@ func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
 		}
 
 		newHouse := corporation.Housing{
-			Type:                    houseType,
-			Address:                 fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
-			District:                house.District,
+			Type: corporation.HousingType{
+				Type: houseType,
+			},
+			Address: fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
+			City: corporation.City{
+				Name: house.City,
+				District: []corporation.District{
+					{Name: house.District},
+				},
+			},
 			Latitude:                house.Latitude,
 			Longitude:               house.Longitude,
 			EnergieLabel:            house.EnergieLabel,
@@ -117,9 +124,6 @@ func (c *client) FetchOffer(minimumPrice float64) ([]corporation.Offer, error) {
 			ExternalID: house.ID,
 			Housing:    newHouse,
 			URL:        fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", house.ID),
-			City: corporation.City{
-				Name: house.City,
-			},
 			SelectionMethod: corporation.SelectionMethod{
 				Method: c.parseSelectionMethod(house.IsSelectionRandom),
 			},
@@ -165,7 +169,7 @@ func offerRequest(minimumPrice float64) (networking.Request, error) {
 	return request, nil
 }
 
-func (c *client) parseHousingType(houseType []string) corporation.HousingType {
+func (c *client) parseHousingType(houseType []string) corporation.Type {
 	if len(houseType) == 0 {
 		return corporation.Undefined
 	}
@@ -184,7 +188,7 @@ func (c *client) parseHousingType(houseType []string) corporation.HousingType {
 	return corporation.Undefined
 }
 
-func (c *client) parseHouseSize(houseType corporation.HousingType, houseSize string) float64 {
+func (c *client) parseHouseSize(houseType corporation.Type, houseSize string) float64 {
 	var size float64
 	if houseType == corporation.House || houseType == corporation.Appartement {
 		size, _ = strconv.ParseFloat(strings.ReplaceAll(houseSize, ",", "."), 32)

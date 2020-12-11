@@ -1,6 +1,7 @@
 package corporation
 
 import (
+	"database/sql/driver"
 	"time"
 
 	"gorm.io/gorm"
@@ -25,6 +26,15 @@ type City struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Name      string         `gorm:"primaryKey"`
 	Region    string         `gorm:"primaryKey"`
+	District  []District     `gorm:"many2many:cities_districts"`
+}
+
+// District is a part of a city
+type District struct {
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Name      string         `gorm:"primaryKey"`
 }
 
 // Offer defines a house or an appartement available in a Housing Corporation
@@ -34,40 +44,37 @@ type Offer struct {
 	URL                  string
 	SelectionMethod      SelectionMethod
 	SelectionDate        time.Time
-	City                 City
 	CanApply, HasApplied bool
 }
 
 const (
-	House HousingType = iota
-	Appartement
-	Parking
-	Undefined
+	// SelectionRandom selects a candidate from an offer randomly
+	SelectionRandom Method = "SELECTION_RANDOM"
+	// SelectionFirstComeFirstServed selects first candidate that reacted to an offer
+	SelectionFirstComeFirstServed = "SELECTION_FIRST_COME_FIRST_SERVED"
+	// SelectionRegistrationDate selects the candidate that registered the first in the housing corporation in the offer drawing
+	SelectionRegistrationDate = "SELECTION_REGISTRATION_DATE"
 )
 
-// HousingType defines the type of an Housing (appartement, house)
-type HousingType int
+// Method defines the selection method used for a Housing Corporation in an Offer
+// There is 3 supported Method: SelectionRandom, SelectionFirstComeFirstServed, SelectionRegistrationDate
+type Method string
 
-// Housing defines an appartement and a house
-type Housing struct {
-	Type                    HousingType
-	Address                 string
-	District                string
-	EnergieLabel            string
-	Price                   float64
-	Size                    float64
-	Longitude, Latitude     float64
-	NumberRoom              int
-	NumberBedroom           int
-	BuildingYear            int
-	HousingAllowance        bool // HousingAllowance defines if the house can get housing allowance
-	Garden                  bool
-	Garage                  bool
-	Elevator                bool
-	Balcony                 bool
-	AccessibilityWheelchair bool
-	AccessibilityScooter    bool
-	Attic                   bool
-	Historic                bool // Defines if house is an historical monument
-	CV                      bool // Defines if the house has a central verwarming
+// Scan implements the Scanner interface from reading from the database
+func (u *Method) Scan(value interface{}) error {
+	*u = Method(value.(string))
+	return nil
+}
+
+// Value implements the Valuer interface for the storing in the database
+func (u Method) Value() (driver.Value, error) {
+	return string(u), nil
+}
+
+// SelectionMethod is the database representation of Method
+type SelectionMethod struct {
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Method    Method         `gorm:"primaryKey"`
 }
