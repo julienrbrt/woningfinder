@@ -49,7 +49,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	corporationService := corporation.NewService(bootstrap.DB)
+	corporationService := corporation.NewService(bootstrap.DB, nil)
 
 	if _, err := corporationService.Create(&corporations); err != nil {
 		log.Fatal(err)
@@ -58,4 +58,6 @@ func main() {
 	if _, err := corporationService.CreateHousingType(&housingTypes); err != nil {
 		log.Fatal(err)
 	}
+
+	log.Println("successfully initiated database 🎉")
 }
