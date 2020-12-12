@@ -34,3 +34,8 @@ This is used because the user can filter the house he wants to react to by city 
 For that WoningFinder uses OpenStreetMap API.
 
 More information about that API [here](https://nominatim.openstreetmap.org).
+
+### Security
+
+For applying to an offer, WoningFinder must authenticate itself as the customer. This means that WoningFinder stores the consumer credentials in the database (`CorporationCredentials`).
+Storing it plaintext is obviously not allowed. WoningFinder supports privacy and security of its customers. We use AES encryption to encrypt and store the user password in the datababse. The password is only decrypted to login to the housing corporation with a private key. No plaintext password is ever stored.
