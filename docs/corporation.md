@@ -3,7 +3,7 @@
 Housing Corporation rarely develop their own system. They use ERPs to achieve the publication and reaction of their housing offer.
 WoningFinder is implementing these system which permits to interact with the Housing Corporation.
 
-The [architecture](architecture.md) documentation, describe which system are supported by WoningFinder.
+The [architecture](architecture.md) documentation, describe which systems are supported by WoningFinder.
 
 ## Which Housing Corporation is supported?
 

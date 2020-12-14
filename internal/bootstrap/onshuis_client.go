@@ -12,6 +12,29 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 )
 
+var onshuisInfo = corporation.Corporation{
+	Name: "OnsHuis",
+	URL:  "https://mijn.onshuis.com",
+	Cities: []corporation.City{
+		{
+			Name:   "Enschede",
+			Region: "Overijssel",
+		},
+		{
+			Name:   "Hengelo",
+			Region: "Overijssel",
+		},
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		{
+			Method: corporation.SelectionRandom,
+		},
+		{
+			Method: corporation.SelectionRandom,
+		},
+	},
+}
+
 // CreateOnsHuisClient creates a client for OnsHuis
 func CreateOnsHuisClient() corporation.Client {
 	// add cookie jar
@@ -31,5 +54,5 @@ func CreateOnsHuisClient() corporation.Client {
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
 
-	return onshuis.NewClient(httpClient)
+	return onshuis.NewClient(onshuisInfo, httpClient)
 }

@@ -71,11 +71,12 @@ type SelectionMethod struct {
 
 // Offer defines a house or an appartement available in a Housing Corporation
 type Offer struct {
-	ExternalID                   string // identifier of the house at the housing coporation in order to react
+	Corporation                  Corporation
 	Housing                      Housing
-	URL                          string
 	SelectionMethod              SelectionMethod
 	SelectionDate                time.Time
+	URL                          string
+	ExternalID                   string // identifier of the house at the housing coporation in order to react
 	MinIncome, MaxIncome         int
 	MinFamilySize, MaxFamilySize int
 	MinAge, MaxAge               int

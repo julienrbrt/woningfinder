@@ -8,7 +8,7 @@ import (
 type Client interface {
 	Login(username, password string) error
 	FetchOffer() ([]Offer, error)
-	ApplyOffer(offer Offer) error
+	ReactToOffer(offer Offer) error
 }
 
 // ErrAuthFailed is retuned when the authentication to the housing coporation has failed

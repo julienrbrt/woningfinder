@@ -15,12 +15,9 @@ const pubSubChannelName = "offers"
 
 // Service permits to handle the persistence of a corporation
 type Service interface {
-	// Creaters
-	Create(corporation *[]Corporation) (*[]Corporation, error)
+	CreateOrUpdate(corporation *[]Corporation) (*[]Corporation, error)
 	CreateHousingType(housingTypes *[]HousingType) (*[]HousingType, error)
 
-	// Getters
-	GetCorporations() (*[]Corporation, error)
 	GetCity(city City) (*City, error)
 
 	// Pub-Sub
@@ -41,11 +38,10 @@ func NewService(db *gorm.DB, rdb *redis.Client) Service {
 	}
 }
 
-func (s *corporationService) Create(corporations *[]Corporation) (*[]Corporation, error) {
+func (s *corporationService) CreateOrUpdate(corporations *[]Corporation) (*[]Corporation, error) {
 	// creates the corporation - on data changes update it
-	result := s.db.Clauses(clause.OnConflict{UpdateAll: true}).Create(&corporations)
-	if result.Error != nil {
-		return nil, result.Error
+	if err := s.db.Clauses(clause.OnConflict{UpdateAll: true}).Create(corporations).Error; err != nil {
+		return nil, err
 	}
 
 	return corporations, nil
@@ -53,22 +49,11 @@ func (s *corporationService) Create(corporations *[]Corporation) (*[]Corporation
 
 func (s *corporationService) CreateHousingType(housingTypes *[]HousingType) (*[]HousingType, error) {
 	// creates housing types
-	result := s.db.Clauses(clause.OnConflict{UpdateAll: true}).Create(&housingTypes)
-	if result.Error != nil {
-		return nil, result.Error
+	if err := s.db.Clauses(clause.OnConflict{UpdateAll: true}).Create(housingTypes).Error; err != nil {
+		return nil, err
 	}
 
 	return housingTypes, nil
-}
-
-func (s *corporationService) GetCorporations() (*[]Corporation, error) {
-	var corporations []Corporation
-	result := s.db.Find(&corporations)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	return &corporations, nil
 }
 
 func (s *corporationService) GetCity(city City) (*City, error) {

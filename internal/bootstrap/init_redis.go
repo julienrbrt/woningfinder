@@ -2,7 +2,6 @@ package bootstrap
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/go-redis/redis"
@@ -30,9 +29,5 @@ func InitRedis() error {
 	}
 
 	RDB = rdb
-	if RDB != nil {
-		log.Println("successfully connected to redis")
-	}
-
 	return nil
 }

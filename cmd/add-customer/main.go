@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -27,12 +28,13 @@ func main() {
 		log.Fatal(err)
 	}
 
+	clientProvider := bootstrap.CreateClientProvider()
 	corporationService := corporation.NewService(bootstrap.DB, nil)
-	userService := user.NewService(bootstrap.DB, corporationService)
+	userService := user.NewService(bootstrap.DB, os.Getenv("AES_SECRET"), clientProvider, corporationService)
 
 	// define hardcoded user preferences
-	user := &user.User{
-		FullName:  "Julien Robert",
+	u := user.User{
+		Name:      "Julien Robert",
 		Email:     "julien@rbrt.fr",
 		BirthYear: 1998,
 		HousingPreferences: user.HousingPreferences{
@@ -67,8 +69,11 @@ func main() {
 		},
 	}
 
-	user, err = userService.Create(user)
+	// create user
+	_, err = userService.CreateUser(&u)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Printf("customer %s successfully created 🎉\n", u.Name)
 }

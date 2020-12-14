@@ -9,13 +9,13 @@ import (
 // User defines an user of WoningFinder
 type User struct {
 	gorm.Model
-	FullName               string
+	Name                   string
 	Email                  string
 	BirthYear              int
 	YearlyIncome           int
 	FamilySize             int
-	HousingPreferences     HousingPreferences `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	CorporationCredentials []CorporationCredentials
+	HousingPreferences     HousingPreferences       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	CorporationCredentials []CorporationCredentials `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 // HousingPreferences defines the user preference on a housing

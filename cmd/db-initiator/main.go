@@ -4,10 +4,8 @@ import (
 	"log"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/onshuis"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/corporation/dewoonplaats"
 	"github.com/woningfinder/woningfinder/pkg/env"
 
 	"github.com/joho/godotenv"
@@ -21,11 +19,6 @@ func init() {
 	if err := godotenv.Load("../../.env"); err != nil {
 		_ = env.MustGetString("APP_NAME")
 	}
-}
-
-var corporations = []corporation.Corporation{
-	dewoonplaats.Info,
-	onshuis.Info,
 }
 
 var housingTypes = []corporation.HousingType{
@@ -49,9 +42,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	clientProvider := bootstrap.CreateClientProvider()
 	corporationService := corporation.NewService(bootstrap.DB, nil)
 
-	if _, err := corporationService.Create(&corporations); err != nil {
+	if _, err := corporationService.CreateOrUpdate(clientProvider.List()); err != nil {
 		log.Fatal(err)
 	}
 
@@ -59,5 +53,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println("successfully initiated database 🎉")
+	log.Println("successfully initialized database 🎉")
 }
