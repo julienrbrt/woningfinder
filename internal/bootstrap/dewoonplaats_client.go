@@ -12,6 +12,49 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 )
 
+var dewoonplaatsInfo = corporation.Corporation{
+	Name: "De Woonplaats",
+	URL:  "https://dewoonplaats.nl",
+	Cities: []corporation.City{
+		{
+			Name:   "Enschede",
+			Region: "Overijssel",
+		},
+		{
+			Name:   "Zwolle",
+			Region: "Overijssel",
+		},
+		{
+			Name:   "Aatlen",
+			Region: "Gelderland",
+		},
+		{
+			Name:   "Dinxperlo",
+			Region: "Gelderland",
+		},
+		{
+			Name:   "Winterswijk",
+			Region: "Gelderland",
+		},
+		{
+			Name:   "Neede",
+			Region: "Gelderland",
+		},
+		{
+			Name:   "Wehl",
+			Region: "Gelderland",
+		},
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		{
+			Method: corporation.SelectionRandom,
+		},
+		{
+			Method: corporation.SelectionFirstComeFirstServed,
+		},
+	},
+}
+
 // CreateDeWoonplaatsClient creates a client for De Woonplaats
 func CreateDeWoonplaatsClient() corporation.Client {
 	// add cookie jar
@@ -31,5 +74,5 @@ func CreateDeWoonplaatsClient() corporation.Client {
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
 
-	return dewoonplaats.NewClient(httpClient)
+	return dewoonplaats.NewClient(dewoonplaatsInfo, httpClient)
 }

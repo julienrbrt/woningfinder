@@ -5,7 +5,7 @@ This document defines the archtitecture of WoningFinder. Its data schema is foun
 WoningFinder is splits in two components: _HousingFinder_ and _HousingMatcher_.
 
 - HousingFinder, is used to query all the offers of the housing corporation. It connects them all and query them at the right time.
-- HousingMatcher, is trigged after HousingFinder via a messaging broker. It will match the new offer to the customer research option and apply to the right one.
+- HousingMatcher, is trigged after HousingFinder via a messaging broker. It will match the new offer to the customer research option and react to the right one.
 
 There is as well small scrips that are run for special reasons:
 
@@ -25,6 +25,9 @@ Some housing corporation (or group of housing corporation) have their home-made 
 - De Woonplaats (JSON API)
 - Woonkeus Stedendriehoek (JSON API)
 
+The definition of corporation are something done offline, once a corporation is supported and a client is created.
+The mapping of the corproation and the client is made in the `client_provider`. The matching is done using the name and the url of the housing corporation.
+
 ## HousingMatcher
 
 ### Location Provider
@@ -37,5 +40,5 @@ More information about that API [here](https://nominatim.openstreetmap.org).
 
 ### Security
 
-For applying to an offer, WoningFinder must authenticate itself as the customer. This means that WoningFinder stores the consumer credentials in the database (`CorporationCredentials`).
+For reacting to an offer, WoningFinder must authenticate itself as the customer. This means that WoningFinder stores the consumer credentials in the database (`CorporationCredentials`).
 Storing it plaintext is obviously not allowed. WoningFinder supports privacy and security of its customers. We use AES encryption to encrypt and store the user password in the datababse. The password is only decrypted to login to the housing corporation with a private key. No plaintext password is ever stored.

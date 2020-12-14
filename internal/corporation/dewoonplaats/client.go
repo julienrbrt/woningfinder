@@ -12,12 +12,14 @@ import (
 var Host = &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: "/wh_services"}
 
 type client struct {
+	corporation      corporation.Corporation
 	networkingClient networking.Client
 }
 
-// NewClient creates a client for De Woonplaats
-func NewClient(c networking.Client) corporation.Client {
+// NewClient creates a client for a housing coporation
+func NewClient(corporation corporation.Corporation, c networking.Client) corporation.Client {
 	return &client{
+		corporation:      corporation,
 		networkingClient: c,
 	}
 }

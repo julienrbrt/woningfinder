@@ -32,29 +32,28 @@ func main() {
 		log.Fatal(err)
 	}
 
-	clientProvider := bootstrap.NewClientProvider()
-
+	clientProvider := bootstrap.CreateClientProvider()
 	corporationService := corporation.NewService(bootstrap.DB, bootstrap.RDB)
-	corporations, err := corporationService.GetCorporations()
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	corporationList := clientProvider.List()
 	wg := sync.WaitGroup{}
-	for _, c := range *corporations {
-		client, err := clientProvider.Get(&c)
+	for _, c := range *corporationList {
+		client, err := clientProvider.Get(c)
 		if err != nil {
 			log.Println(err)
 			continue
 		}
 		wg.Add(1)
-		go func(corporation corporation.Corporation) {
+		go func(corporation corporation.Corporation, client corporation.Client) {
 			defer wg.Done()
 
 			if err := corporationService.PublishOffers(client, corporation); err != nil {
 				log.Println(err)
 			}
-		}(c)
+		}(c, client)
 	}
 	wg.Wait()
 }

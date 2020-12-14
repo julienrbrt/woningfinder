@@ -10,10 +10,10 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
-const methodApply = "ReageerOpWoning"
+const methodReact = "ReageerOpWoning"
 
-func (c *client) ApplyOffer(offer corporation.Offer) error {
-	req, err := applyRequest(offer.ExternalID)
+func (c *client) ReactToOffer(offer corporation.Offer) error {
+	req, err := reactRequest(offer.ExternalID)
 	if err != nil {
 		return err
 	}
@@ -22,10 +22,10 @@ func (c *client) ApplyOffer(offer corporation.Offer) error {
 	return err
 }
 
-func applyRequest(id string) (networking.Request, error) {
+func reactRequest(id string) (networking.Request, error) {
 	req := request{
 		ID:     1,
-		Method: methodApply,
+		Method: methodReact,
 		Params: []string{
 			id,
 		},

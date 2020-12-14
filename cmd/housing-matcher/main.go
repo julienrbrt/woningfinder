@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
@@ -31,8 +32,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	clientProvider := bootstrap.CreateClientProvider()
 	corporationService := corporation.NewService(bootstrap.DB, bootstrap.RDB)
-	userService := user.NewService(bootstrap.DB, corporationService)
+	userService := user.NewService(bootstrap.DB, os.Getenv("AES_SECRET"), clientProvider, corporationService)
 
 	offer := make(chan corporation.Offer)
 	// subscribe to pub/sub messages inside a new goroutine
