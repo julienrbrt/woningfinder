@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/woningfinder/woningfinder/internal/user"
@@ -31,6 +32,10 @@ func InitDB() error {
 	}
 
 	DB = db
+	if DB != nil {
+		log.Println("successfully connected to postgresql 🎉")
+	}
+
 	// Migrate the schema
 	// DB.Debug().AutoMigrate(...) for extensive log
 	DB.AutoMigrate(

@@ -10,7 +10,7 @@ WoningFinder is splits in two components: _HousingFinder_ and _HousingMatcher_.
 There is as well small scrips that are run for special reasons:
 
 - _db-initiator_ permits to fills the default values in the database (housing corporations, cities, housing types, selection methods...).
-- _add-customer_ permits to create a customer that looks for a house in WoningFinder. This is a temporary commands, during the time WoningFinder is with limited availability, where the users are created manually via this cmd.
+- _customer-\*_ permits to create a customer that looks for a house in WoningFinder. This is a temporary commands, during the time WoningFinder is with limited availability, where the users are created manually via this cmd.
 
 ## HousingFinder
 

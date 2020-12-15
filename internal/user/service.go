@@ -1,10 +1,12 @@
 package user
 
 import (
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"log"
 
+	"github.com/go-redis/redis"
 	"github.com/woningfinder/woningfinder/pkg/aes"
 
 	"gorm.io/gorm/clause"
@@ -27,20 +29,23 @@ type Service interface {
 	GetCorporationCredentials(u *User, corporation corporation.Corporation) (*CorporationCredentials, error)
 	DeleteCorporationCredentials(u *User, corporation corporation.Corporation) error
 
-	MatchOffer(offers corporation.Offer) error
+	MatchOffer(offers corporation.OfferList) error
+	HasReacted(uuid string) bool
+	SaveReaction(uuid string)
 }
 
-// userService represents a PostgreSQL implementation of Service.
 type userService struct {
 	db                 *gorm.DB
+	rdb                *redis.Client
 	aesSecret          string
 	clientProvider     corporation.ClientProvider
 	corporationService corporation.Service
 }
 
-func NewService(db *gorm.DB, aesSecret string, clientProvider corporation.ClientProvider, corporationService corporation.Service) Service {
+func NewService(db *gorm.DB, rdb *redis.Client, aesSecret string, clientProvider corporation.ClientProvider, corporationService corporation.Service) Service {
 	return &userService{
 		db:                 db,
+		rdb:                rdb,
 		aesSecret:          aesSecret,
 		clientProvider:     clientProvider,
 		corporationService: corporationService,
@@ -120,7 +125,8 @@ func (s *userService) CreateHousingPreferences(u *User, housingPreferences Housi
 
 	}
 
-	if err := s.db.Model(u).Association("HousingPreferences").Replace(&housingPreferences); err != nil {
+	// create or replace housing preferences
+	if err := s.db.Model(&u).Association("HousingPreferences").Replace(&housingPreferences); err != nil {
 		return fmt.Errorf("error when creating/updating housing preferences: %w", err)
 	}
 
@@ -253,33 +259,161 @@ func (s *userService) DeleteCorporationCredentials(u *User, corporation corporat
 	return nil
 }
 
-func (s *userService) MatchOffer(offer corporation.Offer) error {
-	// find user with credentials for offer corporation
+func (s *userService) decryptCredentials(credentials CorporationCredentials) (CorporationCredentials, error) {
+	// decrypt credentials
+	var err error
+	credentials.Login, err = aes.Decrypt(credentials.Login, s.aesSecret)
+	if err != nil {
+		return CorporationCredentials{}, fmt.Errorf("error when decrypting corporation credentials: %w", err)
+	}
 
-	// find user with housing preferences matching offer
+	credentials.Password, err = aes.Decrypt(credentials.Password, s.aesSecret)
+	if err != nil {
+		return CorporationCredentials{}, fmt.Errorf("error when decrypting corporation credentials: %w", err)
+	}
 
-	// check redis - when reacting store ID, Corporation to check if need to react again
+	return credentials, nil
+}
 
-	// react to matching offers
+func (s *userService) MatchOffer(offerList corporation.OfferList) error {
+	// create housing corporation client
+	client, err := s.clientProvider.Get(offerList.Corporation)
+	if err != nil {
+		return err
+	}
 
-	// store in redis
+	// find users corporation credentials for this offers
+	credentials, err := s.findMatchCredentials(offerList)
+	if err != nil {
+		// no users found, exit silently
+		if errors.Is(err, errNoMatchFound) {
+			return nil
+		}
+		return fmt.Errorf("error while matching offer: %w", err)
+	}
 
-	// send mail
+	// find users with housing preferences matching offer
+	users, err := s.listUsersFromCredentials(credentials)
+	if err != nil {
+		return fmt.Errorf("error while matching offer: %w", err)
+	}
 
-	// var hasApplied int
-	log.Printf("checking %s...\n", offer.Housing.Address)
-	// 	if user.MatchPreferences(offer) && user.MatchCriteria(offer) {
-	// 		err := client.ReactToOffer(offer)
-	// 		if err != nil {
-	// 			log.Fatal(err)
-	// 			continue
-	// 		}
+	// build credentials map
+	var credentialsMap = make(map[int]CorporationCredentials, len(credentials))
+	for _, c := range credentials {
+		credentialsMap[c.UserID] = c
+	}
 
-	// 		log.Printf("successfuly applied to %s - view on %s", offer.Housing.Address, offer.URL)
-	// 		hasApplied++
-	// 	}
+	for _, user := range users {
+		// react concurrently
+		go func(user User) {
+			//get housing preferences
+			housingPreferences, err := s.GetHousingPreferences(&user)
+			if err != nil {
+				log.Printf("error while getting housing preferences for user %s: %v\n", user.Email, err)
+				return
+			}
+			user.HousingPreferences = *housingPreferences
 
-	// log.Printf("WoningFinder has applied to %d house(s) on behalf of %s today.", hasApplied, user.Name)
+			// decrypt housing corporation credentials
+			creds := credentialsMap[int(user.ID)]
+			creds, err = s.decryptCredentials(creds)
+			if err != nil {
+				log.Printf("error while decrypting credentials for %s: %v\n", user.Email, err)
+				return
+			}
+
+			// login to housing corporation
+			if err := client.Login(creds.Login, creds.Password); err != nil {
+				log.Printf("failed to loging to corporation %s for %s: %v\n", offerList.Corporation.Name, user.Email, err)
+			}
+
+			for _, offer := range offerList.Offer {
+				log.Printf("checking match of %s for %s...", offer.Housing.Address, user.Email)
+
+				// check if we already check this offer
+				uuid := buildReactionUUID(&user, offer)
+				if s.HasReacted(uuid) {
+					log.Println("has already been checked... skipping.")
+					continue
+				}
+
+				if user.MatchPreferences(offer) && user.MatchCriteria(offer) {
+					// apply
+					if err := client.ReactToOffer(offer); err != nil {
+						log.Printf("failed to react to %s with user %s: %v\n", offer.Housing.Address, user.Email, err)
+						continue
+					}
+
+					// TODO add to queue to send mail
+					log.Printf("🎉🎉🎉 WoningFinder has successfully reacted to %s on behalf of %s. 🎉🎉🎉\n", offer.Housing.Address, user.Email)
+				}
+
+				// save that WoningFinder checks that offer for this user
+				s.SaveReaction(uuid)
+			}
+		}(user)
+	}
 
 	return nil
+}
+
+func (s *userService) findMatchCredentials(offerList corporation.OfferList) ([]CorporationCredentials, error) {
+	var credentials []CorporationCredentials
+	var query = CorporationCredentials{
+		CorporationName: offerList.Corporation.Name,
+		CorporationURL:  offerList.Corporation.URL,
+	}
+	if err := s.db.Model(&CorporationCredentials{}).Where(query).Find(&credentials).Error; err != nil {
+		return nil, fmt.Errorf("error of matchOffer while getting user credentials: %w", err)
+	}
+
+	// no users found, exit silently
+	if len(credentials) == 0 {
+		return nil, errNoMatchFound
+	}
+
+	return credentials, nil
+}
+
+func (s *userService) listUsersFromCredentials(credentials []CorporationCredentials) ([]User, error) {
+	// get users id
+	var usersID []int
+	for _, c := range credentials {
+		usersID = append(usersID, c.UserID)
+	}
+
+	// query each user
+	var users []User
+	if err := s.db.Where("id IN ?", usersID).Find(&users).Error; err != nil {
+		return nil, fmt.Errorf("error while getting users: %w", err)
+	}
+
+	return users, nil
+}
+
+// HasReacted check if a user already reacted to an offer
+func (s *userService) HasReacted(uuid string) bool {
+	_, err := s.rdb.Get(uuid).Result()
+	if err != nil {
+		// if error is different that key does not exists
+		if err != redis.Nil {
+			log.Printf("error when getting reaction from redis: %v\n", err)
+		}
+		// does not have reacted
+		return false
+	}
+	return true
+}
+
+// SaveReaction saves that an user reacted to an offer
+func (s *userService) SaveReaction(uuid string) {
+	err := s.rdb.Set(uuid, true, 0).Err()
+	if err != nil {
+		log.Printf("error when saving reaction to redis: %v\n", err)
+	}
+}
+
+func buildReactionUUID(user *User, offer corporation.Offer) string {
+	return base64.StdEncoding.EncodeToString([]byte(user.Email + offer.Housing.Address))
 }

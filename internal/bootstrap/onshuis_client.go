@@ -48,5 +48,5 @@ func CreateOnsHuisClient() corporation.Client {
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
 
-	return onshuis.NewClient(onshuisInfo, httpClient)
+	return onshuis.NewClient(httpClient)
 }
