@@ -9,7 +9,7 @@ import (
 // MatchPreferences verifies that an offer match the user preferences
 func (u *User) MatchPreferences(offer corporation.Offer) bool {
 	// match price
-	if offer.Housing.Price <= u.HousingPreferences.MinimumPrice || offer.Housing.Price >= u.HousingPreferences.MaximumPrice {
+	if offer.Housing.Price >= u.HousingPreferences.MaximumPrice {
 		return false
 	}
 
@@ -43,8 +43,8 @@ func (u *User) matchHouseType(housing corporation.Housing) bool {
 		return true
 	}
 
-	for _, p := range u.HousingPreferences.Type {
-		if p == housing.Type {
+	for _, t := range u.HousingPreferences.Type {
+		if t.Type == housing.Type.Type {
 			return true
 		}
 	}

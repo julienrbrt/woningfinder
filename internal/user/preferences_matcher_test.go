@@ -56,7 +56,6 @@ func getUser() user.User {
 				corporation.HousingType{
 					Type: corporation.Appartement},
 			},
-			MinimumPrice:  400,
 			MaximumPrice:  950,
 			NumberBedroom: 2,
 			HasElevator:   true,

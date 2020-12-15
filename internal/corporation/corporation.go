@@ -71,7 +71,6 @@ type SelectionMethod struct {
 
 // Offer defines a house or an appartement available in a Housing Corporation
 type Offer struct {
-	Corporation                  Corporation
 	Housing                      Housing
 	SelectionMethod              SelectionMethod
 	SelectionDate                time.Time
@@ -81,4 +80,10 @@ type Offer struct {
 	MinFamilySize, MaxFamilySize int
 	MinAge, MaxAge               int
 	ChildrenAllowed              bool
+}
+
+// OfferList defines a list of offer belonging to one corporation
+type OfferList struct {
+	Corporation Corporation
+	Offer       []Offer
 }

@@ -34,15 +34,15 @@ func main() {
 
 	clientProvider := bootstrap.CreateClientProvider()
 	corporationService := corporation.NewService(bootstrap.DB, bootstrap.RDB)
-	userService := user.NewService(bootstrap.DB, os.Getenv("AES_SECRET"), clientProvider, corporationService)
+	userService := user.NewService(bootstrap.DB, bootstrap.RDB, os.Getenv("AES_SECRET"), clientProvider, corporationService)
 
-	offer := make(chan corporation.Offer)
+	offerList := make(chan corporation.OfferList)
 	// subscribe to pub/sub messages inside a new goroutine
-	go corporationService.SubscribeOffers(offer)
+	go corporationService.SubscribeOffers(offerList)
 
-	for o := range offer {
+	for o := range offerList {
 		if err := userService.MatchOffer(o); err != nil {
-			log.Printf("error while maching offer %s: %v\n", o.Housing.Address, err)
+			log.Printf("error while maching offers for corporation %s: %v\n", o.Corporation.Name, err)
 		}
 	}
 

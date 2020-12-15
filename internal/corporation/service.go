@@ -20,12 +20,11 @@ type Service interface {
 
 	GetCity(name string) (*City, error)
 
-	// Pub-Sub
+	// (Redis) Pub-Sub
 	PublishOffers(client Client, corporation Corporation) error
-	SubscribeOffers(offerCh chan<- Offer)
+	SubscribeOffers(offerCh chan<- OfferList)
 }
 
-// corporationService represents a PostgreSQL implementation of Service.
 type corporationService struct {
 	db  *gorm.DB
 	rdb *redis.Client
@@ -75,7 +74,13 @@ func (s *corporationService) PublishOffers(client Client, corporation Corporatio
 		return fmt.Errorf("error while fetching offers for %s: %w", corporation.Name, err)
 	}
 
-	result, err := json.Marshal(offers)
+	// build offers list
+	offerList := OfferList{
+		Corporation: corporation,
+		Offer:       offers,
+	}
+
+	result, err := json.Marshal(offerList)
 	if err != nil {
 		return fmt.Errorf("erorr while marshaling offers for %s: %w", corporation.Name, err)
 	}
@@ -89,7 +94,7 @@ func (s *corporationService) PublishOffers(client Client, corporation Corporatio
 	return nil
 }
 
-func (s *corporationService) SubscribeOffers(offerCh chan<- Offer) {
+func (s *corporationService) SubscribeOffers(offerCh chan<- OfferList) {
 	pubsub := s.rdb.Subscribe(pubSubChannelName)
 	defer pubsub.Close()
 
@@ -103,16 +108,13 @@ func (s *corporationService) SubscribeOffers(offerCh chan<- Offer) {
 	ch := pubsub.Channel()
 	// Consume messages
 	for msg := range ch {
-		var offers []Offer
-		err := json.Unmarshal([]byte(msg.Payload), &offers)
+		var offerList OfferList
+		err := json.Unmarshal([]byte(msg.Payload), &offerList)
 		if err != nil {
 			log.Printf("error while unmarshaling offers: %v\n", err)
 			continue
 		}
 
-		for _, o := range offers {
-			go func(offer Offer) { offerCh <- offer }(o)
-		}
-
+		go func(offers OfferList) { offerCh <- offers }(offerList)
 	}
 }

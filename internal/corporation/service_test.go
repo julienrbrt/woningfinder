@@ -1,1 +1,1 @@
-package corporation
+package corporation_test

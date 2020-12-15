@@ -53,5 +53,5 @@ func CreateDeWoonplaatsClient() corporation.Client {
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
 
-	return dewoonplaats.NewClient(dewoonplaatsInfo, httpClient)
+	return dewoonplaats.NewClient(httpClient)
 }

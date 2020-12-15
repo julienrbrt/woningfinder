@@ -120,10 +120,9 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 		}
 
 		offer := corporation.Offer{
-			Corporation: c.corporation,
-			ExternalID:  house.ID,
-			Housing:     newHouse,
-			URL:         fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", house.ID),
+			ExternalID: house.ID,
+			Housing:    newHouse,
+			URL:        fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", house.ID),
 			SelectionMethod: corporation.SelectionMethod{
 				Method: c.parseSelectionMethod(house.IsSelectionRandom),
 			},
