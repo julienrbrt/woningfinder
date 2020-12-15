@@ -50,20 +50,14 @@ func main() {
 			MaximumPrice: 960,
 			City: []corporation.City{
 				{
-					Name:   "Enschede",
-					Region: "Overijssel",
-					District: []corporation.District{
-						{
-							Name: "roombeek",
-						},
-						{
-							Name: "boddenkamp",
-						},
-						{
-							Name: "lasonder",
-						},
-					}},
-				{Name: "Hengelo", Region: "Overijssel"},
+					Name: "Enschede",
+					District: []corporation.CityDistrict{
+						{Name: "Roombeek"},
+						{Name: "Boddenkamp"},
+						{Name: "Lasonder"},
+					},
+				},
+				{Name: "Hengelo"},
 			},
 			NumberBedroom: 2,
 		},

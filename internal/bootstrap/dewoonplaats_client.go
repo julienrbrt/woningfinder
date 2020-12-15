@@ -16,34 +16,13 @@ var dewoonplaatsInfo = corporation.Corporation{
 	Name: "De Woonplaats",
 	URL:  "https://dewoonplaats.nl",
 	Cities: []corporation.City{
-		{
-			Name:   "Enschede",
-			Region: "Overijssel",
-		},
-		{
-			Name:   "Zwolle",
-			Region: "Overijssel",
-		},
-		{
-			Name:   "Aatlen",
-			Region: "Gelderland",
-		},
-		{
-			Name:   "Dinxperlo",
-			Region: "Gelderland",
-		},
-		{
-			Name:   "Winterswijk",
-			Region: "Gelderland",
-		},
-		{
-			Name:   "Neede",
-			Region: "Gelderland",
-		},
-		{
-			Name:   "Wehl",
-			Region: "Gelderland",
-		},
+		{Name: "Enschede"},
+		{Name: "Zwolle"},
+		{Name: "Aatlen"},
+		{Name: "Dinxperlo"},
+		{Name: "Winterswijk"},
+		{Name: "Neede"},
+		{Name: "Wehl"},
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		{

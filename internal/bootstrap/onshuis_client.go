@@ -16,14 +16,8 @@ var onshuisInfo = corporation.Corporation{
 	Name: "OnsHuis",
 	URL:  "https://mijn.onshuis.com",
 	Cities: []corporation.City{
-		{
-			Name:   "Enschede",
-			Region: "Overijssel",
-		},
-		{
-			Name:   "Hengelo",
-			Region: "Overijssel",
-		},
+		{Name: "Enschede"},
+		{Name: "Hengelo"},
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		{

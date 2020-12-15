@@ -14,13 +14,13 @@ func (u *User) MatchPreferences(offer corporation.Offer) bool {
 	}
 
 	// match house type
-	if !u.matchPrefType(offer.Housing.Type) {
+	if !u.matchHouseType(offer.Housing) {
 		return false
 	}
 
 	// match location
-	offer.Housing.SetDistrict()
-	if !matchPrefLocation(offer.Housing.City, u.HousingPreferences.City) {
+	offer.Housing.SetCityDistrict()
+	if !u.matchCity(offer.Housing) || !u.matchCityDistrict(offer.Housing) {
 		return false
 	}
 
@@ -38,13 +38,13 @@ func (u *User) MatchPreferences(offer corporation.Offer) bool {
 	return true
 }
 
-func (u *User) matchPrefType(actual corporation.HousingType) bool {
+func (u *User) matchHouseType(housing corporation.Housing) bool {
 	if len(u.HousingPreferences.Type) == 0 {
 		return true
 	}
 
 	for _, p := range u.HousingPreferences.Type {
-		if p == actual {
+		if p == housing.Type {
 			return true
 		}
 	}
@@ -52,23 +52,31 @@ func (u *User) matchPrefType(actual corporation.HousingType) bool {
 	return false
 }
 
-func matchPrefLocation(actualCity corporation.City, pref []corporation.City) bool {
-	if len(pref) == 0 {
+func (u *User) matchCity(housing corporation.Housing) bool {
+	if len(u.HousingPreferences.City) == 0 {
 		return true
 	}
 
-	for _, p := range pref {
+	for _, city := range u.HousingPreferences.City {
 		// prevent that if actual is an empty, then strings.Contains returns true
-		if p.District == nil && actualCity.Name != "" && strings.Contains(strings.ToLower(actualCity.Name), strings.ToLower(p.Name)) {
+		if housing.City.Name != "" && strings.Contains(strings.ToLower(housing.City.Name), strings.ToLower(city.Name)) {
 			return true
 		}
+	}
 
-		for _, d := range p.District {
-			if len(actualCity.District) > 0 && d.Name != "" &&
-				strings.Contains(strings.ToLower(actualCity.District[0].Name), strings.ToLower(d.Name)) &&
-				strings.Contains(strings.ToLower(actualCity.Name), strings.ToLower(p.Name)) {
-				return true
-			}
+	return false
+}
+
+func (u *User) matchCityDistrict(housing corporation.Housing) bool {
+	if len(u.HousingPreferences.CityDistrict) == 0 {
+		return true
+	}
+
+	for _, district := range u.HousingPreferences.CityDistrict {
+		// prevent that if actual is an empty, then strings.Contains returns true
+		if housing.CityDistrict.CityName != "" && strings.Contains(strings.ToLower(housing.CityDistrict.CityName), strings.ToLower(district.CityName)) &&
+			housing.CityDistrict.Name != "" && strings.Contains(strings.ToLower(housing.CityDistrict.Name), strings.ToLower(district.Name)) {
+			return true
 		}
 	}
 

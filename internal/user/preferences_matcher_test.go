@@ -64,29 +64,37 @@ func getUser() user.User {
 	}
 }
 
+var enschede = corporation.City{Name: "Enschede"}
+
+var hengelo = corporation.City{Name: "Hengelo"}
+
 func Test_MatchPreferences_Location(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()
 
 	a.True(testUser.MatchPreferences(testOffer))
-
-	testUser.HousingPreferences.City = []corporation.City{
-		{Name: "Hengelo"},
-		{Name: "Enschede",
-			District: []corporation.District{
-				{Name: "roombeek"},
-				{Name: "boddenkamp"},
-				{Name: "lasonder-zeggelt"},
-			},
+	testUser.HousingPreferences.City = []corporation.City{enschede, hengelo}
+	a.False(testUser.MatchPreferences(testOffer))
+	testOffer.Housing.City = hengelo
+	a.True(testUser.MatchPreferences(testOffer))
+	testOffer.Housing.City = enschede
+	testUser.HousingPreferences.CityDistrict = []corporation.CityDistrict{
+		{
+			Name:     "roombeek",
+			CityName: "enschede",
+		},
+		{
+			Name:     "boddenkamp",
+			CityName: "enschede",
+		},
+		{
+			Name:     "lasonder-zeggelt",
+			CityName: "enschede",
 		},
 	}
 	a.False(testUser.MatchPreferences(testOffer))
-	testOffer.Housing.City.Name = "Hengelo"
-	a.True(testUser.MatchPreferences(testOffer))
-	testOffer.Housing.City.Name = "enschede"
-	a.False(testUser.MatchPreferences(testOffer))
-	testOffer.Housing.City = corporation.City{Name: "Enschede", District: []corporation.District{{Name: "Enschede - Roombeek"}}}
+	testOffer.Housing.CityDistrict = corporation.CityDistrict{CityName: "Enschede", Name: "Enschede - Roombeek"}
 	a.True(testUser.MatchPreferences(testOffer))
 }
 

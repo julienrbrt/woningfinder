@@ -4,7 +4,6 @@ import (
 	"database/sql/driver"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/woningfinder/woningfinder/pkg/osm"
@@ -34,9 +33,9 @@ func (u Type) Value() (driver.Value, error) {
 
 // HousingType is the database representation of (Housing)Type
 type HousingType struct {
-	CreatedAt time.Time      `json:"-"`
-	UpdatedAt time.Time      `json:"-"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Type      Type           `gorm:"primaryKey"`
 }
 
@@ -44,8 +43,8 @@ type HousingType struct {
 type Housing struct {
 	Type                    HousingType
 	Address                 string
-	CityID                  int
 	City                    City
+	CityDistrict            CityDistrict
 	EnergieLabel            string
 	Price                   float64
 	Size                    float64
@@ -65,10 +64,9 @@ type Housing struct {
 	CV                      bool // Defines if the house has a central verwarming
 }
 
-// SetDistrict set the district name from a location
-func (h *Housing) SetDistrict() {
-	if len(h.City.District) > 0 {
-		h.City.District[0].Name = strings.ToLower(h.City.District[0].Name)
+// SetCityDistrict set the district name from a location
+func (h *Housing) SetCityDistrict() {
+	if h.CityDistrict.Name != "" {
 		return
 	}
 
@@ -77,10 +75,5 @@ func (h *Housing) SetDistrict() {
 		log.Printf(fmt.Errorf("error getting district from %s: %w", h.Address, err).Error())
 	}
 
-	if name == "" {
-		h.City.District = nil
-		return
-	}
-
-	h.City.District = append(h.City.District, District{Name: name})
+	h.CityDistrict.Name = name
 }

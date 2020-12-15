@@ -36,9 +36,9 @@ func InitDB() error {
 	DB.AutoMigrate(
 		&corporation.Corporation{},
 		&corporation.SelectionMethod{},
-		&corporation.City{},
-		&corporation.District{},
 		&corporation.HousingType{},
+		&corporation.City{},
+		&corporation.CityDistrict{},
 		&user.User{},
 		&user.HousingPreferences{},
 		&user.CorporationCredentials{},

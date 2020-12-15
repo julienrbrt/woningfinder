@@ -19,7 +19,7 @@ type Service interface {
 	GetUser(email string) (*User, error)
 	DeleteUser(u *User) error
 
-	UpdateHousingPreferences(u *User) error
+	CreateHousingPreferences(u *User, housingPreferences HousingPreferences) error
 	GetHousingPreferences(u *User) (*HousingPreferences, error)
 	DeleteHousingPreferences(u *User) error
 
@@ -47,38 +47,30 @@ func NewService(db *gorm.DB, aesSecret string, clientProvider corporation.Client
 	}
 }
 
-// Create an user in the database
 func (s *userService) CreateUser(u *User) (*User, error) {
 	if u.Email == "" {
 		return nil, fmt.Errorf("email is required for creating user")
+	}
+	_, err := s.GetUser(u.Email)
+	if err == nil {
+		return nil, fmt.Errorf("error user %s already exists", u.Email)
 	}
 
 	if len(u.HousingPreferences.Type) == 0 {
 		return nil, fmt.Errorf("housing preferences is required for creating user")
 	}
 
-	for i, city := range u.HousingPreferences.City {
-		newCity, err := s.corporationService.GetCity(city)
-		if err != nil {
-			return nil, fmt.Errorf("the given city %s is not supported", city.Name)
-		}
-
-		u.HousingPreferences.City[i] = *newCity
-	}
-
-	_, err := s.GetUser(u.Email)
-	if err == nil {
-		return nil, fmt.Errorf("error user %s already exists", u.Email)
-	}
-
 	if err := s.db.Create(&u).Error; err != nil {
 		return nil, err
+	}
+
+	if err := s.CreateHousingPreferences(u, u.HousingPreferences); err != nil {
+		return nil, fmt.Errorf("error when creating user %s: %w", u.Email, err)
 	}
 
 	return u, nil
 }
 
-// GetUser from an email
 func (s *userService) GetUser(email string) (*User, error) {
 	var u User
 	s.db.Where(&User{Email: email}).First(&u)
@@ -90,9 +82,8 @@ func (s *userService) GetUser(email string) (*User, error) {
 	return &u, nil
 }
 
-// Delete permanantly an user from the database
 func (s *userService) DeleteUser(u *User) error {
-	// delete all corporation credentials
+	// delete all corporations credentials
 	if err := s.db.Unscoped().Select(clause.Associations).
 		Where(&CorporationCredentials{UserID: int(u.ID)}).
 		Delete(&CorporationCredentials{}).Error; err != nil {
@@ -108,7 +99,31 @@ func (s *userService) DeleteUser(u *User) error {
 	return s.db.Unscoped().Select(clause.Associations).Delete(u).Error
 }
 
-func (s *userService) UpdateHousingPreferences(u *User) error {
+func (s *userService) CreateHousingPreferences(u *User, housingPreferences HousingPreferences) error {
+	if len(housingPreferences.Type) == 0 {
+		return fmt.Errorf("error at least 1 housing type is required to setup a housing preferences")
+	}
+
+	// set housing preferences (city and district)
+	for i, city := range housingPreferences.City {
+		newCity, err := s.corporationService.GetCity(city.Name)
+		if err != nil {
+			return fmt.Errorf("error the given city %s is not supported", city.Name)
+		}
+
+		housingPreferences.City[i].Name = newCity.Name
+
+		for _, district := range city.District {
+			district.CityName = newCity.Name
+			housingPreferences.CityDistrict = append(housingPreferences.CityDistrict, district)
+		}
+
+	}
+
+	if err := s.db.Model(u).Association("HousingPreferences").Replace(&housingPreferences); err != nil {
+		return fmt.Errorf("error when creating/updating housing preferences: %w", err)
+	}
+
 	return nil
 }
 
@@ -178,7 +193,6 @@ func (s *userService) CreateCorporationCredentials(u *User, credentials Corporat
 
 	// store credentials
 	if err != nil { // store unexisting credentials
-
 		if err := s.db.Model(u).Association("CorporationCredentials").Append(&credentials); err != nil {
 			return fmt.Errorf("error when creating corporation credentials: %w", err)
 		}

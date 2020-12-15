@@ -10,30 +10,30 @@ import (
 // Corporation defines a housing corporations basic data
 // That data is shared between every housing corporations
 type Corporation struct {
-	CreatedAt       time.Time         `json:"-"`
-	UpdatedAt       time.Time         `json:"-"`
-	DeletedAt       gorm.DeletedAt    `json:"-" gorm:"index"`
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+	DeletedAt       gorm.DeletedAt    `gorm:"index"`
 	Name            string            `gorm:"primaryKey"`
 	URL             string            `gorm:"primaryKey"`
 	Cities          []City            `gorm:"many2many:corporations_cities"`
 	SelectionMethod []SelectionMethod `gorm:"many2many:corporations_selection_method"`
 }
 
-// City defines a city where a HousingCorporation operates or when an house offer lies
+// City defines a city where a housing corporation operates or when an house offer lies
 type City struct {
-	CreatedAt time.Time      `json:"-"`
-	UpdatedAt time.Time      `json:"-"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Name      string         `gorm:"primaryKey"`
-	Region    string         `gorm:"primaryKey"`
-	District  []District     `gorm:"many2many:cities_districts"`
+	District  []CityDistrict `gorm:"foreignKey:CityName"`
 }
 
-// District is a part of a city
-type District struct {
-	CreatedAt time.Time      `json:"-"`
-	UpdatedAt time.Time      `json:"-"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+// CityDistrict the district of a city
+type CityDistrict struct {
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	CityName  string         `gorm:"primaryKey"`
 	Name      string         `gorm:"primaryKey"`
 }
 
@@ -63,9 +63,9 @@ func (u Method) Value() (driver.Value, error) {
 
 // SelectionMethod is the database representation of Method
 type SelectionMethod struct {
-	CreatedAt time.Time      `json:"-"`
-	UpdatedAt time.Time      `json:"-"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Method    Method         `gorm:"primaryKey"`
 }
 
