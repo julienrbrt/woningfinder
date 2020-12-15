@@ -24,7 +24,8 @@ type HousingPreferences struct {
 	UserID                     int                       `gorm:"primaryKey"`
 	Type                       []corporation.HousingType `gorm:"many2many:housing_preferences_housing_types"`
 	MinimumPrice, MaximumPrice float64
-	City                       []corporation.City `gorm:"many2many:housing_preferences_cities"`
+	City                       []corporation.City         `gorm:"many2many:housing_preferences_cities"`
+	CityDistrict               []corporation.CityDistrict `gorm:"many2many:housing_preferences_city_districts"`
 	NumberBedroom              int
 	HasBalcony                 bool
 	HasGarage                  bool

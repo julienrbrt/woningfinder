@@ -94,9 +94,10 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 			Address: fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
 			City: corporation.City{
 				Name: house.City,
-				District: []corporation.District{
-					{Name: house.District},
-				},
+			},
+			CityDistrict: corporation.CityDistrict{
+				CityName: house.City,
+				Name:     house.District,
 			},
 			Latitude:                house.Latitude,
 			Longitude:               house.Longitude,

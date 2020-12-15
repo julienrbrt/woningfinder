@@ -18,7 +18,7 @@ type Service interface {
 	CreateOrUpdate(corporation *[]Corporation) (*[]Corporation, error)
 	CreateHousingType(housingTypes *[]HousingType) (*[]HousingType, error)
 
-	GetCity(city City) (*City, error)
+	GetCity(name string) (*City, error)
 
 	// Pub-Sub
 	PublishOffers(client Client, corporation Corporation) error
@@ -56,12 +56,14 @@ func (s *corporationService) CreateHousingType(housingTypes *[]HousingType) (*[]
 	return housingTypes, nil
 }
 
-func (s *corporationService) GetCity(city City) (*City, error) {
+func (s *corporationService) GetCity(name string) (*City, error) {
 	var c City
-	s.db.Where(city).First(&c)
+	if err := s.db.Where(City{Name: name}).First(&c).Error; err != nil {
+		return nil, fmt.Errorf("failing getting city %s: %w", name, err)
+	}
 
 	if c.Name == "" {
-		return nil, fmt.Errorf("no city found with the name: %s", city.Name)
+		return nil, fmt.Errorf("no city found with the name: %s", name)
 	}
 
 	return &c, nil
