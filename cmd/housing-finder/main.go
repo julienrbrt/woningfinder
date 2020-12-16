@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"sync"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
@@ -9,6 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/env"
 
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron/v3"
 )
 
 // init is invoked before main()
@@ -21,7 +23,15 @@ func init() {
 	}
 }
 
+// workerMode defines if housing-finder should be run with internal cron (always running and cron managed by go)
+// or via command line using `housing-finder standalone`
+var workerMode = true
+
 func main() {
+	// check if should be run is workerMode
+	workerMode = !(len(os.Args) > 1 && os.Args[1] == "standalone")
+
+	// connect to databases
 	err := bootstrap.InitDB()
 	if err != nil {
 		log.Fatal(err)
@@ -34,13 +44,33 @@ func main() {
 
 	clientProvider := bootstrap.CreateClientProvider()
 	corporationService := corporation.NewService(bootstrap.DB, bootstrap.RDB)
-	if err != nil {
-		log.Fatal(err)
-	}
+	if workerMode {
+		// instantiate cron
+		c := cron.New(cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
+		parser := cron.NewParser(cron.Second | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow)
 
-	corporationList := clientProvider.List()
+		// populate crons
+		for _, spec := range env.MustGetStringList("HOUSING_FINDER_SCHEDULE") {
+			_, err := parser.Parse(spec)
+			if err != nil {
+				log.Printf("error when parsing cron spec %s: %v", spec, err)
+				continue
+			}
+			c.AddFunc(spec, func() {
+				findHousing(clientProvider, corporationService)
+			})
+		}
+
+		// start cron scheduler
+		c.Run()
+	} else {
+		findHousing(clientProvider, corporationService)
+	}
+}
+
+func findHousing(clientProvider corporation.ClientProvider, corporationService corporation.Service) {
 	wg := sync.WaitGroup{}
-	for _, c := range *corporationList {
+	for _, c := range *clientProvider.List() {
 		client, err := clientProvider.Get(c)
 		if err != nil {
 			log.Println(err)

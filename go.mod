@@ -9,6 +9,7 @@ require (
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/onsi/ginkgo v1.14.2 // indirect
 	github.com/onsi/gomega v1.10.3 // indirect
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/stretchr/testify v1.6.1
 	golang.org/x/crypto v0.0.0-20200930160638-afb6bcd081ae // indirect
 	golang.org/x/sys v0.0.0-20201024232916-9f70ab9862d5 // indirect

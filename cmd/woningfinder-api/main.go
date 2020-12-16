@@ -29,6 +29,4 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to start server: %v", err)
 	}
-
-	log.Println("successfully started woningfinder-api 🎉")
 }

@@ -42,7 +42,6 @@ func (c *clientProvider) Get(corporation Corporation) (Client, error) {
 		if c.Corporation.Name != corporation.Name || c.Corporation.URL != corporation.URL {
 			continue
 		}
-
 		return c.Client, nil
 	}
 
