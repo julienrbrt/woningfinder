@@ -1,16 +1,27 @@
-# Architechture
+# Architecture
 
 This document defines the archtitecture of WoningFinder. Its data schema is found [here](db_schema.png).
 
-WoningFinder is split in two components: _HousingFinder_ and _HousingMatcher_.
+WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _HousingMatcher_.
 
-- HousingFinder, is used to query all the offers of the housing corporation. It connects them all and query them at the right time.
-- HousingMatcher, is trigged after HousingFinder via a messaging broker. It will match the new offer to the customer research option and react to the right one.
+- _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for WoningFinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
+- _[HousingFinder](../cmd/housing-finder)_, is used to query all the offers of the housing corporation. It connects them all and query them at the right time.
+- _[HousingMatcher](../cmd/housing-matcher)_, is trigged by _HousingFinder_ via a messaging broker (redis pub/sub). It will match the new offers to the customer search option and react it.
 
-There is as well small scripts that are run for special reasons:
+There is as well small tools that are run for special reasons:
 
-- _db-initiator_ permits to fills the default values in the database (housing corporations, cities, housing types, selection methods...).
-- _customer-\*_ permits to create a customer that looks for a house in WoningFinder. This is a temporary commands, during the time WoningFinder is with limited availability, where the users are created manually via this cmd.
+- _[db-initiator](../cmd/tools/db-initiator)_ permits to fills the default values in the database (housing corporations, cities, housing types, selection methods...).
+- _[customer-delete](../cmd/tools/customer-delete)_ permits to delete a customer given his email
+
+## WoningFinder-API
+
+Following is a list of endpoint supported by WoningFinder-API. The API works exclusively with JSON.
+
+| Endpoint Name      | Method | Description                                                                          |
+| ------------------ | ------ | ------------------------------------------------------------------------------------ |
+| Signup             | POST   | Handles the registration flow                                                        |
+| HousingPreferences | POST   | Updates the housing preferences of a given user                                      |
+| HousingCredentials | POST   | Manages the different housing credentials for the supported corporation of the user. |
 
 ## Housing-Finder
 
@@ -28,8 +39,6 @@ Some housing corporation (or group of housing corporation) have their home-made 
 The definition of corporation are something done offline, once a corporation is supported and a client is created.
 The mapping of the corproation and the client is made in the `client_provider`. The matching is done using the name and the url of the housing corporation.
 
-## Housing-Matcher
-
 ### Location Provider
 
 A Geolocation service is used in order to get the name of a district using coordinates.
@@ -37,6 +46,8 @@ This is used because the user can filter the house he wants to react to by city 
 For that WoningFinder uses OpenStreetMap API.
 
 More information about that API [here](https://nominatim.openstreetmap.org).
+
+## Housing-Matcher
 
 ### Security
 
