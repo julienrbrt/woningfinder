@@ -5,7 +5,7 @@ This document defines the archtitecture of WoningFinder. Its data schema is foun
 WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _HousingMatcher_.
 
 - _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for WoningFinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
-- _[HousingFinder](../cmd/housing-finder)_, is used to query all the offers of the housing corporation. It connects them all and query them at the right time.
+- _[HousingFinder](../cmd/housing-finder)_, is used to query all the offers of the housing corporation. It connects them all and query them at the right time. In order to use HousingFinder locally instead as a worker, run `housingfinder standalone`.
 - _[HousingMatcher](../cmd/housing-matcher)_, is trigged by _HousingFinder_ via a messaging broker (redis pub/sub). It will match the new offers to the customer search option and react it.
 
 There is as well small tools that are run for special reasons:
