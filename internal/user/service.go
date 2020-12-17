@@ -146,14 +146,19 @@ func (s *userService) GetHousingPreferences(u *User) (*HousingPreferences, error
 		return nil, fmt.Errorf("error when getting housing preferences for user %s: %w", u.Email, err)
 	}
 
+	// add the types
+	if err := s.db.Model(housingPreferences).Association("Type").Find(&housingPreferences.Type); err != nil {
+		return nil, fmt.Errorf("error when getting housing preferences type for user %s: %w", u.Email, err)
+	}
+
 	// add its city
 	if err := s.db.Model(housingPreferences).Association("City").Find(&housingPreferences.City); err != nil {
 		return nil, fmt.Errorf("error when getting housing preferences cities for user %s: %w", u.Email, err)
 	}
 
-	// add the types
-	if err := s.db.Model(housingPreferences).Association("Type").Find(&housingPreferences.Type); err != nil {
-		return nil, fmt.Errorf("error when getting housing preferences type for user %s: %w", u.Email, err)
+	// add its city districts
+	if err := s.db.Model(housingPreferences).Association("CityDistrict").Find(&housingPreferences.CityDistrict); err != nil {
+		return nil, fmt.Errorf("error when getting housing preferences city districts for user %s: %w", u.Email, err)
 	}
 
 	return &housingPreferences, nil
