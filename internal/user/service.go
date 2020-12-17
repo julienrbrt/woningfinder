@@ -56,13 +56,18 @@ func (s *userService) CreateUser(u *User) (*User, error) {
 	if u.Email == "" {
 		return nil, fmt.Errorf("email is required for creating user")
 	}
-	_, err := s.GetUser(u.Email)
-	if err == nil {
-		return nil, fmt.Errorf("error user %s already exists", u.Email)
+
+	if u.YearlyIncome < -1 {
+		return nil, fmt.Errorf("yearly income must be greater than 0, or set to -1 to not be used")
 	}
 
 	if len(u.HousingPreferences.Type) == 0 {
 		return nil, fmt.Errorf("housing preferences is required for creating user")
+	}
+
+	_, err := s.GetUser(u.Email)
+	if err == nil {
+		return nil, fmt.Errorf("error user %s already exists", u.Email)
 	}
 
 	if err := s.db.Create(&u).Error; err != nil {
