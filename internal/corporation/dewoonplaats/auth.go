@@ -38,7 +38,7 @@ func (c *client) Login(username, password string) error {
 
 	var result loginResult
 	if err := json.Unmarshal(resp.Result, &result); err != nil {
-		return fmt.Errorf("error parsing login result %v: %w", resp.Result, err)
+		return fmt.Errorf("error parsing login result %v: %w", string(resp.Result), err)
 	}
 
 	if !result.Success {
