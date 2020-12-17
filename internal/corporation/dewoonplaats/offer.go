@@ -76,7 +76,7 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 
 	var result offerResult
 	if err := json.Unmarshal(resp.Result, &result); err != nil {
-		return nil, fmt.Errorf("error parsing login result %v: %w", resp.Result, err)
+		return nil, fmt.Errorf("error parsing login result %v: %w", string(resp.Result), err)
 	}
 
 	var offers []corporation.Offer

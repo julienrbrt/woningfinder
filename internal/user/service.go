@@ -330,7 +330,8 @@ func (s *userService) MatchOffer(offerList corporation.OfferList) error {
 
 			// login to housing corporation
 			if err := client.Login(creds.Login, creds.Password); err != nil {
-				log.Printf("failed to loging to corporation %s for %s: %v\n", offerList.Corporation.Name, user.Email, err)
+				log.Printf("failed to login to corporation %s for %s: %v\n", offerList.Corporation.Name, user.Email, err)
+				return
 			}
 
 			for _, offer := range offerList.Offer {
