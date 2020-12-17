@@ -17,7 +17,7 @@ func (u *User) MatchCriteria(offer corporation.Offer) bool {
 		return false
 	}
 
-	if u.YearlyIncome < offer.MinIncome || (offer.MaxIncome > 0 && u.YearlyIncome > offer.MaxIncome) {
+	if u.YearlyIncome > -1 && (u.YearlyIncome < offer.MinIncome || (offer.MaxIncome > 0 && u.YearlyIncome > offer.MaxIncome)) {
 		return false
 	}
 
