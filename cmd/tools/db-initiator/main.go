@@ -3,12 +3,10 @@ package main
 import (
 	"log"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-
-	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/pkg/env"
-
 	"github.com/joho/godotenv"
+	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/pkg/config"
 )
 
 // init is invoked before main()
@@ -17,7 +15,7 @@ func init() {
 	// fallback to system env if unexisting
 	// if not defined on system, panics
 	if err := godotenv.Load("../../../.env"); err != nil {
-		_ = env.MustGetString("APP_NAME")
+		_ = config.MustGetString("APP_NAME")
 	}
 }
 

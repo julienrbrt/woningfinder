@@ -30,6 +30,7 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 - [Itris ERP](https://www.itris.nl/#itris)
 - [Dynamics Empire by cegeka-dsa](https://www.cegeka-dsa.nl/#intro)
 - [WoningNet WRB](https://www.woningnet.nl) (JSON API)
+- [Zig](https://zig.nl)
 
 Some housing corporation (or group of housing corporation) have their home-made system, they are independentely supported:
 

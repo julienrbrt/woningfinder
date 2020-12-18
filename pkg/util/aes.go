@@ -1,4 +1,4 @@
-package aes
+package util
 
 import (
 	"crypto/aes"
@@ -9,8 +9,8 @@ import (
 	"io"
 )
 
-// GenerateKey for AES-256
-func GenerateKey() string {
+// AESGenerateKey for AES-256
+func AESGenerateKey() string {
 	bytes := make([]byte, 32) // generate a random 32 byte key for AES-256
 	if _, err := rand.Read(bytes); err != nil {
 		panic(err.Error())
@@ -20,8 +20,8 @@ func GenerateKey() string {
 	return key
 }
 
-// Encrypt a string given a key
-func Encrypt(stringToEncrypt string, keyString string) (encryptedString string, err error) {
+// AESEncrypt a string given a key
+func AESEncrypt(stringToEncrypt string, keyString string) (encryptedString string, err error) {
 	// Since the key is in string, we need to convert decode it to bytes
 	key, _ := hex.DecodeString(keyString)
 	plaintext := []byte(stringToEncrypt)
@@ -51,8 +51,8 @@ func Encrypt(stringToEncrypt string, keyString string) (encryptedString string, 
 	return fmt.Sprintf("%x", ciphertext), nil
 }
 
-// Decrypt a string given a key
-func Decrypt(encryptedString string, keyString string) (decryptedString string, err error) {
+// AESDecrypt a string given a key
+func AESDecrypt(encryptedString string, keyString string) (decryptedString string, err error) {
 
 	key, _ := hex.DecodeString(keyString)
 	enc, _ := hex.DecodeString(encryptedString)

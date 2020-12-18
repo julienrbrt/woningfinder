@@ -2,12 +2,11 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/user"
-	"github.com/woningfinder/woningfinder/pkg/env"
+	"github.com/woningfinder/woningfinder/pkg/config"
 
 	"github.com/joho/godotenv"
 )
@@ -18,7 +17,7 @@ func init() {
 	// fallback to system env if unexisting
 	// if not defined on system, panics
 	if err := godotenv.Load("../../../.env"); err != nil {
-		_ = env.MustGetString("APP_NAME")
+		_ = config.MustGetString("APP_NAME")
 	}
 }
 
@@ -30,7 +29,7 @@ func main() {
 
 	clientProvider := bootstrap.CreateClientProvider()
 	corporationService := corporation.NewService(bootstrap.DB, nil)
-	userService := user.NewService(bootstrap.DB, bootstrap.RDB, os.Getenv("AES_SECRET"), clientProvider, corporationService)
+	userService := user.NewService(bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
 	// get user
 	u, err := userService.GetUser("PLACEHOLDER_EMAIL_TO_DELETE")
