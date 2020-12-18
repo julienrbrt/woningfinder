@@ -2,13 +2,12 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/user"
-	"github.com/woningfinder/woningfinder/pkg/env"
+	"github.com/woningfinder/woningfinder/pkg/config"
 )
 
 // init is invoked before main()
@@ -17,7 +16,7 @@ func init() {
 	// fallback to system env if unexisting
 	// if not defined on system, panics
 	if err := godotenv.Load("../../.env"); err != nil {
-		_ = env.MustGetString("APP_NAME")
+		_ = config.MustGetString("APP_NAME")
 	}
 }
 
@@ -34,7 +33,7 @@ func main() {
 
 	clientProvider := bootstrap.CreateClientProvider()
 	corporationService := corporation.NewService(bootstrap.DB, bootstrap.RDB)
-	userService := user.NewService(bootstrap.DB, bootstrap.RDB, os.Getenv("AES_SECRET"), clientProvider, corporationService)
+	userService := user.NewService(bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
 	offerList := make(chan corporation.OfferList)
 	// subscribe to pub/sub messages inside a new goroutine

@@ -1,22 +1,22 @@
-package aes_test
+package util_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/aes"
+	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 func TestConfig_Encrypt_Decrypt(t *testing.T) {
 	a := assert.New(t)
 
-	key := aes.GenerateKey()
+	key := util.AESGenerateKey()
 	stringToEncrypt := "password"
 
-	value, err := aes.Encrypt(stringToEncrypt, key)
+	value, err := util.AESEncrypt(stringToEncrypt, key)
 	a.NoError(err)
 	a.NotEqual(stringToEncrypt, value)
-	value, err = aes.Decrypt(value, key)
+	value, err = util.AESDecrypt(value, key)
 	a.NoError(err)
 	a.Equal(stringToEncrypt, value)
 }

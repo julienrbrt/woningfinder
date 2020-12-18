@@ -1,9 +1,11 @@
-package env
+package config_test
 
 import (
 	"net/url"
 	"os"
 	"testing"
+
+	"github.com/woningfinder/woningfinder/pkg/config"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -11,7 +13,7 @@ import (
 func TestConfig_GetString(t *testing.T) {
 	os.Setenv("foo", "bar")
 
-	v, err := GetString("foo")
+	v, err := config.GetString("foo")
 	if err != nil {
 		t.Errorf("Expected GetString to return value and no error, got %s", err)
 	}
@@ -19,7 +21,7 @@ func TestConfig_GetString(t *testing.T) {
 		t.Errorf("Expected GetString to return 'bar', got %s", v)
 	}
 
-	if _, err := GetString("unknown"); err == nil {
+	if _, err := config.GetString("unknown"); err == nil {
 		t.Error("Expected GetString to return error, got none")
 	}
 }
@@ -27,10 +29,10 @@ func TestConfig_GetString(t *testing.T) {
 func TestConfig_GetStringOrDefault(t *testing.T) {
 	os.Setenv("foo", "bar")
 
-	if v := GetStringOrDefault("foo", "default"); v != "bar" {
+	if v := config.GetStringOrDefault("foo", "default"); v != "bar" {
 		t.Errorf("Expected GetStringOrDefault to return bar', got %s", v)
 	}
-	if v := GetStringOrDefault("unknown", "default"); v != "default" {
+	if v := config.GetStringOrDefault("unknown", "default"); v != "default" {
 		t.Errorf("Expected GetStringOrDefault to return default', got %s", v)
 	}
 }
@@ -38,7 +40,7 @@ func TestConfig_GetStringOrDefault(t *testing.T) {
 func TestConfig_MustGetStringSuccess(t *testing.T) {
 	os.Setenv("foo", "bar")
 
-	if v := MustGetString("foo"); v != "bar" {
+	if v := config.MustGetString("foo"); v != "bar" {
 		t.Errorf("Expected GetString to return 'bar', got %s", v)
 	}
 }
@@ -51,7 +53,7 @@ func TestConfig_MustGetStringFailure(t *testing.T) {
 	}()
 
 	os.Setenv("foo", "bar")
-	MustGetString("unknown")
+	config.MustGetString("unknown")
 
 	t.Errorf("Expected MustGetString to panic, but it didn't")
 }
@@ -59,7 +61,7 @@ func TestConfig_MustGetStringFailure(t *testing.T) {
 func TestConfig_GetInt(t *testing.T) {
 	os.Setenv("foo", "1")
 
-	v, err := GetInt("foo")
+	v, err := config.GetInt("foo")
 	if err != nil {
 		t.Errorf("Expected GetInt to return value and no error, got %s", err)
 	}
@@ -67,7 +69,7 @@ func TestConfig_GetInt(t *testing.T) {
 		t.Errorf("Expected GetInt to return '1', got %d", v)
 	}
 
-	if _, err := GetInt("unknown"); err == nil {
+	if _, err := config.GetInt("unknown"); err == nil {
 		t.Error("Expected GetInt to return error, got none")
 	}
 }
@@ -75,10 +77,10 @@ func TestConfig_GetInt(t *testing.T) {
 func TestConfig_GetIntOrDefault(t *testing.T) {
 	os.Setenv("foo", "1")
 
-	if v := GetIntOrDefault("foo", 2); v != 1 {
+	if v := config.GetIntOrDefault("foo", 2); v != 1 {
 		t.Errorf("Expected GetIntOrDefault to return 1', got %d", v)
 	}
-	if v := GetIntOrDefault("unknown", 2); v != 2 {
+	if v := config.GetIntOrDefault("unknown", 2); v != 2 {
 		t.Errorf("Expected GetIntOrDefault to return 2', got %d", v)
 	}
 }
@@ -86,7 +88,7 @@ func TestConfig_GetIntOrDefault(t *testing.T) {
 func TestConfig_MustGetIntSuccess(t *testing.T) {
 	os.Setenv("foo", "1")
 
-	if v := MustGetInt("foo"); v != 1 {
+	if v := config.MustGetInt("foo"); v != 1 {
 		t.Errorf("Expected GetInt to return '1', got %d", v)
 	}
 }
@@ -99,7 +101,7 @@ func TestConfig_MustGetIntFailure(t *testing.T) {
 	}()
 
 	os.Setenv("foo", "1")
-	MustGetInt("unknown")
+	config.MustGetInt("unknown")
 
 	t.Errorf("Expected MustGetInt to panic, but it didn't")
 }
@@ -116,7 +118,7 @@ func TestConfig_GetBool(t *testing.T) {
 		os.Setenv(k, v)
 	}
 
-	v, err := GetBool("foo")
+	v, err := config.GetBool("foo")
 	if err != nil {
 		t.Errorf("Expected GetBool to return value and no error, got %s", err)
 	}
@@ -124,7 +126,7 @@ func TestConfig_GetBool(t *testing.T) {
 		t.Errorf("Expected GetBool to return true', got %t", v)
 	}
 
-	v, err = GetBool("bar")
+	v, err = config.GetBool("bar")
 	if err != nil {
 		t.Errorf("Expected GetBool to return value and no error, got %s", err)
 	}
@@ -132,7 +134,7 @@ func TestConfig_GetBool(t *testing.T) {
 		t.Errorf("Expected GetBool to return false', got %t", v)
 	}
 
-	v, err = GetBool("baz")
+	v, err = config.GetBool("baz")
 	if err != nil {
 		t.Errorf("Expected GetBool to return value and no error, got %s", err)
 	}
@@ -140,7 +142,7 @@ func TestConfig_GetBool(t *testing.T) {
 		t.Errorf("Expected GetBool to return true', got %t", v)
 	}
 
-	v, err = GetBool("foobar")
+	v, err = config.GetBool("foobar")
 	if err != nil {
 		t.Errorf("Expected GetBool to return value and no error, got %s", err)
 	}
@@ -148,11 +150,11 @@ func TestConfig_GetBool(t *testing.T) {
 		t.Errorf("Expected GetBool to return false', got %t", v)
 	}
 
-	if _, err := GetBool("invalid"); err == nil {
+	if _, err := config.GetBool("invalid"); err == nil {
 		t.Error("Expected GetBool to return error, got none")
 	}
 
-	if _, err := GetBool("unknown"); err == nil {
+	if _, err := config.GetBool("unknown"); err == nil {
 		t.Error("Expected GetBool to return error, got none")
 	}
 }
@@ -167,16 +169,16 @@ func TestConfig_GetBoolOrDefault(t *testing.T) {
 		os.Setenv(k, v)
 	}
 
-	if v := GetBoolOrDefault("foo", true); v {
+	if v := config.GetBoolOrDefault("foo", true); v {
 		t.Errorf("Expected GetBool to return false', got %t", v)
 	}
-	if v := GetBoolOrDefault("bar", false); !v {
+	if v := config.GetBoolOrDefault("bar", false); !v {
 		t.Errorf("Expected GetBool to return true', got %t", v)
 	}
-	if v := GetBoolOrDefault("invalid", true); !v {
+	if v := config.GetBoolOrDefault("invalid", true); !v {
 		t.Errorf("Expected GetBool to return true', got %t", v)
 	}
-	if v := GetBoolOrDefault("unknown", false); v {
+	if v := config.GetBoolOrDefault("unknown", false); v {
 		t.Errorf("Expected GetBool to return false', got %t", v)
 	}
 }
@@ -196,7 +198,7 @@ func TestConfig_GetURL(t *testing.T) {
 		Path:   "/path",
 	}
 
-	v, err := GetURL("foo")
+	v, err := config.GetURL("foo")
 	if err != nil {
 		t.Errorf("Expected GetURL to return value and no error, got %s", err)
 	}
@@ -204,11 +206,11 @@ func TestConfig_GetURL(t *testing.T) {
 		t.Errorf("Expected GetURL to return '%s', got %s", expectedFoo, v)
 	}
 
-	if v, err := GetURL("invalid"); err == nil {
+	if v, err := config.GetURL("invalid"); err == nil {
 		t.Errorf("Expected GetURL to return error, got none with value %s", v)
 	}
 
-	if v, err := GetURL("unknown"); err == nil {
+	if v, err := config.GetURL("unknown"); err == nil {
 		t.Errorf("Expected GetURL to return error, got none with value %s", v)
 	}
 }
@@ -222,7 +224,7 @@ func TestConfig_MustGetURLSuccess(t *testing.T) {
 		Path:   "/path",
 	}
 
-	if v := MustGetURL("foo"); v.String() != expectedFoo.String() {
+	if v := config.MustGetURL("foo"); v.String() != expectedFoo.String() {
 		t.Errorf("Expected GetURL to return '%s', got %s", expectedFoo, v)
 	}
 }
@@ -235,7 +237,7 @@ func TestConfig_MustGetStringInvalid(t *testing.T) {
 	}()
 
 	os.Setenv("invalid", "")
-	MustGetURL("invalid")
+	config.MustGetURL("invalid")
 
 	t.Errorf("Expected MustGetURL to panic, but it didn't")
 }
@@ -247,7 +249,7 @@ func TestConfig_MustGetURLUnknown(t *testing.T) {
 		}
 	}()
 
-	MustGetURL("unknown")
+	config.MustGetURL("unknown")
 	t.Errorf("Expected MustGetURL to panic, but it didn't")
 }
 
@@ -262,9 +264,9 @@ func TestConfig_GetJSON(t *testing.T) {
 
 	a := assert.New(t)
 	var v string
-	a.Error(GetJSON("invalid", &v))
-	a.Error(GetJSON("unknown", &v))
-	a.NoError(GetJSON("valid", &v))
+	a.Error(config.GetJSON("invalid", &v))
+	a.Error(config.GetJSON("unknown", &v))
+	a.NoError(config.GetJSON("valid", &v))
 }
 
 func TestConfig_MustGetJSON_Unknown(t *testing.T) {
@@ -274,7 +276,7 @@ func TestConfig_MustGetJSON_Unknown(t *testing.T) {
 		}
 	}()
 
-	MustGetJSON("unknown", make(map[string]string))
+	config.MustGetJSON("unknown", make(map[string]string))
 	t.Errorf("Expected MustGetJSON to panic, but it didn't")
 }
 
@@ -286,7 +288,7 @@ func TestConfig_MustGetJSON_InvalidJSON(t *testing.T) {
 	}()
 
 	os.Setenv("key", `{"invalid": "json"`)
-	MustGetJSON("key", make(map[string]string))
+	config.MustGetJSON("key", make(map[string]string))
 
 	t.Errorf("Expected MustGetJSON to panic, but it didn't")
 }
@@ -295,7 +297,7 @@ func TestConfig_MustGetJSON_Success(t *testing.T) {
 	os.Setenv("key", `{"valid": "json", "foo": "bar"}`)
 
 	var v map[string]string
-	MustGetJSON("key", &v)
+	config.MustGetJSON("key", &v)
 	a := assert.New(t)
 	a.Equal("json", v["valid"])
 	a.Equal("bar", v["foo"])
@@ -304,7 +306,7 @@ func TestConfig_MustGetJSON_Success(t *testing.T) {
 func TestConfig_GetStringList(t *testing.T) {
 	os.Setenv("foo", "bar,baz,qux")
 
-	v, err := GetStringList("foo")
+	v, err := config.GetStringList("foo")
 	if err != nil {
 		t.Errorf("Expected GetStringList to return value and no error, got %v", err)
 	}
@@ -312,7 +314,7 @@ func TestConfig_GetStringList(t *testing.T) {
 		t.Errorf("Expected GetStringList to return 3 strings, got %d", len(v))
 	}
 
-	if _, err := GetStringList("unknown"); err == nil {
+	if _, err := config.GetStringList("unknown"); err == nil {
 		t.Error("Expected GetStringList to return error, got none")
 	}
 }
@@ -320,10 +322,10 @@ func TestConfig_GetStringList(t *testing.T) {
 func TestConfig_GetStringListOrDefault(t *testing.T) {
 	os.Setenv("foo", "bar,baz,qux")
 
-	if v := GetStringListOrDefault("foo", []string{}); len(v) != 3 {
+	if v := config.GetStringListOrDefault("foo", []string{}); len(v) != 3 {
 		t.Errorf("Expected GetStringListOrDefault to return 3 strings, got %d", len(v))
 	}
-	if v := GetStringListOrDefault("unknown", []string{"default"}); len(v) != 1 {
+	if v := config.GetStringListOrDefault("unknown", []string{"default"}); len(v) != 1 {
 		t.Errorf("Expected GetStringListOrDefault to return 1 string, got %d", len(v))
 	}
 }
@@ -331,7 +333,7 @@ func TestConfig_GetStringListOrDefault(t *testing.T) {
 func TestConfig_MustGetStringListSuccess(t *testing.T) {
 	os.Setenv("foo", "bar,baz")
 
-	if v := MustGetStringList("foo"); len(v) != 2 {
+	if v := config.MustGetStringList("foo"); len(v) != 2 {
 		t.Errorf("Expected MustGetStringList to return 2 strings, got %d", len(v))
 	}
 }
@@ -344,7 +346,7 @@ func TestConfig_MustGetStringListFailure(t *testing.T) {
 	}()
 
 	os.Setenv("foo", "bar,baz")
-	MustGetString("unknown")
+	config.MustGetString("unknown")
 
 	t.Errorf("Expected MustGetStringList to panic, but it didn't")
 }

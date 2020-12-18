@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/go-redis/redis"
-	"github.com/woningfinder/woningfinder/pkg/aes"
+	"github.com/woningfinder/woningfinder/pkg/util"
 
 	"gorm.io/gorm/clause"
 
@@ -191,12 +191,12 @@ func (s *userService) CreateCorporationCredentials(u *User, credentials Corporat
 	}
 
 	// encrypt credentials
-	credentials.Login, err = aes.Encrypt(credentials.Login, s.aesSecret)
+	credentials.Login, err = util.AESEncrypt(credentials.Login, s.aesSecret)
 	if err != nil {
 		return fmt.Errorf("error when encrypting corporation credentials: %w", err)
 	}
 
-	credentials.Password, err = aes.Encrypt(credentials.Password, s.aesSecret)
+	credentials.Password, err = util.AESEncrypt(credentials.Password, s.aesSecret)
 	if err != nil {
 		return fmt.Errorf("error when encrypting corporation credentials: %w", err)
 	}
@@ -240,12 +240,12 @@ func (s *userService) GetCorporationCredentials(u *User, corporation corporation
 
 	// decrypt credentials
 	var err error
-	credentials.Login, err = aes.Decrypt(credentials.Login, s.aesSecret)
+	credentials.Login, err = util.AESDecrypt(credentials.Login, s.aesSecret)
 	if err != nil {
 		return nil, fmt.Errorf("error when decrypting corporation credentials: %w", err)
 	}
 
-	credentials.Password, err = aes.Decrypt(credentials.Password, s.aesSecret)
+	credentials.Password, err = util.AESDecrypt(credentials.Password, s.aesSecret)
 	if err != nil {
 		return nil, fmt.Errorf("error when decrypting corporation credentials: %w", err)
 	}
@@ -272,12 +272,12 @@ func (s *userService) DeleteCorporationCredentials(u *User, corporation corporat
 func (s *userService) decryptCredentials(credentials CorporationCredentials) (CorporationCredentials, error) {
 	// decrypt credentials
 	var err error
-	credentials.Login, err = aes.Decrypt(credentials.Login, s.aesSecret)
+	credentials.Login, err = util.AESDecrypt(credentials.Login, s.aesSecret)
 	if err != nil {
 		return CorporationCredentials{}, fmt.Errorf("error when decrypting corporation credentials: %w", err)
 	}
 
-	credentials.Password, err = aes.Decrypt(credentials.Password, s.aesSecret)
+	credentials.Password, err = util.AESDecrypt(credentials.Password, s.aesSecret)
 	if err != nil {
 		return CorporationCredentials{}, fmt.Errorf("error when decrypting corporation credentials: %w", err)
 	}
@@ -426,5 +426,5 @@ func (s *userService) SaveReaction(uuid string) {
 }
 
 func buildReactionUUID(user *User, offer corporation.Offer) string {
-	return base64.StdEncoding.EncodeToString([]byte(user.Email + offer.Housing.Address))
+	return base64.StdEncoding.EncodeToString([]byte(user.Email + offer.Housing.Address + offer.SelectionDate.String()))
 }

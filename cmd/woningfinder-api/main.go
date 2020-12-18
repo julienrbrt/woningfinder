@@ -4,9 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/woningfinder/woningfinder/pkg/env"
-
 	"github.com/joho/godotenv"
+	"github.com/woningfinder/woningfinder/pkg/config"
 )
 
 // init is invoked before main()
@@ -15,14 +14,14 @@ func init() {
 	// fallback to system env if unexisting
 	// if not defined on system, panics
 	if err := godotenv.Load("../../.env"); err != nil {
-		_ = env.MustGetString("APP_NAME")
+		_ = config.MustGetString("APP_NAME")
 	}
 }
 
 func main() {
 
 	// app port
-	port := env.MustGetString("APP_PORT")
+	port := config.MustGetString("APP_PORT")
 	log.Println("listening on port", port)
 
 	err := http.ListenAndServe(":"+port, nil)
