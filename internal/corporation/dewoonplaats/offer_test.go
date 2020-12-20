@@ -17,7 +17,7 @@ func Test_FetchOffer(t *testing.T) {
 	offers, err := client.FetchOffer()
 	a.NoError(err)
 	a.True(len(offers) > 0)
-	for i, offer := range offers {
+	for _, offer := range offers {
 		a.NotEmpty(offer.Housing.Type.Type)
 		if offer.Housing.Type.Type == corporation.Undefined {
 			continue
@@ -37,10 +37,6 @@ func Test_FetchOffer(t *testing.T) {
 		a.True(offer.Housing.Longitude > 0)
 		a.True(offer.Housing.Latitude > 0)
 		a.True(offer.Housing.NumberRoom > 0)
-		if offer.Housing.Size == 0 && len(offers) > i-1 {
-			continue
-		}
-		a.True(offer.Housing.Size > 0)
 
 		// test only for one offer
 		return

@@ -186,7 +186,7 @@ func (c *client) parseHousingType(houseType []string) corporation.Type {
 }
 
 func (c *client) parseHouseSize(houseSize string) float64 {
-	size, _ := strconv.ParseFloat(strings.ReplaceAll(houseSize, ",", "."), 32)
+	size, _ := strconv.ParseFloat(strings.ReplaceAll(houseSize, ",", "."), 16)
 
 	return size
 }
