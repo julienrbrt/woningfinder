@@ -13,7 +13,6 @@ import (
 const (
 	House       Type = "HOUSE"
 	Appartement      = "APPARTEMENT"
-	Parking          = "PARKING"
 	Undefined        = "UNDEFINED"
 )
 
@@ -60,8 +59,6 @@ type Housing struct {
 	AccessibilityWheelchair bool
 	AccessibilityScooter    bool
 	Attic                   bool
-	Historic                bool // Defines if house is an historical monument
-	CV                      bool // Defines if the house has a central verwarming
 }
 
 // SetCityDistrict set the district name from a location

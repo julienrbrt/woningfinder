@@ -15,14 +15,16 @@ const pubSubChannelName = "offers"
 
 // Service permits to handle the persistence of a corporation
 type Service interface {
+	// Create Corporation
 	CreateOrUpdate(corporation *[]Corporation) (*[]Corporation, error)
 	CreateHousingType(housingTypes *[]HousingType) (*[]HousingType, error)
-
-	GetCity(name string) (*City, error)
 
 	// (Redis) Pub-Sub
 	PublishOffers(client Client, corporation Corporation) error
 	SubscribeOffers(offerCh chan<- OfferList)
+
+	// Getters
+	GetCity(name string) (*City, error)
 }
 
 type corporationService struct {

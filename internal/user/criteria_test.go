@@ -11,7 +11,9 @@ func Test_MatchCriteria_Age(t *testing.T) {
 	testUser := getUser()
 	testOffer := getOffer()
 
+	testOffer.MinAge = 55
 	a.False(testUser.MatchCriteria(testOffer))
+	testOffer.MinAge = 18
 	testOffer.MaxAge = 99
 	testUser.FamilySize = 2
 	testOffer.MaxIncome = 0
