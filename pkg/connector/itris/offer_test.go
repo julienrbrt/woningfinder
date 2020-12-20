@@ -10,39 +10,50 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var clientList = []string{
+	"https://mijn.onshuis.com",
+	"https://mijn.mijande.nl",
+	"https://mijn.woongoedzvl.nl",
+}
+
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
-	itrisConnector := itris.NewConnector("https://mijn.woongoedzvl.nl")
+	// checks if at least one of the tested housing corporation had offers
+	hadOffer := false
 
-	offers, err := itrisConnector.FetchOffer()
-	a.NoError(err)
-	a.True(len(offers) > 0)
-	for i, offer := range offers {
-		a.NotEmpty(offer.Housing.Type.Type)
-		if offer.Housing.Type.Type == corporation.Undefined {
-			continue
+	for _, url := range clientList {
+		itrisConnector := itris.NewConnector(url)
+
+		offers, err := itrisConnector.FetchOffer()
+		a.NoError(err)
+		if !hadOffer {
+			hadOffer = len(offers) > 0
 		}
+		for _, offer := range offers {
+			a.NotEmpty(offer.Housing.Type.Type)
+			if offer.Housing.Type.Type == corporation.Undefined {
+				continue
+			}
 
-		a.NotNil(offer.SelectionMethod)
-		a.NotNil(offer.SelectionDate)
-		a.NotEmpty(offer.URL)
-		a.NotEmpty(offer.ExternalID)
+			a.NotNil(offer.SelectionMethod)
+			a.NotNil(offer.SelectionDate)
+			a.NotEmpty(offer.URL)
+			a.NotEmpty(offer.ExternalID)
 
-		a.NotNil(offer.Housing)
-		a.NotEmpty(offer.Housing.City.Name)
-		a.NotEmpty(offer.Housing.Address)
-		a.NotEmpty(offer.Housing.EnergieLabel)
-		a.True(offer.Housing.BuildingYear > 0)
-		a.True(offer.Housing.Price > 0)
-		a.True(offer.Housing.Longitude > 0)
-		a.True(offer.Housing.Latitude > 0)
-		a.True(offer.Housing.NumberRoom > 0)
-		if offer.Housing.Size == 0 && len(offers) > i-1 {
-			continue
+			a.NotNil(offer.Housing)
+			a.NotEmpty(offer.Housing.City.Name)
+			a.NotEmpty(offer.Housing.Address)
+			a.NotEmpty(offer.Housing.EnergieLabel)
+			a.True(offer.Housing.BuildingYear > 0)
+			a.True(offer.Housing.Price > 0)
+			a.True(offer.Housing.Longitude > 0)
+			a.True(offer.Housing.Latitude > 0)
+			a.True(offer.Housing.NumberRoom > 0)
+
+			// test only for one offer
+			break
 		}
-		a.True(offer.Housing.Size > 0)
-
-		// test only for one offer
-		return
 	}
+
+	a.True(hadOffer)
 }
