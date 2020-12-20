@@ -19,6 +19,11 @@ func (c *itrisConnector) FetchOffer() ([]corporation.Offer, error) {
 	var offers []corporation.Offer
 	c.collector.OnHTML("div.aanbodListItems", func(el *colly.HTMLElement) {
 		el.ForEach("div.woningaanbod", func(_ int, e *colly.HTMLElement) {
+			houseType := c.parseHousingType(e.Text)
+			if houseType == corporation.Undefined {
+				return
+			}
+
 			address := strings.Title(strings.ToLower(e.ChildAttr(detailsHousingChildAttr, "data-select-address")))
 			latitude, longitude := c.parseLocation(e.ChildAttr(detailsHousingChildAttr, "data-select-lat-long"), address)
 			if latitude == 0 || longitude == 0 {
@@ -49,6 +54,9 @@ func (c *itrisConnector) FetchOffer() ([]corporation.Offer, error) {
 				URL:           c.url + e.ChildAttr(detailsHousingChildAttr, "href"),
 				ExternalID:    e.Attr("data-aanbod-id"),
 				Housing: corporation.Housing{
+					Type: corporation.HousingType{
+						Type: houseType,
+					},
 					Price:   price,
 					Address: address,
 					City: corporation.City{
@@ -69,6 +77,20 @@ func (c *itrisConnector) FetchOffer() ([]corporation.Offer, error) {
 	}
 
 	return offers, nil
+}
+
+func (c *itrisConnector) parseHousingType(houseType string) corporation.Type {
+	houseType = strings.ToLower(houseType)
+
+	if strings.Contains(houseType, "appartement") {
+		return corporation.Appartement
+	}
+
+	if strings.Contains(houseType, "eengezinswoning") {
+		return corporation.House
+	}
+
+	return corporation.Undefined
 }
 
 func (c *itrisConnector) parseLocation(entry, address string) (latitude float64, longitude float64) {
