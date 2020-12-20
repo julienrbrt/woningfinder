@@ -104,19 +104,17 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 			EnergieLabel:            house.EnergieLabel,
 			NumberRoom:              len(house.RoomSize),
 			NumberBedroom:           house.NumberBedroom,
-			Size:                    c.parseHouseSize(houseType, house.Size),
+			Size:                    c.parseHouseSize(house.Size),
 			Price:                   house.RentPrice,
 			BuildingYear:            house.BuildingYear,
 			HousingAllowance:        house.HasLowRentPrice && !house.RentLuxe && len(house.RentPriceForAllowance) > 0,
 			Garden:                  len(house.Garden) > 0,
-			CV:                      house.CV,
 			Garage:                  house.Garage,
 			Elevator:                house.Lift,
 			Balcony:                 house.Balcony,
 			AccessibilityScooter:    house.AccessibilityScooter,
 			AccessibilityWheelchair: house.AccessibilityWheelchair,
 			Attic:                   house.Attic,
-			Historic:                house.Historic,
 		}
 
 		offer := corporation.Offer{
@@ -126,14 +124,13 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 			SelectionMethod: corporation.SelectionMethod{
 				Method: c.parseSelectionMethod(house.IsSelectionRandom),
 			},
-			SelectionDate:   c.parseSelectionDate(house.SelectionDate),
-			MinIncome:       house.Criteria.MinInkomen,
-			MaxIncome:       house.Criteria.MaxInkomen,
-			MinFamilySize:   house.Criteria.MinGezinsgrootte,
-			MaxFamilySize:   house.Criteria.MaxGezinsgrootte,
-			MinAge:          house.Criteria.MinLeeftijd,
-			MaxAge:          house.Criteria.MaxLeeftijd,
-			ChildrenAllowed: house.Criteria.KinderenValid,
+			SelectionDate: c.parseSelectionDate(house.SelectionDate),
+			MinIncome:     house.Criteria.MinInkomen,
+			MaxIncome:     house.Criteria.MaxInkomen,
+			MinFamilySize: house.Criteria.MinGezinsgrootte,
+			MaxFamilySize: house.Criteria.MaxGezinsgrootte,
+			MinAge:        house.Criteria.MinLeeftijd,
+			MaxAge:        house.Criteria.MaxLeeftijd,
 		}
 
 		offers = append(offers, offer)
@@ -178,9 +175,7 @@ func (c *client) parseHousingType(houseType []string) corporation.Type {
 
 	for _, h := range houseType {
 		h = strings.ToLower(h)
-		if h == "parkeren" {
-			return corporation.Parking
-		} else if h == "appartement" {
+		if h == "appartement" {
 			return corporation.Appartement
 		} else if h == "eengezinswoning" {
 			return corporation.House
@@ -190,11 +185,8 @@ func (c *client) parseHousingType(houseType []string) corporation.Type {
 	return corporation.Undefined
 }
 
-func (c *client) parseHouseSize(houseType corporation.Type, houseSize string) float64 {
-	var size float64
-	if houseType == corporation.House || houseType == corporation.Appartement {
-		size, _ = strconv.ParseFloat(strings.ReplaceAll(houseSize, ",", "."), 32)
-	}
+func (c *client) parseHouseSize(houseSize string) float64 {
+	size, _ := strconv.ParseFloat(strings.ReplaceAll(houseSize, ",", "."), 32)
 
 	return size
 }

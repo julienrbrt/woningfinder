@@ -27,9 +27,6 @@ var housingTypes = []corporation.HousingType{
 		Type: corporation.Appartement,
 	},
 	{
-		Type: corporation.Parking,
-	},
-	{
 		Type: corporation.Undefined,
 	},
 }

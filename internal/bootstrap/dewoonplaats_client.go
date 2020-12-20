@@ -12,28 +12,6 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 )
 
-var dewoonplaatsInfo = corporation.Corporation{
-	Name: "De Woonplaats",
-	URL:  "https://dewoonplaats.nl",
-	Cities: []corporation.City{
-		{Name: "Enschede"},
-		{Name: "Zwolle"},
-		{Name: "Aatlen"},
-		{Name: "Dinxperlo"},
-		{Name: "Winterswijk"},
-		{Name: "Neede"},
-		{Name: "Wehl"},
-	},
-	SelectionMethod: []corporation.SelectionMethod{
-		{
-			Method: corporation.SelectionRandom,
-		},
-		{
-			Method: corporation.SelectionFirstComeFirstServed,
-		},
-	},
-}
-
 // CreateDeWoonplaatsClient creates a client for De Woonplaats
 func CreateDeWoonplaatsClient() corporation.Client {
 	// add cookie jar
@@ -47,7 +25,7 @@ func CreateDeWoonplaatsClient() corporation.Client {
 		Jar:     jar,
 	}
 	defaultMiddleWare := []networking.ClientMiddleware{
-		middleware.CreateHostMiddleware(dewoonplaats.Host),
+		middleware.CreateHostMiddleware(dewoonplaats.Info.APIEndpoint),
 		middleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}),
 	}
 

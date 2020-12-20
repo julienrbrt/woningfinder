@@ -2,6 +2,7 @@ package corporation
 
 import (
 	"database/sql/driver"
+	"net/url"
 	"time"
 
 	"gorm.io/gorm"
@@ -10,6 +11,7 @@ import (
 // Corporation defines a housing corporations basic data
 // That data is shared between every housing corporations
 type Corporation struct {
+	APIEndpoint     *url.URL `gorm:"-"`
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 	DeletedAt       gorm.DeletedAt    `gorm:"index"`
@@ -79,7 +81,6 @@ type Offer struct {
 	MinIncome, MaxIncome         int
 	MinFamilySize, MaxFamilySize int
 	MinAge, MaxAge               int
-	ChildrenAllowed              bool
 }
 
 // OfferList defines a list of offer belonging to one corporation

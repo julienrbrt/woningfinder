@@ -17,7 +17,7 @@ func getOffer() corporation.Offer {
 			},
 			Latitude:                52.133,
 			Longitude:               6.61433,
-			Address:                 "Beatrixstraat 1 R 7161 DJ Neede  A",
+			Address:                 "Beatrixstraat 1 R 7161 DJ Neede A",
 			EnergieLabel:            "A",
 			Price:                   656.39,
 			Size:                    80,
@@ -32,8 +32,6 @@ func getOffer() corporation.Offer {
 			AccessibilityWheelchair: false,
 			AccessibilityScooter:    true,
 			Attic:                   false,
-			Historic:                false,
-			CV:                      false,
 		},
 		MinAge:        18,
 		MaxAge:        35,
@@ -104,7 +102,7 @@ func Test_MatchPreferences_HousingType(t *testing.T) {
 
 	a.True(testUser.MatchPreferences(testOffer))
 	testOffer.Housing.Type = corporation.HousingType{
-		Type: corporation.Parking,
+		Type: corporation.Undefined,
 	}
 	a.False(testUser.MatchPreferences(testOffer))
 	testUser.HousingPreferences.Type = nil

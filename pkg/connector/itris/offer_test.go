@@ -1,4 +1,4 @@
-package dewoonplaats_test
+package itris_test
 
 import (
 	"testing"
@@ -12,9 +12,9 @@ import (
 
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
-	client := bootstrap.CreateDeWoonplaatsClient()
+	itrisConnector := bootstrap.CreateOnsHuisClient()
 
-	offers, err := client.FetchOffer()
+	offers, err := itrisConnector.FetchOffer()
 	a.NoError(err)
 	a.True(len(offers) > 0)
 	for _, offer := range offers {

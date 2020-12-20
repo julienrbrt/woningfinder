@@ -2,24 +2,28 @@ package itris
 
 import (
 	"log"
-	"net/url"
+	"net/http/cookiejar"
 
-	"github.com/gocolly/colly"
+	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/pkg/connector"
 )
 
 type itrisConnector struct {
-	url       url.URL
+	url       string
 	collector *colly.Collector
 }
 
-func NewConnector(url url.URL) connector.Connector {
-	c := colly.NewCollector(
-		// Visit only given domain
-		colly.AllowedDomains(url.Host),
-	)
+func NewConnector(url string) connector.Connector {
+	c := colly.NewCollector()
 
-	// before making a request print "Visiting ..."
+	// add cookie jar
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.SetCookieJar(jar)
+
+	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {
 		log.Println("itris connector visiting", r.URL.String())
 	})
