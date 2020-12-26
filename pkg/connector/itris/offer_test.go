@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/woningfinder/woningfinder/pkg/connector/itris"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 
@@ -22,7 +23,7 @@ func Test_FetchOffer(t *testing.T) {
 	hadOffer := false
 
 	for _, url := range clientList {
-		itrisConnector := itris.NewConnector(url)
+		itrisConnector := itris.NewConnector(logging.NewZapLogger(), url)
 
 		offers, err := itrisConnector.FetchOffer()
 		a.NoError(err)

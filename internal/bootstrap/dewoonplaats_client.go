@@ -1,7 +1,6 @@
 package bootstrap
 
 import (
-	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"time"
@@ -10,14 +9,15 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/dewoonplaats"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
+	"go.uber.org/zap"
 )
 
 // CreateDeWoonplaatsClient creates a client for De Woonplaats
-func CreateDeWoonplaatsClient() corporation.Client {
+func CreateDeWoonplaatsClient(logger *zap.Logger) corporation.Client {
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
 	if err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 
 	client := &http.Client{

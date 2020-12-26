@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log"
-
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 // init is invoked before main()
@@ -32,21 +31,23 @@ var housingTypes = []corporation.HousingType{
 }
 
 func main() {
+	logger := logging.NewZapLogger()
+
 	err := bootstrap.InitDB()
 	if err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 
-	clientProvider := bootstrap.CreateClientProvider()
-	corporationService := corporation.NewService(bootstrap.DB, nil)
+	clientProvider := bootstrap.CreateClientProvider(logger)
+	corporationService := corporation.NewService(logger, bootstrap.DB, nil)
 
 	if _, err := corporationService.CreateOrUpdate(clientProvider.List()); err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 
 	if _, err := corporationService.CreateHousingType(&housingTypes); err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 
-	log.Println("successfully initialized database 🎉")
+	logger.Sugar().Infof("successfully initialized database 🎉")
 }

@@ -46,7 +46,7 @@ func NewClient(baseClient BaseClient, middleware ...ClientMiddleware) Client {
 }
 
 func (c *client) Send(r *Request) (*Response, error) {
-	req, err := requestBuilder(r)
+	req, err := RequestBuilder(r)
 	if err != nil {
 		return nil, err
 	}

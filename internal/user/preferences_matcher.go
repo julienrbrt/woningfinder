@@ -1,6 +1,7 @@
 package user
 
 import (
+	"log"
 	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -19,7 +20,10 @@ func (u *User) MatchPreferences(offer corporation.Offer) bool {
 	}
 
 	// match location
-	offer.Housing.SetCityDistrict()
+	err := offer.Housing.SetCityDistrict()
+	if err != nil {
+		log.Print(err)
+	}
 	if !u.matchCity(offer.Housing) || !u.matchCityDistrict(offer.Housing) {
 		return false
 	}

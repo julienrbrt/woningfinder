@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -22,25 +22,27 @@ func init() {
 }
 
 func main() {
+	logger := logging.NewZapLogger()
+
 	err := bootstrap.InitDB()
 	if err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 
-	clientProvider := bootstrap.CreateClientProvider()
-	corporationService := corporation.NewService(bootstrap.DB, nil)
-	userService := user.NewService(bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	clientProvider := bootstrap.CreateClientProvider(logger)
+	corporationService := corporation.NewService(logger, bootstrap.DB, nil)
+	userService := user.NewService(logger, bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
 	// get user
 	u, err := userService.GetUser("PLACEHOLDER_EMAIL_TO_DELETE")
 	if err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 
 	// delete user
 	if err := userService.DeleteUser(u); err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 
-	log.Printf("customer %s successfully deleted 😢\n", u.Name)
+	logger.Sugar().Infof("customer %s successfully deleted 😢\n", u.Name)
 }

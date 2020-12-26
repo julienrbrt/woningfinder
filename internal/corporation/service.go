@@ -3,9 +3,9 @@ package corporation
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/go-redis/redis"
+	"go.uber.org/zap"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -28,14 +28,16 @@ type Service interface {
 }
 
 type corporationService struct {
-	db  *gorm.DB
-	rdb *redis.Client
+	logger *zap.Logger
+	db     *gorm.DB
+	rdb    *redis.Client
 }
 
-func NewService(db *gorm.DB, rdb *redis.Client) Service {
+func NewService(logger *zap.Logger, db *gorm.DB, rdb *redis.Client) Service {
 	return &corporationService{
-		db:  db,
-		rdb: rdb,
+		logger: logger,
+		db:     db,
+		rdb:    rdb,
 	}
 }
 
@@ -103,7 +105,7 @@ func (s *corporationService) SubscribeOffers(offerCh chan<- OfferList) {
 	// Wait for confirmation that subscription is created before doing anything.
 	_, err := pubsub.Receive()
 	if err != nil {
-		log.Fatalf("error subscribing to channel: %v", err)
+		s.logger.Sugar().Errorf("error subscribing to channel: %w", err)
 	}
 
 	// Go channel which receives messages.
@@ -113,7 +115,7 @@ func (s *corporationService) SubscribeOffers(offerCh chan<- OfferList) {
 		var offerList OfferList
 		err := json.Unmarshal([]byte(msg.Payload), &offerList)
 		if err != nil {
-			log.Printf("error while unmarshaling offers: %v\n", err)
+			s.logger.Sugar().Errorf("error while unmarshaling offers: %w", err)
 			continue
 		}
 

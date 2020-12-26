@@ -4,10 +4,10 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/go-redis/redis"
 	"github.com/woningfinder/woningfinder/pkg/util"
+	"go.uber.org/zap"
 
 	"gorm.io/gorm/clause"
 
@@ -35,6 +35,7 @@ type Service interface {
 }
 
 type userService struct {
+	logger             *zap.Logger
 	db                 *gorm.DB
 	rdb                *redis.Client
 	aesSecret          string
@@ -42,8 +43,9 @@ type userService struct {
 	corporationService corporation.Service
 }
 
-func NewService(db *gorm.DB, rdb *redis.Client, aesSecret string, clientProvider corporation.ClientProvider, corporationService corporation.Service) Service {
+func NewService(logger *zap.Logger, db *gorm.DB, rdb *redis.Client, aesSecret string, clientProvider corporation.ClientProvider, corporationService corporation.Service) Service {
 	return &userService{
+		logger:             logger,
 		db:                 db,
 		rdb:                rdb,
 		aesSecret:          aesSecret,
@@ -320,7 +322,7 @@ func (s *userService) MatchOffer(offerList corporation.OfferList) error {
 			//get housing preferences
 			housingPreferences, err := s.GetHousingPreferences(&user)
 			if err != nil {
-				log.Printf("error while getting housing preferences for user %s: %v\n", user.Email, err)
+				s.logger.Sugar().Errorf("error while getting housing preferences for user %s: %w", user.Email, err)
 				return
 			}
 			user.HousingPreferences = *housingPreferences
@@ -329,35 +331,35 @@ func (s *userService) MatchOffer(offerList corporation.OfferList) error {
 			creds := credentialsMap[int(user.ID)]
 			creds, err = s.decryptCredentials(creds)
 			if err != nil {
-				log.Printf("error while decrypting credentials for %s: %v\n", user.Email, err)
+				s.logger.Sugar().Errorf("error while decrypting credentials for %s: %w", user.Email, err)
 				return
 			}
 
 			// login to housing corporation
 			if err := client.Login(creds.Login, creds.Password); err != nil {
-				log.Printf("failed to login to corporation %s for %s: %v\n", offerList.Corporation.Name, user.Email, err)
+				s.logger.Sugar().Errorf("failed to login to corporation %s for %s: %w", offerList.Corporation.Name, user.Email, err)
 				return
 			}
 
 			for _, offer := range offerList.Offer {
-				log.Printf("checking match of %s for %s...", offer.Housing.Address, user.Email)
+				s.logger.Sugar().Infof("checking match of %s for %s...", offer.Housing.Address, user.Email)
 
 				// check if we already check this offer
 				uuid := buildReactionUUID(&user, offer)
 				if s.HasReacted(uuid) {
-					log.Println("has already been checked... skipping.")
+					s.logger.Sugar().Infof("has already been checked... skipping.")
 					continue
 				}
 
 				if user.MatchPreferences(offer) && user.MatchCriteria(offer) {
 					// apply
 					if err := client.ReactToOffer(offer); err != nil {
-						log.Printf("failed to react to %s with user %s: %v\n", offer.Housing.Address, user.Email, err)
+						s.logger.Sugar().Errorf("failed to react to %s with user %s: %w", offer.Housing.Address, user.Email, err)
 						continue
 					}
 
 					// TODO add to queue to send mail
-					log.Printf("🎉🎉🎉 WoningFinder has successfully reacted to %s on behalf of %s. 🎉🎉🎉\n", offer.Housing.Address, user.Email)
+					s.logger.Sugar().Infof("🎉🎉🎉 WoningFinder has successfully reacted to %s on behalf of %s. 🎉🎉🎉\n", offer.Housing.Address, user.Email)
 				}
 
 				// save that WoningFinder checks that offer for this user
@@ -409,7 +411,7 @@ func (s *userService) HasReacted(uuid string) bool {
 	if err != nil {
 		// if error is different that key does not exists
 		if err != redis.Nil {
-			log.Printf("error when getting reaction from redis: %v\n", err)
+			s.logger.Sugar().Errorf("error when getting reaction from redis: %w", err)
 		}
 		// does not have reacted
 		return false
@@ -421,7 +423,7 @@ func (s *userService) HasReacted(uuid string) bool {
 func (s *userService) SaveReaction(uuid string) {
 	err := s.rdb.Set(uuid, true, 0).Err()
 	if err != nil {
-		log.Printf("error when saving reaction to redis: %v\n", err)
+		s.logger.Sugar().Errorf("error when saving reaction to redis: %w", err)
 	}
 }
 
