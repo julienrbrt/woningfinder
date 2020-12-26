@@ -66,6 +66,10 @@ func (h *Housing) SetCityDistrict() error {
 		return nil
 	}
 
+	if h.Longitude == 0 || h.Latitude == 0 {
+		return nil
+	}
+
 	name, err := osm.GetResidential(fmt.Sprintf("%.5f", h.Latitude), fmt.Sprintf("%.5f", h.Longitude))
 	if err != nil {
 		return fmt.Errorf("error getting district from %s: %w", h.Address, err)

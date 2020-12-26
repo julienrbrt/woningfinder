@@ -25,8 +25,7 @@ func (c *itrisConnector) FetchOffer() ([]corporation.Offer, error) {
 			address := strings.Title(strings.ToLower(e.ChildAttr(detailsHousingChildAttr, "data-select-address")))
 			latitude, longitude := c.parseLocation(e.ChildAttr(detailsHousingChildAttr, "data-select-lat-long"), address)
 			if latitude == 0 || longitude == 0 {
-				c.logger.Sugar().Errorf("error while parsing coordinates of %s: [%f, %f]", address, latitude, longitude)
-				return
+				c.logger.Sugar().Warnf("error while parsing coordinates of %s: [%f, %f]", address, latitude, longitude)
 			}
 
 			reactionDate, err := time.Parse(layoutTime, e.Attr("data-reactiedatum"))
