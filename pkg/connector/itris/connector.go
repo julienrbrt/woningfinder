@@ -15,6 +15,8 @@ type itrisConnector struct {
 
 func NewConnector(url string) connector.Connector {
 	c := colly.NewCollector()
+	// allow revisiting url between jobs
+	c.AllowURLRevisit = true
 
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
