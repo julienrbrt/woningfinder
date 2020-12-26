@@ -1,7 +1,6 @@
 package itris
 
 import (
-	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -26,25 +25,25 @@ func (c *itrisConnector) FetchOffer() ([]corporation.Offer, error) {
 			address := strings.Title(strings.ToLower(e.ChildAttr(detailsHousingChildAttr, "data-select-address")))
 			latitude, longitude := c.parseLocation(e.ChildAttr(detailsHousingChildAttr, "data-select-lat-long"), address)
 			if latitude == 0 || longitude == 0 {
-				log.Printf("error while parsing coordinates of %s: [%f, %f]", address, latitude, longitude)
+				c.logger.Sugar().Errorf("error while parsing coordinates of %s: [%f, %f]", address, latitude, longitude)
 				return
 			}
 
 			reactionDate, err := time.Parse(layoutTime, e.Attr("data-reactiedatum"))
 			if err != nil {
-				log.Printf("error while parsing date of %s: %v", address, err)
+				c.logger.Sugar().Errorf("error while parsing date of %s: %w", address, err)
 				return
 			}
 
 			price, err := strconv.ParseFloat(e.Attr("data-prijs"), 16)
 			if err != nil {
-				log.Printf("error while parsing price of %s: %v", address, err)
+				c.logger.Sugar().Errorf("error while parsing price of %s: %w", address, err)
 				return
 			}
 
 			numberBedroom, err := strconv.Atoi(e.Attr("data-kamers"))
 			if err != nil {
-				log.Printf("error while parsing number bedroom of %s: %v", address, err)
+				c.logger.Sugar().Errorf("error while parsing number bedroom of %s: %w", address, err)
 				return
 			}
 
@@ -72,7 +71,7 @@ func (c *itrisConnector) FetchOffer() ([]corporation.Offer, error) {
 
 			// visit offer url
 			if err := e.Request.Visit(offer.URL); err != nil {
-				log.Printf("error while checking offer details %s: %v", address, err)
+				c.logger.Sugar().Errorf("error while checking offer details %s: %w", address, err)
 			}
 		})
 	})
@@ -146,18 +145,19 @@ func (c *itrisConnector) parseLocation(entry, address string) (latitude float64,
 	// latitude is idx 0 and longitude is 1
 	coordinates := strings.Split(entry, "-")
 	if len(coordinates) != 2 {
-		log.Printf("error while parsing coordinates of %s: %v", address, coordinates)
+		c.logger.Sugar().Warnf("error while parsing coordinates of %s: %v", address, coordinates)
 		return
 	}
+
 	latitude, err := strconv.ParseFloat(coordinates[0], 16)
 	if err != nil {
-		log.Printf("error while parsing latitude of %s: %v", address, err)
+		c.logger.Sugar().Errorf("error while parsing latitude of %s: %v", address, err)
 		return
 	}
 
 	longitude, err = strconv.ParseFloat(coordinates[1], 16)
 	if err != nil {
-		log.Printf("error while parsing latitude of %s: %v", address, err)
+		c.logger.Sugar().Errorf("error while parsing latitude of %s: %v", address, err)
 		return
 	}
 

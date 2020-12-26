@@ -3,7 +3,6 @@ package corporation
 import (
 	"database/sql/driver"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/woningfinder/woningfinder/pkg/osm"
@@ -62,15 +61,16 @@ type Housing struct {
 }
 
 // SetCityDistrict set the district name from a location
-func (h *Housing) SetCityDistrict() {
+func (h *Housing) SetCityDistrict() error {
 	if h.CityDistrict.Name != "" {
-		return
+		return nil
 	}
 
 	name, err := osm.GetResidential(fmt.Sprintf("%.5f", h.Latitude), fmt.Sprintf("%.5f", h.Longitude))
 	if err != nil {
-		log.Printf(fmt.Errorf("error getting district from %s: %w", h.Address, err).Error())
+		return fmt.Errorf("error getting district from %s: %w", h.Address, err)
 	}
 
 	h.CityDistrict.Name = name
+	return nil
 }

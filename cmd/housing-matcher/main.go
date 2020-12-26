@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
@@ -21,19 +21,21 @@ func init() {
 }
 
 func main() {
+	logger := logging.NewZapLoggerWithSentry(config.MustGetString("SENTRY_DSN"))
+
 	err := bootstrap.InitDB()
 	if err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 
 	err = bootstrap.InitRedis()
 	if err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 
-	clientProvider := bootstrap.CreateClientProvider()
-	corporationService := corporation.NewService(bootstrap.DB, bootstrap.RDB)
-	userService := user.NewService(bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	clientProvider := bootstrap.CreateClientProvider(logger)
+	corporationService := corporation.NewService(logger, bootstrap.DB, bootstrap.RDB)
+	userService := user.NewService(logger, bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
 	offerList := make(chan corporation.OfferList)
 	// subscribe to pub/sub messages inside a new goroutine
@@ -41,7 +43,7 @@ func main() {
 
 	for o := range offerList {
 		if err := userService.MatchOffer(o); err != nil {
-			log.Printf("error while maching offers for corporation %s: %v\n", o.Corporation.Name, err)
+			logger.Sugar().Errorf("error while maching offers for corporation %s: %w", o.Corporation.Name, err)
 		}
 	}
 

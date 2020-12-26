@@ -1,8 +1,9 @@
 package main
 
 import (
-	"log"
 	"net/http"
+
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/pkg/config"
@@ -19,13 +20,14 @@ func init() {
 }
 
 func main() {
+	logger := logging.NewZapLoggerWithSentry(config.MustGetString("SENTRY_DSN"))
 
 	// app port
 	port := config.MustGetString("APP_PORT")
-	log.Println("listening on port", port)
+	logger.Sugar().Infof("listening on port", port)
 
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
-		log.Fatalf("failed to start server: %v", err)
+		logger.Sugar().Fatalf("failed to start server: %w", err)
 	}
 }

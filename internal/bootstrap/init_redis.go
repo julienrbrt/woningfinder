@@ -2,10 +2,10 @@ package bootstrap
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/go-redis/redis"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 //RDB stores the redis connection
@@ -13,6 +13,8 @@ var RDB *redis.Client
 
 // InitRedis create a connection to WoningFinder Redis storage
 func InitRedis() error {
+	logger := logging.NewZapLogger()
+
 	redisHost := os.Getenv("REDIS_HOST")
 	redisPort := os.Getenv("REDIS_PORT")
 	redisPassword := os.Getenv("REDIS_PASSWORD")
@@ -31,7 +33,7 @@ func InitRedis() error {
 
 	RDB = rdb
 	if RDB != nil {
-		log.Println("successfully connected to redis 🎉")
+		logger.Sugar().Infof("successfully connected to redis 🎉")
 	}
 
 	return nil

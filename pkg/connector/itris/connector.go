@@ -1,19 +1,21 @@
 package itris
 
 import (
-	"log"
 	"net/http/cookiejar"
+
+	"go.uber.org/zap"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/pkg/connector"
 )
 
 type itrisConnector struct {
+	logger    *zap.Logger
 	url       string
 	collector *colly.Collector
 }
 
-func NewConnector(url string) connector.Connector {
+func NewConnector(logger *zap.Logger, url string) connector.Connector {
 	c := colly.NewCollector()
 	// allow revisiting url between jobs
 	c.AllowURLRevisit = true
@@ -21,16 +23,17 @@ func NewConnector(url string) connector.Connector {
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
 	if err != nil {
-		log.Fatal(err)
+		logger.Sugar().Fatal(err)
 	}
 	c.SetCookieJar(jar)
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {
-		log.Println("itris connector visiting", r.URL.String())
+		logger.Sugar().Infof("itris connector visiting", r.URL.String())
 	})
 
 	return &itrisConnector{
+		logger:    logger,
 		url:       url,
 		collector: c,
 	}

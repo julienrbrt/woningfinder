@@ -1,4 +1,4 @@
-package networking
+package networking_test
 
 import (
 	"context"
@@ -10,20 +10,21 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/woningfinder/woningfinder/pkg/networking"
 	"github.com/woningfinder/woningfinder/pkg/networking/query"
 	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 func TestRequestBuilder_NoHost(t *testing.T) {
 	a := assert.New(t)
-	_, err := requestBuilder(&Request{})
+	_, err := networking.RequestBuilder(&networking.Request{})
 	a.Error(err)
 }
 
 func TestRequestBuilder_InvalidBody(t *testing.T) {
 	a := assert.New(t)
 	readerErr := errors.New("error from the body reader")
-	_, err := requestBuilder(&Request{
+	_, err := networking.RequestBuilder(&networking.Request{
 		Host: &url.URL{Host: "example.com"},
 		Body: ioutil.NopCloser(util.NewErrReader(readerErr)),
 	})
@@ -33,7 +34,7 @@ func TestRequestBuilder_InvalidBody(t *testing.T) {
 
 func TestRequestBuilder_InvalidMethod(t *testing.T) {
 	a := assert.New(t)
-	_, err := requestBuilder(&Request{
+	_, err := networking.RequestBuilder(&networking.Request{
 		Host:   &url.URL{Host: "example.com"},
 		Method: "THIS IS INVALID",
 	})
@@ -42,7 +43,7 @@ func TestRequestBuilder_InvalidMethod(t *testing.T) {
 
 func TestRequestBuilder_WithSlashes(t *testing.T) {
 	a := assert.New(t)
-	req, err := requestBuilder(&Request{
+	req, err := networking.RequestBuilder(&networking.Request{
 		Host: &url.URL{Host: "example.com", Path: "a/path"},
 		Path: "AH%2FWC P COACH A STD %2FQ %2FC",
 	})
@@ -57,7 +58,7 @@ func TestRequestBuilder_WithSlashes(t *testing.T) {
 
 func TestRequestBuilder_SuccessMinimal(t *testing.T) {
 	a := assert.New(t)
-	req, err := requestBuilder(&Request{
+	req, err := networking.RequestBuilder(&networking.Request{
 		Host: &url.URL{Host: "example.com"},
 	})
 	a.NoError(err)
@@ -74,7 +75,7 @@ func TestRequestBuilder_SuccessFull(t *testing.T) {
 	q := make(query.Query, 0, 2)
 	q.Add("foo", "bar")
 	q.Add("baz", "foobar")
-	req, err := requestBuilder(&Request{
+	req, err := networking.RequestBuilder(&networking.Request{
 		Host:   &url.URL{Scheme: "https", Host: "example.com", Path: "/base", RawQuery: "host=example"},
 		Path:   "/api/v2/ping/",
 		Method: http.MethodPost,

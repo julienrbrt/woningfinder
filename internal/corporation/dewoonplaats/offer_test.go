@@ -3,6 +3,8 @@ package dewoonplaats_test
 import (
 	"testing"
 
+	"github.com/woningfinder/woningfinder/pkg/logging"
+
 	"github.com/woningfinder/woningfinder/internal/corporation"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
@@ -12,7 +14,7 @@ import (
 
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
-	client := bootstrap.CreateDeWoonplaatsClient()
+	client := bootstrap.CreateDeWoonplaatsClient(logging.NewZapLogger())
 
 	offers, err := client.FetchOffer()
 	a.NoError(err)
