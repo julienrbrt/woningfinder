@@ -29,7 +29,7 @@ func NewConnector(logger *zap.Logger, url string) connector.Connector {
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {
-		logger.Sugar().Infof("itris connector visiting", r.URL.String())
+		logger.Sugar().Infof("itris connector visiting %s", r.URL.String())
 	})
 
 	return &itrisConnector{

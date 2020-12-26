@@ -33,7 +33,7 @@ func InitRedis() error {
 
 	RDB = rdb
 	if RDB != nil {
-		logger.Sugar().Infof("successfully connected to redis 🎉")
+		logger.Sugar().Info("successfully connected to redis 🎉")
 	}
 
 	return nil

@@ -49,5 +49,5 @@ func main() {
 		logger.Sugar().Fatal(err)
 	}
 
-	logger.Sugar().Infof("successfully initialized database 🎉")
+	logger.Sugar().Info("successfully initialized database 🎉")
 }
