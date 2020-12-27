@@ -24,7 +24,7 @@ func main() {
 
 	// app port
 	port := config.MustGetString("APP_PORT")
-	logger.Sugar().Infof("listening on port %d", port)
+	logger.Sugar().Infof("listening on port %s", port)
 
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
