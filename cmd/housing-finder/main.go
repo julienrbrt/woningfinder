@@ -1,16 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
-	"go.uber.org/zap"
 
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron/v3"
@@ -26,15 +25,8 @@ func init() {
 	}
 }
 
-// workerMode defines if housing-finder should be run with internal cron (always running and cron managed by go)
-// or via command line using `housing-finder standalone`
-var workerMode = true
-
 func main() {
 	logger := logging.NewZapLoggerWithSentry(config.MustGetString("SENTRY_DSN"))
-
-	// check if should be run is workerMode
-	workerMode = !(len(os.Args) > 1 && os.Args[1] == "standalone")
 
 	// connect to databases
 	err := bootstrap.InitDB()
@@ -50,52 +42,60 @@ func main() {
 	mapboxClient := bootstrap.CreateMapboxGeocodingClient()
 	clientProvider := bootstrap.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporation.NewService(logger, bootstrap.DB, bootstrap.RDB)
-	if workerMode {
-		// get time location
-		nld, err := time.LoadLocation("Europe/Amsterdam")
-		if err != nil {
-			logger.Sugar().Fatal(err)
-		}
-
-		// instantiate cron
-		c := cron.New(cron.WithLocation(nld), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
-		parser := cron.NewParser(cron.Second | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow)
-
-		// populate crons
-		for _, spec := range config.MustGetStringList("HOUSING_FINDER_SCHEDULE") {
-			_, err := parser.Parse(spec)
-			if err != nil {
-				logger.Sugar().Errorf("error when parsing cron spec %s: %w", spec, err)
-				continue
-			}
-			c.AddFunc(spec, func() {
-				findHousing(logger, clientProvider, corporationService)
-			})
-		}
-
-		// start cron scheduler
-		c.Run()
-	} else {
-		findHousing(logger, clientProvider, corporationService)
+	// get time location
+	nl, err := time.LoadLocation("Europe/Amsterdam")
+	if err != nil {
+		logger.Sugar().Fatal(err)
 	}
-}
 
-func findHousing(logger *zap.Logger, clientProvider corporation.ClientProvider, corporationService corporation.Service) {
-	wg := sync.WaitGroup{}
-	for _, c := range *clientProvider.List() {
-		client, err := clientProvider.Get(c)
+	// instantiate cron
+	c := cron.New(cron.WithLocation(nl), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
+
+	// populate crons
+	for _, corp := range *clientProvider.List() {
+		// get corporation client
+		corporationClient, err := clientProvider.Get(corp)
 		if err != nil {
-			logger.Sugar().Warn(err)
+			logger.Sugar().Error(err)
 			continue
 		}
-		wg.Add(1)
-		go func(corporation corporation.Corporation, client corporation.Client) {
-			defer wg.Done()
 
-			if err := corporationService.PublishOffers(client, corporation); err != nil {
+		// specify cron time or fallback to default
+		// sets a second retry cron at 5 seconds interval
+		var spec string
+		for _, second := range []int{0, 5} {
+			if corp.SelectionTime == (time.Time{}) {
+				// the default is running at 17:00 is not specified
+				spec = buildSpec(second, 0, 17)
+			} else {
+				spec = buildSpec(second, corp.SelectionTime.Minute(), corp.SelectionTime.Hour())
+			}
+
+			_, err = c.AddFunc(spec, func() {
+				if err := corporationService.PublishOffers(corporationClient, corp); err != nil {
+					logger.Sugar().Error(err)
+				}
+			})
+			if err != nil {
 				logger.Sugar().Error(err)
 			}
-		}(c, client)
+		}
+
+		// add one more time at midnight
+		_, err = c.AddFunc("@midnight", func() {
+			if err := corporationService.PublishOffers(corporationClient, corp); err != nil {
+				logger.Sugar().Error(err)
+			}
+		})
+		if err != nil {
+			logger.Sugar().Error(err)
+		}
 	}
-	wg.Wait()
+
+	// start cron scheduler
+	c.Run()
+}
+
+func buildSpec(hour, minute, second int) string {
+	return fmt.Sprintf("%d %d %d * * *", second, minute, hour)
 }

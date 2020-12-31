@@ -33,8 +33,7 @@ func main() {
 		logger.Sugar().Fatal(err)
 	}
 
-	mapboxClient := bootstrap.CreateMapboxGeocodingClient()
-	clientProvider := bootstrap.CreateClientProvider(logger, mapboxClient)
+	clientProvider := bootstrap.CreateClientProvider(logger, nil)
 	corporationService := corporation.NewService(logger, bootstrap.DB, bootstrap.RDB)
 	userService := user.NewService(logger, bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 

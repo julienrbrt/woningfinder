@@ -2,6 +2,7 @@ package dewoonplaats
 
 import (
 	"net/url"
+	"time"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 )
@@ -28,4 +29,5 @@ var Info = corporation.Corporation{
 			Method: corporation.SelectionFirstComeFirstServed,
 		},
 	},
+	SelectionTime: time.Date(2021, time.January, 1, 18, 0, 0, 0, time.UTC),
 }
