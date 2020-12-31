@@ -1,7 +1,6 @@
 package user
 
 import (
-	"log"
 	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -20,10 +19,6 @@ func (u *User) MatchPreferences(offer corporation.Offer) bool {
 	}
 
 	// match location
-	err := offer.Housing.SetCityDistrict()
-	if err != nil {
-		log.Print(err)
-	}
 	if !u.matchCity(offer.Housing) || !u.matchCityDistrict(offer.Housing) {
 		return false
 	}
@@ -72,8 +67,14 @@ func (u *User) matchCity(housing corporation.Housing) bool {
 }
 
 func (u *User) matchCityDistrict(housing corporation.Housing) bool {
+	// no preferences so accept everything
 	if len(u.HousingPreferences.CityDistrict) == 0 {
 		return true
+	}
+
+	// no district but user has preferences so reject
+	if housing.CityDistrict.Name == "" {
+		return false
 	}
 
 	for _, district := range u.HousingPreferences.CityDistrict {

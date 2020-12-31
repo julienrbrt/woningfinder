@@ -28,6 +28,7 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 ### Supported ERP
 
 - [Itris ERP](https://www.itris.nl/#itris) (via parsing)
+- [Embrace Cloud](https://www.embracecloud.nl/woningcorporaties/wat-kan-het-allemaal/)
 - [Dynamics Empire by cegeka-dsa](https://www.cegeka-dsa.nl/#intro)
 - [WoningNet WRB](https://www.woningnet.nl) (JSON API)
 - [Zig](https://zig.nl)
@@ -44,9 +45,9 @@ The mapping of the corproation and the client is made in the `client_provider`. 
 
 A Geolocation service is used in order to get the name of a district using coordinates.
 This is used because the user can filter the house he wants to react to by city and district.
-For that WoningFinder uses OpenStreetMap API.
+For that WoningFinder uses Mapbox Geocoding API.
 
-More information about that API [here](https://nominatim.openstreetmap.org).
+[More information about that API](https://docs.mapbox.com/api/search/geocoding/).
 
 ## Housing-Matcher
 

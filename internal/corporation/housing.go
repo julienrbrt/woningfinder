@@ -2,17 +2,18 @@ package corporation
 
 import (
 	"database/sql/driver"
-	"fmt"
 	"time"
 
-	"github.com/woningfinder/woningfinder/pkg/osm"
 	"gorm.io/gorm"
 )
 
 const (
-	House       Type = "HOUSE"
-	Appartement      = "APPARTEMENT"
-	Undefined        = "UNDEFINED"
+	// House is a house type
+	House Type = "HOUSE"
+	// Appartement is a appartement type
+	Appartement = "APPARTEMENT"
+	// Undefined is an undefined type (probably parking but unsupported by WoningFinder)
+	Undefined = "UNDEFINED"
 )
 
 // Type defines the type of an HousingType (appartement, house)
@@ -60,21 +61,17 @@ type Housing struct {
 	Attic                   bool
 }
 
-// SetCityDistrict set the district name from a location
-func (h *Housing) SetCityDistrict() error {
-	if h.CityDistrict.Name != "" {
-		return nil
+// IsValid confirms that a housing contains all the required information by WoningFinder
+func (h *Housing) IsValid() bool {
+	if h.Type.Type == Undefined {
+		return true
 	}
 
-	if h.Longitude == 0 || h.Latitude == 0 {
-		return nil
-	}
-
-	name, err := osm.GetResidential(fmt.Sprintf("%.5f", h.Latitude), fmt.Sprintf("%.5f", h.Longitude))
-	if err != nil {
-		return fmt.Errorf("error getting district from %s: %w", h.Address, err)
-	}
-
-	h.CityDistrict.Name = name
-	return nil
+	return h.Type.Type != "" &&
+		h.City.Name != "" &&
+		h.CityDistrict.CityName == h.City.Name &&
+		h.EnergieLabel != "" &&
+		h.BuildingYear > 0 &&
+		h.Price > 0 &&
+		h.NumberBedroom > 0
 }

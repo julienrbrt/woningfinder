@@ -11,7 +11,7 @@ type client struct {
 	networkingClient networking.Client
 }
 
-// NewClient creates a client for de woonplaats
+// NewClient creates a client for De Woonplaats
 func NewClient(c networking.Client) corporation.Client {
 	return &client{
 		networkingClient: c,

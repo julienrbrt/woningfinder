@@ -20,7 +20,8 @@ func Test_FetchOffer(t *testing.T) {
 	a.NoError(err)
 	a.True(len(offers) > 0)
 	for _, offer := range offers {
-		a.NotEmpty(offer.Housing.Type.Type)
+		a.True(offer.Housing.IsValid())
+
 		if offer.Housing.Type.Type == corporation.Undefined {
 			continue
 		}
@@ -29,16 +30,6 @@ func Test_FetchOffer(t *testing.T) {
 		a.NotNil(offer.SelectionDate)
 		a.NotEmpty(offer.URL)
 		a.NotEmpty(offer.ExternalID)
-
-		a.NotNil(offer.Housing)
-		a.NotEmpty(offer.Housing.City.Name)
-		a.NotEmpty(offer.Housing.Address)
-		a.NotEmpty(offer.Housing.EnergieLabel)
-		a.True(offer.Housing.BuildingYear > 0)
-		a.True(offer.Housing.Price > 0)
-		a.True(offer.Housing.Longitude > 0)
-		a.True(offer.Housing.Latitude > 0)
-		a.True(offer.Housing.NumberRoom > 0)
 
 		// test only for one offer
 		return

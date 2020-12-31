@@ -93,6 +93,8 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	a.False(testUser.MatchPreferences(testOffer))
 	testOffer.Housing.CityDistrict = corporation.CityDistrict{CityName: "Enschede", Name: "Enschede - Roombeek"}
 	a.True(testUser.MatchPreferences(testOffer))
+	testOffer.Housing.CityDistrict = corporation.CityDistrict{CityName: "Enschede", Name: "deppenbroek"}
+	a.False(testUser.MatchPreferences(testOffer))
 }
 
 func Test_MatchPreferences_HousingType(t *testing.T) {

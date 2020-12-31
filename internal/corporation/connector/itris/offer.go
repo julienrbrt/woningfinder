@@ -1,6 +1,7 @@
 package itris
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -11,21 +12,32 @@ import (
 
 const detailsHousingChildAttr = "li.link a"
 
-func (c *itrisConnector) FetchOffer() ([]corporation.Offer, error) {
+func (c *client) FetchOffer() ([]corporation.Offer, error) {
 	offers := map[string]*corporation.Offer{}
 
 	// add offer
 	c.collector.OnHTML("div.aanbodListItems", func(el *colly.HTMLElement) {
 		el.ForEach("div.woningaanbod", func(_ int, e *colly.HTMLElement) {
-			houseType := c.parseHousingType(e.Text)
+			houseType := parseHousingType(e.Text)
 			if houseType == corporation.Undefined {
 				return
 			}
 
+			// get location
+			var cityDistrict string
 			address := strings.Title(strings.ToLower(e.ChildAttr(detailsHousingChildAttr, "data-select-address")))
-			latitude, longitude := c.parseLocation(e.ChildAttr(detailsHousingChildAttr, "data-select-lat-long"), address)
-			if latitude == 0 || longitude == 0 {
-				c.logger.Sugar().Warnf("error while parsing coordinates of %s: [%f, %f]", address, latitude, longitude)
+			city := strings.Title(strings.ToLower(e.Attr("data-plaats")))
+			latitude, longitude, err := parseLocation(e.ChildAttr(detailsHousingChildAttr, "data-select-lat-long"), address)
+			if err != nil {
+				cityDistrict, err = c.mapboxClient.CityDistrictFromAddress(address)
+				if err != nil {
+					c.logger.Sugar().Warnf("could not get city district of %s: %w", address, err)
+				}
+			} else {
+				cityDistrict, err = c.mapboxClient.CityDistrictFromCoords(latitude, longitude)
+				if err != nil {
+					c.logger.Sugar().Warnf("could not get city district of %s: %w", address, err)
+				}
 			}
 
 			reactionDate, err := time.Parse(layoutTime, e.Attr("data-reactiedatum"))
@@ -57,10 +69,12 @@ func (c *itrisConnector) FetchOffer() ([]corporation.Offer, error) {
 					Price:   price,
 					Address: address,
 					City: corporation.City{
-						Name: strings.Title(strings.ToLower(e.Attr("data-plaats"))),
+						Name: city,
 					},
-					Latitude:      latitude,
-					Longitude:     longitude,
+					CityDistrict: corporation.CityDistrict{
+						CityName: city,
+						Name:     cityDistrict,
+					},
 					NumberBedroom: numberBedroom,
 				},
 			}
@@ -126,7 +140,7 @@ func (c *itrisConnector) FetchOffer() ([]corporation.Offer, error) {
 	return offerList, nil
 }
 
-func (c *itrisConnector) parseHousingType(houseType string) corporation.Type {
+func parseHousingType(houseType string) corporation.Type {
 	houseType = strings.ToLower(houseType)
 
 	if strings.Contains(houseType, "appartement") {
@@ -140,25 +154,26 @@ func (c *itrisConnector) parseHousingType(houseType string) corporation.Type {
 	return corporation.Undefined
 }
 
-func (c *itrisConnector) parseLocation(entry, address string) (latitude float64, longitude float64) {
-	// latitude is idx 0 and longitude is 1
+func parseLocation(entry, address string) (string, string, error) {
+	// latitude is index 0 and longitude is 1
 	coordinates := strings.Split(entry, "-")
 	if len(coordinates) != 2 {
-		c.logger.Sugar().Warnf("error while parsing coordinates of %s: %v", address, coordinates)
-		return
+		return "", "", fmt.Errorf("error while getting coordinates for %s", address)
 	}
 
 	latitude, err := strconv.ParseFloat(coordinates[0], 16)
 	if err != nil {
-		c.logger.Sugar().Errorf("error while parsing latitude of %s: %v", address, err)
-		return
+		return "", "", fmt.Errorf("error while checking latitude of %s: %v", address, err)
 	}
 
-	longitude, err = strconv.ParseFloat(coordinates[1], 16)
+	longitude, err := strconv.ParseFloat(coordinates[1], 16)
 	if err != nil {
-		c.logger.Sugar().Errorf("error while parsing latitude of %s: %v", address, err)
-		return
+		return "", "", fmt.Errorf("error while checking longitude of %s: %v", address, err)
 	}
 
-	return
+	if latitude == 0 || longitude == 0 {
+		return "", "", fmt.Errorf("error invalid coordinates for %s", address)
+	}
+
+	return coordinates[0], coordinates[1], nil
 }

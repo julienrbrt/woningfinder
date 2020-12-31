@@ -8,7 +8,7 @@ import (
 
 func mapLoggerToSentry(logger *zap.Logger, DSN string) *zap.Logger {
 	cfg := zapsentry.Configuration{
-		Level: zapcore.ErrorLevel, // when to send message to sentry
+		Level: zapcore.WarnLevel, // when to send message to sentry
 		Tags: map[string]string{
 			"component": "system",
 		},
