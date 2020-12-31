@@ -27,11 +27,11 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 
 ### Supported ERP
 
-- [Itris ERP](https://www.itris.nl/#itris) (via parsing)
-- [Embrace Cloud](https://www.embracecloud.nl/woningcorporaties/wat-kan-het-allemaal/)
-- [Dynamics Empire by cegeka-dsa](https://www.cegeka-dsa.nl/#intro)
-- [WoningNet WRB](https://www.woningnet.nl) (JSON API)
-- [Zig](https://zig.nl)
+- [x] [Itris ERP](https://www.itris.nl/#itris) (via web parsing)
+- [ ] [Embrace Cloud](https://www.embracecloud.nl/woningcorporaties/wat-kan-het-allemaal/)
+- [ ] [Dynamics Empire by cegeka-dsa](https://www.cegeka-dsa.nl/#intro)
+- [ ] [WoningNet WRB](https://www.woningnet.nl) (JSON API)
+- [ ] [Zig](https://zig.nl)
 
 Some housing corporation (or group of housing corporation) have their home-made system, they are independentely supported:
 
@@ -43,13 +43,18 @@ The mapping of the corproation and the client is made in the `client_provider`. 
 
 ### Location Provider
 
-A Geolocation service is used in order to get the name of a district using coordinates.
+A geolocation service is used in order to get the name of a district using coordinates.
 This is used because the user can filter the house he wants to react to by city and district.
 For that WoningFinder uses Mapbox Geocoding API.
 
 [More information about that API](https://docs.mapbox.com/api/search/geocoding/).
 
 ## Housing-Matcher
+
+### Matching check
+
+We use redis in order to check if we already try to match a user with an offer. We create an uuid of the user and the address and only check if it does not exists.
+This permits to do not have to re-check multiple times an offer as offers stay published for multiple days.
 
 ### Security
 
