@@ -19,6 +19,7 @@ type Corporation struct {
 	URL             string            `gorm:"primaryKey"`
 	Cities          []City            `gorm:"many2many:corporations_cities"`
 	SelectionMethod []SelectionMethod `gorm:"many2many:corporations_selection_method"`
+	SelectionTime   time.Time
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

@@ -5,7 +5,7 @@ This document defines the archtitecture of WoningFinder. Its data schema is foun
 WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _HousingMatcher_.
 
 - _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for WoningFinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
-- _[HousingFinder](../cmd/housing-finder)_, is used to query all the offers of the housing corporation. It connects them all and query them at the right time. In order to use HousingFinder locally instead as a worker, run `housingfinder standalone`.
+- _[HousingFinder](../cmd/housing-finder)_, is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to redis pub/sub.
 - _[HousingMatcher](../cmd/housing-matcher)_, is trigged by _HousingFinder_ via a messaging broker (redis pub/sub). It will match the new offers to the customer search option and react it.
 
 There is as well small tools that are run for special reasons:
@@ -25,23 +25,7 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 
 ## Housing-Finder
 
-### Supported ERP
-
-- [x] [Itris ERP](https://www.itris.nl/#itris) (via web parsing)
-- [ ] [Embrace Cloud](https://www.embracecloud.nl/woningcorporaties/wat-kan-het-allemaal/)
-- [ ] [Dynamics Empire by cegeka-dsa](https://www.cegeka-dsa.nl/#intro)
-- [ ] [WoningNet WRB](https://www.woningnet.nl) (JSON API)
-- [ ] [Zig](https://zig.nl)
-
-Some housing corporation (or group of housing corporation) have their home-made system, they are independentely supported:
-
-- De Woonplaats (JSON API)
-- Woonkeus Stedendriehoek (JSON API)
-
-The definition of corporation are something done offline, once a corporation is supported and a client is created.
-The mapping of the corproation and the client is made in the `client_provider`. The matching is done using the name and the url of the housing corporation.
-
-### Location Provider
+### Geocoding
 
 A geolocation service is used in order to get the name of a district using coordinates.
 This is used because the user can filter the house he wants to react to by city and district.
@@ -51,7 +35,7 @@ For that WoningFinder uses Mapbox Geocoding API.
 
 ## Housing-Matcher
 
-### Matching check
+### Matching
 
 We use redis in order to check if we already try to match a user with an offer. We create an uuid of the user and the address and only check if it does not exists.
 This permits to do not have to re-check multiple times an offer as offers stay published for multiple days.
