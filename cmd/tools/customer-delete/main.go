@@ -29,7 +29,7 @@ func main() {
 		logger.Sugar().Fatal(err)
 	}
 
-	clientProvider := bootstrap.CreateClientProvider(logger)
+	clientProvider := bootstrap.CreateClientProvider(logger, nil)
 	corporationService := corporation.NewService(logger, bootstrap.DB, nil)
 	userService := user.NewService(logger, bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 

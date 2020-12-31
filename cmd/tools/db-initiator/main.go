@@ -38,7 +38,7 @@ func main() {
 		logger.Sugar().Fatal(err)
 	}
 
-	clientProvider := bootstrap.CreateClientProvider(logger)
+	clientProvider := bootstrap.CreateClientProvider(logger, nil)
 	corporationService := corporation.NewService(logger, bootstrap.DB, nil)
 
 	if _, err := corporationService.CreateOrUpdate(clientProvider.List()); err != nil {

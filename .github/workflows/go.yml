@@ -22,6 +22,8 @@ jobs:
         go get -v -t -d ./...
 
     - name: Test
+      env: # environment variables used in tests
+        MAPBOX_API_KEY: ${{ secrets.MAPBOX_API_KEY }} # set mapbox api key
       run: go test ./...
 
     - name: Build

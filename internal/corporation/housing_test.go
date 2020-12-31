@@ -7,7 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
-func Test_Offer_SetCityDistrict(t *testing.T) {
+func Test_Housing_IsValid_InvalidHousing(t *testing.T) {
 	a := assert.New(t)
 	housing := corporation.Housing{
 		Type: corporation.HousingType{
@@ -16,35 +16,49 @@ func Test_Offer_SetCityDistrict(t *testing.T) {
 		Latitude:  52.23148,
 		Longitude: 6.89277,
 	}
-	err := housing.SetCityDistrict()
-	a.NoError(err)
-	a.Equal("roombeek", housing.CityDistrict.Name)
+	a.False(housing.IsValid())
 }
 
-func Test_Offer_SetCityDistrict_Empty(t *testing.T) {
+func Test_Housing_IsValid_ValidUndefined(t *testing.T) {
+	a := assert.New(t)
+	housing := corporation.Housing{
+		Type: corporation.HousingType{
+			Type: corporation.Undefined,
+		},
+		Latitude:  52.23148,
+		Longitude: 6.89277,
+	}
+	a.True(housing.IsValid())
+}
+
+func Test_Housing_IsValid_Valid(t *testing.T) {
 	a := assert.New(t)
 	housing := corporation.Housing{
 		Type: corporation.HousingType{
 			Type: corporation.House,
 		},
-		Latitude: 0,
-	}
-	err := housing.SetCityDistrict()
-	a.NoError(err)
-	a.Equal(housing.CityDistrict.Name, "")
-}
-
-func Test_Offer_SetCityDistrict_AlreadySet(t *testing.T) {
-	a := assert.New(t)
-	housing := corporation.Housing{
-		Type: corporation.HousingType{
-			Type: corporation.House,
+		City: corporation.City{
+			Name: "enschede",
 		},
 		CityDistrict: corporation.CityDistrict{
-			Name: "set",
+			CityName: "enschede",
+			Name:     "roombeek",
 		},
+		Address:                 "Beatrixstraat 1 R 7161 DJ Neede A",
+		EnergieLabel:            "A",
+		Price:                   656.39,
+		Size:                    80,
+		NumberRoom:              6,
+		NumberBedroom:           2,
+		BuildingYear:            2010,
+		HousingAllowance:        true,
+		Garden:                  false,
+		Garage:                  false,
+		Elevator:                true,
+		Balcony:                 true,
+		AccessibilityWheelchair: false,
+		AccessibilityScooter:    true,
+		Attic:                   false,
 	}
-	err := housing.SetCityDistrict()
-	a.NoError(err)
-	a.Equal("set", housing.CityDistrict.Name)
+	a.True(housing.IsValid())
 }
