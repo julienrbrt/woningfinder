@@ -65,8 +65,8 @@ func main() {
 		var spec string
 		for _, second := range []int{0, 5} {
 			if corp.SelectionTime == (time.Time{}) {
-				// the default is running at 17:15 is not specified
-				spec = buildSpec(17, 15, second)
+				// the default is running at 18:00 if not specified
+				spec = buildSpec(18, 00, second)
 			} else {
 				spec = buildSpec(corp.SelectionTime.Hour(), corp.SelectionTime.Minute(), second)
 			}
