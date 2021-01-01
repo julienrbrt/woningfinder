@@ -78,6 +78,13 @@ func (s *corporationService) PublishOffers(client Client, corporation Corporatio
 		return fmt.Errorf("error while fetching offers for %s: %w", corporation.Name, err)
 	}
 
+	// log number of offers found
+	if len(offers) > 0 {
+		s.logger.Sugar().Infof("%d offers found for %s", len(offers), corporation.Name)
+	} else {
+		s.logger.Sugar().Infof("no offers found for %s", corporation.Name)
+	}
+
 	// build offers list
 	offerList := OfferList{
 		Corporation: corporation,
@@ -89,10 +96,8 @@ func (s *corporationService) PublishOffers(client Client, corporation Corporatio
 		return fmt.Errorf("erorr while marshaling offers for %s: %w", corporation.Name, err)
 	}
 
-	err = s.rdb.Publish(pubSubChannelName, result).Err()
-	if err != nil {
+	if err = s.rdb.Publish(pubSubChannelName, result).Err(); err != nil {
 		return fmt.Errorf("error publishing %d offers to channel %s: %w", len(offers), pubSubChannelName, err)
-
 	}
 
 	return nil

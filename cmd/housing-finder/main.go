@@ -53,8 +53,11 @@ func main() {
 
 	// populate crons
 	for _, corp := range *clientProvider.List() {
+		// https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
+		corp := corp
+
 		// get corporation client
-		corporationClient, err := clientProvider.Get(corp)
+		client, err := clientProvider.Get(corp)
 		if err != nil {
 			logger.Sugar().Error(err)
 			continue
@@ -63,32 +66,26 @@ func main() {
 		// specify cron time or fallback to default
 		// sets a second retry cron at 5 seconds interval
 		var spec string
-		for _, second := range []int{0, 5} {
-			if corp.SelectionTime == (time.Time{}) {
-				// the default is running at 18:00 if not specified
-				spec = buildSpec(18, 00, second)
-			} else {
+		for _, second := range []int{-1, 0, 5} {
+			if corp.SelectionTime != (time.Time{}) {
 				spec = buildSpec(corp.SelectionTime.Hour(), corp.SelectionTime.Minute(), second)
+			} else {
+				// the default is running at 17:00 if not specified
+				spec = buildSpec(17, 00, second)
 			}
 
-			_, err = c.AddFunc(spec, func() {
-				if err := corporationService.PublishOffers(corporationClient, corp); err != nil {
+			// add one more time at midnight
+			if second == -1 {
+				spec = "@midnight"
+			}
+
+			if _, err = c.AddFunc(spec, func() {
+				if err := corporationService.PublishOffers(client, corp); err != nil {
 					logger.Sugar().Error(err)
 				}
-			})
-			if err != nil {
+			}); err != nil {
 				logger.Sugar().Error(err)
 			}
-		}
-
-		// add one more time at midnight
-		_, err = c.AddFunc("@midnight", func() {
-			if err := corporationService.PublishOffers(corporationClient, corp); err != nil {
-				logger.Sugar().Error(err)
-			}
-		})
-		if err != nil {
-			logger.Sugar().Error(err)
 		}
 	}
 
