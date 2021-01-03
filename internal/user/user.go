@@ -32,6 +32,7 @@ type HousingPreferences struct {
 	HasGarden           bool
 	HasElevator         bool
 	HasHousingAllowance bool
+	HasAttic            bool
 	IsAccessible        bool
 }
 

@@ -66,7 +66,6 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 					Type: corporation.HousingType{
 						Type: houseType,
 					},
-					Price:   price,
 					Address: address,
 					City: corporation.City{
 						Name: city,
@@ -75,6 +74,7 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 						CityName: city,
 						Name:     cityDistrict,
 					},
+					Price:         price,
 					NumberBedroom: numberBedroom,
 				},
 			}
@@ -123,6 +123,17 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 				offers[offerURL].Housing.BuildingYear = buildingYear
 			}
 		})
+
+		// TODO
+		// add size
+		// add housingallowance
+		// add garden
+		// add garage
+		// add elevator
+		// add balcony
+		// add attic
+		// add accessible
+
 	})
 
 	// parse offers
