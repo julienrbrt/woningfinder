@@ -29,8 +29,9 @@ func (u *User) MatchPreferences(offer corporation.Offer) bool {
 		(u.HousingPreferences.HasGarden && !offer.Housing.Garden) ||
 		(u.HousingPreferences.HasElevator && !offer.Housing.Elevator) ||
 		(u.HousingPreferences.HasHousingAllowance && !offer.Housing.HousingAllowance) ||
-		(u.HousingPreferences.IsAccessible && (!offer.Housing.AccessibilityScooter && !offer.Housing.AccessibilityWheelchair)) ||
-		(u.HousingPreferences.HasGarage && !offer.Housing.Garage) {
+		(u.HousingPreferences.IsAccessible && !offer.Housing.Accessible) ||
+		(u.HousingPreferences.HasGarage && !offer.Housing.Garage) ||
+		(u.HousingPreferences.HasAttic && !offer.Housing.Attic) {
 		return false
 	}
 

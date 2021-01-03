@@ -29,34 +29,33 @@ type offerResult struct {
 			MinLeeftijd      int    `json:"min_leeftijd"`
 			Omschrijving     string `json:"omschrijving"`
 		} `json:"criteria"`
-		Latitude                float64 `json:"lat"`
-		Longitude               float64 `json:"lng"`
-		Address                 string  `json:"adres"`
-		District                string  `json:"wijk"`
-		City                    string  `json:"plaats"`
-		Postcode                string  `json:"postcode"`
-		RentPrice               float64 `json:"relevante_huurprijs,omitempty"`
-		RentPriceForAllowance   string  `json:"toeslagprijs"`
-		RentLuxe                bool    `json:"tehuur_luxehuur,omitempty"`
-		MapsURL                 string  `json:"mapslink"`
-		BuildingYear            int     `json:"bouwjaar"`
-		EnergieLabel            string  `json:"energielabel"`
-		NumberBedroom           int     `json:"slaapkamers"`
-		CV                      bool    `json:"cv"`
-		Balcony                 bool    `json:"balkon"`
-		Garage                  bool    `json:"garage"`
-		Historic                bool    `json:"historic"`
-		ForRent                 bool    `json:"ishuur"`
-		HasLowRentPrice         bool    `json:"ishuurlaag"`
-		Lift                    bool    `json:"lift"`
-		AccessibilityScooter    bool    `json:"rollatortoegankelijk"`
-		AccessibilityWheelchair bool    `json:"rolstoeltoegankelijk"`
-		Garden                  string  `json:"tuin"`
-		Attic                   bool    `json:"zolder"`
-		SelectionDate           string  `json:"lotingsdatum"`
-		IsSelectionRandom       bool    `json:"loting"`
-		Size                    string  `json:"woonoppervlak"`
-		RoomSize                []struct {
+		Latitude              float64 `json:"lat"`
+		Longitude             float64 `json:"lng"`
+		Address               string  `json:"adres"`
+		District              string  `json:"wijk"`
+		City                  string  `json:"plaats"`
+		Postcode              string  `json:"postcode"`
+		RentPrice             float64 `json:"relevante_huurprijs,omitempty"`
+		RentPriceForAllowance string  `json:"toeslagprijs"`
+		RentLuxe              bool    `json:"tehuur_luxehuur,omitempty"`
+		MapsURL               string  `json:"mapslink"`
+		BuildingYear          int     `json:"bouwjaar"`
+		EnergieLabel          string  `json:"energielabel"`
+		NumberBedroom         int     `json:"slaapkamers"`
+		CV                    bool    `json:"cv"`
+		Balcony               bool    `json:"balkon"`
+		Garage                bool    `json:"garage"`
+		Historic              bool    `json:"historic"`
+		ForRent               bool    `json:"ishuur"`
+		HasLowRentPrice       bool    `json:"ishuurlaag"`
+		Lift                  bool    `json:"lift"`
+		Garden                string  `json:"tuin"`
+		Attic                 bool    `json:"zolder"`
+		SelectionDate         string  `json:"lotingsdatum"`
+		IsSelectionRandom     bool    `json:"loting"`
+		Size                  string  `json:"woonoppervlak"`
+		Accessible            bool    `json:"rolstoeltoegankelijk"`
+		RoomSize              []struct {
 			Name string `json:"titel"`
 			Size string `json:"oppervlak"`
 		} `json:"vertrekken"`
@@ -99,22 +98,21 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 				CityName: house.City,
 				Name:     house.District,
 			},
-			Latitude:                house.Latitude,
-			Longitude:               house.Longitude,
-			EnergieLabel:            house.EnergieLabel,
-			NumberRoom:              len(house.RoomSize),
-			NumberBedroom:           house.NumberBedroom,
-			Size:                    c.parseHouseSize(house.Size),
-			Price:                   house.RentPrice,
-			BuildingYear:            house.BuildingYear,
-			HousingAllowance:        house.HasLowRentPrice && !house.RentLuxe && len(house.RentPriceForAllowance) > 0,
-			Garden:                  len(house.Garden) > 0,
-			Garage:                  house.Garage,
-			Elevator:                house.Lift,
-			Balcony:                 house.Balcony,
-			AccessibilityScooter:    house.AccessibilityScooter,
-			AccessibilityWheelchair: house.AccessibilityWheelchair,
-			Attic:                   house.Attic,
+			Latitude:         house.Latitude,
+			Longitude:        house.Longitude,
+			EnergieLabel:     house.EnergieLabel,
+			NumberRoom:       len(house.RoomSize),
+			NumberBedroom:    house.NumberBedroom,
+			Size:             c.parseHouseSize(house.Size),
+			Price:            house.RentPrice,
+			BuildingYear:     house.BuildingYear,
+			HousingAllowance: house.HasLowRentPrice && !house.RentLuxe && len(house.RentPriceForAllowance) > 0,
+			Garden:           len(house.Garden) > 0,
+			Garage:           house.Garage,
+			Elevator:         house.Lift,
+			Balcony:          house.Balcony,
+			Attic:            house.Attic,
+			Accessible:       house.Accessible,
 		}
 
 		offer := corporation.Offer{

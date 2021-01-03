@@ -40,25 +40,24 @@ type HousingType struct {
 
 // Housing defines an appartement and a house
 type Housing struct {
-	Type                    HousingType
-	Address                 string
-	City                    City
-	CityDistrict            CityDistrict
-	EnergieLabel            string
-	Price                   float64
-	Size                    float64
-	Longitude, Latitude     float64
-	NumberRoom              int
-	NumberBedroom           int
-	BuildingYear            int
-	HousingAllowance        bool // HousingAllowance defines if the house can get housing allowance
-	Garden                  bool
-	Garage                  bool
-	Elevator                bool
-	Balcony                 bool
-	AccessibilityWheelchair bool
-	AccessibilityScooter    bool
-	Attic                   bool
+	Type                HousingType
+	Address             string
+	City                City
+	CityDistrict        CityDistrict
+	EnergieLabel        string
+	Price               float64
+	Size                float64
+	Longitude, Latitude float64
+	NumberRoom          int
+	NumberBedroom       int
+	BuildingYear        int
+	HousingAllowance    bool // HousingAllowance defines if the house can get housing allowance
+	Garden              bool
+	Garage              bool
+	Elevator            bool
+	Balcony             bool
+	Attic               bool
+	Accessible          bool // Assessible defines if the house is accessible for handicapt people
 }
 
 // IsValid confirms that a housing contains all the required information by WoningFinder
@@ -68,10 +67,13 @@ func (h *Housing) IsValid() bool {
 	}
 
 	return h.Type.Type != "" &&
+		h.Address != "" &&
 		h.City.Name != "" &&
 		h.CityDistrict.CityName == h.City.Name &&
 		h.EnergieLabel != "" &&
-		h.BuildingYear > 0 &&
 		h.Price > 0 &&
-		h.NumberBedroom > 0
+		h.Size > 0 &&
+		h.NumberRoom > 0 &&
+		h.NumberBedroom > 0 &&
+		h.BuildingYear > 0
 }
