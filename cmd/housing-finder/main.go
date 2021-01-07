@@ -64,19 +64,23 @@ func main() {
 		}
 
 		// specify cron time or fallback to default
-		// sets a second retry cron at 5 seconds interval
+		// always check at midnight
+		if _, err = c.AddFunc("@midnight", func() {
+			if err := corporationService.PublishOffers(client, corp); err != nil {
+				logger.Sugar().Error(err)
+			}
+		}); err != nil {
+			logger.Sugar().Error(err)
+		}
+
+		// check at 0, 10 and 30 seconds after the publishing time
 		var spec string
-		for _, second := range []int{-1, 0, 5} {
+		for _, second := range []int{0, 10, 30} {
 			if corp.SelectionTime != (time.Time{}) {
 				spec = buildSpec(corp.SelectionTime.Hour(), corp.SelectionTime.Minute(), second)
 			} else {
 				// the default is running at 17:00 if not specified
 				spec = buildSpec(17, 00, second)
-			}
-
-			// add one more time at midnight
-			if second == -1 {
-				spec = "@midnight"
 			}
 
 			if _, err = c.AddFunc(spec, func() {
