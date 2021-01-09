@@ -10,7 +10,7 @@ import (
 
 func Test_Mapbox_Geocoding(t *testing.T) {
 	a := assert.New(t)
-	mapboxClient := bootstrap.CreateMapboxGeocodingClient()
+	mapboxClient := bootstrap.CreateMapboxClient()
 	districtFromAddress, err := mapboxClient.CityDistrictFromAddress("Hogelandsingel 120 ENSCHEDE")
 	districtFromCoords, err := mapboxClient.CityDistrictFromCoords("52.2130417", "6.9075881")
 	a.NoError(err)

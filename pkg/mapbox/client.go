@@ -6,8 +6,8 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
-// GeocodingAPIEndpoint is the geocoding mapbox api endpoint
-var GeocodingAPIEndpoint = url.URL{Scheme: "https", Host: "api.mapbox.com", Path: "/geocoding/v5/"}
+// APIEndpoint is the geocoding mapbox api endpoint
+var APIEndpoint = url.URL{Scheme: "https", Host: "api.mapbox.com", Path: "/geocoding/v5/"}
 
 // Client for Mapbox
 type Client interface {
