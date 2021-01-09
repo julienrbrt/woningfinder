@@ -1,9 +1,10 @@
 package user
 
 import (
-	"gorm.io/gorm"
+	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // User defines an user of WoningFinder
@@ -14,35 +15,68 @@ type User struct {
 	BirthYear              int
 	YearlyIncome           int
 	FamilySize             int
-	HousingPreferences     HousingPreferences       `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Plan                   Plan
+	HousingPreferences     []HousingPreferences
 	CorporationCredentials []CorporationCredentials `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
-// HousingPreferences defines the user preference on a housing
-type HousingPreferences struct {
-	gorm.Model
-	UserID              int                       `gorm:"primaryKey"`
-	Type                []corporation.HousingType `gorm:"many2many:housing_preferences_housing_types"`
-	MaximumPrice        float64
-	City                []corporation.City         `gorm:"many2many:housing_preferences_cities"`
-	CityDistrict        []corporation.CityDistrict `gorm:"many2many:housing_preferences_city_districts"`
-	NumberBedroom       int
-	HasBalcony          bool
-	HasGarage           bool
-	HasGarden           bool
-	HasElevator         bool
-	HasHousingAllowance bool
-	HasAttic            bool
-	IsAccessible        bool
+func (s *service) CreateUser(u *User) (*User, error) {
+	if u.Email == "" {
+		return nil, fmt.Errorf("email is required for creating user")
+	}
+
+	if u.Plan != Zeker && u.Plan != Sneller {
+		return nil, fmt.Errorf("subscribing to an existing plan is required")
+	}
+
+	if u.YearlyIncome < -1 {
+		return nil, fmt.Errorf("yearly income must be greater than 0, or set to -1 to not be used")
+	}
+
+	if len(u.HousingPreferences) == 0 {
+		return nil, fmt.Errorf("housing preferences is required for creating user")
+	}
+
+	_, err := s.GetUser(u.Email)
+	if err == nil {
+		return nil, fmt.Errorf("error user %s already exists", u.Email)
+	}
+
+	if err := s.dbClient.Conn().Create(&u).Error; err != nil {
+		return nil, err
+	}
+
+	if err := s.CreateHousingPreferences(u, u.HousingPreferences); err != nil {
+		return nil, fmt.Errorf("error when creating user %s: %w", u.Email, err)
+	}
+
+	return u, nil
 }
 
-// CorporationCredentials holds the user credentials to login to an housing corporation
-type CorporationCredentials struct {
-	gorm.Model
-	UserID          int    `gorm:"primaryKey"`
-	CorporationName string `gorm:"primaryKey"`
-	CorporationURL  string `gorm:"primaryKey"`
-	Corporation     corporation.Corporation
-	Login           string
-	Password        string
+func (s *service) GetUser(email string) (*User, error) {
+	var u User
+	s.dbClient.Conn().Where(&User{Email: email}).First(&u)
+
+	if u.ID == 0 {
+		return nil, fmt.Errorf("no user found with the email: %s", email)
+	}
+
+	return &u, nil
+}
+
+func (s *service) DeleteUser(u *User) error {
+	// delete all corporations credentials
+	if err := s.dbClient.Conn().Unscoped().Select(clause.Associations).
+		Where(&CorporationCredentials{UserID: int(u.ID)}).
+		Delete(&CorporationCredentials{}).Error; err != nil {
+		return fmt.Errorf("failed to delete corporation credentials associated to this user: %w", err)
+	}
+
+	// delete housing preferences
+	err := s.DeleteHousingPreferences(u)
+	if err != nil {
+		return fmt.Errorf("failed deleting housing preferences from user: %w", err)
+	}
+
+	return s.dbClient.Conn().Unscoped().Select(clause.Associations).Delete(u).Error
 }

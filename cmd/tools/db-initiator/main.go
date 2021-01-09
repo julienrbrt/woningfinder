@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/config"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/woningfinder/woningfinder/internal/logging"
 )
 
 // init is invoked before main()
@@ -33,13 +33,9 @@ var housingTypes = []corporation.HousingType{
 func main() {
 	logger := logging.NewZapLogger()
 
-	err := bootstrap.InitDB()
-	if err != nil {
-		logger.Sugar().Fatal(err)
-	}
-
+	dbClient := bootstrap.CreateDBClient(logger)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil)
-	corporationService := corporation.NewService(logger, bootstrap.DB, nil)
+	corporationService := corporation.NewService(logger, dbClient, nil)
 
 	if _, err := corporationService.CreateOrUpdate(clientProvider.List()); err != nil {
 		logger.Sugar().Fatal(err)

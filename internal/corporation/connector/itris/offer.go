@@ -31,12 +31,12 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 			if err != nil {
 				cityDistrict, err = c.mapboxClient.CityDistrictFromAddress(address)
 				if err != nil {
-					c.logger.Sugar().Warnf("could not get city district of %s: %w", address, err)
+					c.logger.Sugar().Infof("could not get city district of %s: %w", address, err)
 				}
 			} else {
 				cityDistrict, err = c.mapboxClient.CityDistrictFromCoords(latitude, longitude)
 				if err != nil {
-					c.logger.Sugar().Warnf("could not get city district of %s: %w", address, err)
+					c.logger.Sugar().Infof("could not get city district of %s: %w", address, err)
 				}
 			}
 

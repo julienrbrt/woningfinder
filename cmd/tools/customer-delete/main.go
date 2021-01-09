@@ -1,12 +1,15 @@
 package main
 
 import (
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"os"
+	"strings"
+
+	"github.com/woningfinder/woningfinder/internal/logging"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/config"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/user"
-	"github.com/woningfinder/woningfinder/pkg/config"
 
 	"github.com/joho/godotenv"
 )
@@ -24,17 +27,22 @@ func init() {
 func main() {
 	logger := logging.NewZapLogger()
 
-	err := bootstrap.InitDB()
-	if err != nil {
-		logger.Sugar().Fatal(err)
+	// read email to delete from arguments
+	if len(os.Args) != 2 {
+		logger.Sugar().Fatal("customer-delete must have an user email as (only) argument\n")
+	}
+	email := os.Args[0]
+	if email == "" || !strings.Contains(email, "@") {
+		logger.Sugar().Fatal("incorrect argument for user to delete, have %s, expect a correct email", email)
 	}
 
+	dbClient := bootstrap.CreateDBClient(logger)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil)
-	corporationService := corporation.NewService(logger, bootstrap.DB, nil)
-	userService := user.NewService(logger, bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	corporationService := corporation.NewService(logger, dbClient, nil)
+	userService := user.NewService(logger, dbClient, nil, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
 	// get user
-	u, err := userService.GetUser("PLACEHOLDER_EMAIL_TO_DELETE")
+	u, err := userService.GetUser(email)
 	if err != nil {
 		logger.Sugar().Fatal(err)
 	}

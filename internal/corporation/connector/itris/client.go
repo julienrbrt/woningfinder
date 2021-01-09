@@ -7,7 +7,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/pkg/mapbox"
+	"github.com/woningfinder/woningfinder/internal/services/mapbox"
 )
 
 type client struct {
@@ -18,7 +18,7 @@ type client struct {
 }
 
 // NewClient allows to connect to itris ERP
-func NewClient(logger *zap.Logger, mapboxClient mapbox.Client, url string) corporation.Client {
+func NewClient(logger *zap.Logger, mapboxClient mapbox.Client, url string) (corporation.Client, error) {
 	c := colly.NewCollector()
 	// allow revisiting url between jobs
 	c.AllowURLRevisit = true
@@ -26,7 +26,7 @@ func NewClient(logger *zap.Logger, mapboxClient mapbox.Client, url string) corpo
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
 	if err != nil {
-		logger.Sugar().Fatal(err)
+		return nil, err
 	}
 	c.SetCookieJar(jar)
 
@@ -40,5 +40,5 @@ func NewClient(logger *zap.Logger, mapboxClient mapbox.Client, url string) corpo
 		logger:       logger,
 		mapboxClient: mapboxClient,
 		url:          url,
-	}
+	}, nil
 }

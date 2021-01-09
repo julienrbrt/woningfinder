@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/pkg/networking"
+	"github.com/woningfinder/woningfinder/internal/networking"
 )
 
 const methodReact = "ReageerOpWoning"

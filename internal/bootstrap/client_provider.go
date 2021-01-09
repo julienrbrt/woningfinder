@@ -4,7 +4,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/dewoonplaats"
 	"github.com/woningfinder/woningfinder/internal/corporation/onshuis"
-	"github.com/woningfinder/woningfinder/pkg/mapbox"
+	"github.com/woningfinder/woningfinder/internal/services/mapbox"
 	"go.uber.org/zap"
 )
 

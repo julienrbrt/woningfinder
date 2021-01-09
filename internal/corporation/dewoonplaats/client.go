@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/pkg/networking"
+	"github.com/woningfinder/woningfinder/internal/networking"
 )
 
 type client struct {

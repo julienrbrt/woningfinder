@@ -4,14 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/go-redis/redis"
+	"github.com/woningfinder/woningfinder/internal/database"
 	"go.uber.org/zap"
 
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
-
-const pubSubChannelName = "offers"
 
 // Service permits to handle the persistence of a corporation
 type Service interface {
@@ -19,7 +16,7 @@ type Service interface {
 	CreateOrUpdate(corporation *[]Corporation) (*[]Corporation, error)
 	CreateHousingType(housingTypes *[]HousingType) (*[]HousingType, error)
 
-	// (Redis) Pub-Sub
+	// Pub-Sub Offers
 	PublishOffers(client Client, corporation Corporation) error
 	SubscribeOffers(offerCh chan<- OfferList)
 
@@ -27,41 +24,41 @@ type Service interface {
 	GetCity(name string) (*City, error)
 }
 
-type corporationService struct {
-	logger *zap.Logger
-	db     *gorm.DB
-	rdb    *redis.Client
+type service struct {
+	logger      *zap.Logger
+	dbClient    database.DBClient
+	redisClient database.RedisClient
 }
 
-func NewService(logger *zap.Logger, db *gorm.DB, rdb *redis.Client) Service {
-	return &corporationService{
-		logger: logger,
-		db:     db,
-		rdb:    rdb,
+func NewService(logger *zap.Logger, dbClient database.DBClient, redisClient database.RedisClient) Service {
+	return &service{
+		logger:      logger,
+		dbClient:    dbClient,
+		redisClient: redisClient,
 	}
 }
 
-func (s *corporationService) CreateOrUpdate(corporations *[]Corporation) (*[]Corporation, error) {
+func (s *service) CreateOrUpdate(corporations *[]Corporation) (*[]Corporation, error) {
 	// creates the corporation - on data changes update it
-	if err := s.db.Clauses(clause.OnConflict{UpdateAll: true}).Create(corporations).Error; err != nil {
+	if err := s.dbClient.Conn().Clauses(clause.OnConflict{UpdateAll: true}).Create(corporations).Error; err != nil {
 		return nil, err
 	}
 
 	return corporations, nil
 }
 
-func (s *corporationService) CreateHousingType(housingTypes *[]HousingType) (*[]HousingType, error) {
+func (s *service) CreateHousingType(housingTypes *[]HousingType) (*[]HousingType, error) {
 	// creates housing types
-	if err := s.db.Clauses(clause.OnConflict{UpdateAll: true}).Create(housingTypes).Error; err != nil {
+	if err := s.dbClient.Conn().Clauses(clause.OnConflict{UpdateAll: true}).Create(housingTypes).Error; err != nil {
 		return nil, err
 	}
 
 	return housingTypes, nil
 }
 
-func (s *corporationService) GetCity(name string) (*City, error) {
+func (s *service) GetCity(name string) (*City, error) {
 	var c City
-	if err := s.db.Where(City{Name: name}).First(&c).Error; err != nil {
+	if err := s.dbClient.Conn().Where(City{Name: name}).First(&c).Error; err != nil {
 		return nil, fmt.Errorf("failing getting city %s: %w", name, err)
 	}
 
@@ -72,7 +69,7 @@ func (s *corporationService) GetCity(name string) (*City, error) {
 	return &c, nil
 }
 
-func (s *corporationService) PublishOffers(client Client, corporation Corporation) error {
+func (s *service) PublishOffers(client Client, corporation Corporation) error {
 	offers, err := client.FetchOffer()
 	if err != nil {
 		return fmt.Errorf("error while fetching offers for %s: %w", corporation.Name, err)
@@ -96,25 +93,19 @@ func (s *corporationService) PublishOffers(client Client, corporation Corporatio
 		return fmt.Errorf("erorr while marshaling offers for %s: %w", corporation.Name, err)
 	}
 
-	if err = s.rdb.Publish(pubSubChannelName, result).Err(); err != nil {
-		return fmt.Errorf("error publishing %d offers to channel %s: %w", len(offers), pubSubChannelName, err)
+	if err := s.redisClient.Publish(database.PubSubOffers, result); err != nil {
+		return fmt.Errorf("error publishing %d offers: %w", len(offers), err)
 	}
 
 	return nil
 }
 
-func (s *corporationService) SubscribeOffers(offerCh chan<- OfferList) {
-	pubsub := s.rdb.Subscribe(pubSubChannelName)
-	defer pubsub.Close()
-
-	// Wait for confirmation that subscription is created before doing anything.
-	_, err := pubsub.Receive()
+func (s *service) SubscribeOffers(offerCh chan<- OfferList) {
+	ch, err := s.redisClient.Subscribe(database.PubSubOffers)
 	if err != nil {
-		s.logger.Sugar().Errorf("error subscribing to channel: %w", err)
+		s.logger.Sugar().Error(err)
 	}
 
-	// Go channel which receives messages.
-	ch := pubsub.Channel()
 	// Consume messages
 	for msg := range ch {
 		var offerList OfferList

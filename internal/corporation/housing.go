@@ -59,21 +59,3 @@ type Housing struct {
 	Attic               bool
 	Accessible          bool // Assessible defines if the house is accessible for handicapt people
 }
-
-// IsValid confirms that a housing contains all the required information by WoningFinder
-func (h *Housing) IsValid() bool {
-	if h.Type.Type == Undefined {
-		return true
-	}
-
-	return h.Type.Type != "" &&
-		h.Address != "" &&
-		h.City.Name != "" &&
-		h.CityDistrict.CityName == h.City.Name &&
-		h.EnergieLabel != "" &&
-		h.Price > 0 &&
-		h.Size > 0 &&
-		h.NumberRoom > 0 &&
-		h.NumberBedroom > 0 &&
-		h.BuildingYear > 0
-}

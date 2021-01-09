@@ -7,8 +7,8 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/dewoonplaats"
-	"github.com/woningfinder/woningfinder/pkg/networking"
-	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
+	"github.com/woningfinder/woningfinder/internal/networking"
+	"github.com/woningfinder/woningfinder/internal/networking/middleware"
 	"go.uber.org/zap"
 )
 

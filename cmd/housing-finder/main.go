@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/config"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/woningfinder/woningfinder/internal/logging"
 
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron/v3"
@@ -28,20 +28,13 @@ func init() {
 func main() {
 	logger := logging.NewZapLoggerWithSentry(config.MustGetString("SENTRY_DSN"))
 
-	// connect to databases
-	err := bootstrap.InitDB()
-	if err != nil {
-		logger.Sugar().Fatal(err)
-	}
-
-	err = bootstrap.InitRedis()
-	if err != nil {
-		logger.Sugar().Fatal(err)
-	}
-
+	dbClient := bootstrap.CreateDBClient(logger)
+	redisClient := bootstrap.CreateRedisClient(logger)
 	mapboxClient := bootstrap.CreateMapboxClient()
+
 	clientProvider := bootstrap.CreateClientProvider(logger, mapboxClient)
-	corporationService := corporation.NewService(logger, bootstrap.DB, bootstrap.RDB)
+	corporationService := corporation.NewService(logger, dbClient, redisClient)
+
 	// get time location
 	nl, err := time.LoadLocation("Europe/Amsterdam")
 	if err != nil {
