@@ -39,7 +39,7 @@ func main() {
 		logger.Sugar().Fatal(err)
 	}
 
-	mapboxClient := bootstrap.CreateMapboxGeocodingClient()
+	mapboxClient := bootstrap.CreateMapboxClient()
 	clientProvider := bootstrap.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporation.NewService(logger, bootstrap.DB, bootstrap.RDB)
 	// get time location
@@ -75,7 +75,7 @@ func main() {
 
 		// check at 0, 10 and 30 seconds after the publishing time
 		var spec string
-		for _, second := range []int{0, 10, 30} {
+		for _, second := range []int{0, 10, 25, 50} {
 			if corp.SelectionTime != (time.Time{}) {
 				spec = buildSpec(corp.SelectionTime.Hour(), corp.SelectionTime.Minute(), second)
 			} else {

@@ -10,11 +10,11 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 )
 
-// CreateMapboxGeocodingClient creates a client geocoding Mapbox
-func CreateMapboxGeocodingClient() mapbox.Client {
+// CreateMapboxClient creates a Mapbox client
+func CreateMapboxClient() mapbox.Client {
 	client := &http.Client{Timeout: 5 * time.Second}
 	defaultMiddleWare := []networking.ClientMiddleware{
-		middleware.CreateHostMiddleware(&mapbox.GeocodingAPIEndpoint),
+		middleware.CreateHostMiddleware(&mapbox.APIEndpoint),
 	}
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
