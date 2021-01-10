@@ -3,10 +3,10 @@ package main
 import (
 	"net/http"
 
-	"github.com/woningfinder/woningfinder/internal/logging"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/joho/godotenv"
-	"github.com/woningfinder/woningfinder/internal/config"
+	"github.com/woningfinder/woningfinder/pkg/config"
 )
 
 // init is invoked before main()

@@ -7,7 +7,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/services/mapbox"
+	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
 type client struct {

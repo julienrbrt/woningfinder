@@ -1,8 +1,8 @@
 package bootstrap
 
 import (
-	"github.com/woningfinder/woningfinder/internal/config"
-	"github.com/woningfinder/woningfinder/internal/services/stripe"
+	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/woningfinder/woningfinder/pkg/stripe"
 	"go.uber.org/zap"
 )
 

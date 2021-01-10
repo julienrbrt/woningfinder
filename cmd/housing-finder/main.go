@@ -6,10 +6,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/woningfinder/woningfinder/internal/services/corporation"
+
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/config"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/logging"
+	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron/v3"

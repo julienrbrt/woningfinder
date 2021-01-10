@@ -3,10 +3,10 @@ package bootstrap
 import (
 	"os"
 
-	"github.com/woningfinder/woningfinder/internal/config"
-	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
+
 	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/internal/user"
+	"github.com/woningfinder/woningfinder/pkg/config"
 	"go.uber.org/zap"
 )
 
@@ -20,14 +20,14 @@ func CreateDBClient(logger *zap.Logger) database.DBClient {
 	// Migrate the schema
 	// DB.Debug().AutoMigrate(...) for extensive log
 	client.Conn().AutoMigrate(
-		&corporation.Corporation{},
-		&corporation.SelectionMethod{},
-		&corporation.HousingType{},
-		&corporation.City{},
-		&corporation.CityDistrict{},
-		&user.User{},
-		&user.HousingPreferences{},
-		&user.CorporationCredentials{},
+		&entity.Corporation{},
+		&entity.SelectionMethod{},
+		&entity.HousingType{},
+		&entity.City{},
+		&entity.CityDistrict{},
+		&entity.User{},
+		&entity.HousingPreferences{},
+		&entity.CorporationCredentials{},
 	)
 
 	return client

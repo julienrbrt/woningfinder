@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/woningfinder/woningfinder/internal/config"
-	"github.com/woningfinder/woningfinder/internal/networking"
-	"github.com/woningfinder/woningfinder/internal/networking/middleware"
-	"github.com/woningfinder/woningfinder/internal/services/mapbox"
+	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/woningfinder/woningfinder/pkg/mapbox"
+	"github.com/woningfinder/woningfinder/pkg/networking"
+	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 )
 
 // CreateMapboxClient creates a Mapbox client

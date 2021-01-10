@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/networking"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
 const methodReact = "ReageerOpWoning"
 
-func (c *client) ReactToOffer(offer corporation.Offer) error {
+func (c *client) ReactToOffer(offer entity.Offer) error {
 	req, err := reactRequest(offer.ExternalID)
 	if err != nil {
 		return err

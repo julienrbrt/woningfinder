@@ -8,7 +8,7 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 
-	"github.com/woningfinder/woningfinder/internal/networking"
+	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
 const methodLogin = "Login"

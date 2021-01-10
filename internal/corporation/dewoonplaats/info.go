@@ -4,15 +4,15 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
 
 // Info defines the static information about this Housing  Corporation
-var Info = corporation.Corporation{
+var Info = entity.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: "/wh_services"},
 	Name:        "De Woonplaats",
 	URL:         "https://dewoonplaats.nl",
-	Cities: []corporation.City{
+	Cities: []entity.City{
 		{Name: "Enschede"},
 		{Name: "Zwolle"},
 		{Name: "Aatlen"},
@@ -21,12 +21,12 @@ var Info = corporation.Corporation{
 		{Name: "Neede"},
 		{Name: "Wehl"},
 	},
-	SelectionMethod: []corporation.SelectionMethod{
+	SelectionMethod: []entity.SelectionMethod{
 		{
-			Method: corporation.SelectionRandom,
+			Method: entity.SelectionRandom,
 		},
 		{
-			Method: corporation.SelectionFirstComeFirstServed,
+			Method: entity.SelectionFirstComeFirstServed,
 		},
 	},
 	SelectionTime: time.Date(2021, time.January, 1, 18, 0, 0, 0, time.UTC),

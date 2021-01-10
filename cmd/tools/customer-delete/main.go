@@ -4,12 +4,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/internal/logging"
+	"github.com/woningfinder/woningfinder/internal/services/corporation"
+	"github.com/woningfinder/woningfinder/internal/services/user"
+
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/config"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/user"
+	"github.com/woningfinder/woningfinder/pkg/config"
 
 	"github.com/joho/godotenv"
 )

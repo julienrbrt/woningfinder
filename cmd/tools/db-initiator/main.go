@@ -3,9 +3,10 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/config"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/logging"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/services/corporation"
+	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 // init is invoked before main()
@@ -18,15 +19,15 @@ func init() {
 	}
 }
 
-var housingTypes = []corporation.HousingType{
+var housingTypes = []entity.HousingType{
 	{
-		Type: corporation.House,
+		Type: entity.HousingTypeHouse,
 	},
 	{
-		Type: corporation.Appartement,
+		Type: entity.HousingTypeAppartement,
 	},
 	{
-		Type: corporation.Undefined,
+		Type: entity.HousingTypeUndefined,
 	},
 }
 
@@ -37,7 +38,7 @@ func main() {
 	clientProvider := bootstrap.CreateClientProvider(logger, nil)
 	corporationService := corporation.NewService(logger, dbClient, nil)
 
-	if _, err := corporationService.CreateOrUpdate(clientProvider.List()); err != nil {
+	if _, err := corporationService.CreateOrUpdateCorporation(clientProvider.List()); err != nil {
 		logger.Sugar().Fatal(err)
 	}
 

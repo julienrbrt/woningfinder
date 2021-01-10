@@ -3,11 +3,10 @@ package dewoonplaats_test
 import (
 	"testing"
 
-	"github.com/woningfinder/woningfinder/internal/logging"
-
-	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -22,7 +21,7 @@ func Test_FetchOffer(t *testing.T) {
 	for _, offer := range offers {
 		// verify housing validity
 		a.NotEmpty(offer.Housing.Type.Type)
-		if offer.Housing.Type.Type == corporation.Undefined {
+		if offer.Housing.Type.Type == entity.HousingTypeUndefined {
 			continue
 		}
 

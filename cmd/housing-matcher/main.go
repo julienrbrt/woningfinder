@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/woningfinder/woningfinder/internal/logging"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/config"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/user"
+	"github.com/woningfinder/woningfinder/internal/services/corporation"
+	"github.com/woningfinder/woningfinder/internal/services/user"
+	"github.com/woningfinder/woningfinder/pkg/config"
 )
 
 // init is invoked before main()
@@ -29,7 +30,7 @@ func main() {
 	corporationService := corporation.NewService(logger, dbClient, redisClient)
 	userService := user.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
-	offerList := make(chan corporation.OfferList)
+	offerList := make(chan entity.OfferList)
 	// subscribe to pub/sub messages inside a new goroutine
 	go corporationService.SubscribeOffers(offerList)
 
