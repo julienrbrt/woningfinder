@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
+
+	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 
@@ -47,8 +48,7 @@ func main() {
 
 	// populate crons
 	for _, corp := range *clientProvider.List() {
-		// https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
-		corp := corp
+		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 
 		// get corporation client
 		client, err := clientProvider.Get(corp)
@@ -57,40 +57,17 @@ func main() {
 			continue
 		}
 
-		// specify cron time or fallback to default
-		// always check at midnight
-		if _, err = c.AddFunc("@midnight", func() {
-			if err := corporationService.PublishOffers(client, corp); err != nil {
-				logger.Sugar().Error(err)
-			}
-		}); err != nil {
-			logger.Sugar().Error(err)
-		}
-
-		// check at 0, 10 and 30 seconds after the publishing time
-		var spec string
-		for _, second := range []int{0, 10, 25, 50} {
-			if corp.SelectionTime != (time.Time{}) {
-				spec = buildSpec(corp.SelectionTime.Hour(), corp.SelectionTime.Minute(), second)
-			} else {
-				// the default is running at 17:00 if not specified
-				spec = buildSpec(17, 00, second)
-			}
-
-			if _, err = c.AddFunc(spec, func() {
+		// schedule corporation fetching
+		schedule := scheduler.CorporationScheduler(corp)
+		for _, s := range schedule {
+			c.Schedule(s, cron.FuncJob(func() {
 				if err := corporationService.PublishOffers(client, corp); err != nil {
 					logger.Sugar().Error(err)
 				}
-			}); err != nil {
-				logger.Sugar().Error(err)
-			}
+			}))
 		}
 	}
 
 	// start cron scheduler
 	c.Run()
-}
-
-func buildSpec(hour, minute, second int) string {
-	return fmt.Sprintf("%d %d %d * * *", second, minute, hour)
 }

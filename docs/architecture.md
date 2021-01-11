@@ -2,7 +2,7 @@
 
 This document defines the archtitecture of WoningFinder. Its data schema is found [here](db_schema.png).
 
-WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _HousingMatcher_.
+WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _HousingMatcher_ and a landing page.
 
 - _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for WoningFinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
 - _[HousingFinder](../cmd/housing-finder)_, is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to redis pub/sub.
@@ -13,6 +13,11 @@ There is as well small tools that are run for special reasons:
 - _[db-initiator](../cmd/tools/db-initiator)_ permits to fills the default values in the database (housing corporations, cities, housing types, selection methods...).
 - _[customer-delete](../cmd/tools/customer-delete)_ permits to delete a customer given his email
 
+## Landing Page
+
+The landing page is available at https://woningfinder.nl.
+The source code is available in another [repository](https://github.com/woningfinder/woningfinder.nl).
+
 ## WoningFinder-API
 
 Following is a list of endpoint supported by WoningFinder-API. The API works exclusively with JSON.
@@ -22,6 +27,8 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 | Signup             | POST   | Handles the registration flow                                                        |
 | HousingPreferences | POST   | Updates the housing preferences of a given user                                      |
 | HousingCredentials | POST   | Manages the different housing credentials for the supported corporation of the user. |
+
+WoningFinder's API is available at https://woningfinder.nl/api.
 
 ## Housing-Finder
 
