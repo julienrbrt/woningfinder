@@ -18,3 +18,8 @@ func NewZapLogger(debug bool, sentryDSN string) *zap.Logger {
 
 	return mapLoggerToSentry(logger, sentryDSN)
 }
+
+// NewTestZapLogger default the NewZapLogger without Sentry
+func NewTestZapLogger() *zap.Logger {
+	return NewZapLogger(false, "")
+}

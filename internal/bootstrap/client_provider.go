@@ -13,7 +13,7 @@ func CreateClientProvider(logger *zap.Logger, mapboxClient mapbox.Client) corpor
 	providers := []corporation.Provider{
 		{
 			Corporation: dewoonplaats.Info,
-			Client:      CreateDeWoonplaatsClient(logger),
+			Client:      CreateDeWoonplaatsClient(logger, mapboxClient),
 		},
 		{
 			Corporation: onshuis.Info,
