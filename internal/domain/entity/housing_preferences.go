@@ -20,5 +20,14 @@ type HousingPreferences struct {
 	HasHousingAllowance bool
 	HasAttic            bool
 	IsAccessible        bool
-	OfferMatch          []OfferMatch
+}
+
+// HousingPreferencesMatch defines an offer that matched with an user
+// It is used to determined to which offer WoningFinder has applied
+type HousingPreferencesMatch struct {
+	gorm.Model
+	UserID          int `gorm:"primaryKey"`
+	HousingAddress  string
+	CorporationName string
+	OfferURL        string
 }

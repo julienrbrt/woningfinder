@@ -3,7 +3,8 @@ package logging
 import "go.uber.org/zap"
 
 // NewZapLogger creates a logger using the zap library
-func NewZapLogger() *zap.Logger {
+// If debug is true errors are as well sent to Sentry
+func NewZapLogger(debug bool, sentryDSN string) *zap.Logger {
 	// logger, err := zap.NewProduction()
 	logger, err := zap.NewDevelopment()
 	if err != nil {
@@ -11,17 +12,9 @@ func NewZapLogger() *zap.Logger {
 	}
 	defer logger.Sync() // flushes buffer, if any
 
-	return logger
-}
-
-// NewZapLoggerWithSentry creates a logger using the zap library that throws error to Sentry
-func NewZapLoggerWithSentry(sentryDSN string) *zap.Logger {
-	// logger, err := zap.NewProduction()
-	logger, err := zap.NewDevelopment()
-	if err != nil {
-		panic(err)
+	if debug {
+		return logger
 	}
-	defer logger.Sync() // flushes buffer, if any
 
 	return mapLoggerToSentry(logger, sentryDSN)
 }

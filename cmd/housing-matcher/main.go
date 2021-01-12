@@ -22,7 +22,7 @@ func init() {
 }
 
 func main() {
-	logger := logging.NewZapLoggerWithSentry(config.MustGetString("SENTRY_DSN"))
+	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)

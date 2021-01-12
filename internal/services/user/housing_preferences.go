@@ -8,8 +8,8 @@ import (
 )
 
 func (s *service) CreateHousingPreferences(u *entity.User, pref []entity.HousingPreferences) error {
-	if !u.Plan.AllowMultipleHousingPreferences() && len(pref) > 1 {
-		return fmt.Errorf("error cannot create more than one housing preferences in plan %s", u.Plan)
+	if !u.Plan.Name.AllowMultipleHousingPreferences() && len(pref) > 1 {
+		return fmt.Errorf("error cannot create more than one housing preferences in plan %s", u.Plan.Name)
 	}
 
 	for _, housingPreferences := range pref {

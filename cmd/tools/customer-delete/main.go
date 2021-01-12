@@ -26,7 +26,7 @@ func init() {
 }
 
 func main() {
-	logger := logging.NewZapLogger()
+	logger := logging.NewZapLogger(true, "")
 
 	// read email to delete from arguments
 	if len(os.Args) != 2 {

@@ -10,14 +10,15 @@ import (
 // User defines an user of WoningFinder
 type User struct {
 	gorm.Model
-	Name                   string
-	Email                  string
-	BirthYear              int
-	YearlyIncome           int
-	FamilySize             int
-	Plan                   Plan
-	HousingPreferences     []HousingPreferences
-	CorporationCredentials []CorporationCredentials `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Name                    string
+	Email                   string
+	BirthYear               int
+	YearlyIncome            int
+	FamilySize              int
+	Plan                    Plan `gorm:"foreignKey:Name"`
+	HousingPreferences      []HousingPreferences
+	HousingPreferencesMatch []HousingPreferencesMatch
+	CorporationCredentials  []CorporationCredentials `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 // MatchCriteria verifies that an user match the offer criterias

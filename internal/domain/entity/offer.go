@@ -2,8 +2,6 @@ package entity
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 // Offer defines a house or an appartement available in a Housing Corporation
@@ -22,14 +20,4 @@ type Offer struct {
 type OfferList struct {
 	Corporation Corporation
 	Offer       []Offer
-}
-
-// OfferMatch defines an offer that matched with an user
-// It is used to determined to which offer WoningFinder has applied
-type OfferMatch struct {
-	gorm.Model
-	UserID          int `gorm:"primaryKey"`
-	HousingAddress  string
-	CorporationName string
-	OfferURL        string
 }

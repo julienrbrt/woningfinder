@@ -10,7 +10,6 @@ import (
 // Service permits to handle the persistence of a corporation
 type Service interface {
 	CreateOrUpdateCorporation(corporation *[]entity.Corporation) (*[]entity.Corporation, error)
-	CreateHousingType(housingTypes *[]entity.HousingType) (*[]entity.HousingType, error)
 	GetCity(name string) (*entity.City, error)
 
 	PublishOffers(client corporation.Client, corporation entity.Corporation) error

@@ -16,15 +16,6 @@ func (s *service) CreateOrUpdateCorporation(corporations *[]entity.Corporation) 
 	return corporations, nil
 }
 
-func (s *service) CreateHousingType(housingTypes *[]entity.HousingType) (*[]entity.HousingType, error) {
-	// creates housing types
-	if err := s.dbClient.Conn().Clauses(clause.OnConflict{UpdateAll: true}).Create(housingTypes).Error; err != nil {
-		return nil, err
-	}
-
-	return housingTypes, nil
-}
-
 func (s *service) GetCity(name string) (*entity.City, error) {
 	var c entity.City
 	if err := s.dbClient.Conn().Where(entity.City{Name: name}).First(&c).Error; err != nil {

@@ -12,7 +12,7 @@ func (s *service) CreateUser(u *entity.User) (*entity.User, error) {
 		return nil, fmt.Errorf("email is required for creating user")
 	}
 
-	if !u.Plan.Exists() {
+	if !u.Plan.Name.Exists() {
 		return nil, fmt.Errorf("subscribing to a valid plan is required")
 	}
 

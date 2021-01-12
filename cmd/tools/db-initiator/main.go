@@ -7,6 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"gorm.io/gorm/clause"
 )
 
 // init is invoked before main()
@@ -31,8 +32,17 @@ var housingTypes = []entity.HousingType{
 	},
 }
 
+var plans = []entity.Plan{
+	{
+		Name: entity.PlanZeker,
+	},
+	{
+		Name: entity.PlanSneller,
+	},
+}
+
 func main() {
-	logger := logging.NewZapLogger()
+	logger := logging.NewZapLogger(true, "")
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil)
@@ -42,7 +52,13 @@ func main() {
 		logger.Sugar().Fatal(err)
 	}
 
-	if _, err := corporationService.CreateHousingType(&housingTypes); err != nil {
+	// creates housing types
+	if err := dbClient.Conn().Clauses(clause.OnConflict{UpdateAll: true}).Create(housingTypes).Error; err != nil {
+		logger.Sugar().Fatal(err)
+	}
+
+	// creates plan
+	if err := dbClient.Conn().Clauses(clause.OnConflict{UpdateAll: true}).Create(plans).Error; err != nil {
 		logger.Sugar().Fatal(err)
 	}
 

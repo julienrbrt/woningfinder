@@ -18,17 +18,25 @@ func CreateDBClient(logger *zap.Logger) database.DBClient {
 	}
 
 	// Migrate the schema
-	// DB.Debug().AutoMigrate(...) for extensive log
-	client.Conn().AutoMigrate(
+	db := client.Conn()
+	if config.GetBoolOrDefault("APP_DEBUG", false) {
+		db = db.Debug()
+	}
+
+	if err = db.AutoMigrate(
 		&entity.Corporation{},
 		&entity.SelectionMethod{},
 		&entity.HousingType{},
 		&entity.City{},
 		&entity.CityDistrict{},
 		&entity.User{},
+		&entity.Plan{},
 		&entity.HousingPreferences{},
+		&entity.HousingPreferencesMatch{},
 		&entity.CorporationCredentials{},
-	)
+	); err != nil {
+		logger.Sugar().Fatal(err)
+	}
 
 	return client
 }
