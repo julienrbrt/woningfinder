@@ -2,9 +2,6 @@ package entity
 
 import (
 	"database/sql/driver"
-	"time"
-
-	"gorm.io/gorm"
 )
 
 const (
@@ -32,10 +29,7 @@ func (u Type) Value() (driver.Value, error) {
 
 // HousingType is the database representation of (Housing)Type
 type HousingType struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
-	Type      Type           `gorm:"primaryKey"`
+	Type Type `pg:",pk"`
 }
 
 // Housing defines an appartement and a house

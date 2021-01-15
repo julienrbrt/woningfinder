@@ -13,7 +13,7 @@ import (
 
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
-	client := bootstrap.CreateDeWoonplaatsClient(logging.NewTestZapLogger(), bootstrap.CreateMapboxClient())
+	client := bootstrap.CreateDeWoonplaatsClient(logging.NewZapLoggerWithoutSentry(), bootstrap.CreateMapboxClient())
 
 	offers, err := client.FetchOffer()
 	a.NoError(err)

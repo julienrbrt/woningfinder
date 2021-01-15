@@ -42,9 +42,14 @@ func getOffer() entity.Offer {
 
 func getUser() entity.User {
 	return entity.User{
+		Name:         "Test",
+		Email:        "test@example.org",
 		BirthYear:    1990,
 		YearlyIncome: 30000,
 		FamilySize:   3,
+		Tier: entity.Tier{
+			Name: entity.PlanZeker,
+		},
 		HousingPreferences: []entity.HousingPreferences{
 			{
 				Type: []entity.HousingType{
@@ -63,7 +68,20 @@ func getUser() entity.User {
 
 var enschede, hengelo = entity.City{Name: "Enschede"}, entity.City{Name: "Hengelo"}
 
-func Test_MatchCriteria_Age(t *testing.T) {
+func Test_User_IsValid(t *testing.T) {
+	a := assert.New(t)
+	testUser := getUser()
+	a.Nil(testUser.IsValid())
+}
+
+func Test_User_IsValid_Invalid(t *testing.T) {
+	a := assert.New(t)
+	testUser := getUser()
+	testUser.HousingPreferences = nil
+	a.Error(testUser.IsValid())
+}
+
+func Test_User_MatchCriteria_Age(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()
@@ -77,7 +95,7 @@ func Test_MatchCriteria_Age(t *testing.T) {
 	a.True(testUser.MatchCriteria(testOffer))
 }
 
-func Test_MatchCriteria_FamilySize(t *testing.T) {
+func Test_User_MatchCriteria_FamilySize(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()
@@ -90,7 +108,7 @@ func Test_MatchCriteria_FamilySize(t *testing.T) {
 	a.True(testUser.MatchCriteria(testOffer))
 }
 
-func Test_MatchCriteria_Income(t *testing.T) {
+func Test_User_MatchCriteria_Income(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()
@@ -103,7 +121,7 @@ func Test_MatchCriteria_Income(t *testing.T) {
 	a.True(testUser.MatchCriteria(testOffer))
 }
 
-func Test_MatchPreferences_Location(t *testing.T) {
+func Test_User_MatchPreferences_Location(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()
@@ -135,7 +153,7 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	a.False(testUser.MatchPreferences(testOffer))
 }
 
-func Test_MatchPreferences_HousingType(t *testing.T) {
+func Test_User_MatchPreferences_HousingType(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()
@@ -149,7 +167,7 @@ func Test_MatchPreferences_HousingType(t *testing.T) {
 	a.True(testUser.MatchPreferences(testOffer))
 }
 
-func Test_MatchPreferences_Price(t *testing.T) {
+func Test_User_MatchPreferences_Price(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()
@@ -159,7 +177,7 @@ func Test_MatchPreferences_Price(t *testing.T) {
 	a.False(testUser.MatchPreferences(testOffer))
 }
 
-func Test_MatchPreferences_Criteria(t *testing.T) {
+func Test_User_MatchPreferences_Criteria(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()

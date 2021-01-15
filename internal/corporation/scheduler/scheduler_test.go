@@ -32,7 +32,7 @@ func Test_CorporationScheduler_NoSelectionTime(t *testing.T) {
 func Test_CorporationScheduler_WithSelectionTime(t *testing.T) {
 	a := assert.New(t)
 	corporation := entity.Corporation{
-		SelectionTime: time.Date(2021, 1, 1, 12, 55, 0, 0, time.UTC),
+		SelectionTime: scheduler.CreateSelectionTime(12, 55, 0),
 		SelectionMethod: []entity.SelectionMethod{
 			{
 				Method: entity.SelectionRandom,
@@ -53,7 +53,7 @@ func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 	a := assert.New(t)
 
 	corporation := entity.Corporation{
-		SelectionTime: time.Date(2021, 1, 1, 17, 59, 15, 0, time.UTC),
+		SelectionTime: scheduler.CreateSelectionTime(17, 59, 15),
 		SelectionMethod: []entity.SelectionMethod{
 			{
 				Method: entity.SelectionFirstComeFirstServed,
@@ -63,7 +63,7 @@ func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 
 	now := time.Now()
 	schedules := scheduler.CorporationScheduler(corporation)
-	a.Len(schedules, 8)
+	a.Len(schedules, 11)
 	a.Equal(schedules[0].Next(now).Hour(), 17)
 	a.Equal(schedules[0].Next(now).Minute(), 59)
 	a.Equal(schedules[0].Next(now).Second(), 15)

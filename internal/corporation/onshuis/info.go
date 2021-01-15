@@ -19,8 +19,5 @@ var Info = entity.Corporation{
 		{
 			Method: entity.SelectionRandom,
 		},
-		{
-			Method: entity.SelectionRandom,
-		},
 	},
 }

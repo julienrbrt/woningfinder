@@ -1,24 +1,52 @@
 package entity
 
 import (
+	"fmt"
 	"strings"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 // User defines an user of WoningFinder
 type User struct {
-	gorm.Model
+	ID                      int
+	CreatedAt               time.Time `pg:"default:now()"`
+	UpdatedAt               time.Time
+	DeletedAt               time.Time
 	Name                    string
-	Email                   string
+	Email                   string `pg:",unique"`
 	BirthYear               int
 	YearlyIncome            int
 	FamilySize              int
-	Plan                    Plan `gorm:"foreignKey:Name"`
-	HousingPreferences      []HousingPreferences
-	HousingPreferencesMatch []HousingPreferencesMatch
-	CorporationCredentials  []CorporationCredentials `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	TierID                  int
+	Tier                    Tier                      `pg:"rel:has-one"`
+	HousingPreferences      []HousingPreferences      `pg:"rel:has-many,join_fk:user_id"`
+	HousingPreferencesMatch []HousingPreferencesMatch `pg:"rel:has-many,join_fk:user_id"`
+	CorporationCredentials  []CorporationCredentials  `pg:"rel:has-many,join_fk:user_id"`
+}
+
+// IsValid checks if a user is valid
+func (u *User) IsValid() error {
+	if u.Name == "" || u.Email == "" {
+		return fmt.Errorf("user name or email missing")
+	}
+
+	if u.BirthYear < 1900 {
+		return fmt.Errorf("user birth year invalid")
+	}
+
+	if u.YearlyIncome < -1 {
+		return fmt.Errorf("user yearly income invalid")
+	}
+
+	if !u.Tier.Name.Exists() {
+		return fmt.Errorf("user must have a tier")
+	}
+
+	if len(u.HousingPreferences) == 0 {
+		return fmt.Errorf("user must have a housing preferences")
+	}
+
+	return nil
 }
 
 // MatchCriteria verifies that an user match the offer criterias

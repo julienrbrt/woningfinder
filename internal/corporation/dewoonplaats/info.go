@@ -2,7 +2,8 @@ package dewoonplaats
 
 import (
 	"net/url"
-	"time"
+
+	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
@@ -29,5 +30,5 @@ var Info = entity.Corporation{
 			Method: entity.SelectionFirstComeFirstServed,
 		},
 	},
-	SelectionTime: time.Date(2021, time.January, 1, 18, 0, 0, 0, time.UTC),
+	SelectionTime: scheduler.CreateSelectionTime(18, 0, 0),
 }

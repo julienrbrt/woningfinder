@@ -4,12 +4,11 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	"gorm.io/gorm/clause"
 )
 
 func (s *service) CreateHousingPreferences(u *entity.User, pref []entity.HousingPreferences) error {
-	if !u.Plan.Name.AllowMultipleHousingPreferences() && len(pref) > 1 {
-		return fmt.Errorf("error cannot create more than one housing preferences in plan %s", u.Plan.Name)
+	if !u.Tier.Name.AllowMultipleHousingPreferences() && len(pref) > 1 {
+		return fmt.Errorf("error cannot create more than one housing preferences in plan %s", u.Tier.Name)
 	}
 
 	for _, housingPreferences := range pref {
@@ -78,6 +77,6 @@ func (s *service) DeleteHousingPreferences(u *entity.User) error {
 
 	return s.dbClient.Conn().
 		Unscoped().
-		Select(clause.Associations).
+		// Select(clause.Associations).
 		Delete(pref).Error
 }

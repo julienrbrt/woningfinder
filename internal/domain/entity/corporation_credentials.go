@@ -1,16 +1,16 @@
 package entity
 
-import (
-	"gorm.io/gorm"
-)
+import "time"
 
 // CorporationCredentials holds the user credentials to login to an housing corporation
 type CorporationCredentials struct {
-	gorm.Model
-	UserID          int    `gorm:"primaryKey"`
-	CorporationName string `gorm:"primaryKey"`
-	CorporationURL  string `gorm:"primaryKey"`
-	Corporation     Corporation
+	CreatedAt       time.Time `pg:"default:now()"`
+	UpdatedAt       time.Time
+	DeletedAt       time.Time
+	UserID          int         `pg:",pk"`
+	CorporationName string      `pg:",unique"`
+	CorporationURL  string      `pg:",unique"`
+	Corporation     Corporation `pg:"rel:has-one"`
 	Login           string
 	Password        string
 }

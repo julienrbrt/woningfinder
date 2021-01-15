@@ -23,10 +23,13 @@ func init() {
 	if err := godotenv.Load("../../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
+
+	// register m2m models with go-pg
+	bootstrap.RegisterModel()
 }
 
 func main() {
-	logger := logging.NewZapLogger(true, "")
+	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 
 	// read email to delete from arguments
 	if len(os.Args) != 2 {

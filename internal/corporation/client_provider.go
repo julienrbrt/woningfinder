@@ -14,7 +14,7 @@ type Provider struct {
 
 // ClientProvider permits to get the corporation's client
 type ClientProvider interface {
-	List() *[]entity.Corporation
+	List() []entity.Corporation
 	Get(corporation entity.Corporation) (Client, error)
 }
 
@@ -30,13 +30,13 @@ func NewClientProvider(providers []Provider) ClientProvider {
 }
 
 // List all the supported corporations
-func (c *clientProvider) List() *[]entity.Corporation {
+func (c *clientProvider) List() []entity.Corporation {
 	var corporations []entity.Corporation
 	for _, c := range c.providers {
 		corporations = append(corporations, c.Corporation)
 	}
 
-	return &corporations
+	return corporations
 }
 
 // Get gives the client used to query a corporation

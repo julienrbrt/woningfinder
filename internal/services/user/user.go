@@ -4,66 +4,56 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	"gorm.io/gorm/clause"
 )
 
-func (s *service) CreateUser(u *entity.User) (*entity.User, error) {
-	if u.Email == "" {
-		return nil, fmt.Errorf("email is required for creating user")
+// TODO eventually use a prepare function to create it in one query only
+func (s *service) CreateUser(u *entity.User) error {
+	db := s.dbClient.Conn()
+
+	// verify user
+	if err := u.IsValid(); err != nil {
+		return fmt.Errorf("error user %s invalid: %w", u.Email, err)
 	}
 
-	if !u.Plan.Name.Exists() {
-		return nil, fmt.Errorf("subscribing to a valid plan is required")
+	// associate to tier
+	var tier entity.Tier
+	if err := db.Model(&tier).Where("name = ?", u.Tier.Name).Select(); err != nil {
+		return fmt.Errorf("error getting tier for creating user: %w", err)
+	}
+	u.Tier.ID = tier.ID
+
+	// create user - if exist throw error
+	if _, err := db.Model(&u).Insert(); err != nil {
+		return fmt.Errorf("failing creating user: %w", err)
 	}
 
-	if u.YearlyIncome < -1 {
-		return nil, fmt.Errorf("yearly income must be greater than 0, or set to -1 to not be used")
-	}
-
-	if len(u.HousingPreferences) == 0 {
-		return nil, fmt.Errorf("housing preferences is required for creating user")
-	}
-
-	_, err := s.GetUser(u.Email)
-	if err == nil {
-		return nil, fmt.Errorf("error user %s already exists", u.Email)
-	}
-
-	if err := s.dbClient.Conn().Create(&u).Error; err != nil {
-		return nil, err
-	}
-
+	// create user housing preferences
 	if err := s.CreateHousingPreferences(u, u.HousingPreferences); err != nil {
-		return nil, fmt.Errorf("error when creating user %s: %w", u.Email, err)
+		return fmt.Errorf("error when creating user %s: %w", u.Email, err)
 	}
 
-	return u, nil
+	return nil
 }
 
 func (s *service) GetUser(email string) (*entity.User, error) {
-	var u entity.User
-	s.dbClient.Conn().Where(&entity.User{Email: email}).First(&u)
+	var user entity.User
+	if err := db.Model(&user).Where("email = ?", email).Select(); err != nil {
+		return nil, fmt.Errorf("failed getting user %s: %w", email, err)
+	}
 
 	if u.ID == 0 {
 		return nil, fmt.Errorf("no user found with the email: %s", email)
 	}
 
+	// note enriching the user is not necessary because GetUser is almost never used
+
 	return &u, nil
 }
 
 func (s *service) DeleteUser(u *entity.User) error {
+	// TODO to implement
 	// delete all corporations credentials
-	if err := s.dbClient.Conn().Unscoped().Select(clause.Associations).
-		Where(&entity.CorporationCredentials{UserID: int(u.ID)}).
-		Delete(&entity.CorporationCredentials{}).Error; err != nil {
-		return fmt.Errorf("failed to delete corporation credentials associated to this user: %w", err)
-	}
-
 	// delete housing preferences
-	err := s.DeleteHousingPreferences(u)
-	if err != nil {
-		return fmt.Errorf("failed deleting housing preferences from user: %w", err)
-	}
-
-	return s.dbClient.Conn().Unscoped().Select(clause.Associations).Delete(u).Error
+	// delete user
+	panic("not implemented")
 }

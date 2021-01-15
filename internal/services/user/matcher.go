@@ -11,6 +11,9 @@ import (
 
 var errNoMatchFound = fmt.Errorf("no match found")
 
+// TODO SPLIT IN MULTIPLE FUNCTION
+// ADD MATCHED HOUSE TO DATABASE
+// ADD TO QUEUE EMAIL
 func (s *service) MatchOffer(offerList entity.OfferList) error {
 	// create housing corporation client
 	client, err := s.clientProvider.Get(offerList.Corporation)

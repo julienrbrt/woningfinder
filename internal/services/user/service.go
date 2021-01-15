@@ -1,22 +1,20 @@
 package user
 
 import (
-	"go.uber.org/zap"
-
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 // Service permits to handle the persistence of an user
 type Service interface {
-	CreateUser(u *entity.User) (*entity.User, error)
+	CreateUser(u *entity.User) error
 	GetUser(email string) (*entity.User, error)
 	DeleteUser(u *entity.User) error
 
 	CreateHousingPreferences(u *entity.User, pref []entity.HousingPreferences) error
-	GetHousingPreferences(u *entity.User) (*[]entity.HousingPreferences, error)
 	DeleteHousingPreferences(u *entity.User) error
 
 	CreateCorporationCredentials(u *entity.User, credentials entity.CorporationCredentials) error
@@ -27,7 +25,7 @@ type Service interface {
 }
 
 type service struct {
-	logger             *zap.Logger
+	logger             *logging.Logger
 	dbClient           database.DBClient
 	redisClient        database.RedisClient
 	aesSecret          string
@@ -35,7 +33,7 @@ type service struct {
 	corporationService corporationService.Service
 }
 
-func NewService(logger *zap.Logger, dbClient database.DBClient, redisClient database.RedisClient, aesSecret string, clientProvider corporation.ClientProvider, corporationService corporationService.Service) Service {
+func NewService(logger *logging.Logger, dbClient database.DBClient, redisClient database.RedisClient, aesSecret string, clientProvider corporation.ClientProvider, corporationService corporationService.Service) Service {
 	return &service{
 		logger:             logger,
 		dbClient:           dbClient,

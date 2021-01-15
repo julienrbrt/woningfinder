@@ -1,10 +1,24 @@
 package logging
 
-import "go.uber.org/zap"
+import (
+	"context"
+
+	"go.uber.org/zap"
+)
+
+// Logger embbed zap.Logger
+type Logger struct {
+	*zap.Logger
+}
+
+// Printf prints a log as info
+func (l *Logger) Printf(_ context.Context, template string, args ...interface{}) {
+	l.Sugar().Infof(template, args)
+}
 
 // NewZapLogger creates a logger using the zap library
 // If debug is true errors are as well sent to Sentry
-func NewZapLogger(debug bool, sentryDSN string) *zap.Logger {
+func NewZapLogger(debug bool, sentryDSN string) *Logger {
 	// logger, err := zap.NewProduction()
 	logger, err := zap.NewDevelopment()
 	if err != nil {
@@ -13,13 +27,13 @@ func NewZapLogger(debug bool, sentryDSN string) *zap.Logger {
 	defer logger.Sync() // flushes buffer, if any
 
 	if debug {
-		return logger
+		return &Logger{logger}
 	}
 
-	return mapLoggerToSentry(logger, sentryDSN)
+	return &Logger{mapLoggerToSentry(logger, sentryDSN)}
 }
 
-// NewTestZapLogger default the NewZapLogger without Sentry
-func NewTestZapLogger() *zap.Logger {
+// NewZapLoggerWithoutSentry default the NewZapLogger without Sentry
+func NewZapLoggerWithoutSentry() *Logger {
 	return NewZapLogger(false, "")
 }

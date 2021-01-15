@@ -25,7 +25,7 @@ func Test_FetchOffer(t *testing.T) {
 	hadOffer := false
 
 	for _, url := range clientList {
-		client, err := itris.NewClient(logging.NewTestZapLogger(), bootstrap.CreateMapboxClient(), url)
+		client, err := itris.NewClient(logging.NewZapLoggerWithoutSentry(), bootstrap.CreateMapboxClient(), url)
 		a.NoError(err)
 
 		offers, err := client.FetchOffer()

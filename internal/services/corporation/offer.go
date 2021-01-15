@@ -16,11 +16,12 @@ func (s *service) PublishOffers(client corporation.Client, corporation entity.Co
 	}
 
 	// log number of offers found
-	if len(offers) > 0 {
-		s.logger.Sugar().Infof("%d offers found for %s", len(offers), corporation.Name)
-	} else {
+	if len(offers) == 0 {
 		s.logger.Sugar().Infof("no offers found for %s", corporation.Name)
+		return nil
 	}
+
+	s.logger.Sugar().Infof("%d offers found for %s", len(offers), corporation.Name)
 
 	// build offers list
 	offerList := entity.OfferList{
@@ -30,7 +31,7 @@ func (s *service) PublishOffers(client corporation.Client, corporation entity.Co
 
 	result, err := json.Marshal(offerList)
 	if err != nil {
-		return fmt.Errorf("erorr while marshaling offers for %s: %w", corporation.Name, err)
+		return fmt.Errorf("error while marshaling offers for %s: %w", corporation.Name, err)
 	}
 
 	if err := s.redisClient.Publish(database.PubSubOffers, result); err != nil {
@@ -40,10 +41,10 @@ func (s *service) PublishOffers(client corporation.Client, corporation entity.Co
 	return nil
 }
 
-func (s *service) SubscribeOffers(offerCh chan<- entity.OfferList) {
+func (s *service) SubscribeOffers(offerCh chan<- entity.OfferList) error {
 	ch, err := s.redisClient.Subscribe(database.PubSubOffers)
 	if err != nil {
-		s.logger.Sugar().Error(err)
+		return err
 	}
 
 	// Consume messages
@@ -57,4 +58,7 @@ func (s *service) SubscribeOffers(offerCh chan<- entity.OfferList) {
 
 		go func(offers entity.OfferList) { offerCh <- offers }(offerList)
 	}
+
+	// should never happen
+	return nil
 }

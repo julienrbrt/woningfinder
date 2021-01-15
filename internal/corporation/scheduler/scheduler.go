@@ -27,7 +27,7 @@ func CorporationScheduler(corporation entity.Corporation) []cron.Schedule {
 	// checks before the selection time and after the selection time
 	// only checks multiple time if the selection time is defined
 	if hasFirstComeFirstServed(corporation) && corporation.SelectionTime != (time.Time{}) {
-		for _, minute := range []int{0, 1} {
+		for _, minute := range []int{0, 1, 2} {
 			for _, second := range []int{15, 30, 45} {
 				newTime := corporation.SelectionTime.Add(time.Duration(minute) * time.Minute).Add(time.Duration(second) * time.Second)
 				sched := buildSchedule(parser, newTime.Hour(), newTime.Minute(), newTime.Second())

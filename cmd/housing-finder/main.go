@@ -25,6 +25,9 @@ func init() {
 	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
+
+	// register m2m models with go-pg
+	bootstrap.RegisterModel()
 }
 
 func main() {
@@ -47,7 +50,7 @@ func main() {
 	c := cron.New(cron.WithLocation(nl), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
 
 	// populate crons
-	for _, corp := range *clientProvider.List() {
+	for _, corp := range clientProvider.List() {
 		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 
 		// get corporation client

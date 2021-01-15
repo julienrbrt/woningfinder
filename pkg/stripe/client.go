@@ -5,7 +5,7 @@ import (
 
 	"github.com/stripe/stripe-go"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	"go.uber.org/zap"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 // APIEndpoint is the Stripe base endpoint
@@ -16,10 +16,10 @@ type Client interface {
 }
 
 type client struct {
-	logger *zap.Logger
+	logger *logging.Logger
 }
 
-func NewClient(logger *zap.Logger, apiKey string) Client {
+func NewClient(logger *logging.Logger, apiKey string) Client {
 	// api key
 	stripe.Key = apiKey
 	// define stripe default logger

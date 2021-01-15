@@ -3,7 +3,7 @@ package itris
 import (
 	"net/http/cookiejar"
 
-	"go.uber.org/zap"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -12,13 +12,13 @@ import (
 
 type client struct {
 	collector    *colly.Collector
-	logger       *zap.Logger
+	logger       *logging.Logger
 	mapboxClient mapbox.Client
 	url          string
 }
 
 // NewClient allows to connect to itris ERP
-func NewClient(logger *zap.Logger, mapboxClient mapbox.Client, url string) (corporation.Client, error) {
+func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (corporation.Client, error) {
 	c := colly.NewCollector()
 	// allow revisiting url between jobs
 	c.AllowURLRevisit = true
@@ -32,7 +32,7 @@ func NewClient(logger *zap.Logger, mapboxClient mapbox.Client, url string) (corp
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {
-		logger.Sugar().Infof("itris client visiting %s", r.URL.String())
+		logger.Sugar().Debugf("itris client visiting %s", r.URL.String())
 	})
 
 	return &client{

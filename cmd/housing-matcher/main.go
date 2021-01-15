@@ -19,6 +19,9 @@ func init() {
 	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
+
+	// register m2m models with go-pg
+	bootstrap.RegisterModel()
 }
 
 func main() {
@@ -32,7 +35,11 @@ func main() {
 
 	offerList := make(chan entity.OfferList)
 	// subscribe to pub/sub messages inside a new goroutine
-	go corporationService.SubscribeOffers(offerList)
+	go func(offerList chan entity.OfferList) {
+		if err := corporationService.SubscribeOffers(offerList); err != nil {
+			logger.Sugar().Fatalf(err)
+		}
+	}(offerList)
 
 	for o := range offerList {
 		if err := userService.MatchOffer(o); err != nil {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis"
-	"go.uber.org/zap"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 type RedisClient interface {
@@ -13,12 +13,12 @@ type RedisClient interface {
 }
 
 type redisClient struct {
-	logger *zap.Logger
+	logger *logging.Logger
 	rdb    *redis.Client
 }
 
 // NewRedisClient creates a connection to WoningFinder Redis storage
-func NewRedisClient(logger *zap.Logger, host, port, password string) (RedisClient, error) {
+func NewRedisClient(logger *logging.Logger, host, port, password string) (RedisClient, error) {
 	options, err := redis.ParseURL(fmt.Sprintf("rediss://default:%s@%s:%s/0", password, host, port))
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to redis with host: %s", host)

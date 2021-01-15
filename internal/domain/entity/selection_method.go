@@ -2,10 +2,12 @@ package entity
 
 import (
 	"database/sql/driver"
-	"time"
-
-	"gorm.io/gorm"
 )
+
+// SelectionMethod is the database representation of Method
+type SelectionMethod struct {
+	Method Method `pg:",pk"`
+}
 
 const (
 	// SelectionRandom selects a candidate from an offer randomly
@@ -21,20 +23,17 @@ const (
 type Method string
 
 // Scan implements the Scanner interface from reading from the database
-func (u *Method) Scan(value interface{}) error {
-	*u = Method(value.(string))
+func (m *Method) Scan(value interface{}) error {
+	*m = Method(string(value.([]byte)))
 	return nil
 }
 
 // Value implements the Valuer interface for the storing in the database
-func (u Method) Value() (driver.Value, error) {
-	return string(u), nil
+func (m Method) Value() (driver.Value, error) {
+	return string(m), nil
 }
 
-// SelectionMethod is the database representation of Method
-type SelectionMethod struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
-	Method    Method         `gorm:"primaryKey"`
+// Exists returns is the given method exist
+func (m Method) Exists() bool {
+	return m == SelectionRandom || m == SelectionFirstComeFirstServed || m == SelectionRegistrationDate
 }
