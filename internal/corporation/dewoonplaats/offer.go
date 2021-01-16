@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
@@ -62,7 +62,7 @@ type offerResult struct {
 	} `json:"woningen"`
 }
 
-func (c *client) FetchOffer() ([]corporation.Offer, error) {
+func (c *client) FetchOffer() ([]entity.Offer, error) {
 	req, err := offerRequest()
 	if err != nil {
 		return nil, err
@@ -78,26 +78,30 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 		return nil, fmt.Errorf("error parsing login result %v: %w", string(resp.Result), err)
 	}
 
-	var offers []corporation.Offer
+	var offers []entity.Offer
 	for _, house := range result.Offer {
 		houseType := c.parseHousingType(house.HousingType)
 
-		if !house.ForRent || houseType == corporation.Undefined || house.RentPrice == 0 {
+		if !house.ForRent || houseType == entity.HousingTypeUndefined || house.RentPrice == 0 {
 			continue
 		}
 
-		newHouse := corporation.Housing{
-			Type: corporation.HousingType{
+		if house.District == "" {
+			house.District, err = c.mapboxClient.CityDistrictFromCoords(fmt.Sprintf("%f", house.Latitude), fmt.Sprintf("%f", house.Longitude))
+			if err != nil {
+				c.logger.Sugar().Infof("could not get city district of %s: %w", house.Address, err)
+			}
+		}
+
+		newHouse := entity.Housing{
+			Type: entity.HousingType{
 				Type: houseType,
 			},
 			Address: fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
-			City: corporation.City{
+			City: entity.City{
 				Name: house.City,
 			},
-			CityDistrict: corporation.CityDistrict{
-				CityName: house.City,
-				Name:     house.District,
-			},
+			CityDistrict:     house.District,
 			Latitude:         house.Latitude,
 			Longitude:        house.Longitude,
 			EnergieLabel:     house.EnergieLabel,
@@ -115,11 +119,11 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 			Accessible:       house.Accessible,
 		}
 
-		offer := corporation.Offer{
+		offer := entity.Offer{
 			ExternalID: house.ID,
 			Housing:    newHouse,
 			URL:        fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", house.ID),
-			SelectionMethod: corporation.SelectionMethod{
+			SelectionMethod: entity.SelectionMethod{
 				Method: c.parseSelectionMethod(house.IsSelectionRandom),
 			},
 			SelectionDate: c.parseSelectionDate(house.SelectionDate),
@@ -166,21 +170,21 @@ func offerRequest() (networking.Request, error) {
 	return request, nil
 }
 
-func (c *client) parseHousingType(houseType []string) corporation.Type {
+func (c *client) parseHousingType(houseType []string) entity.Type {
 	if len(houseType) == 0 {
-		return corporation.Undefined
+		return entity.HousingTypeUndefined
 	}
 
 	for _, h := range houseType {
 		h = strings.ToLower(h)
 		if h == "appartement" {
-			return corporation.Appartement
+			return entity.HousingTypeAppartement
 		} else if h == "eengezinswoning" {
-			return corporation.House
+			return entity.HousingTypeHouse
 		}
 	}
 
-	return corporation.Undefined
+	return entity.HousingTypeUndefined
 }
 
 func (c *client) parseHouseSize(houseSize string) float64 {
@@ -202,10 +206,10 @@ func (c *client) parseSelectionDate(str string) time.Time {
 	return date
 }
 
-func (c *client) parseSelectionMethod(random bool) corporation.Method {
+func (c *client) parseSelectionMethod(random bool) entity.Method {
 	if random {
-		return corporation.SelectionRandom
+		return entity.SelectionRandom
 	}
 
-	return corporation.SelectionFirstComeFirstServed
+	return entity.SelectionFirstComeFirstServed
 }

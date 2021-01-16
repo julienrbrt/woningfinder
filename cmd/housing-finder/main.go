@@ -1,13 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
+
+	"github.com/woningfinder/woningfinder/internal/services/corporation"
+
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 
@@ -23,25 +25,21 @@ func init() {
 	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
+
+	// register m2m models with go-pg
+	bootstrap.RegisterModel()
 }
 
 func main() {
-	logger := logging.NewZapLoggerWithSentry(config.MustGetString("SENTRY_DSN"))
+	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 
-	// connect to databases
-	err := bootstrap.InitDB()
-	if err != nil {
-		logger.Sugar().Fatal(err)
-	}
-
-	err = bootstrap.InitRedis()
-	if err != nil {
-		logger.Sugar().Fatal(err)
-	}
-
+	dbClient := bootstrap.CreateDBClient(logger)
+	redisClient := bootstrap.CreateRedisClient(logger)
 	mapboxClient := bootstrap.CreateMapboxClient()
+
 	clientProvider := bootstrap.CreateClientProvider(logger, mapboxClient)
-	corporationService := corporation.NewService(logger, bootstrap.DB, bootstrap.RDB)
+	corporationService := corporation.NewService(logger, dbClient, redisClient)
+
 	// get time location
 	nl, err := time.LoadLocation("Europe/Amsterdam")
 	if err != nil {
@@ -52,9 +50,8 @@ func main() {
 	c := cron.New(cron.WithLocation(nl), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
 
 	// populate crons
-	for _, corp := range *clientProvider.List() {
-		// https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
-		corp := corp
+	for _, corp := range clientProvider.List() {
+		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 
 		// get corporation client
 		client, err := clientProvider.Get(corp)
@@ -63,40 +60,17 @@ func main() {
 			continue
 		}
 
-		// specify cron time or fallback to default
-		// always check at midnight
-		if _, err = c.AddFunc("@midnight", func() {
-			if err := corporationService.PublishOffers(client, corp); err != nil {
-				logger.Sugar().Error(err)
-			}
-		}); err != nil {
-			logger.Sugar().Error(err)
-		}
-
-		// check at 0, 10 and 30 seconds after the publishing time
-		var spec string
-		for _, second := range []int{0, 10, 25, 50} {
-			if corp.SelectionTime != (time.Time{}) {
-				spec = buildSpec(corp.SelectionTime.Hour(), corp.SelectionTime.Minute(), second)
-			} else {
-				// the default is running at 17:00 if not specified
-				spec = buildSpec(17, 00, second)
-			}
-
-			if _, err = c.AddFunc(spec, func() {
+		// schedule corporation fetching
+		schedule := scheduler.CorporationScheduler(corp)
+		for _, s := range schedule {
+			c.Schedule(s, cron.FuncJob(func() {
 				if err := corporationService.PublishOffers(client, corp); err != nil {
 					logger.Sugar().Error(err)
 				}
-			}); err != nil {
-				logger.Sugar().Error(err)
-			}
+			}))
 		}
 	}
 
 	// start cron scheduler
 	c.Run()
-}
-
-func buildSpec(hour, minute, second int) string {
-	return fmt.Sprintf("%d %d %d * * *", second, minute, hour)
 }

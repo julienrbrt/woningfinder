@@ -20,7 +20,7 @@ func init() {
 }
 
 func main() {
-	logger := logging.NewZapLoggerWithSentry(config.MustGetString("SENTRY_DSN"))
+	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 
 	// app port
 	port := config.MustGetString("APP_PORT")

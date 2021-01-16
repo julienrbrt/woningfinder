@@ -1,12 +1,13 @@
 package main
 
 import (
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/user"
+	"github.com/woningfinder/woningfinder/internal/services/corporation"
+	"github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 )
 
@@ -18,28 +19,27 @@ func init() {
 	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
+
+	// register m2m models with go-pg
+	bootstrap.RegisterModel()
 }
 
 func main() {
-	logger := logging.NewZapLoggerWithSentry(config.MustGetString("SENTRY_DSN"))
+	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 
-	err := bootstrap.InitDB()
-	if err != nil {
-		logger.Sugar().Fatal(err)
-	}
-
-	err = bootstrap.InitRedis()
-	if err != nil {
-		logger.Sugar().Fatal(err)
-	}
-
+	dbClient := bootstrap.CreateDBClient(logger)
+	redisClient := bootstrap.CreateRedisClient(logger)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil)
-	corporationService := corporation.NewService(logger, bootstrap.DB, bootstrap.RDB)
-	userService := user.NewService(logger, bootstrap.DB, bootstrap.RDB, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	corporationService := corporation.NewService(logger, dbClient, redisClient)
+	userService := user.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
-	offerList := make(chan corporation.OfferList)
+	offerList := make(chan entity.OfferList)
 	// subscribe to pub/sub messages inside a new goroutine
-	go corporationService.SubscribeOffers(offerList)
+	go func(offerList chan entity.OfferList) {
+		if err := corporationService.SubscribeOffers(offerList); err != nil {
+			logger.Sugar().Fatal(err)
+		}
+	}(offerList)
 
 	for o := range offerList {
 		if err := userService.MatchOffer(o); err != nil {
