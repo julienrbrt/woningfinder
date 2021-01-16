@@ -17,6 +17,7 @@ type Service interface {
 	CreateHousingPreferences(u *entity.User, preferences []entity.HousingPreferences) error
 	GetHousingPreferences(u *entity.User) ([]entity.HousingPreferences, error)
 	DeleteHousingPreferences(u *entity.User) error
+	CreateHousingPreferencesMatch(u *entity.User, offer entity.Offer, corporationName string) error
 
 	CreateCorporationCredentials(u *entity.User, credentials entity.CorporationCredentials) error
 	GetCorporationCredentials(u *entity.User, corporation entity.Corporation) (*entity.CorporationCredentials, error)
