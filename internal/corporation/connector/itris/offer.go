@@ -7,19 +7,19 @@ import (
 	"time"
 
 	"github.com/gocolly/colly/v2"
-	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
 
 const detailsHousingChildAttr = "li.link a"
 
-func (c *client) FetchOffer() ([]corporation.Offer, error) {
-	offers := map[string]*corporation.Offer{}
+func (c *client) FetchOffer() ([]entity.Offer, error) {
+	offers := map[string]*entity.Offer{}
 
 	// add offer
 	c.collector.OnHTML("div.aanbodListItems", func(el *colly.HTMLElement) {
 		el.ForEach("div.woningaanbod", func(_ int, e *colly.HTMLElement) {
 			houseType := parseHousingType(e.Text)
-			if houseType == corporation.Undefined {
+			if houseType == entity.HousingTypeUndefined {
 				return
 			}
 
@@ -31,12 +31,12 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 			if err != nil {
 				cityDistrict, err = c.mapboxClient.CityDistrictFromAddress(address)
 				if err != nil {
-					c.logger.Sugar().Warnf("could not get city district of %s: %w", address, err)
+					c.logger.Sugar().Infof("could not get city district of %s: %w", address, err)
 				}
 			} else {
 				cityDistrict, err = c.mapboxClient.CityDistrictFromCoords(latitude, longitude)
 				if err != nil {
-					c.logger.Sugar().Warnf("could not get city district of %s: %w", address, err)
+					c.logger.Sugar().Infof("could not get city district of %s: %w", address, err)
 				}
 			}
 
@@ -58,22 +58,19 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 				return
 			}
 
-			offer := corporation.Offer{
+			offer := entity.Offer{
 				SelectionDate: reactionDate,
 				URL:           c.url + e.ChildAttr(detailsHousingChildAttr, "href"),
 				ExternalID:    e.Attr("data-aanbod-id"),
-				Housing: corporation.Housing{
-					Type: corporation.HousingType{
+				Housing: entity.Housing{
+					Type: entity.HousingType{
 						Type: houseType,
 					},
 					Address: address,
-					City: corporation.City{
+					City: entity.City{
 						Name: city,
 					},
-					CityDistrict: corporation.CityDistrict{
-						CityName: city,
-						Name:     cityDistrict,
-					},
+					CityDistrict:  cityDistrict,
 					Price:         price,
 					NumberBedroom: numberBedroom,
 				},
@@ -143,7 +140,7 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 	}
 
 	// get all offers as array
-	var offerList []corporation.Offer
+	var offerList []entity.Offer
 	for _, offer := range offers {
 		offerList = append(offerList, *offer)
 	}
@@ -151,18 +148,18 @@ func (c *client) FetchOffer() ([]corporation.Offer, error) {
 	return offerList, nil
 }
 
-func parseHousingType(houseType string) corporation.Type {
+func parseHousingType(houseType string) entity.Type {
 	houseType = strings.ToLower(houseType)
 
 	if strings.Contains(houseType, "appartement") {
-		return corporation.Appartement
+		return entity.HousingTypeAppartement
 	}
 
 	if strings.Contains(houseType, "woning") {
-		return corporation.House
+		return entity.HousingTypeHouse
 	}
 
-	return corporation.Undefined
+	return entity.HousingTypeUndefined
 }
 
 func parseLocation(entry, address string) (string, string, error) {

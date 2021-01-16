@@ -2,17 +2,20 @@ package corporation
 
 import (
 	"fmt"
+
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
 
+// Provider provides a client to an housing corporation
 type Provider struct {
-	Corporation Corporation
+	Corporation entity.Corporation
 	Client      Client
 }
 
 // ClientProvider permits to get the corporation's client
 type ClientProvider interface {
-	List() *[]Corporation
-	Get(corporation Corporation) (Client, error)
+	List() []entity.Corporation
+	Get(corporation entity.Corporation) (Client, error)
 }
 
 type clientProvider struct {
@@ -27,17 +30,17 @@ func NewClientProvider(providers []Provider) ClientProvider {
 }
 
 // List all the supported corporations
-func (c *clientProvider) List() *[]Corporation {
-	var corporations []Corporation
+func (c *clientProvider) List() []entity.Corporation {
+	var corporations []entity.Corporation
 	for _, c := range c.providers {
 		corporations = append(corporations, c.Corporation)
 	}
 
-	return &corporations
+	return corporations
 }
 
 // Get gives the client used to query a corporation
-func (c *clientProvider) Get(corporation Corporation) (Client, error) {
+func (c *clientProvider) Get(corporation entity.Corporation) (Client, error) {
 	for _, c := range c.providers {
 		if c.Corporation.Name != corporation.Name || c.Corporation.URL != corporation.URL {
 			continue

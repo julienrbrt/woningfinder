@@ -1,21 +1,24 @@
 package logging
 
-import "go.uber.org/zap"
+import (
+	"context"
 
-// NewZapLogger creates a logger using the zap library
-func NewZapLogger() *zap.Logger {
-	// logger, err := zap.NewProduction()
-	logger, err := zap.NewDevelopment()
-	if err != nil {
-		panic(err)
-	}
-	defer logger.Sync() // flushes buffer, if any
+	"go.uber.org/zap"
+)
 
-	return logger
+// Logger embbed zap.Logger
+type Logger struct {
+	*zap.Logger
 }
 
-// NewZapLoggerWithSentry creates a logger using the zap library that throws error to Sentry
-func NewZapLoggerWithSentry(sentryDSN string) *zap.Logger {
+// Printf prints a log as info
+func (l *Logger) Printf(_ context.Context, template string, args ...interface{}) {
+	l.Sugar().Infof(template, args)
+}
+
+// NewZapLogger creates a logger using the zap library
+// If debug is true errors are as well sent to Sentry
+func NewZapLogger(debug bool, sentryDSN string) *Logger {
 	// logger, err := zap.NewProduction()
 	logger, err := zap.NewDevelopment()
 	if err != nil {
@@ -23,5 +26,14 @@ func NewZapLoggerWithSentry(sentryDSN string) *zap.Logger {
 	}
 	defer logger.Sync() // flushes buffer, if any
 
-	return mapLoggerToSentry(logger, sentryDSN)
+	if debug {
+		return &Logger{logger}
+	}
+
+	return &Logger{mapLoggerToSentry(logger, sentryDSN)}
+}
+
+// NewZapLoggerWithoutSentry default the NewZapLogger without Sentry
+func NewZapLoggerWithoutSentry() *Logger {
+	return NewZapLogger(false, "")
 }
