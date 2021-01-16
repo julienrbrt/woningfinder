@@ -53,7 +53,7 @@ type HousingPreferencesMatch struct {
 	CreatedAt       time.Time `pg:"default:now()"`
 	UpdatedAt       time.Time
 	DeletedAt       time.Time `pg:",soft_delete"`
-	UserID          int       `pg:",pk"`
+	UserID          int
 	HousingAddress  string
 	CorporationName string
 	OfferURL        string

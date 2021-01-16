@@ -11,9 +11,6 @@ import (
 
 var errNoMatchFound = fmt.Errorf("no match found")
 
-// TODO SPLIT IN MULTIPLE FUNCTION
-// ADD MATCHED HOUSE TO DATABASE
-// ADD TO QUEUE EMAIL
 func (s *service) MatchOffer(offerList entity.OfferList) error {
 	// create housing corporation client
 	client, err := s.clientProvider.Get(offerList.Corporation)
@@ -67,13 +64,17 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 				}
 
 				if user.MatchPreferences(offer) && user.MatchCriteria(offer) {
-					// apply
+					// react to offer
 					if err := client.ReactToOffer(offer); err != nil {
 						s.logger.Sugar().Errorf("failed to react to %s with user %s: %w", offer.Housing.Address, user.Email, err)
 						continue
 					}
 
-					// TODO add to queue to send mail
+					// save match to database
+					if err := s.CreateHousingPreferencesMatch(&user, offer, creds.CorporationName); err != nil {
+						s.logger.Sugar().Errorf("failed to add %s match to user %s: %w", offer.Housing.Address, user.Email, err)
+					}
+
 					s.logger.Sugar().Infof("🎉🎉🎉 WoningFinder has successfully reacted to %s on behalf of %s. 🎉🎉🎉\n", offer.Housing.Address, user.Email)
 				}
 

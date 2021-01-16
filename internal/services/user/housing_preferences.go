@@ -102,3 +102,18 @@ func (s *service) DeleteHousingPreferences(u *entity.User) error {
 	// delete all relations
 	panic("not implemented")
 }
+
+func (s *service) CreateHousingPreferencesMatch(u *entity.User, offer entity.Offer, corporationName string) error {
+	match := entity.HousingPreferencesMatch{
+		UserID:          u.ID,
+		HousingAddress:  offer.Housing.Address,
+		CorporationName: corporationName,
+		OfferURL:        offer.URL,
+	}
+
+	if _, err := s.dbClient.Conn().Model(&match).Insert(); err != nil {
+		return fmt.Errorf("error when add housing preferences match: %w", err)
+	}
+
+	return nil
+}
