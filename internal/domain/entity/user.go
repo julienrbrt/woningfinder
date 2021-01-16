@@ -46,6 +46,11 @@ func (u *User) IsValid() error {
 		return fmt.Errorf("user must have a housing preferences")
 	}
 
+	// verify housing preferences
+	if !u.Tier.Name.AllowMultipleHousingPreferences() && len(u.HousingPreferences) > 1 {
+		return fmt.Errorf("error cannot create more than one housing preferences in plan %s", u.Tier.Name)
+	}
+
 	return nil
 }
 
@@ -142,14 +147,14 @@ func matchCityDistrict(pref HousingPreferences, housing Housing) bool {
 	}
 
 	// no district but user has preferences so reject
-	if housing.CityDistrict.Name == "" {
+	if housing.CityDistrict == "" {
 		return false
 	}
 
 	for _, district := range pref.CityDistrict {
 		// prevent that if actual is an empty, then strings.Contains returns true
-		if housing.CityDistrict.CityName != "" && strings.Contains(strings.ToLower(housing.CityDistrict.CityName), strings.ToLower(district.CityName)) &&
-			housing.CityDistrict.Name != "" && strings.Contains(strings.ToLower(housing.CityDistrict.Name), strings.ToLower(district.Name)) {
+		if housing.City.Name != "" && strings.Contains(strings.ToLower(housing.City.Name), strings.ToLower(district.CityName)) &&
+			strings.Contains(strings.ToLower(housing.CityDistrict), strings.ToLower(district.Name)) {
 			return true
 		}
 	}

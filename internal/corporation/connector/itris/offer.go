@@ -70,10 +70,7 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 					City: entity.City{
 						Name: city,
 					},
-					CityDistrict: entity.CityDistrict{
-						CityName: city,
-						Name:     cityDistrict,
-					},
+					CityDistrict:  cityDistrict,
 					Price:         price,
 					NumberBedroom: numberBedroom,
 				},

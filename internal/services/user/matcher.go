@@ -22,7 +22,7 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 	}
 
 	// find users corporation credentials for this offers
-	credentials, err := s.findMatchCredentials(offerList)
+	credentials, err := s.GetAllCorporationCredentials(offerList.Corporation)
 	if err != nil {
 		// no users found, exit silently
 		if errors.Is(err, errNoMatchFound) {
@@ -31,32 +31,21 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 		return fmt.Errorf("error while matching offer: %w", err)
 	}
 
-	// find users with housing preferences matching offer
-	users, err := s.listUsersFromCredentials(credentials)
-	if err != nil {
-		return fmt.Errorf("error while matching offer: %w", err)
-	}
+	// match offers
+	for _, cred := range credentials {
+		user := entity.User{ID: cred.UserID}
 
-	// build credentials map
-	var credentialsMap = make(map[int]*entity.CorporationCredentials, len(credentials))
-	for _, c := range credentials {
-		credentialsMap[c.UserID] = &c
-	}
-
-	for _, user := range users {
 		// react concurrently
-		go func(user entity.User) {
+		go func(user entity.User, cred entity.CorporationCredentials) {
 			//get housing preferences
-			housingPreferences, err := s.GetHousingPreferences(&user)
+			user.HousingPreferences, err = s.GetHousingPreferences(&user)
 			if err != nil {
 				s.logger.Sugar().Errorf("error while getting housing preferences for user %s: %w", user.Email, err)
 				return
 			}
-			user.HousingPreferences = *housingPreferences
 
 			// decrypt housing corporation credentials
-			creds := credentialsMap[int(user.ID)]
-			creds, err = s.decryptCredentials(creds)
+			creds, err := s.decryptCredentials(&cred)
 			if err != nil {
 				s.logger.Sugar().Errorf("error while decrypting credentials for %s: %w", user.Email, err)
 				return
@@ -74,7 +63,6 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 				// check if we already check this offer
 				uuid := buildReactionUUID(&user, offer)
 				if s.hasReacted(uuid) {
-					s.logger.Sugar().Debug("has already been checked... skipping.")
 					continue
 				}
 
@@ -92,7 +80,7 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 				// save that we've checked the offer for the user
 				s.storeReaction(uuid)
 			}
-		}(user)
+		}(user, cred)
 	}
 
 	return nil
@@ -117,40 +105,6 @@ func (s *service) storeReaction(uuid string) {
 	if err := s.redisClient.Set(uuid, true); err != nil {
 		s.logger.Sugar().Errorf("error when saving reaction to redis: %w", err)
 	}
-}
-
-func (s *service) findMatchCredentials(offerList entity.OfferList) ([]entity.CorporationCredentials, error) {
-	var credentials []entity.CorporationCredentials
-	var query = entity.CorporationCredentials{
-		CorporationName: offerList.Corporation.Name,
-		CorporationURL:  offerList.Corporation.URL,
-	}
-	if err := s.dbClient.Conn().Model(&entity.CorporationCredentials{}).Where(query).Find(&credentials).Error; err != nil {
-		return nil, fmt.Errorf("error of matchOffer while getting user credentials: %w", err)
-	}
-
-	// no users found, exit silently
-	if len(credentials) == 0 {
-		return nil, errNoMatchFound
-	}
-
-	return credentials, nil
-}
-
-func (s *service) listUsersFromCredentials(credentials []entity.CorporationCredentials) ([]entity.User, error) {
-	// get users id
-	var usersID []int
-	for _, c := range credentials {
-		usersID = append(usersID, c.UserID)
-	}
-
-	// query each user
-	var users []entity.User
-	if err := s.dbClient.Conn().Where("id IN ?", usersID).Find(&users).Error; err != nil {
-		return nil, fmt.Errorf("error while getting users: %w", err)
-	}
-
-	return users, nil
 }
 
 func buildReactionUUID(user *entity.User, offer entity.Offer) string {

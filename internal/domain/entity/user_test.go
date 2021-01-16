@@ -59,7 +59,7 @@ func getUser() entity.User {
 						Type: entity.HousingTypeAppartement},
 				},
 				MaximumPrice:  950,
-				NumberBedroom: 2,
+				NumberBedroom: 1,
 				HasElevator:   true,
 			},
 		},
@@ -132,7 +132,7 @@ func Test_User_MatchPreferences_Location(t *testing.T) {
 	testOffer.Housing.City = hengelo
 	a.True(testUser.MatchPreferences(testOffer))
 	testOffer.Housing.City = enschede
-	testUser.HousingPreferences[0].CityDistrict = []entity.CityDistrict{
+	testUser.HousingPreferences[0].CityDistrict = []entity.HousingPreferencesCityDistrict{
 		{
 			Name:     "roombeek",
 			CityName: "enschede",
@@ -147,9 +147,9 @@ func Test_User_MatchPreferences_Location(t *testing.T) {
 		},
 	}
 	a.False(testUser.MatchPreferences(testOffer))
-	testOffer.Housing.CityDistrict = entity.CityDistrict{CityName: "Enschede", Name: "Enschede - Roombeek"}
+	testOffer.Housing.CityDistrict = "Enschede - Roombeek"
 	a.True(testUser.MatchPreferences(testOffer))
-	testOffer.Housing.CityDistrict = entity.CityDistrict{CityName: "Enschede", Name: "deppenbroek"}
+	testOffer.Housing.CityDistrict = "deppenbroek"
 	a.False(testUser.MatchPreferences(testOffer))
 }
 

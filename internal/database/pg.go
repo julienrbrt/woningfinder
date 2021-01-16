@@ -29,6 +29,8 @@ func NewDBClient(logger *logging.Logger, host, port, name, user, password string
 		return nil, err
 	}
 	db := pg.Connect(opt)
+	// log each query
+	db.AddQueryHook(dbLogger{logger: logger})
 
 	// check connection
 	ctx := context.Background()

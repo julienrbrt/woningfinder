@@ -86,9 +86,8 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 			continue
 		}
 
-		cityDistrict := house.District
-		if cityDistrict == "" {
-			cityDistrict, err = c.mapboxClient.CityDistrictFromCoords(fmt.Sprintf("%f", house.Latitude), fmt.Sprintf("%f", house.Longitude))
+		if house.District == "" {
+			house.District, err = c.mapboxClient.CityDistrictFromCoords(fmt.Sprintf("%f", house.Latitude), fmt.Sprintf("%f", house.Longitude))
 			if err != nil {
 				c.logger.Sugar().Infof("could not get city district of %s: %w", house.Address, err)
 			}
@@ -102,10 +101,7 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 			City: entity.City{
 				Name: house.City,
 			},
-			CityDistrict: entity.CityDistrict{
-				CityName: house.City,
-				Name:     cityDistrict,
-			},
+			CityDistrict:     house.District,
 			Latitude:         house.Latitude,
 			Longitude:        house.Longitude,
 			EnergieLabel:     house.EnergieLabel,

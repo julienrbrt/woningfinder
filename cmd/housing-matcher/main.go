@@ -37,7 +37,7 @@ func main() {
 	// subscribe to pub/sub messages inside a new goroutine
 	go func(offerList chan entity.OfferList) {
 		if err := corporationService.SubscribeOffers(offerList); err != nil {
-			logger.Sugar().Fatalf(err)
+			logger.Sugar().Fatal(err)
 		}
 	}(offerList)
 

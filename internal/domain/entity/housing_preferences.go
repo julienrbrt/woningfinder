@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -13,8 +14,8 @@ type HousingPreferences struct {
 	UserID              int
 	Type                []HousingType `pg:"many2many:housing_preferences_housing_types,join_fk:housing_type"`
 	MaximumPrice        float64
-	City                []City         `pg:"many2many:housing_preferences_cities"`
-	CityDistrict        []CityDistrict `pg:"many2many:housing_preferences_city_districts"`
+	City                []City                           `pg:"many2many:housing_preferences_cities" json:",omitempty"`
+	CityDistrict        []HousingPreferencesCityDistrict `pg:"rel:has-many" json:",omitempty"`
 	NumberBedroom       int
 	HasBalcony          bool
 	HasGarage           bool
@@ -23,6 +24,26 @@ type HousingPreferences struct {
 	HasHousingAllowance bool
 	HasAttic            bool
 	IsAccessible        bool
+}
+
+// HousingPreferencesCityDistrict defines the user preferences city districts
+type HousingPreferencesCityDistrict struct {
+	HousingPreferencesID int
+	Name                 string
+	CityName             string
+}
+
+// IsValid verifies that the given HousingPreferences is valid
+func (h *HousingPreferences) IsValid() error {
+	if len(h.Type) == 0 {
+		return fmt.Errorf("housing preferences housing type missing")
+	}
+
+	if len(h.City) == 0 {
+		return fmt.Errorf("housing preferences cities missing")
+	}
+
+	return nil
 }
 
 // HousingPreferencesMatch defines an offer that matched with an user
@@ -48,11 +69,4 @@ type HousingPreferencesHousingType struct {
 type HousingPreferencesCity struct {
 	HousingPreferencesID int
 	CityName             string
-}
-
-// HousingPreferencesCityDistrict defines the many-to-many relationship table
-type HousingPreferencesCityDistrict struct {
-	HousingPreferencesID int
-	CityName             string
-	CityDistrictName     string
 }

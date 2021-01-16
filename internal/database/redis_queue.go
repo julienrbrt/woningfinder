@@ -28,7 +28,7 @@ func (r *redisClient) Publish(channelName string, data []byte) error {
 
 func (r *redisClient) Subscribe(channelName string) (<-chan *redis.Message, error) {
 	pubsub := r.rdb.Subscribe(channelName)
-	defer pubsub.Close()
+	// defer pubsub.Close()
 
 	// wait for confirmation that subscription is created before doing anything.
 	if _, err := pubsub.Receive(); err != nil {

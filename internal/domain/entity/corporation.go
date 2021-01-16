@@ -9,7 +9,7 @@ import (
 // Corporation defines a housing corporations basic data
 // That data is shared between every housing corporations
 type Corporation struct {
-	APIEndpoint     *url.URL  `pg:"-"`
+	APIEndpoint     *url.URL  `pg:"-" json:",omitempty"`
 	CreatedAt       time.Time `pg:"default:now()"`
 	UpdatedAt       time.Time
 	DeletedAt       time.Time `pg:",soft_delete"`
@@ -55,18 +55,10 @@ func (c *Corporation) IsValid() error {
 
 // City defines a city where a housing corporation operates or when an house offer lies
 type City struct {
-	CreatedAt time.Time      `pg:"default:now()"`
-	DeletedAt time.Time      `pg:",soft_delete"`
-	Name      string         `pg:",pk"`
-	District  []CityDistrict `pg:"rel:has-many,join_fk:city_name"`
-}
-
-// CityDistrict the district of a city
-type CityDistrict struct {
 	CreatedAt time.Time `pg:"default:now()"`
 	DeletedAt time.Time `pg:",soft_delete"`
-	CityName  string    `pg:",pk"`
 	Name      string    `pg:",pk"`
+	District  []string  `pg:"-" json:",omitempty"`
 }
 
 // CorporationCity defines the many-to-many relationship table

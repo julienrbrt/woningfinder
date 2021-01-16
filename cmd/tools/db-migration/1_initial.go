@@ -17,16 +17,15 @@ func init() {
 		(*entity.CorporationSelectionMethod)(nil),
 		(*entity.HousingPreferencesHousingType)(nil),
 		(*entity.HousingPreferencesCity)(nil),
-		(*entity.HousingPreferencesCityDistrict)(nil),
 
 		(*entity.Corporation)(nil),
 		(*entity.SelectionMethod)(nil),
 		(*entity.HousingType)(nil),
 		(*entity.City)(nil),
-		(*entity.CityDistrict)(nil),
 		(*entity.User)(nil),
 		(*entity.Tier)(nil),
 		(*entity.HousingPreferences)(nil),
+		(*entity.HousingPreferencesCityDistrict)(nil),
 		(*entity.HousingPreferencesMatch)(nil),
 		(*entity.CorporationCredentials)(nil),
 	}

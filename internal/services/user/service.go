@@ -10,15 +10,17 @@ import (
 
 // Service permits to handle the persistence of an user
 type Service interface {
-	CreateUser(u *entity.User) error
+	CreateUser(u entity.User) error
 	GetUser(email string) (*entity.User, error)
 	DeleteUser(u *entity.User) error
 
-	CreateHousingPreferences(u *entity.User, pref []entity.HousingPreferences) error
+	CreateHousingPreferences(u *entity.User, preferences []entity.HousingPreferences) error
+	GetHousingPreferences(u *entity.User) ([]entity.HousingPreferences, error)
 	DeleteHousingPreferences(u *entity.User) error
 
 	CreateCorporationCredentials(u *entity.User, credentials entity.CorporationCredentials) error
 	GetCorporationCredentials(u *entity.User, corporation entity.Corporation) (*entity.CorporationCredentials, error)
+	GetAllCorporationCredentials(corporation entity.Corporation) ([]entity.CorporationCredentials, error)
 	DeleteCorporationCredentials(u *entity.User, corporation entity.Corporation) error
 
 	MatchOffer(offers entity.OfferList) error

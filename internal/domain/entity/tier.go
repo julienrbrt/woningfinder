@@ -23,7 +23,7 @@ type Plan string
 
 // Scan implements the Scanner interface from reading from the database
 func (u *Plan) Scan(value interface{}) error {
-	*u = Plan(value.(string))
+	*u = Plan(string(value.([]byte)))
 	return nil
 }
 

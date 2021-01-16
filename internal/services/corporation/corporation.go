@@ -51,15 +51,15 @@ func (s *service) GetCorporation(name string) (*entity.Corporation, error) {
 	db := s.dbClient.Conn()
 
 	var corp entity.Corporation
-	if err := db.Model(&corp).Where("name = ?", name).Select(); err != nil {
+	if err := db.Model(&corp).Where("name ILIKE ?", name).Select(); err != nil {
 		return nil, fmt.Errorf("failed getting corporation %s: %w", name, err)
 	}
 
 	// enriching corporation
-	if err := db.Model(&corp).Relation("SelectionMethod").First(); err != nil {
+	if err := db.Model(&corp).Where("name = ?", corp.Name).Relation("SelectionMethod").Select(); err != nil {
 		return nil, fmt.Errorf("failed getting corporation %s selection method: %w", name, err)
 	}
-	if err := db.Model(&corp).Relation("Cities").First(); err != nil {
+	if err := db.Model(&corp).Where("name = ?", corp.Name).Relation("Cities").Select(); err != nil {
 		return nil, fmt.Errorf("failed getting corporation %s cities: %w", name, err)
 	}
 
@@ -72,23 +72,19 @@ func (s *service) DeleteCorporation(corp entity.Corporation) error {
 	panic("not implemented")
 }
 
-func (s *service) AddCities(city []entity.City) ([]entity.City, error) {
-	_, err := s.dbClient.Conn().Model(&city).OnConflict("(name) DO NOTHING").Insert()
+func (s *service) AddCities(cities []entity.City) ([]entity.City, error) {
+	_, err := s.dbClient.Conn().Model(&cities).OnConflict("(name) DO NOTHING").Insert()
 	if err != nil {
 		return nil, fmt.Errorf("error creating cities: %w", err)
 	}
 
-	return city, nil
+	return cities, nil
 }
 
 func (s *service) GetCity(name string) (*entity.City, error) {
 	var city entity.City
-	if err := s.dbClient.Conn().Model(city).Where("name = ?", name).Select(); err != nil {
+	if err := s.dbClient.Conn().Model(&city).Where("name = ?", name).Select(); err != nil {
 		return nil, fmt.Errorf("failing getting city %s: %w", name, err)
-	}
-
-	if city.Name == "" {
-		return nil, fmt.Errorf("failing getting city %s: not found", name)
 	}
 
 	return &city, nil
