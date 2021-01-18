@@ -55,7 +55,7 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 			}
 
 			for _, offer := range offerList.Offer {
-				s.logger.Sugar().Infof("checking match of %s for %s...", offer.Housing.Address, user.Email)
+				s.logger.Sugar().Debugf("checking match of %s for %s...", offer.Housing.Address, user.Email)
 
 				// check if we already check this offer
 				uuid := buildReactionUUID(&user, offer)

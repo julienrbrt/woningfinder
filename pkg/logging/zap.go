@@ -19,17 +19,24 @@ func (l *Logger) Printf(_ context.Context, template string, args ...interface{})
 // NewZapLogger creates a logger using the zap library
 // If debug is true errors are as well sent to Sentry
 func NewZapLogger(debug bool, sentryDSN string) *Logger {
-	// logger, err := zap.NewProduction()
-	logger, err := zap.NewDevelopment()
+	var err error
+	var logger *zap.Logger
+
+	// debug logger
+	if debug {
+		logger, err = zap.NewDevelopment()
+		if err != nil {
+			panic(err)
+		}
+		defer logger.Sync() // flushes buffer, if any
+		return &Logger{logger}
+	}
+
+	logger, err = zap.NewProduction()
 	if err != nil {
 		panic(err)
 	}
 	defer logger.Sync() // flushes buffer, if any
-
-	if debug {
-		return &Logger{logger}
-	}
-
 	return &Logger{mapLoggerToSentry(logger, sentryDSN)}
 }
 

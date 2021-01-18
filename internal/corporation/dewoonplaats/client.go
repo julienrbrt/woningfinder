@@ -1,8 +1,6 @@
 package dewoonplaats
 
 import (
-	"fmt"
-
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
@@ -24,18 +22,18 @@ func NewClient(logger *logging.Logger, c networking.Client, mapboxClient mapbox.
 	}
 }
 
-func (c *client) Send(req networking.Request) (response, error) {
+func (c *client) Send(req networking.Request) (*response, error) {
 	// send request to networking client
 	resp, err := c.networkingClient.Send(&req)
 	if err != nil {
-		return response{}, fmt.Errorf("request %v has given an error: %w", req, err)
+		return nil, err
 	}
 
 	var r response
 	err = resp.ReadJSONBody(&r)
 	if err != nil {
-		return response{}, err
+		return nil, err
 	}
 
-	return r, r.Error()
+	return &r, r.Error()
 }
