@@ -29,7 +29,7 @@ func main() {
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
-	clientProvider := bootstrap.CreateClientProvider(logger, nil)
+	clientProvider := bootstrap.CreateClientProvider(logger, nil) // mapboxClient not required in the matcher
 	corporationService := corporation.NewService(logger, dbClient, redisClient)
 	userService := user.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 

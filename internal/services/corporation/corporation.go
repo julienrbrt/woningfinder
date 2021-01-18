@@ -90,6 +90,16 @@ func (s *service) GetCity(name string) (*entity.City, error) {
 	return &city, nil
 }
 
+func (s *service) GetCities() (*[]entity.City, error) {
+	var cities []entity.City
+
+	if err := s.dbClient.Conn().Model(&cities).Select(); err != nil {
+		return nil, fmt.Errorf("failing getting cities: %w", err)
+	}
+
+	return &cities, nil
+}
+
 func (s *service) DeleteCity(city entity.City) error {
 	// TODO to implement
 	panic("not implemented")

@@ -8,8 +8,8 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-// Service permits to handle the persistence of an user
-type Service interface {
+// UserService permits to handle the persistence of an user
+type UserService interface {
 	CreateUser(u entity.User) error
 	GetUser(email string) (*entity.User, error)
 	DeleteUser(u *entity.User) error
@@ -33,10 +33,10 @@ type service struct {
 	redisClient        database.RedisClient
 	aesSecret          string
 	clientProvider     corporation.ClientProvider
-	corporationService corporationService.Service
+	corporationService corporationService.CorporationService
 }
 
-func NewService(logger *logging.Logger, dbClient database.DBClient, redisClient database.RedisClient, aesSecret string, clientProvider corporation.ClientProvider, corporationService corporationService.Service) Service {
+func NewService(logger *logging.Logger, dbClient database.DBClient, redisClient database.RedisClient, aesSecret string, clientProvider corporation.ClientProvider, corporationService corporationService.CorporationService) UserService {
 	return &service{
 		logger:             logger,
 		dbClient:           dbClient,
