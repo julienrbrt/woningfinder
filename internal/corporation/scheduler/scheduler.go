@@ -9,6 +9,11 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
+var (
+	minutes = []int{0, 1, 2, 3}
+	seconds = []int{15, 30, 45}
+)
+
 // CorporationScheduler creates schedules (when to fetch their offer) given a selection time for a housing corporation
 func CorporationScheduler(corporation entity.Corporation) []cron.Schedule {
 	var schedules []cron.Schedule
@@ -27,8 +32,8 @@ func CorporationScheduler(corporation entity.Corporation) []cron.Schedule {
 	// checks before the selection time and after the selection time
 	// only checks multiple time if the selection time is defined
 	if hasFirstComeFirstServed(corporation) && corporation.SelectionTime != (time.Time{}) {
-		for _, minute := range []int{0, 1, 2, 3} {
-			for _, second := range []int{15, 30, 45} {
+		for _, minute := range minutes {
+			for _, second := range seconds {
 				newTime := corporation.SelectionTime.Add(time.Duration(minute) * time.Minute).Add(time.Duration(second) * time.Second)
 				sched := buildSchedule(parser, newTime.Hour(), newTime.Minute(), newTime.Second())
 				schedules = append(schedules, sched)
