@@ -12,7 +12,7 @@ type Corporation struct {
 	APIEndpoint     *url.URL  `pg:"-" json:",omitempty"`
 	CreatedAt       time.Time `pg:"default:now()"`
 	UpdatedAt       time.Time
-	DeletedAt       time.Time `pg:",soft_delete"`
+	DeletedAt       time.Time `pg:",soft_delete" json:"-"`
 	Name            string    `pg:",pk"`
 	URL             string
 	Cities          []City            `pg:"many2many:corporation_cities"`
@@ -56,7 +56,7 @@ func (c *Corporation) IsValid() error {
 // City defines a city where a housing corporation operates or when an house offer lies
 type City struct {
 	CreatedAt time.Time `pg:"default:now()"`
-	DeletedAt time.Time `pg:",soft_delete"`
+	DeletedAt time.Time `pg:",soft_delete" json:"-"`
 	Name      string    `pg:",pk"`
 	District  []string  `pg:"-" json:",omitempty"`
 }

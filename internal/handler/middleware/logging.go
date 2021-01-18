@@ -1,0 +1,61 @@
+package middleware
+
+import (
+	"fmt"
+	"net/http"
+	"time"
+
+	"github.com/go-chi/chi/middleware"
+	"github.com/woningfinder/woningfinder/pkg/logging"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
+
+// CreateZapMiddleware logs requests
+func CreateZapMiddleware(logger *logging.Logger) func(next http.Handler) http.Handler {
+	return routerLogger{logger: logger}.middleware
+}
+
+type routerLogger struct {
+	logger *logging.Logger
+}
+
+func (m routerLogger) middleware(next http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		requestID := middleware.GetReqID(r.Context())
+		scheme := "http"
+		if r.TLS != nil {
+			scheme = "https"
+		}
+		uri := fmt.Sprintf("%s://%s%s", scheme, r.Host, r.RequestURI)
+
+		ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
+		next.ServeHTTP(ww, r)
+
+		latency := time.Since(start)
+
+		fields := []zapcore.Field{
+			zap.String("uri", uri),
+			zap.Duration("took", latency),
+			zap.String("remote_addr", r.RemoteAddr),
+			zap.Int("http_status", ww.Status()),
+			zap.String("http_method", r.Method),
+			zap.String("user_agent", r.UserAgent()),
+		}
+		if requestID != "" {
+			fields = append(fields, zap.String("request_id", requestID))
+		}
+
+		// checks the status code of the response and logs are error if server error
+		logLine := fmt.Sprintf("%s %s", r.Method, uri)
+		if ww.Status() >= http.StatusInternalServerError {
+			m.logger.Warn(fmt.Sprintf("%s - Invalid response, expected the response code to be in the 200-299 range got %d", logLine, ww.Status()), fields...)
+		} else {
+			m.logger.Info(logLine, fields...)
+		}
+
+	}
+
+	return http.HandlerFunc(fn)
+}

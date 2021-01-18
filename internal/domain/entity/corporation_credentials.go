@@ -9,7 +9,7 @@ import (
 type CorporationCredentials struct {
 	CreatedAt       time.Time `pg:"default:now()"`
 	UpdatedAt       time.Time
-	DeletedAt       time.Time
+	DeletedAt       time.Time   `json:"-"`
 	UserID          int         `pg:",pk"`
 	CorporationName string      `pg:",pk"`
 	Corporation     Corporation `pg:"rel:has-one"`

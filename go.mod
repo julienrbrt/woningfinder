@@ -5,6 +5,8 @@ go 1.15
 require (
 	github.com/TheZeroSlave/zapsentry v1.5.0
 	github.com/getsentry/sentry-go v0.9.0 // indirect
+	github.com/go-chi/chi v1.5.1
+	github.com/go-chi/render v1.0.1
 	github.com/go-pg/migrations/v8 v8.0.1
 	github.com/go-pg/pg/v10 v10.7.3
 	github.com/go-redis/redis v6.15.9+incompatible

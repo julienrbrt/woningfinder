@@ -25,7 +25,7 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 | Endpoint Name            | Method | Description                                                                          |
 | ------------------------ | ------ | ------------------------------------------------------------------------------------ |
 | /signup                  | POST   | Handles the registration flow                                                        |
-| /cities                  | POST   | Gets all supported cities                                                            |
+| /cities                  | GET    | Gets all supported cities                                                            |
 | /housing-preferences     | POST   | Updates the housing preferences of a given user                                      |
 | /corporation-credentials | POST   | Manages the different housing credentials for the supported corporation of the user. |
 
