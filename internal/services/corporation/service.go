@@ -7,8 +7,8 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-// CorporationService permits to handle the persistence of a corporation
-type CorporationService interface {
+// Service permits to handle the persistence of a corporation
+type Service interface {
 	CreateOrUpdateCorporation(corporation entity.Corporation) error
 	GetCorporation(name string) (*entity.Corporation, error)
 	DeleteCorporation(corp entity.Corporation) error
@@ -29,7 +29,8 @@ type service struct {
 	redisClient database.RedisClient
 }
 
-func NewService(logger *logging.Logger, dbClient database.DBClient, redisClient database.RedisClient) CorporationService {
+// NewService instantiate the corporation service
+func NewService(logger *logging.Logger, dbClient database.DBClient, redisClient database.RedisClient) Service {
 	return &service{
 		logger:      logger,
 		dbClient:    dbClient,

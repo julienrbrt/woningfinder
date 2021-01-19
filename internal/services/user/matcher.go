@@ -30,14 +30,19 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 
 	// match offers
 	for _, cred := range credentials {
-		user := entity.User{ID: cred.UserID}
+		user := &entity.User{ID: cred.UserID}
 
 		// react concurrently
-		go func(user entity.User, cred entity.CorporationCredentials) {
-			//get housing preferences
-			user.HousingPreferences, err = s.GetHousingPreferences(&user)
+		go func(user *entity.User, cred entity.CorporationCredentials) {
+			//enrich user
+			user, err = s.GetUser(user)
 			if err != nil {
-				s.logger.Sugar().Errorf("error while getting housing preferences for user %s: %w", user.Email, err)
+				s.logger.Sugar().Errorf("error while getting user %s: %w", user.Email, err)
+				return
+			}
+
+			// skip non paid user
+			if !user.HasPaid() {
 				return
 			}
 
@@ -58,7 +63,7 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 				s.logger.Sugar().Debugf("checking match of %s for %s...", offer.Housing.Address, user.Email)
 
 				// check if we already check this offer
-				uuid := buildReactionUUID(&user, offer)
+				uuid := buildReactionUUID(user, offer)
 				if s.hasReacted(uuid) {
 					continue
 				}
@@ -71,7 +76,7 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 					}
 
 					// save match to database
-					if err := s.CreateHousingPreferencesMatch(&user, offer, creds.CorporationName); err != nil {
+					if err := s.CreateHousingPreferencesMatch(user, offer, creds.CorporationName); err != nil {
 						s.logger.Sugar().Errorf("failed to add %s match to user %s: %w", offer.Housing.Address, user.Email, err)
 					}
 

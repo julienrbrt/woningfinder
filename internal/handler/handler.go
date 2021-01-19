@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/render"
 	customMiddleware "github.com/woningfinder/woningfinder/internal/handler/middleware"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/internal/services/user"
@@ -12,13 +13,13 @@ import (
 )
 
 type handler struct {
-	logger *logging.Logger
-	corporation.CorporationService
-	user.UserService
+	logger             *logging.Logger
+	corporationService corporation.Service
+	userService        user.Service
 }
 
 // NewHandler creates a WoningFinder API router
-func NewHandler(logger *logging.Logger, corporationService corporation.CorporationService, userService user.UserService) http.Handler {
+func NewHandler(logger *logging.Logger, corporationService corporation.Service, userService user.Service) http.Handler {
 	handler := &handler{logger, corporationService, userService}
 
 	// router configuration
@@ -31,12 +32,23 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Corporati
 	r.Use(middleware.Recoverer)
 
 	// register default routes
-	r.NotFound(handler.NotFound)
-	r.MethodNotAllowed(handler.MethodNotAllowed)
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+		render.Render(w, r, ErrNotFound)
+	})
+	r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		render.Render(w, r, ErrMethodNotAllowed)
+	})
 
 	// register routes
-	r.Get("/cities", handler.Cities)
+	r.Get("/cities", handler.GetCities)
 	r.Post("/signup", handler.SignUp)
+	r.Route("/corporation-credentials", func(r chi.Router) {
+		r.Get("/", handler.GetCorporationCredentials)
+		r.Post("/", handler.UpdateCorporationCredentials)
+		r.Delete("/", handler.DeleteCorporationCredentials)
+	})
 
 	return r
 }

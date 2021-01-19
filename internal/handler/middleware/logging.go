@@ -50,7 +50,7 @@ func (m routerLogger) middleware(next http.Handler) http.Handler {
 		// checks the status code of the response and logs are error if server error
 		logLine := fmt.Sprintf("%s %s", r.Method, uri)
 		if ww.Status() >= http.StatusInternalServerError {
-			m.logger.Warn(fmt.Sprintf("%s - Invalid response, expected the response code to be in the 200-299 range got %d", logLine, ww.Status()), fields...)
+			m.logger.Error(fmt.Sprintf("%s - Invalid response with status code %d", logLine, ww.Status()), fields...)
 		} else {
 			m.logger.Info(logLine, fields...)
 		}
