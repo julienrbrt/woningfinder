@@ -24,7 +24,7 @@ type User struct {
 	CorporationCredentials  []CorporationCredentials  `pg:"rel:has-many,join_fk:user_id"`
 }
 
-// Bind permits go-chi routerto verify the user input and marshal it
+// Bind permits go-chi router to verify the user input and marshal it
 func (u *User) Bind(r *http.Request) error {
 	return u.IsValid()
 }

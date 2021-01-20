@@ -12,7 +12,6 @@ type Service interface {
 	CreateOrUpdateCorporation(corporation entity.Corporation) error
 	GetCorporation(name string) (*entity.Corporation, error)
 	DeleteCorporation(corp entity.Corporation) error
-	// GetCorporationByCity(city string) ([]entity.Corporation, error) // TODO for credentials login page
 
 	// Cities
 	AddCities(city []entity.City) ([]entity.City, error)

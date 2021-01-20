@@ -6,14 +6,14 @@ import (
 )
 
 const (
-	// PlanZeker is the normal plan
-	PlanZeker Plan = "ZEKER"
-	// PlanSneller is the high-end plan
-	PlanSneller = "SNELLER"
+	// PlanBasis is the normal plan
+	PlanBasis Plan = "BASIS"
+	// PlanPro is the high-end plan
+	PlanPro = "PRO"
 )
 
 // UserPlan stores the user plan and payment details (when paid)
-// TODO when a user found a house reset paymentdate
+// TODO when a user found a house reset PaymentDate
 type UserPlan struct {
 	UserID      int       `pg:",pk"`
 	CreatedAt   time.Time `pg:"default:now()"`
@@ -39,15 +39,15 @@ func (p Plan) Value() (driver.Value, error) {
 
 // Exists check if the plan exists
 func (p Plan) Exists() bool {
-	return p == PlanZeker || p == PlanSneller
+	return p == PlanBasis || p == PlanPro
 }
 
 // MaxHousingPreferences returns the maximum autorized of housing preferences
 func (p Plan) MaxHousingPreferences() int {
 	switch p {
-	case PlanZeker:
+	case PlanBasis:
 		return 1
-	case PlanSneller:
+	case PlanPro:
 		return 10
 	default:
 		return 0

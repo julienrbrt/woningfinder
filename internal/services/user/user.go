@@ -59,7 +59,7 @@ func (s *service) GetUser(search *entity.User) (*entity.User, error) {
 		return nil, fmt.Errorf("failed getting user %s housing preferences: %w", u.Email, err)
 	}
 
-	if err := db.Model(&u).Where("id = ?", u.ID).Relation("UserPlan").Select(); err != nil {
+	if err := db.Model(&u).Where("id = ?", u.ID).Relation("Plan").Select(); err != nil {
 		return nil, fmt.Errorf("failed getting user %s plan: %w", u.Email, err)
 	}
 
