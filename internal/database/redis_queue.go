@@ -6,12 +6,6 @@ import (
 	"github.com/go-redis/redis"
 )
 
-// PubSubOffers defines on which channel the corporation offers are sent via redis
-const PubSubOffers = "offers"
-
-// PubSubPayment defines on which channel the payment confirmation are sent via redis
-const PubSubPayment = "stripe"
-
 // Queue defines how the different Redis pub-sub is used (as queue)
 type Queue interface {
 	Publish(channelName string, data []byte) error

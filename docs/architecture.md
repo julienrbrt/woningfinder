@@ -22,14 +22,20 @@ The source code is available in another [repository](https://github.com/woningfi
 
 Following is a list of endpoint supported by WoningFinder-API. The API works exclusively with JSON. Validation is obviously performed in the frontend and the backend.
 
-| Endpoint Name            | Method     | Description                                                                          |
-| ------------------------ | ---------- | ------------------------------------------------------------------------------------ |
-| /signup                  | POST       | Handles the registration flow                                                        |
-| /cities                  | GET        | Gets all supported cities                                                            |
-| /housing-preferences     | PUT        | Updates the housing preferences of a given user                                      |
-| /corporation-credentials | GET + POST | Manages the different housing credentials for the supported corporation of the user. |
+| Endpoint Name                    | Method     | Description                                                                          |
+| -------------------------------- | ---------- | ------------------------------------------------------------------------------------ |
+| /signup                          | POST       | Handles the registration flow                                                        |
+| /login [more](###Authentication) | POST       | Login sends an email to the user in order to login                                   |
+| /token [more](###Authentication) | POST       | Verifies users token                                                                 |
+| /cities                          | GET        | Gets all supported cities                                                            |
+| /housing-preferences             | PUT        | Updates the housing preferences of a given user                                      |
+| /corporation-credentials         | GET + POST | Manages the different housing credentials for the supported corporation of the user. |
 
 WoningFinder's API is available at https://woningfinder.nl/api.
+
+### Authentication
+
+The authentication works with email one time usage login token.
 
 ## Housing-Finder
 

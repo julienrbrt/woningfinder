@@ -32,7 +32,7 @@ func main() {
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
-	corporationService := corporation.NewService(logger, dbClient, redisClient)
+	corporationService := corporation.NewService(logger, dbClient)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil) // mapboxClient not required in the api
 	userService := user.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	router := handler.NewHandler(logger, corporationService, userService)

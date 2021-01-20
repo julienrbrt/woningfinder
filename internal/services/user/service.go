@@ -10,22 +10,25 @@ import (
 
 // Service permits to handle the persistence of an user
 type Service interface {
+	// Users
 	CreateUser(u *entity.User) error
 	GetUser(search *entity.User) (*entity.User, error)
 	DeleteUser(u *entity.User) error
 	HasPaid(u *entity.User, plan entity.UserPlan) error
 
+	// Housing Preferences
 	CreateHousingPreferences(u *entity.User, preferences []entity.HousingPreferences) error
 	GetHousingPreferences(u *entity.User) ([]entity.HousingPreferences, error)
 	DeleteHousingPreferences(u *entity.User) error
 	CreateHousingPreferencesMatch(u *entity.User, offer entity.Offer, corporationName string) error
 
+	// Corporation Credentials
 	CreateCorporationCredentials(u *entity.User, credentials entity.CorporationCredentials) error
 	GetCorporationCredentials(u *entity.User, corporation entity.Corporation) (*entity.CorporationCredentials, error)
 	GetAllCorporationCredentials(corporation entity.Corporation) ([]entity.CorporationCredentials, error)
 	DeleteCorporationCredentials(u *entity.User, corporation entity.Corporation) error
-
-	MatchOffer(offers entity.OfferList) error
+	ValidateCredentials(credentials entity.CorporationCredentials) error
+	DecryptCredentials(credentials *entity.CorporationCredentials) (*entity.CorporationCredentials, error)
 }
 
 type service struct {

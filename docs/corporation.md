@@ -5,7 +5,7 @@ WoningFinder is implementing these systems permitting to interact with the housi
 
 ## Supported ERP
 
-- [x] [Itris ERP](https://www.itris.nl/#itris)
+- [x] [Itris ERP](https://www.itris.nl/#itris) - Itris Connector
 - [ ] [Embrace Cloud](https://www.embracecloud.nl/woningcorporaties/wat-kan-het-allemaal/)
 - [ ] [Zig](https://zig.nl)
 - [ ] [WoningNet WRB](https://www.woningnet.nl)

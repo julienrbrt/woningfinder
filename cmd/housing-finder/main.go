@@ -5,16 +5,15 @@ import (
 	"os"
 	"time"
 
-	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
-
-	"github.com/woningfinder/woningfinder/internal/services/corporation"
-
-	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron/v3"
+	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
+	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
+	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
+	userService "github.com/woningfinder/woningfinder/internal/services/user"
+	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 // init is invoked before main()
@@ -38,7 +37,9 @@ func main() {
 	mapboxClient := bootstrap.CreateMapboxClient()
 
 	clientProvider := bootstrap.CreateClientProvider(logger, mapboxClient)
-	corporationService := corporation.NewService(logger, dbClient, redisClient)
+	corporationService := corporationService.NewService(logger, dbClient)
+	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	matcherService := matcherService.NewService(logger, redisClient, userService, corporationService, clientProvider)
 
 	// get time location
 	nl, err := time.LoadLocation("Europe/Amsterdam")
@@ -60,11 +61,16 @@ func main() {
 			continue
 		}
 
+		// TO DELETE
+		if err := matcherService.PublishOffers(client, corp); err != nil {
+			logger.Sugar().Error(err)
+		}
+
 		// schedule corporation fetching
 		schedule := scheduler.CorporationScheduler(corp)
 		for _, s := range schedule {
 			c.Schedule(s, cron.FuncJob(func() {
-				if err := corporationService.PublishOffers(client, corp); err != nil {
+				if err := matcherService.PublishOffers(client, corp); err != nil {
 					logger.Sugar().Error(err)
 				}
 			}))

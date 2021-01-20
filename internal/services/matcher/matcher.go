@@ -1,4 +1,4 @@
-package user
+package matcher
 
 import (
 	"encoding/base64"
@@ -7,9 +7,8 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/services"
 )
-
-var errNoMatchFound = fmt.Errorf("no match found")
 
 func (s *service) MatchOffer(offerList entity.OfferList) error {
 	// create housing corporation client
@@ -19,10 +18,10 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 	}
 
 	// find users corporation credentials for this offers
-	credentials, err := s.GetAllCorporationCredentials(offerList.Corporation)
+	credentials, err := s.userService.GetAllCorporationCredentials(offerList.Corporation)
 	if err != nil {
 		// no users found, exit silently
-		if errors.Is(err, errNoMatchFound) {
+		if errors.Is(err, services.ErrNoMatchFound) {
 			return nil
 		}
 		return fmt.Errorf("error while matching offer: %w", err)
@@ -35,7 +34,7 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 		// react concurrently
 		go func(user *entity.User, cred entity.CorporationCredentials) {
 			//enrich user
-			user, err = s.GetUser(user)
+			user, err = s.userService.GetUser(user)
 			if err != nil {
 				s.logger.Sugar().Errorf("error while getting user %s: %w", user.Email, err)
 				return
@@ -47,7 +46,7 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 			}
 
 			// decrypt housing corporation credentials
-			creds, err := s.decryptCredentials(&cred)
+			creds, err := s.userService.DecryptCredentials(&cred)
 			if err != nil {
 				s.logger.Sugar().Errorf("error while decrypting credentials for %s: %w", user.Email, err)
 				return
@@ -76,7 +75,7 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 					}
 
 					// save match to database
-					if err := s.CreateHousingPreferencesMatch(user, offer, creds.CorporationName); err != nil {
+					if err := s.userService.CreateHousingPreferencesMatch(user, offer, creds.CorporationName); err != nil {
 						s.logger.Sugar().Errorf("failed to add %s match to user %s: %w", offer.Housing.Address, user.Email, err)
 					}
 

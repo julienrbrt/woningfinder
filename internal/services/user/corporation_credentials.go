@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/services"
 	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
@@ -13,7 +14,7 @@ func (s *service) CreateCorporationCredentials(u *entity.User, credentials entit
 	}
 
 	// check credentials validity
-	if err := s.validateCredentials(credentials); err != nil {
+	if err := s.ValidateCredentials(credentials); err != nil {
 		return fmt.Errorf("error when validation corporation credentials: %w", err)
 	}
 
@@ -68,7 +69,7 @@ func (s *service) GetAllCorporationCredentials(corporation entity.Corporation) (
 
 	// no users found
 	if len(credentials) == 0 {
-		return nil, errNoMatchFound
+		return nil, services.ErrNoMatchFound
 	}
 
 	return credentials, nil
@@ -89,7 +90,7 @@ func (s *service) DeleteCorporationCredentials(u *entity.User, corporation entit
 	panic("not implemented")
 }
 
-func (s *service) validateCredentials(credentials entity.CorporationCredentials) error {
+func (s *service) ValidateCredentials(credentials entity.CorporationCredentials) error {
 	client, err := s.clientProvider.Get(credentials.Corporation)
 	if err != nil {
 		return err
@@ -101,7 +102,7 @@ func (s *service) validateCredentials(credentials entity.CorporationCredentials)
 	return nil
 }
 
-func (s *service) decryptCredentials(credentials *entity.CorporationCredentials) (*entity.CorporationCredentials, error) {
+func (s *service) DecryptCredentials(credentials *entity.CorporationCredentials) (*entity.CorporationCredentials, error) {
 	// decrypt credentials
 	var err error
 

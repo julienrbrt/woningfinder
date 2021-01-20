@@ -45,7 +45,7 @@ func init() {
 	logger := logging.NewZapLoggerWithoutSentry()
 	corporations := bootstrap.CreateClientProvider(logger, nil).List()
 	dbClient := bootstrap.CreateDBClient(logger)
-	corporationService := corporation.NewService(logger, dbClient, nil)
+	corporationService := corporation.NewService(logger, dbClient)
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {
 		// add housing types
