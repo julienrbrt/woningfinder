@@ -6,7 +6,8 @@ WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _
 
 - _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for WoningFinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
 - _[HousingFinder](../cmd/housing-finder)_, is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to redis pub/sub.
-- _[HousingMatcher](../cmd/housing-matcher)_, is trigged by _HousingFinder_ via a messaging broker (redis pub/sub). It will match the new offers to the customer search option and react it.
+- _[HousingMatcher](../cmd/housing-matcher)_, is triggered by _HousingFinder_ via a messaging broker (redis pub/sub). It will match the new offers to the customer search option and react it.
+- _[PaymentValidator](../cmd/payment-validator)_, is triggered by a webhook and read from a messaging broker (redis pub/sub). It will validate that an user has paid in WoningFinder database.
 
 There is as well small tools that are run for special reasons:
 
@@ -22,14 +23,26 @@ The source code is available in another [repository](https://github.com/woningfi
 
 Following is a list of endpoint supported by WoningFinder-API. The API works exclusively with JSON. Validation is obviously performed in the frontend and the backend.
 
-| Endpoint Name            | Method | Description                                                                          |
-| ------------------------ | ------ | ------------------------------------------------------------------------------------ |
-| /signup                  | POST   | Handles the registration flow                                                        |
-| /cities                  | GET    | Gets all supported cities                                                            |
-| /housing-preferences     | POST   | Updates the housing preferences of a given user                                      |
-| /corporation-credentials | POST   | Manages the different housing credentials for the supported corporation of the user. |
+| Endpoint Name            | Method     | Description                                                                          |
+| ------------------------ | ---------- | ------------------------------------------------------------------------------------ |
+| /signup                  | POST       | Handles the registration flow                                                        |
+| /cities                  | GET        | Gets all supported cities                                                            |
+| /housing-preferences     | PUT        | Updates the housing preferences of a given user                                      |
+| /corporation-credentials | GET + POST | Manages the different housing credentials for the supported corporation of the user. |
+| /stripe-webhook          | POST       | Endpoint where Stripe sends its events (used for validating payment of customer)     |
 
 WoningFinder's API is available at https://woningfinder.nl/api.
+
+### Authentication
+
+The authentication works with JWT. The token are generated in the sent mail and valid for 12h.
+One can use the token as header (`Authorization`) and as query parameter (`jwt`).
+More information on how built the token in the [code](../internal/auth/jwt.go).
+
+### Payment
+
+The payment is managed by Stripe. Stripe confirms that an user has paid via a webhook.
+Our webhook then add the paying information (user and plan) to a queue, that is processed by the _[PaymentValidator](../cmd/payment-validator)_ worker.
 
 ## Housing-Finder
 

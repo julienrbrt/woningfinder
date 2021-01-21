@@ -9,7 +9,6 @@ import (
 type HousingPreferences struct {
 	ID                  int       `pg:",pk"`
 	CreatedAt           time.Time `pg:"default:now()"`
-	UpdatedAt           time.Time
 	DeletedAt           time.Time `pg:",soft_delete" json:"-"`
 	UserID              int
 	Type                []HousingType `pg:"many2many:housing_preferences_housing_types,join_fk:housing_type"`
@@ -51,7 +50,6 @@ func (h *HousingPreferences) IsValid() error {
 type HousingPreferencesMatch struct {
 	ID              int       `pg:",pk"`
 	CreatedAt       time.Time `pg:"default:now()"`
-	UpdatedAt       time.Time
 	DeletedAt       time.Time `pg:",soft_delete" json:"-"`
 	UserID          int
 	HousingAddress  string

@@ -2,6 +2,7 @@ package entity
 
 import (
 	"database/sql/driver"
+	"errors"
 )
 
 const (
@@ -18,6 +19,10 @@ type Type string
 
 // Scan implements the Scanner interface from reading from the database
 func (u *Type) Scan(value interface{}) error {
+	if value == nil {
+		return errors.New("should not happen")
+	}
+
 	*u = Type(string(value.([]byte)))
 	return nil
 }

@@ -10,17 +10,6 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-var tiers = []entity.Tier{
-	{
-		Name:  entity.PlanZeker,
-		Price: 25,
-	},
-	{
-		Name:  entity.PlanSneller,
-		Price: 75,
-	},
-}
-
 var housingTypes = []entity.HousingType{
 	{
 		Type: entity.HousingTypeHouse,
@@ -56,14 +45,9 @@ func init() {
 	logger := logging.NewZapLoggerWithoutSentry()
 	corporations := bootstrap.CreateClientProvider(logger, nil).List()
 	dbClient := bootstrap.CreateDBClient(logger)
-	corporationService := corporation.NewService(logger, dbClient, nil)
+	corporationService := corporation.NewService(logger, dbClient)
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {
-		// add tiers
-		if _, err := db.Model(&tiers).Insert(); err != nil {
-			return err
-		}
-
 		// add housing types
 		if _, err := db.Model(&housingTypes).Insert(); err != nil {
 			return err

@@ -6,12 +6,6 @@ import (
 	"github.com/go-redis/redis"
 )
 
-// PubSubOffers defines on which channel the corporation offers are sent via redis
-const PubSubOffers = "offers"
-
-// PubSubPayment defines on which channel the payment confirmation are sent via redis
-const PubSubPayment = "stripe"
-
 // Queue defines how the different Redis pub-sub is used (as queue)
 type Queue interface {
 	Publish(channelName string, data []byte) error
@@ -19,8 +13,13 @@ type Queue interface {
 }
 
 func (r *redisClient) Publish(channelName string, data []byte) error {
-	if err := r.rdb.Publish(channelName, data).Err(); err != nil {
-		return fmt.Errorf("error publishing %v to channel %s: %w", data, channelName, err)
+	result := r.rdb.Publish(channelName, data)
+	if result.Err() != nil {
+		return fmt.Errorf("error publishing %v to channel %s: %w", string(data), channelName, result.Err())
+	}
+
+	if result.Val() == 0 {
+		r.logger.Sugar().Warnf("⚠️ warning successfuly published %v to channel %s: no one received it", string(data), channelName)
 	}
 
 	return nil

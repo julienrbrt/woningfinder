@@ -63,7 +63,7 @@ func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 
 	now := time.Now()
 	schedules := scheduler.CorporationScheduler(corporation)
-	a.Len(schedules, 11)
+	a.Len(schedules, 14)
 	a.Equal(schedules[0].Next(now).Hour(), 17)
 	a.Equal(schedules[0].Next(now).Minute(), 59)
 	a.Equal(schedules[0].Next(now).Second(), 15)

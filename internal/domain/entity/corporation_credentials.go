@@ -7,8 +7,7 @@ import (
 
 // CorporationCredentials holds the user credentials to login to an housing corporation
 type CorporationCredentials struct {
-	CreatedAt       time.Time `pg:"default:now()"`
-	UpdatedAt       time.Time
+	CreatedAt       time.Time   `pg:"default:now()"`
 	DeletedAt       time.Time   `json:"-"`
 	UserID          int         `pg:",pk"`
 	CorporationName string      `pg:",pk"`

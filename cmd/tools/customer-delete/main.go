@@ -4,6 +4,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
+
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/internal/services/user"
 
@@ -42,11 +44,11 @@ func main() {
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil)
-	corporationService := corporation.NewService(logger, dbClient, nil)
+	corporationService := corporation.NewService(logger, dbClient)
 	userService := user.NewService(logger, dbClient, nil, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
 	// get user
-	u, err := userService.GetUser(email)
+	u, err := userService.GetUser(&entity.User{Email: email})
 	if err != nil {
 		logger.Sugar().Fatal(err)
 	}

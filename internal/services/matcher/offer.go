@@ -1,11 +1,10 @@
-package corporation
+package matcher
 
 import (
 	"encoding/json"
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
 
@@ -34,7 +33,7 @@ func (s *service) PublishOffers(client corporation.Client, corporation entity.Co
 		return fmt.Errorf("error while marshaling offers for %s: %w", corporation.Name, err)
 	}
 
-	if err := s.redisClient.Publish(database.PubSubOffers, result); err != nil {
+	if err := s.redisClient.Publish(pubSubOffers, result); err != nil {
 		return fmt.Errorf("error publishing %d offers: %w", len(offers), err)
 	}
 
@@ -42,21 +41,22 @@ func (s *service) PublishOffers(client corporation.Client, corporation entity.Co
 }
 
 func (s *service) SubscribeOffers(offerCh chan<- entity.OfferList) error {
-	ch, err := s.redisClient.Subscribe(database.PubSubOffers)
+	ch, err := s.redisClient.Subscribe(pubSubOffers)
 	if err != nil {
 		return err
 	}
 
-	// Consume messages
+	// Consume messages and match offers
 	for msg := range ch {
-		var offerList entity.OfferList
-		err := json.Unmarshal([]byte(msg.Payload), &offerList)
+		var offers entity.OfferList
+		err := json.Unmarshal([]byte(msg.Payload), &offers)
 		if err != nil {
 			s.logger.Sugar().Errorf("error while unmarshaling offers: %w", err)
 			continue
 		}
 
-		go func(offers entity.OfferList) { offerCh <- offers }(offerList)
+		// send offers to channel
+		offerCh <- offers
 	}
 
 	// should never happen

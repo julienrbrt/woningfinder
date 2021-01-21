@@ -42,7 +42,7 @@ func (c *clientProvider) List() []entity.Corporation {
 // Get gives the client used to query a corporation
 func (c *clientProvider) Get(corporation entity.Corporation) (Client, error) {
 	for _, c := range c.providers {
-		if c.Corporation.Name != corporation.Name || c.Corporation.URL != corporation.URL {
+		if c.Corporation.Name != corporation.Name {
 			continue
 		}
 		return c.Client, nil

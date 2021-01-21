@@ -2,6 +2,7 @@ package corporation
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
@@ -37,6 +38,7 @@ func (s *service) CreateOrUpdateCorporation(corp entity.Corporation) error {
 
 	// add cities relation
 	for _, city := range cities {
+		city.Name = strings.Title(city.Name)
 		if _, err := db.Model(&entity.CorporationCity{CorporationName: corp.Name, CityName: city.Name}).
 			Where("corporation_name = ? and city_name = ?", corp.Name, city.Name).
 			SelectOrInsert(); err != nil {
@@ -69,38 +71,5 @@ func (s *service) GetCorporation(name string) (*entity.Corporation, error) {
 func (s *service) DeleteCorporation(corp entity.Corporation) error {
 	// TODO to implement
 	// Delete all relationships and delete newly unsupported cities
-	panic("not implemented")
-}
-
-func (s *service) AddCities(cities []entity.City) ([]entity.City, error) {
-	_, err := s.dbClient.Conn().Model(&cities).OnConflict("(name) DO NOTHING").Insert()
-	if err != nil {
-		return nil, fmt.Errorf("error creating cities: %w", err)
-	}
-
-	return cities, nil
-}
-
-func (s *service) GetCity(name string) (*entity.City, error) {
-	var city entity.City
-	if err := s.dbClient.Conn().Model(&city).Where("name = ?", name).Select(); err != nil {
-		return nil, fmt.Errorf("failing getting city %s: %w", name, err)
-	}
-
-	return &city, nil
-}
-
-func (s *service) GetCities() (*[]entity.City, error) {
-	var cities []entity.City
-
-	if err := s.dbClient.Conn().Model(&cities).Select(); err != nil {
-		return nil, fmt.Errorf("failing getting cities: %w", err)
-	}
-
-	return &cities, nil
-}
-
-func (s *service) DeleteCity(city entity.City) error {
-	// TODO to implement
 	panic("not implemented")
 }

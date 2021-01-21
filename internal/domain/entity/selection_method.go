@@ -2,6 +2,7 @@ package entity
 
 import (
 	"database/sql/driver"
+	"errors"
 )
 
 // SelectionMethod is the database representation of Method
@@ -24,6 +25,10 @@ type Method string
 
 // Scan implements the Scanner interface from reading from the database
 func (m *Method) Scan(value interface{}) error {
+	if value == nil {
+		return errors.New("should not happen")
+	}
+
 	*m = Method(string(value.([]byte)))
 	return nil
 }
