@@ -13,11 +13,9 @@ const (
 )
 
 // UserPlan stores the user plan and payment details (when paid)
-// TODO when a user found a house reset PaymentDate
 type UserPlan struct {
 	UserID      int       `pg:",pk"`
 	CreatedAt   time.Time `pg:"default:now()"`
-	UpdatedAt   time.Time
 	DeletedAt   time.Time `pg:",soft_delete" json:"-"`
 	PaymentDate time.Time `json:"-"` // When payment date is set the user has paid and the search can start
 	Name        Plan
@@ -28,6 +26,10 @@ type Plan string
 
 // Scan implements the Scanner interface from reading from the database
 func (p *Plan) Scan(value interface{}) error {
+	if value == nil { // happens if we try to get an user without a plan (i.e. not paid yet)
+		return nil
+	}
+
 	*p = Plan(string(value.([]byte)))
 	return nil
 }

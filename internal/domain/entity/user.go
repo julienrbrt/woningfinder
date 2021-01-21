@@ -11,7 +11,6 @@ import (
 type User struct {
 	ID                      int
 	CreatedAt               time.Time `pg:"default:now()"`
-	UpdatedAt               time.Time
 	DeletedAt               time.Time `json:"-"`
 	Name                    string
 	Email                   string `pg:",unique"`

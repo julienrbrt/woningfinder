@@ -5,6 +5,7 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/auth"
 
+	"github.com/woningfinder/woningfinder/internal/services/payment"
 	"github.com/woningfinder/woningfinder/internal/services/user"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
@@ -37,8 +38,10 @@ func main() {
 	corporationService := corporation.NewService(logger, dbClient)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil) // mapboxClient not required in the api
 	userService := user.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	bootstrap.CreateSripeClient(logger) // init stripe library
+	paymentService := payment.NewService(logger, redisClient, userService)
 	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
-	router := handler.NewHandler(logger, corporationService, userService, jwtAuth)
+	router := handler.NewHandler(logger, corporationService, userService, paymentService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), jwtAuth)
 
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
 		logger.Sugar().Fatalf("failed to start server: %w", err)

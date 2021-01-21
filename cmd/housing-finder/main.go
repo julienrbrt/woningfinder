@@ -61,12 +61,7 @@ func main() {
 			continue
 		}
 
-		// TO DELETE
-		if err := matcherService.PublishOffers(client, corp); err != nil {
-			logger.Sugar().Error(err)
-		}
-
-		// schedule corporation fetching
+		// schedule corporation offer fetching
 		schedule := scheduler.CorporationScheduler(corp)
 		for _, s := range schedule {
 			c.Schedule(s, cron.FuncJob(func() {

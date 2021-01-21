@@ -39,8 +39,8 @@ func (s *service) CreateUser(u *entity.User) error {
 
 func (s *service) GetUser(search *entity.User) (*entity.User, error) {
 	db := s.dbClient.Conn()
-	var u entity.User
 
+	var u entity.User
 	// get user (by id or email)
 	if search.ID > 0 {
 		if err := db.Model(&u).Where("id = ?", search.ID).Select(); err != nil {
@@ -77,12 +77,5 @@ func (s *service) DeleteUser(u *entity.User) error {
 	// delete all corporations credentials
 	// delete housing preferences
 	// delete user
-	panic("not implemented")
-}
-
-func (s *service) HasPaid(u *entity.User, plan entity.UserPlan) error {
-	// TODO to implement
-	// create entity.UserPlan with payment date and plan name
-	// this should be called via a webhook called by Stripe
 	panic("not implemented")
 }

@@ -11,7 +11,6 @@ import (
 type Corporation struct {
 	APIEndpoint     *url.URL  `pg:"-" json:",omitempty"`
 	CreatedAt       time.Time `pg:"default:now()"`
-	UpdatedAt       time.Time
 	DeletedAt       time.Time `pg:",soft_delete" json:"-"`
 	Name            string    `pg:",pk"`
 	URL             string

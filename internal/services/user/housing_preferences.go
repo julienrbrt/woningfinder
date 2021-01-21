@@ -113,7 +113,7 @@ func (s *service) CreateHousingPreferencesMatch(u *entity.User, offer entity.Off
 	}
 
 	if _, err := s.dbClient.Conn().Model(&match).Insert(); err != nil {
-		return fmt.Errorf("error when add housing preferences match: %w", err)
+		return fmt.Errorf("error when adding housing preferences match: %w", err)
 	}
 
 	return nil

@@ -46,16 +46,17 @@ func (s *service) SubscribeOffers(offerCh chan<- entity.OfferList) error {
 		return err
 	}
 
-	// Consume messages
+	// Consume messages and match offers
 	for msg := range ch {
-		var offerList entity.OfferList
-		err := json.Unmarshal([]byte(msg.Payload), &offerList)
+		var offers entity.OfferList
+		err := json.Unmarshal([]byte(msg.Payload), &offers)
 		if err != nil {
 			s.logger.Sugar().Errorf("error while unmarshaling offers: %w", err)
 			continue
 		}
 
-		go func(offers entity.OfferList) { offerCh <- offers }(offerList)
+		// send offers to channel
+		offerCh <- offers
 	}
 
 	// should never happen

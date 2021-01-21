@@ -9,14 +9,10 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-const (
-	// PubSubOffers defines on which channel the corporation offers are sent via redis
-	pubSubOffers = "offers"
-	// PubSubPayment defines on which channel the payment confirmation are sent via redis
-	pubSubPayment = "stripe"
-)
+// pubSubOffers defines on which channel the corporation offers are sent via redis
+const pubSubOffers = "offers"
 
-// Service permits to handle the persistence of an user
+// Service permits to handle the persistence of matcher
 type Service interface {
 	PublishOffers(client corporation.Client, corporation entity.Corporation) error
 	SubscribeOffers(offerCh chan<- entity.OfferList) error

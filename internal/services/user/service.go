@@ -14,7 +14,10 @@ type Service interface {
 	CreateUser(u *entity.User) error
 	GetUser(search *entity.User) (*entity.User, error)
 	DeleteUser(u *entity.User) error
-	HasPaid(u *entity.User, plan entity.UserPlan) error
+
+	// Payment
+	SetPaid(u *entity.User, plan entity.Plan) error
+	SetExpired(u *entity.User) error
 
 	// Housing Preferences
 	CreateHousingPreferences(u *entity.User, preferences []entity.HousingPreferences) error

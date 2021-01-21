@@ -4,8 +4,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
+	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -29,23 +28,28 @@ func main() {
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
-	clientProvider := bootstrap.CreateClientProvider(logger, nil) // mapboxClient not required in the matcher
-	corporationService := corporationService.NewService(logger, dbClient)
-	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
-	matcherService := matcherService.NewService(logger, redisClient, userService, corporationService, clientProvider)
+	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), nil, nil) // no corporation relation stuff in payment-validator
+	paymentService := paymentService.NewService(logger, redisClient, userService)
 
-	offerList := make(chan entity.OfferList)
+	payments := make(chan entity.PaymentData)
 	// subscribe to pub/sub messages inside a new go routine
-	go func(offerList chan entity.OfferList) {
-		if err := matcherService.SubscribeOffers(offerList); err != nil {
+	go func(payments chan entity.PaymentData) {
+		if err := paymentService.ProcessPayment(payments); err != nil {
 			logger.Sugar().Fatal(err)
 		}
-	}(offerList)
+	}(payments)
 
-	// match offer
-	for offers := range offerList {
-		if err := matcherService.MatchOffer(offers); err != nil {
-			logger.Sugar().Errorf("error while maching offers for corporation %s: %w", offers.Corporation.Name, err)
+	// set that user has paid
+	for payment := range payments {
+		user, err := userService.GetUser(&entity.User{Email: payment.UserEmail})
+		if err != nil {
+			logger.Sugar().Errorf("error while processing payment data: cannot get user: %w", err)
+			continue
+		}
+
+		if err := userService.SetPaid(user, payment.Plan); err != nil {
+			logger.Sugar().Errorf("error while processing payment data: %w", err)
+			continue
 		}
 	}
 }

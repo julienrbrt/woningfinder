@@ -62,7 +62,7 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 
 	var credentials handlerEntity.CredentialsRequest
 	if err := render.Bind(r, &credentials); err != nil {
-		render.Render(w, r, handlerEntity.ErrorRenderer(err))
+		render.Render(w, r, handlerEntity.ErrBadRequest)
 		return
 	}
 
