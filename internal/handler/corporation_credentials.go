@@ -4,38 +4,65 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/woningfinder/woningfinder/internal/auth"
+
+	"github.com/go-chi/jwtauth"
+
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 )
 
 // GetCorporationCredentials gets a list of corporation credentials that match the user housing preferences
 func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Request) {
-	// TODO check JWT token and get user with userID
-	var user entity.User
-
-	corporations, err := h.userService.GetHousingPreferencesMatchingCorporation(&user)
+	// extract jwt
+	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
-		render.Render(w, r, ServerErrorRenderer(err))
+		render.Render(w, r, handlerEntity.ErrBadRequest)
 		return
 	}
 
-	// TODO  gets if the credentials are stored or not
+	// get user from jwt claims
+	user, err := auth.ExtractUserFromJWT(claims)
+	if err != nil {
+		render.Render(w, r, handlerEntity.ErrBadRequest)
+		return
+	}
 
-	var credentials []credentialsResponse
+	corporations, err := h.userService.GetHousingPreferencesMatchingCorporation(user)
+	if err != nil {
+		render.Render(w, r, handlerEntity.ServerErrorRenderer(err))
+		return
+	}
+
+	// TODO gets if the credentials are stored or not
+
+	var credentials []handlerEntity.CredentialsResponse
 	for _, corporation := range corporations {
-		credentials = append(credentials, credentialsResponse{CorporationName: corporation.Name})
+		credentials = append(credentials, handlerEntity.CredentialsResponse{CorporationName: corporation.Name})
 	}
 
 	json.NewEncoder(w).Encode(credentials)
 }
 
 func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Request) {
-	// TODO check JWT token and get user with userID
-	var user entity.User
+	// extract jwt
+	_, claims, err := jwtauth.FromContext(r.Context())
+	if err != nil {
+		render.Render(w, r, handlerEntity.ErrBadRequest)
+		return
+	}
 
-	var credentials credentialsRequest
+	// get user from jwt claims
+	user, err := auth.ExtractUserFromJWT(claims)
+	if err != nil {
+		render.Render(w, r, handlerEntity.ErrBadRequest)
+		return
+	}
+
+	var credentials handlerEntity.CredentialsRequest
 	if err := render.Bind(r, &credentials); err != nil {
-		render.Render(w, r, ErrorRenderer(err))
+		render.Render(w, r, handlerEntity.ErrorRenderer(err))
 		return
 	}
 
@@ -46,13 +73,14 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 		Login:           credentials.Login,
 		Password:        credentials.Password,
 	}
-	if err := h.userService.CreateCorporationCredentials(&user, corporationCredentials); err != nil {
-		render.Render(w, r, ServerErrorRenderer(err))
+	if err := h.userService.CreateCorporationCredentials(user, corporationCredentials); err != nil {
+		render.Render(w, r, handlerEntity.ServerErrorRenderer(err))
 		return
 	}
 
+	// returns 200 by default
 }
 
 func (h *handler) DeleteCorporationCredentials(w http.ResponseWriter, r *http.Request) {
-
+	// TODO implement DeleteCorporationCredentials
 }

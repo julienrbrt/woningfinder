@@ -1,4 +1,4 @@
-package handler
+package entity
 
 import (
 	"net/http"
@@ -18,6 +18,7 @@ var (
 	ErrMethodNotAllowed = &ErrorResponse{StatusCode: http.StatusMethodNotAllowed, Message: "Method not allowed"}
 	ErrNotFound         = &ErrorResponse{StatusCode: http.StatusNotFound, Message: "Resource not found"}
 	ErrBadRequest       = &ErrorResponse{StatusCode: http.StatusBadRequest, Message: "Bad request"}
+	ErrUnauthorized     = &ErrorResponse{StatusCode: http.StatusUnauthorized, StatusText: "Unauthorized"}
 )
 
 func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
