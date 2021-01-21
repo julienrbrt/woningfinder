@@ -2,12 +2,13 @@ package user
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
 
 // TODO eventually use a prepare function to create it in one query only
-func (s *service) CreateUser(u entity.User) error {
+func (s *service) CreateUser(u *entity.User) error {
 	db := s.dbClient.Conn()
 
 	// verify user
@@ -15,22 +16,18 @@ func (s *service) CreateUser(u entity.User) error {
 		return fmt.Errorf("error user %s invalid: %w", u.Email, err)
 	}
 
-	// associate to tier
-	var tier entity.Tier
-	if err := db.Model(&tier).Where("name = ?", u.Tier.Name).Select(); err != nil {
-		return fmt.Errorf("error getting tier for creating user: %w", err)
-	}
-	u.TierID = tier.ID
+	// a user cannot have paid when being created so reset by security
+	u.Plan.PaymentDate = (time.Time{})
 
 	// create user - if exist throw error
-	if _, err := db.Model(&u).Insert(); err != nil {
+	if _, err := db.Model(u).Insert(); err != nil {
 		return fmt.Errorf("failing creating user: %w", err)
 	}
 
 	// create user housing preferences
-	if err := s.CreateHousingPreferences(&u, u.HousingPreferences); err != nil {
+	if err := s.CreateHousingPreferences(u, u.HousingPreferences); err != nil {
 		// rollback
-		if _, err2 := db.Model(&u).Where("email = ?", u.Email).Delete(); err2 != nil {
+		if _, err2 := db.Model(u).Where("email = ?", u.Email).Delete(); err2 != nil {
 			s.logger.Sugar().Errorf("error %w and error when rolling back user creation: %w", err, err2)
 		}
 
@@ -40,13 +37,19 @@ func (s *service) CreateUser(u entity.User) error {
 	return nil
 }
 
-func (s *service) GetUser(email string) (*entity.User, error) {
+func (s *service) GetUser(search *entity.User) (*entity.User, error) {
 	db := s.dbClient.Conn()
 
-	// get user
 	var u entity.User
-	if err := db.Model(&u).Where("email ILIKE ?", email).Select(); err != nil {
-		return nil, fmt.Errorf("failed getting user %s: %w", email, err)
+	// get user (by id or email)
+	if search.ID > 0 {
+		if err := db.Model(&u).Where("id = ?", search.ID).Select(); err != nil {
+			return nil, fmt.Errorf("failed getting user %d: %w", search.ID, err)
+		}
+	} else {
+		if err := db.Model(&u).Where("email ILIKE ?", search.Email).Select(); err != nil {
+			return nil, fmt.Errorf("failed getting user %s: %w", search.Email, err)
+		}
 	}
 
 	// enrich user
@@ -56,11 +59,11 @@ func (s *service) GetUser(email string) (*entity.User, error) {
 		return nil, fmt.Errorf("failed getting user %s housing preferences: %w", u.Email, err)
 	}
 
-	if err := db.Model(&u).Where("email = ?", u.Email).Relation("Tier").Select(); err != nil {
-		return nil, fmt.Errorf("failed getting user %s tier: %w", u.Email, err)
+	if err := db.Model(&u).Where("id = ?", u.ID).Relation("Plan").Select(); err != nil {
+		return nil, fmt.Errorf("failed getting user %s plan: %w", u.Email, err)
 	}
 
-	if err := db.Model(&u).Where("email = ?", u.Email).Relation("HousingPreferencesMatch").Select(); err != nil {
+	if err := db.Model(&u).Where("id = ?", u.ID).Relation("HousingPreferencesMatch").Select(); err != nil {
 		return nil, fmt.Errorf("failed getting user %s housing preferences match: %w", u.Email, err)
 	}
 

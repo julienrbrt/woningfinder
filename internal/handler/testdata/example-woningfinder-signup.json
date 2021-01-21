@@ -1,0 +1,30 @@
+{
+  "Name": "Foo Baar",
+  "Email": "foobaar@example.com",
+  "BirthYear": 2000,
+  "YearlyIncome": 8000,
+  "FamilySize": 2,
+  "Plan": {
+    "Name": "BASIS"
+  },
+  "HousingPreferences": [
+    {
+      "Type": [
+        {
+          "Type": "APPARTEMENT"
+        },
+        {
+          "Type": "HOUSE"
+        }
+      ],
+      "City": [
+        {
+          "Name": "enschede"
+        }
+      ],
+      "MaximumPrice": 800,
+      "NumberBedroom": 2,
+      "HasHousingAllowance": true
+    }
+  ]
+}

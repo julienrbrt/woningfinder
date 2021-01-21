@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/services/corporation"
-	"github.com/woningfinder/woningfinder/internal/services/user"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
+	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
+	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 // init is invoked before main()
@@ -30,21 +30,22 @@ func main() {
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil) // mapboxClient not required in the matcher
-	corporationService := corporation.NewService(logger, dbClient, redisClient)
-	userService := user.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	corporationService := corporationService.NewService(logger, dbClient)
+	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	matcherService := matcherService.NewService(logger, redisClient, userService, corporationService, clientProvider)
 
 	offerList := make(chan entity.OfferList)
-	// subscribe to pub/sub messages inside a new goroutine
+	// subscribe to pub/sub messages inside a new go routine
 	go func(offerList chan entity.OfferList) {
-		if err := corporationService.SubscribeOffers(offerList); err != nil {
+		if err := matcherService.SubscribeOffers(offerList); err != nil {
 			logger.Sugar().Fatal(err)
 		}
 	}(offerList)
 
-	for o := range offerList {
-		if err := userService.MatchOffer(o); err != nil {
-			logger.Sugar().Errorf("error while maching offers for corporation %s: %w", o.Corporation.Name, err)
+	// match offer
+	for offers := range offerList {
+		if err := matcherService.MatchOffer(offers); err != nil {
+			logger.Sugar().Errorf("error while maching offers for corporation %s: %w", offers.Corporation.Name, err)
 		}
 	}
-
 }

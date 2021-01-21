@@ -29,6 +29,7 @@ func NewZapLogger(debug bool, sentryDSN string) *Logger {
 			panic(err)
 		}
 		defer logger.Sync() // flushes buffer, if any
+
 		return &Logger{logger}
 	}
 
@@ -36,11 +37,12 @@ func NewZapLogger(debug bool, sentryDSN string) *Logger {
 	if err != nil {
 		panic(err)
 	}
-	defer logger.Sync() // flushes buffer, if any
+	defer logger.Sync()
+
 	return &Logger{mapLoggerToSentry(logger, sentryDSN)}
 }
 
 // NewZapLoggerWithoutSentry default the NewZapLogger without Sentry
 func NewZapLoggerWithoutSentry() *Logger {
-	return NewZapLogger(false, "")
+	return NewZapLogger(true, "")
 }

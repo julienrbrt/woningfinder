@@ -3,6 +3,9 @@ package main
 import (
 	"net/http"
 
+	"github.com/woningfinder/woningfinder/internal/auth"
+
+	"github.com/woningfinder/woningfinder/internal/services/payment"
 	"github.com/woningfinder/woningfinder/internal/services/user"
 
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
@@ -23,16 +26,22 @@ func init() {
 	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
+
+	// register m2m models with go-pg
+	bootstrap.RegisterModel()
 }
 
 func main() {
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
-	corporationService := corporation.NewService(logger, dbClient, redisClient)
+	corporationService := corporation.NewService(logger, dbClient)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil) // mapboxClient not required in the api
 	userService := user.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
-	router := handler.NewHandler(logger, corporationService, userService)
+	bootstrap.CreateSripeClient(logger) // init stripe library
+	paymentService := payment.NewService(logger, redisClient, userService)
+	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
+	router := handler.NewHandler(logger, corporationService, userService, paymentService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), jwtAuth)
 
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
 		logger.Sugar().Fatalf("failed to start server: %w", err)

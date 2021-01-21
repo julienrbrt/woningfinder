@@ -47,8 +47,8 @@ func getUser() entity.User {
 		BirthYear:    1990,
 		YearlyIncome: 30000,
 		FamilySize:   3,
-		Tier: entity.Tier{
-			Name: entity.PlanZeker,
+		Plan: entity.UserPlan{
+			Name: entity.PlanBasis,
 		},
 		HousingPreferences: []entity.HousingPreferences{
 			{

@@ -2,6 +2,7 @@ package user
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
@@ -11,8 +12,8 @@ func (s *service) CreateHousingPreferences(u *entity.User, preferences []entity.
 	db := s.dbClient.Conn()
 
 	// verify if user allowed to create a housing preferences
-	if !u.Tier.Name.AllowMultipleHousingPreferences() && len(u.HousingPreferences) > 1 {
-		return fmt.Errorf("error cannot create more than one housing preferences in plan %s", u.Tier.Name)
+	if len(u.HousingPreferences) > u.Plan.Name.MaxHousingPreferences() {
+		return fmt.Errorf("error cannot create more than %d housing preferences in plan %s: got %d", u.Plan.Name.MaxHousingPreferences(), u.Plan.Name, len(u.HousingPreferences))
 	}
 
 	for _, housingPreferences := range preferences {
@@ -23,7 +24,7 @@ func (s *service) CreateHousingPreferences(u *entity.User, preferences []entity.
 
 		// set and verify housing preferences city
 		for i, city := range housingPreferences.City {
-			newCity, err := s.corporationService.GetCity(city.Name)
+			newCity, err := s.corporationService.GetCity(strings.Title(city.Name))
 			if err != nil {
 				return fmt.Errorf("error the given city %s is not supported: %w", city.Name, err)
 			}
@@ -112,7 +113,7 @@ func (s *service) CreateHousingPreferencesMatch(u *entity.User, offer entity.Off
 	}
 
 	if _, err := s.dbClient.Conn().Model(&match).Insert(); err != nil {
-		return fmt.Errorf("error when add housing preferences match: %w", err)
+		return fmt.Errorf("error when adding housing preferences match: %w", err)
 	}
 
 	return nil

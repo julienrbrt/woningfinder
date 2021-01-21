@@ -2,6 +2,7 @@ package entity
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -10,18 +11,26 @@ import (
 type User struct {
 	ID                      int
 	CreatedAt               time.Time `pg:"default:now()"`
-	UpdatedAt               time.Time
 	DeletedAt               time.Time `json:"-"`
 	Name                    string
 	Email                   string `pg:",unique"`
 	BirthYear               int
 	YearlyIncome            int
 	FamilySize              int
-	TierID                  int
-	Tier                    Tier                      `pg:"rel:has-one"`
+	Plan                    UserPlan                  `pg:"rel:has-one,fk:id"`
 	HousingPreferences      []HousingPreferences      `pg:"rel:has-many,join_fk:user_id"`
 	HousingPreferencesMatch []HousingPreferencesMatch `pg:"rel:has-many,join_fk:user_id"`
 	CorporationCredentials  []CorporationCredentials  `pg:"rel:has-many,join_fk:user_id"`
+}
+
+// Bind permits go-chi router to verify the user input and marshal it
+func (u *User) Bind(r *http.Request) error {
+	return u.IsValid()
+}
+
+// Render permits go-chi router to render the user
+func (*User) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
 }
 
 // IsValid checks if a user is valid
@@ -38,20 +47,29 @@ func (u *User) IsValid() error {
 		return fmt.Errorf("user yearly income invalid")
 	}
 
-	if !u.Tier.Name.Exists() {
-		return fmt.Errorf("user must have a tier")
-	}
-
 	if len(u.HousingPreferences) == 0 {
 		return fmt.Errorf("user must have a housing preferences")
 	}
 
-	// verify housing preferences
-	if !u.Tier.Name.AllowMultipleHousingPreferences() && len(u.HousingPreferences) > 1 {
-		return fmt.Errorf("error cannot create more than one housing preferences in plan %s", u.Tier.Name)
+	// verify plan
+	if !u.Plan.Name.Exists() {
+		return fmt.Errorf("user plan invalid")
+	}
+
+	if len(u.HousingPreferences) > u.Plan.Name.MaxHousingPreferences() {
+		return fmt.Errorf("error cannot create more than %d housing preferences in plan %s: got %d", u.Plan.Name.MaxHousingPreferences(), u.Plan.Name, len(u.HousingPreferences))
 	}
 
 	return nil
+}
+
+// HasPaid checks if a user has a paid plan
+func (u *User) HasPaid() bool {
+	if u.Plan == (UserPlan{}) || !u.Plan.Name.Exists() {
+		return false
+	}
+
+	return u.Plan.PaymentDate != (time.Time{})
 }
 
 // MatchCriteria verifies that an user match the offer criterias

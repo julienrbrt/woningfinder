@@ -23,7 +23,7 @@ func init() {
 		(*entity.HousingType)(nil),
 		(*entity.City)(nil),
 		(*entity.User)(nil),
-		(*entity.Tier)(nil),
+		(*entity.UserPlan)(nil),
 		(*entity.HousingPreferences)(nil),
 		(*entity.HousingPreferencesCityDistrict)(nil),
 		(*entity.HousingPreferencesMatch)(nil),
