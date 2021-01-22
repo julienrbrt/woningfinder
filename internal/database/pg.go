@@ -23,8 +23,14 @@ func NewDBClient(logger *logging.Logger, debug bool, host, port, name, user, pas
 	// set logger
 	pg.SetLogger(logger)
 
+	// in debug mode ssl is not required (debug mode should only be ran locally)
+	sslmode := "require"
+	if debug {
+		sslmode = "disable"
+	}
+
 	// connect to database
-	opt, err := pg.ParseURL(fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=require&", user, password, host, port, name))
+	opt, err := pg.ParseURL(fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s&", user, password, host, port, name, sslmode))
 	if err != nil {
 		return nil, err
 	}

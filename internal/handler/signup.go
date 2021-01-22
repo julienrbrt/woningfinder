@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/render"
@@ -17,7 +16,7 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.userService.CreateUser(user); err != nil {
-		render.Render(w, r, handlerEntity.ServerErrorRenderer(fmt.Errorf("error while registering an account")))
+		render.Render(w, r, handlerEntity.ServerErrorRenderer(err))
 		return
 	}
 
