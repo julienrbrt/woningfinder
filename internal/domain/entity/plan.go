@@ -14,7 +14,7 @@ const (
 
 // UserPlan stores the user plan and payment details (when paid)
 type UserPlan struct {
-	UserID      int       `pg:",pk"`
+	UserID      uint      `pg:",pk"`
 	CreatedAt   time.Time `pg:"default:now()"`
 	DeletedAt   time.Time `pg:",soft_delete" json:"-"`
 	PaymentDate time.Time `json:"-"` // When payment date is set the user has paid and the search can start

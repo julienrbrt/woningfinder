@@ -42,6 +42,7 @@ More information on how built the token in the [code](../internal/auth/jwt.go).
 ### Payment
 
 The payment is managed by Stripe. Stripe confirms that an user has paid via a webhook.
+The information returned by Stripe must be the user email address and the payment amount.
 Our webhook then add the paying information (user and plan) to a queue, that is processed by the _[PaymentValidator](../cmd/payment-validator)_ worker.
 
 ## Housing-Finder
@@ -59,7 +60,7 @@ For that WoningFinder uses Mapbox Geocoding API.
 ### Matching
 
 We use redis in order to check if we already try to match a user with an offer. We create an uuid of the user and the address and only check if it does not exists.
-This permits to do not have to re-check multiple times an offer as offers stay published for multiple days.
+This permits to do not have to re-check multiple times an offer as offers stay published for multiple days. Once there is a match, the match is added in the `HousingPreferencesMatch` table of the database.
 
 ### Security
 

@@ -7,10 +7,10 @@ import (
 
 // HousingPreferences defines the user preference on a housing
 type HousingPreferences struct {
-	ID                  int       `pg:",pk"`
+	ID                  uint      `pg:",pk"`
 	CreatedAt           time.Time `pg:"default:now()"`
 	DeletedAt           time.Time `pg:",soft_delete" json:"-"`
-	UserID              int
+	UserID              uint
 	Type                []HousingType `pg:"many2many:housing_preferences_housing_types,join_fk:housing_type"`
 	MaximumPrice        float64
 	City                []City                           `pg:"many2many:housing_preferences_cities" json:",omitempty"`
@@ -27,7 +27,7 @@ type HousingPreferences struct {
 
 // HousingPreferencesCityDistrict defines the user preferences city districts
 type HousingPreferencesCityDistrict struct {
-	HousingPreferencesID int
+	HousingPreferencesID uint
 	Name                 string
 	CityName             string
 }
@@ -48,10 +48,10 @@ func (h *HousingPreferences) IsValid() error {
 // HousingPreferencesMatch defines an offer that matched with an user
 // It is used to determined to which offer WoningFinder has applied
 type HousingPreferencesMatch struct {
-	ID              int       `pg:",pk"`
+	ID              uint      `pg:",pk"`
 	CreatedAt       time.Time `pg:"default:now()"`
 	DeletedAt       time.Time `pg:",soft_delete" json:"-"`
-	UserID          int
+	UserID          uint
 	HousingAddress  string
 	CorporationName string
 	OfferURL        string
@@ -59,12 +59,12 @@ type HousingPreferencesMatch struct {
 
 // HousingPreferencesHousingType defines the many-to-many relationship table
 type HousingPreferencesHousingType struct {
-	HousingPreferencesID int
+	HousingPreferencesID uint
 	HousingType          Type
 }
 
 // HousingPreferencesCity defines the many-to-many relationship table
 type HousingPreferencesCity struct {
-	HousingPreferencesID int
+	HousingPreferencesID uint
 	CityName             string
 }
