@@ -79,7 +79,7 @@ func (s *service) verifyCorporationCities(offers []entity.Offer, corporation ent
 		return fmt.Errorf("failing adding cities to corporation: %w", err)
 	}
 
-	s.logger.Sugar().Infof("%d cities added for %s: please update the structs", len(notFound), corporation.Name)
+	s.logger.Sugar().Warnf("%d cities added for %s: please update the structs", len(notFound), corporation.Name)
 
 	return nil
 }
