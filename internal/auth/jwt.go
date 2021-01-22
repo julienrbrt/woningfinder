@@ -43,5 +43,5 @@ func ExtractUserFromJWT(claims map[string]interface{}) (*entity.User, error) {
 		return nil, fmt.Errorf("error extracting %s from claims, got %v", userEmailKey, claims[userIDKey])
 	}
 
-	return &entity.User{ID: int(userID), Email: userEmail}, nil
+	return &entity.User{ID: uint(userID), Email: userEmail}, nil
 }

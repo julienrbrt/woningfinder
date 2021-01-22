@@ -9,7 +9,7 @@ import (
 
 // User defines an user of WoningFinder
 type User struct {
-	ID                      int
+	ID                      uint
 	CreatedAt               time.Time `pg:"default:now()"`
 	DeletedAt               time.Time `json:"-"`
 	Name                    string
