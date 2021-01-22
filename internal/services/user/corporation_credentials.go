@@ -63,7 +63,11 @@ func (s *service) GetCorporationCredentials(u *entity.User, corporation entity.C
 
 func (s *service) GetAllCorporationCredentials(corporation entity.Corporation) ([]entity.CorporationCredentials, error) {
 	credentials := []entity.CorporationCredentials{}
-	if err := s.dbClient.Conn().Model(&credentials).Where("corporation_name ILIKE ?", corporation.Name).Select(); err != nil {
+	if err := s.dbClient.Conn().
+		Model(&credentials).
+		Where("corporation_name ILIKE ?", corporation.Name).
+		Order("created_at ASC"). // people having registered their credentials for the longer get reaction priority (see documentation)
+		Select(); err != nil {
 		return nil, fmt.Errorf("error getting user credentials: %w", err)
 	}
 
