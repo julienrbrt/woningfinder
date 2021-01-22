@@ -2,17 +2,28 @@ package corporation
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
 
-func (s *service) AddCities(cities []entity.City) ([]entity.City, error) {
-	_, err := s.dbClient.Conn().Model(&cities).OnConflict("(name) DO NOTHING").Insert()
+func (s *service) AddCities(cities []entity.City, corporation entity.Corporation) error {
+	_, err := s.dbClient.Conn().Model(&cities).OnConflict("(name) DO UPDATE").Insert()
 	if err != nil {
-		return nil, fmt.Errorf("error creating cities: %w", err)
+		return fmt.Errorf("error creating cities: %w", err)
 	}
 
-	return cities, nil
+	// add cities relation
+	for _, city := range cities {
+		city.Name = strings.Title(city.Name)
+		if _, err := s.dbClient.Conn().Model(&entity.CorporationCity{CorporationName: corporation.Name, CityName: city.Name}).
+			Where("corporation_name = ? and city_name = ?", corporation.Name, city.Name).
+			SelectOrInsert(); err != nil {
+			return fmt.Errorf("failing creating corporation: %w", err)
+		}
+	}
+
+	return nil
 }
 
 func (s *service) GetCity(name string) (*entity.City, error) {

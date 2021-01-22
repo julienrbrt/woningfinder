@@ -14,7 +14,7 @@ type Service interface {
 	DeleteCorporation(corp entity.Corporation) error
 
 	// Cities
-	AddCities(city []entity.City) ([]entity.City, error)
+	AddCities(cities []entity.City, corporation entity.Corporation) error
 	GetCities() (*[]entity.City, error)
 	GetCity(name string) (*entity.City, error)
 	DeleteCity(city entity.City) error

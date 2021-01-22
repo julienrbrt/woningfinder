@@ -2,7 +2,6 @@ package corporation
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
@@ -30,20 +29,9 @@ func (s *service) CreateOrUpdateCorporation(corp entity.Corporation) error {
 		}
 	}
 
-	// add cities
-	cities, err := s.AddCities(corp.Cities)
-	if err != nil {
-		return fmt.Errorf("failing creating corporation: %w", err)
-	}
-
-	// add cities relation
-	for _, city := range cities {
-		city.Name = strings.Title(city.Name)
-		if _, err := db.Model(&entity.CorporationCity{CorporationName: corp.Name, CityName: city.Name}).
-			Where("corporation_name = ? and city_name = ?", corp.Name, city.Name).
-			SelectOrInsert(); err != nil {
-			return fmt.Errorf("failing creating corporation: %w", err)
-		}
+	// add cities and cities relation
+	if err := s.AddCities(corp.Cities, corp); err != nil {
+		return fmt.Errorf("failing adding cities to corporation: %w", err)
 	}
 
 	return nil
