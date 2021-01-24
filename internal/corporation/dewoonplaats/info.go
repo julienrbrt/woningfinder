@@ -21,6 +21,8 @@ var Info = entity.Corporation{
 		{Name: "Winterswijk"},
 		{Name: "Neede"},
 		{Name: "Wehl"},
+		{Name: "Aalten"},
+		{Name: "Groenlo"},
 	},
 	SelectionMethod: []entity.SelectionMethod{
 		{
