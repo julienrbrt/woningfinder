@@ -29,7 +29,7 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 | /cities                  | GET        | Gets all supported cities                                                            |
 | /housing-preferences     | PUT        | Updates the housing preferences of a given user                                      |
 | /corporation-credentials | GET + POST | Manages the different housing credentials for the supported corporation of the user. |
-| /stripe-webhook          | POST       | Endpoint where Stripe sends its events (used for validating payment of customer)     |
+| /stripe-webhook          | POST       | Endpoint where Stripe sends its webhook events (used for validating user payment)    |
 
 WoningFinder's API is available at https://woningfinder.nl/api.
 

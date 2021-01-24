@@ -8,6 +8,7 @@ import (
 	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 )
 
+// SignUp contains the handler for registering on WoningFinder
 func (h *handler) SignUp(w http.ResponseWriter, r *http.Request) {
 	user := &entity.User{}
 	if err := render.Bind(r, user); err != nil {

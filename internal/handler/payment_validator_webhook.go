@@ -14,7 +14,7 @@ import (
 	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 )
 
-// TODO this should be called via a webhook called by Stripe
+// ProcessPayment is called via the Stripe webhook and confirm that a user has paid
 func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 	// get request
 	const MaxBodyBytes = int64(65536)

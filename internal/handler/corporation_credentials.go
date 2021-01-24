@@ -45,6 +45,7 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 	json.NewEncoder(w).Encode(credentials)
 }
 
+// UpdateCorporationCredentials permits to update the given corporation credentials of an user
 func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Request) {
 	// extract jwt
 	_, claims, err := jwtauth.FromContext(r.Context())
@@ -81,6 +82,7 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 	// returns 200 by default
 }
 
+// DeleteCorporationCredentials permits to delete a corporation credentials
 func (h *handler) DeleteCorporationCredentials(w http.ResponseWriter, r *http.Request) {
 	// TODO implement DeleteCorporationCredentials
 }
