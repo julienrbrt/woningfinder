@@ -11,7 +11,7 @@ import (
 
 var (
 	minutes = []int{0, 1, 2, 3}
-	seconds = []int{15, 30, 45}
+	seconds = []int{0, 15, 30, 45}
 )
 
 // CorporationScheduler creates schedules (when to fetch their offer) given a selection time for a housing corporation
@@ -34,6 +34,11 @@ func CorporationScheduler(corporation entity.Corporation) []cron.Schedule {
 	if hasFirstComeFirstServed(corporation) && corporation.SelectionTime != (time.Time{}) {
 		for _, minute := range minutes {
 			for _, second := range seconds {
+				// skip the first one as already set above
+				if minute == 0 && second == 0 {
+					continue
+				}
+
 				newTime := corporation.SelectionTime.Add(time.Duration(minute) * time.Minute).Add(time.Duration(second) * time.Second)
 				sched := buildSchedule(parser, newTime.Hour(), newTime.Minute(), newTime.Second())
 				schedules = append(schedules, sched)
