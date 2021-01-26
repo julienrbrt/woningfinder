@@ -24,7 +24,7 @@ type service struct {
 	logger             *logging.Logger
 	redisClient        database.RedisClient
 	userService        userService.Service
-	corporationService corporationService.Service // TODO to use when adding link cities to corporations
+	corporationService corporationService.Service
 	clientProvider     corporation.ClientProvider
 }
 

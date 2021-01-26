@@ -10,7 +10,7 @@ import (
 // pubSubPayment defines on which channel the payment confirmation are sent via redis
 const pubSubPayment = "stripe"
 
-// Service permits to handle the persistence of an user
+// Service permits to handle the management of the payments
 type Service interface {
 	QueuePayment(payment *entity.PaymentData) error
 	ProcessPayment(paymentCh chan<- entity.PaymentData) error

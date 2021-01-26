@@ -1,15 +1,34 @@
-package templates
+package notifications
 
 import (
 	"fmt"
 
+	"github.com/woningfinder/woningfinder/internal/auth"
+
 	"github.com/matcornic/hermes/v2"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
 )
 
-// WelcomeSubject is the subject of the welcome mail
-const WelcomeSubject = "Welkom bij WoningFinder!"
+func (s *service) SendWelcomeNotificaton(user *entity.User) error {
+	_, jwtToken, err := auth.CreateJWTUserToken(s.jwtAuth, user)
+	if err != nil {
+		return fmt.Errorf("error sending welcome notification: %w", err)
+	}
 
-func (t *templates) WelcomeTpl() (html, plain string, err error) {
+	html, plain, err := welcomeTpl(user, jwtToken)
+	if err != nil {
+		return fmt.Errorf("error sending welcome notification: %w", err)
+	}
+
+	if err := s.emailClient.Send("Welkom bij WoningFinder!", html, plain, user.Email); err != nil {
+		return fmt.Errorf("error sending welcome notification: %w", err)
+	}
+
+	return nil
+}
+
+func welcomeTpl(user *entity.User, jwtToken string) (html, plain string, err error) {
 	email := hermes.Email{
 		Body: hermes.Body{
 			Title: "Welkom bij WoningFinder!",
@@ -24,7 +43,7 @@ func (t *templates) WelcomeTpl() (html, plain string, err error) {
 					Button: hermes.Button{
 						Color: "#E46948",
 						Text:  "Mijn woningcorporaties",
-						Link:  fmt.Sprintf("https://app.woningfinder.com/woningcorporaties?jwt=%s", t.jwtToken),
+						Link:  fmt.Sprintf("https://app.woningfinder.com/woningcorporaties?jwt=%s", jwtToken),
 					},
 				},
 			},
@@ -37,13 +56,13 @@ func (t *templates) WelcomeTpl() (html, plain string, err error) {
 	}
 
 	// generate html email
-	html, err = t.product.GenerateHTML(email)
+	html, err = templates.WoningFinderInfo.GenerateHTML(email)
 	if err != nil {
 		return "", "", fmt.Errorf("error while building email from template: %w", err)
 	}
 
 	// generate plain email
-	plain, err = t.product.GeneratePlainText(email)
+	plain, err = templates.WoningFinderInfo.GeneratePlainText(email)
 	if err != nil {
 		return "", "", fmt.Errorf("error while building email from template: %w", err)
 	}

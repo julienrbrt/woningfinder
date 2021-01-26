@@ -1,22 +1,33 @@
-package templates
+package notifications
 
 import (
 	"fmt"
 
 	"github.com/matcornic/hermes/v2"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
 )
 
-// WeeklyUpdateSubject is the subject of the weekly update mail
-const WeeklyUpdateSubject = "Wekelijkse update"
+func (s *service) SendWeeklyUpdate(user *entity.User, housingMatch []entity.HousingPreferencesMatch) error {
+	html, plain, err := weeklyUpdateTpl(user, housingMatch)
+	if err != nil {
+		return fmt.Errorf("error sending weekly update notification: %w", err)
+	}
 
-func (t *templates) WeeklyUpdateTpl(housingMatch []entity.HousingPreferencesMatch) (html, plain string, err error) {
+	if err := s.emailClient.Send("Wekelijkse update", html, plain, user.Email); err != nil {
+		return fmt.Errorf("error sending weekly update notification: %w", err)
+	}
+
+	return nil
+}
+
+func weeklyUpdateTpl(user *entity.User, housingMatch []entity.HousingPreferencesMatch) (html, plain string, err error) {
 	var email hermes.Email
 
 	if len(housingMatch) > 0 {
 		email = hermes.Email{
 			Body: hermes.Body{
-				Title: fmt.Sprintf("Hallo %s,", t.user.Name),
+				Title: fmt.Sprintf("Hallo %s,", user.Name),
 				Intros: []string{
 					fmt.Sprintf("We hebben goed nieuws! In de afgelopen week hebben we op %d woning(en) gereageerd:", len(housingMatch)),
 				},
@@ -33,7 +44,7 @@ func (t *templates) WeeklyUpdateTpl(housingMatch []entity.HousingPreferencesMatc
 	} else {
 		email = hermes.Email{
 			Body: hermes.Body{
-				Title: fmt.Sprintf("Hallo %s,", t.user.Name),
+				Title: fmt.Sprintf("Hallo %s,", user.Name),
 				Intros: []string{
 					"We hebben elke dag gekeken, maar hebben deze week niets voor jou kunnen vinden.",
 					"Maak je geen zorgen, we blijven zoeken!",
@@ -48,13 +59,13 @@ func (t *templates) WeeklyUpdateTpl(housingMatch []entity.HousingPreferencesMatc
 	}
 
 	// generate html email
-	html, err = t.product.GenerateHTML(email)
+	html, err = templates.WoningFinderInfo.GenerateHTML(email)
 	if err != nil {
 		return "", "", fmt.Errorf("error while building email from template: %w", err)
 	}
 
 	// generate plain email
-	plain, err = t.product.GeneratePlainText(email)
+	plain, err = templates.WoningFinderInfo.GeneratePlainText(email)
 	if err != nil {
 		return "", "", fmt.Errorf("error while building email from template: %w", err)
 	}
