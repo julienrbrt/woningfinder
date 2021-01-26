@@ -69,7 +69,7 @@ func (u *User) HasPaid() bool {
 		return false
 	}
 
-	return u.Plan.PaymentDate != (time.Time{})
+	return u.Plan.CreatedAt != (time.Time{})
 }
 
 // MatchCriteria verifies that an user match the offer criterias

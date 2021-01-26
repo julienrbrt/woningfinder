@@ -9,7 +9,7 @@ import (
 
 // Service permits to handle the management of the notifications
 type Service interface {
-	SendWelcomeNotificaton(user *entity.User) error
+	SendWelcome(user *entity.User) error
 	SendWeeklyUpdate(user *entity.User, housingMatch []entity.HousingPreferencesMatch) error
 	SendCorporationCredentialsError(user *entity.User, corporationName string) error
 	SendBye(user *entity.User) error

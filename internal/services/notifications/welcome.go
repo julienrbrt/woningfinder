@@ -10,7 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
 )
 
-func (s *service) SendWelcomeNotificaton(user *entity.User) error {
+func (s *service) SendWelcome(user *entity.User) error {
 	_, jwtToken, err := auth.CreateJWTUserToken(s.jwtAuth, user)
 	if err != nil {
 		return fmt.Errorf("error sending welcome notification: %w", err)

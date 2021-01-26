@@ -2,8 +2,10 @@ package main
 
 import (
 	"github.com/joho/godotenv"
+	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
@@ -25,11 +27,14 @@ func init() {
 
 func main() {
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
+	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
+	emailClient := bootstrap.CreateEmailClient()
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), nil, nil) // no corporation relation stuff in payment-validator
 	paymentService := paymentService.NewService(logger, redisClient, userService)
+	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
 
 	payments := make(chan entity.PaymentData)
 	// subscribe to pub/sub messages inside a new go routine
@@ -50,6 +55,11 @@ func main() {
 		if err := userService.SetPaid(user, payment.Plan); err != nil {
 			logger.Sugar().Errorf("error while processing payment data: %w", err)
 			continue
+		}
+
+		// send confirmation email
+		if err := notificationsService.SendWelcome(user); err != nil {
+			logger.Sugar().Errorf("error while processing payment data: %w", err)
 		}
 	}
 }

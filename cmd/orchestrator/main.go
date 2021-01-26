@@ -7,10 +7,12 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron/v3"
+	"github.com/woningfinder/woningfinder/cmd/orchestrator/job"
+	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
+	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -31,17 +33,20 @@ func init() {
 
 func main() {
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
+	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
 	mapboxClient := bootstrap.CreateMapboxClient()
+	emailClient := bootstrap.CreateEmailClient()
 
 	clientProvider := bootstrap.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	matcherService := matcherService.NewService(logger, redisClient, userService, corporationService, clientProvider)
+	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
 
-	// get time location
+	// set location to the netherlands
 	nl, err := time.LoadLocation("Europe/Amsterdam")
 	if err != nil {
 		logger.Sugar().Fatal(err)
@@ -51,26 +56,8 @@ func main() {
 	c := cron.New(cron.WithLocation(nl), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
 
 	// populate crons
-	for _, corp := range clientProvider.List() {
-		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
-
-		// get corporation client
-		client, err := clientProvider.Get(corp)
-		if err != nil {
-			logger.Sugar().Error(err)
-			continue
-		}
-
-		// schedule corporation offer fetching
-		schedule := scheduler.CorporationScheduler(corp)
-		for _, s := range schedule {
-			c.Schedule(s, cron.FuncJob(func() {
-				if err := matcherService.PublishOffers(client, corp); err != nil {
-					logger.Sugar().Error(err)
-				}
-			}))
-		}
-	}
+	job.HousingFinder(logger, c, clientProvider, matcherService)
+	job.BatchWeeklyUpdate(logger, c, userService, notificationsService)
 
 	// start cron scheduler
 	c.Run()

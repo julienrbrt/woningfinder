@@ -25,13 +25,30 @@ func weeklyUpdateTpl(user *entity.User, housingMatch []entity.HousingPreferences
 	var email hermes.Email
 
 	if len(housingMatch) > 0 {
+		// list the housing match
+		var matchs [][]hermes.Entry
+		for _, match := range housingMatch {
+			matchs = append(matchs, []hermes.Entry{
+				{Key: "Reactie datum", Value: fmt.Sprintf("%d-%d-%d", match.CreatedAt.Day(), match.CreatedAt.Month(), match.CreatedAt.Year())},
+				{Key: "Adres", Value: match.HousingAddress},
+				{Key: "Woningcorporatie", Value: match.CorporationName},
+			})
+		}
+
 		email = hermes.Email{
 			Body: hermes.Body{
 				Title: fmt.Sprintf("Hallo %s,", user.Name),
 				Intros: []string{
 					fmt.Sprintf("We hebben goed nieuws! In de afgelopen week hebben we op %d woning(en) gereageerd:", len(housingMatch)),
 				},
-				// TODO show houses
+				Table: hermes.Table{
+					Data: matchs,
+					Columns: hermes.Columns{
+						CustomWidth: map[string]string{
+							"Woningcorporatie": "20%",
+						},
+					},
+				},
 				Outros: []string{
 					"Voor meer informatie, kun je altijd kijken op de website van de woningcorporaties waar we hebben gereageerd.",
 					"Je huis staat tussen jouw reacties.",
