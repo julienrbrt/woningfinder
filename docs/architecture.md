@@ -5,9 +5,12 @@ This document defines the archtitecture of WoningFinder. Its data schema is foun
 WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _HousingMatcher_ and a landing page.
 
 - _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for WoningFinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
-- _[HousingFinder](../cmd/housing-finder)_, is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to redis pub/sub.
 - _[HousingMatcher](../cmd/housing-matcher)_, is triggered by _HousingFinder_ via a messaging broker (redis pub/sub). It will match the new offers to the customer search option and react it.
 - _[PaymentValidator](../cmd/payment-validator)_, is triggered by a webhook and read from a messaging broker (redis pub/sub). It will validate that an user has paid in WoningFinder database.
+
+- _[Orchestrator](../cmd/orchestrator)_, permits to orchestrate the different jobs that needs to be often ran by WoningFinder.
+  - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to redis pub/sub.
+  - _WeeklyUpdate_ generates and send the customer weekly updates.
 
 There is as well small tools that are run for special reasons:
 

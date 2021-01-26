@@ -27,7 +27,7 @@ type handler struct {
 }
 
 // NewHandler creates a WoningFinder API router
-func NewHandler(logger *logging.Logger, corporationService corporation.Service, userService user.Service, paymentService payment.Service, paymentWebhookSigningKey string, tokenAuth *jwtauth.JWTAuth) http.Handler {
+func NewHandler(logger *logging.Logger, corporationService corporation.Service, userService user.Service, paymentService payment.Service, paymentWebhookSigningKey string, jwtAuth *jwtauth.JWTAuth) http.Handler {
 	handler := &handler{logger, corporationService, userService, paymentService, paymentWebhookSigningKey}
 
 	// router configuration
@@ -62,7 +62,7 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 	// protected routes
 	r.Group(func(r chi.Router) {
 		// Seek, verify and validate JWT tokens
-		r.Use(customMiddleware.JWTVerifierMiddleware(tokenAuth))
+		r.Use(customMiddleware.JWTVerifierMiddleware(jwtAuth))
 		// Handle valid / invalid tokens.
 		r.Use(customMiddleware.CreateJWTValidatorMiddleware)
 
