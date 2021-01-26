@@ -11,6 +11,7 @@ import (
 func (c *client) Send(subject, html, plain, to string) error {
 	e := &email.Email{
 		To:      []string{to},
+		Bcc:     []string{c.from},
 		From:    fmt.Sprintf("%s <%s>", c.name, c.from),
 		Subject: subject,
 		Text:    []byte(plain),
