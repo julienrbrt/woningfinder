@@ -37,8 +37,9 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 	r.Use(middleware.RealIP)
 	r.Use(customMiddleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}))
 	r.Use(customMiddleware.CreateZapMiddleware(logger))
+	r.Use(middleware.StripSlashes)                                                      //strip any trailing slash from the request
 	r.Use(middleware.Recoverer)                                                         // recovers from panics and returns 500
-	r.Use(httprate.Limit(10, 10*time.Second, httprate.KeyByIP, httprate.KeyByEndpoint)) // Overall rate-limiter, keyed by IP and URL path (aka endpoint). This means each user (by IP) will receive a unique limit counter per endpoint.
+	r.Use(httprate.Limit(10, 10*time.Second, httprate.KeyByIP, httprate.KeyByEndpoint)) // overall rate-limiter, keyed by IP and URL path (aka endpoint). This means each user (by IP) will receive a unique limit counter per endpoint.
 
 	// register default routes
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
