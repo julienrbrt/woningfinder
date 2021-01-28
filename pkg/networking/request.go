@@ -24,6 +24,47 @@ type Request struct {
 	Context   context.Context
 }
 
+// Copy deep copies a request.
+func (r *Request) Copy() (*Request, error) {
+	copiedBody, err := r.CopyBody()
+	if err != nil {
+		return nil, fmt.Errorf("failed to copy request body, for creating a copy of the request")
+	}
+
+	var copiedBodyReader io.Reader
+	if copiedBody != nil {
+		copiedBodyReader = bytes.NewReader(copiedBody)
+	}
+
+	var copiedHeaders map[string]string
+	if r.Headers != nil {
+		copiedHeaders = make(map[string]string, len(r.Headers))
+		for k, v := range r.Headers {
+			copiedHeaders[k] = v
+		}
+	}
+
+	var copiedHost *url.URL
+	if r.Host != nil {
+		copiedHostValue := *r.Host
+		copiedHost = &copiedHostValue
+	}
+
+	var copiedQuery query.Query
+	if r.Query != nil {
+		copiedQuery = append(query.Query{}, r.Query...)
+	}
+
+	newRequest := *r
+	newRequest.Host = copiedHost
+	newRequest.Query = copiedQuery
+	newRequest.Headers = copiedHeaders
+	newRequest.Body = copiedBodyReader
+	newRequest.bodyBytes = copiedBody
+
+	return &newRequest, nil
+}
+
 // GetContext gets the request's context.
 func (r *Request) GetContext() context.Context {
 	if r.Context == nil {

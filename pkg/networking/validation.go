@@ -17,7 +17,12 @@ func responseValidator(r *Response) error {
 		getResponseBody(r),
 	)
 
-	return fmt.Errorf(message)
+	err := NewNetworkingError(r, message)
+	if r.StatusCode >= 500 {
+		return NewTemporaryNetError(err)
+	}
+
+	return err
 }
 
 func getResponseBody(resp *Response) string {

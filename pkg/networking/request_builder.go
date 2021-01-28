@@ -9,9 +9,9 @@ import (
 	"strings"
 )
 
-// RequestBuilder permits to build a networking.Request as a http.Request
+// requestBuilder permits to build a networking.Request as a http.Request
 // This permits to build the request ready to be used by the Go HTTP client and checking if the given request can be correctly sent.
-func RequestBuilder(r *Request) (*http.Request, error) {
+func requestBuilder(r *Request) (*http.Request, error) {
 	if r.Host == nil {
 		return nil, fmt.Errorf("no host provided on request %q", r)
 	}

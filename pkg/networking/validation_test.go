@@ -1,7 +1,9 @@
 package networking
 
 import (
+	"errors"
 	"fmt"
+	"net"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,6 +35,30 @@ func TestResponseValidator(t *testing.T) {
 			} else {
 				a.Error(err)
 			}
+		})
+	}
+}
+
+func TestDefaultResponseValidator_Validate_Temporary(t *testing.T) {
+	expectations := map[int]bool{
+		400: false,
+		401: false,
+		403: false,
+		404: false,
+		500: true,
+		502: true,
+		503: true,
+	}
+
+	a := assert.New(t)
+	for statusCode, temporary := range expectations {
+		t.Run(fmt.Sprintf("status code: %d", statusCode), func(t *testing.T) {
+			err := responseValidator(&Response{
+				StatusCode: statusCode,
+			})
+			var netErr net.Error
+			a.True(errors.As(err, &netErr))
+			a.Equal(temporary, netErr.Temporary())
 		})
 	}
 }

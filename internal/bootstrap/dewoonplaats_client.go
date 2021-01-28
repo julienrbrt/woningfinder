@@ -5,6 +5,8 @@ import (
 	"net/http/cookiejar"
 	"time"
 
+	"github.com/woningfinder/woningfinder/pkg/networking/retry"
+
 	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -23,12 +25,13 @@ func CreateDeWoonplaatsClient(logger *logging.Logger, mapboxClient mapbox.Client
 	}
 
 	client := &http.Client{
-		Timeout: 5 * time.Second,
+		Timeout: retry.DefaultTimeout,
 		Jar:     jar,
 	}
 	defaultMiddleWare := []networking.ClientMiddleware{
 		middleware.CreateHostMiddleware(dewoonplaats.Info.APIEndpoint),
 		middleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}),
+		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
 	}
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)

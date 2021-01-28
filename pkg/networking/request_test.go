@@ -2,10 +2,15 @@ package networking
 
 import (
 	"bytes"
+	"context"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/woningfinder/woningfinder/pkg/networking/query"
 )
 
 func TestRequest_GetMethodDefault(t *testing.T) {
@@ -75,4 +80,65 @@ func TestRequest_CopyBodyNil(t *testing.T) {
 	if body != nil {
 		t.Errorf("Expected the response body to be nil, got %q", string(body))
 	}
+}
+
+func TestRequest_Copy_Minimal(t *testing.T) {
+	a := assert.New(t)
+	r := &Request{}
+	r2, err := r.Copy()
+	a.NoError(err)
+	a.Equal(r, r2)
+	a.False(r == r2)
+
+	r2.Host = &url.URL{Scheme: "http"}
+	r2.Query = query.Query{query.Pair{Key: "baz", Value: "foobar"}}
+	r2.Headers = map[string]string{"X-Custom": "Foo"}
+	r2.Context = context.WithValue(context.Background(), "bar", "baz")
+
+	a.Nil(r.Host)
+	a.Empty(r.Path)
+	a.Nil(r.Query)
+	a.Nil(r.Headers)
+	a.Nil(r.Context)
+}
+
+func TestRequest_Copy_Full(t *testing.T) {
+	a := assert.New(t)
+	r := &Request{
+		Host:    &url.URL{Host: "example.com"},
+		Path:    "/alias/1",
+		Query:   query.Query{query.Pair{Key: "foo", Value: "bar"}},
+		Method:  "POST",
+		Headers: map[string]string{"X-Custom": "Foobar"},
+		Body:    ioutil.NopCloser(strings.NewReader("test123")),
+		Context: context.WithValue(context.Background(), "foo", "bar"),
+	}
+	r2, err := r.Copy()
+	a.NoError(err)
+	a.Equal(r, r2)
+	a.False(r == r2)
+
+	rBody, err := ioutil.ReadAll(r.Body)
+	a.NoError(err)
+	r2Body, err := ioutil.ReadAll(r2.Body)
+	a.NoError(err)
+	a.Equal(rBody, r2Body)
+
+	r2.Host.Scheme = "http"
+	r2.Query.Add("baz", "foobar")
+	r2.Headers["X-Custom2"] = "Bar"
+	r2.Context = context.WithValue(r2.Context, "bar", "baz")
+
+	a.Empty(r.Host.Scheme)
+	a.Equal("/alias/1", r.Path)
+	a.Len(r.Query, 1)
+	a.Equal("foo", r.Query[0].Key)
+	a.Equal("bar", r.Query[0].Value)
+	a.Len(r.Headers, 1)
+	a.Equal("Foobar", r.Headers["X-Custom"])
+	val, ok := r.Context.Value("foo").(string)
+	a.True(ok)
+	a.Equal("bar", val)
+	_, ok = r.Context.Value("bar").(string)
+	a.False(ok)
 }
