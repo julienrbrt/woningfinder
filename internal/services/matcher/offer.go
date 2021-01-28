@@ -33,9 +33,9 @@ func (s *service) PublishOffers(client corporation.Client, corporation entity.Co
 		return fmt.Errorf("error while marshaling offers for %s: %w", corporation.Name, err)
 	}
 
-	// publish to redis queue
-	if err := s.redisClient.Publish(pubSubOffers, result); err != nil {
-		return fmt.Errorf("error publishing %d offers: %w", len(offers), err)
+	// add to redis queue
+	if err := s.redisClient.Push(offersQueue, result); err != nil {
+		return fmt.Errorf("error pushing %d offers to queue: %w", len(offers), err)
 	}
 
 	// verify supported cities
@@ -84,25 +84,24 @@ func (s *service) verifyCorporationCities(offers []entity.Offer, corporation ent
 	return nil
 }
 
-func (s *service) SubscribeOffers(offerCh chan<- entity.OfferList) error {
-	ch, err := s.redisClient.Subscribe(pubSubOffers)
-	if err != nil {
-		return err
-	}
-
-	// Consume messages and match offers
-	for msg := range ch {
-		var offers entity.OfferList
-		err := json.Unmarshal([]byte(msg.Payload), &offers)
+func (s *service) SubscribeOffers(ch chan<- entity.OfferList) error {
+	for {
+		offers, err := s.redisClient.BPop(offersQueue)
 		if err != nil {
-			s.logger.Sugar().Errorf("error while unmarshaling offers: %w", err)
-			continue
+			return err
 		}
 
-		// send offers to channel
-		offerCh <- offers
-	}
+		// Consume offers from queue
+		for _, o := range offers {
+			var offers entity.OfferList
+			err := json.Unmarshal([]byte(o), &offers)
+			if err != nil {
+				s.logger.Sugar().Errorf("error while unmarshaling offers: %w", err)
+				continue
+			}
 
-	// should never happen
-	return nil
+			// send offers to channel
+			ch <- offers
+		}
+	}
 }

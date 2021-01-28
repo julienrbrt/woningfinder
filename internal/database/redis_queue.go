@@ -1,39 +1,33 @@
 package database
 
-import (
-	"fmt"
+import "fmt"
 
-	"github.com/go-redis/redis"
-)
-
-// Queue defines how the different Redis pub-sub is used (as queue)
+// Queue is abstracting the logic of a FIFO queue
 type Queue interface {
-	Publish(channelName string, data []byte) error
-	Subscribe(channelName string) (<-chan *redis.Message, error)
+	Push(listName string, data []byte) error
+	BPop(listName string) ([]string, error)
 }
 
-func (r *redisClient) Publish(channelName string, data []byte) error {
-	result := r.rdb.Publish(channelName, data)
+func (r *redisClient) Push(listName string, data []byte) error {
+	result := r.rdb.RPush(listName, data)
 	if result.Err() != nil {
-		return fmt.Errorf("error publishing %v to channel %s: %w", string(data), channelName, result.Err())
-	}
-
-	if result.Val() == 0 {
-		r.logger.Sugar().Warnf("⚠️ warning successfuly published %v to channel %s: no one received it", string(data), channelName)
+		return fmt.Errorf("error adding %v to list %s: %w", string(data), listName, result.Err())
 	}
 
 	return nil
 }
 
-func (r *redisClient) Subscribe(channelName string) (<-chan *redis.Message, error) {
-	pubsub := r.rdb.Subscribe(channelName)
-	// defer pubsub.Close()
-
-	// wait for confirmation that subscription is created before doing anything.
-	if _, err := pubsub.Receive(); err != nil {
-		return nil, fmt.Errorf("error subscribing to channel: %w", err)
+func (r *redisClient) BPop(listName string) ([]string, error) {
+	result := r.rdb.BLPop(0, listName) // timeout of zero to block indefinitely
+	if result.Err() != nil {
+		return nil, fmt.Errorf("error getting value from list %s", listName)
 	}
 
-	//channel which receives messages.
-	return pubsub.Channel(), nil
+	value := result.Val()
+	if len(value) <= 1 {
+		return nil, fmt.Errorf("error reading value for list %s: value empty", listName)
+	}
+
+	// returns values[1:] to do not contain the listName
+	return value[1:], nil
 }

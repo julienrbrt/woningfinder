@@ -34,16 +34,16 @@ func main() {
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	matcherService := matcherService.NewService(logger, redisClient, userService, corporationService, clientProvider)
 
-	offerList := make(chan entity.OfferList)
-	// subscribe to pub/sub messages inside a new go routine
-	go func(offerList chan entity.OfferList) {
-		if err := matcherService.SubscribeOffers(offerList); err != nil {
+	// subscribe to offers queue inside a new go routine
+	ch := make(chan entity.OfferList)
+	go func(ch chan entity.OfferList) {
+		if err := matcherService.SubscribeOffers(ch); err != nil {
 			logger.Sugar().Fatal(err)
 		}
-	}(offerList)
+	}(ch)
 
 	// match offer
-	for offers := range offerList {
+	for offers := range ch {
 		if err := matcherService.MatchOffer(offers); err != nil {
 			logger.Sugar().Errorf("error while maching offers for corporation %s: %w", offers.Corporation.Name, err)
 		}

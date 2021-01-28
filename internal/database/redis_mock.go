@@ -1,38 +1,22 @@
 package database
 
-import "github.com/go-redis/redis"
-
 type RedisClientMock interface {
-	Queue
 	KeyStore
+	Queue
 }
 
 type redisClientMock struct {
-	queueOutput    <-chan *redis.Message
 	keyStoreOutput string
+	queueOutput    []string
 	err            error
 }
 
-func NewRedisClientMock(queueOutput <-chan *redis.Message, keyStoreOutput string, err error) RedisClientMock {
+func NewRedisClientMock(keyStoreOutput string, queueOutput []string, err error) RedisClientMock {
 	return &redisClientMock{
-		queueOutput:    queueOutput,
 		keyStoreOutput: keyStoreOutput,
+		queueOutput:    queueOutput,
 		err:            err,
 	}
-}
-
-// Queue
-func (c *redisClientMock) Publish(_ string, _ []byte) error {
-	return c.err
-
-}
-
-func (c *redisClientMock) Subscribe(channelName string) (<-chan *redis.Message, error) {
-	if c.err != nil {
-		return nil, c.err
-	}
-
-	return c.queueOutput, nil
 }
 
 // KeyStore
@@ -46,4 +30,17 @@ func (c *redisClientMock) Get(key string) (string, error) {
 
 func (c *redisClientMock) Set(key string, value interface{}) error {
 	return c.err
+}
+
+// Queue
+func (c *redisClientMock) Push(listName string, data []byte) error {
+	return c.err
+}
+
+func (c *redisClientMock) BPop(listName string) ([]string, error) {
+	if c.err != nil {
+		return nil, c.err
+	}
+
+	return c.queueOutput, nil
 }

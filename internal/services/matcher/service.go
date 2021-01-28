@@ -9,13 +9,13 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-// pubSubOffers defines on which channel the corporation offers are sent via redis
-const pubSubOffers = "offers"
+// offersQueue defines on which queue the corporation offers are sent via redis
+const offersQueue = "queue:offers"
 
 // Service permits to handle the persistence of matcher
 type Service interface {
 	PublishOffers(client corporation.Client, corporation entity.Corporation) error
-	SubscribeOffers(offerCh chan<- entity.OfferList) error
+	SubscribeOffers(ch chan<- entity.OfferList) error
 
 	MatchOffer(offers entity.OfferList) error
 }

@@ -3,30 +3,33 @@ package payment
 import (
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-// pubSubPayment defines on which channel the payment confirmation are sent via redis
-const pubSubPayment = "stripe"
+// paymentQueue defines on which channel the payment confirmation are sent via redis
+const paymentQueue = "queue:stripe"
 
 // Service permits to handle the management of the payments
 type Service interface {
 	QueuePayment(payment *entity.PaymentData) error
-	ProcessPayment(paymentCh chan<- entity.PaymentData) error
+	ProcessPayment() error
 }
 
 type service struct {
-	logger      *logging.Logger
-	redisClient database.RedisClient
-	userService userService.Service
+	logger               *logging.Logger
+	redisClient          database.RedisClient
+	userService          userService.Service
+	notificationsService notificationsService.Service
 }
 
 // NewService instantiate the payment service
-func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service) Service {
+func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, notificationsService notificationsService.Service) Service {
 	return &service{
-		logger:      logger,
-		redisClient: redisClient,
-		userService: userService,
+		logger:               logger,
+		redisClient:          redisClient,
+		userService:          userService,
+		notificationsService: notificationsService,
 	}
 }

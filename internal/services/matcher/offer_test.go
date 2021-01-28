@@ -5,7 +5,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/go-redis/redis"
 	"github.com/stretchr/testify/assert"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/dewoonplaats"
@@ -29,7 +28,7 @@ func Test_PublishOffers_CorporationClientError(t *testing.T) {
 
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
-	redisMock := database.NewRedisClientMock(nil, "", nil)
+	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
 
 	a.Error(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{}, err), dewoonplaats.Info))
@@ -40,7 +39,7 @@ func Test_PublishOffers_RedisClientError(t *testing.T) {
 
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
-	redisMock := database.NewRedisClientMock(nil, "", err)
+	redisMock := database.NewRedisClientMock("", nil, err)
 	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
 
 	a.Error(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{{}}, nil), dewoonplaats.Info))
@@ -49,7 +48,7 @@ func Test_PublishOffers_RedisClientError(t *testing.T) {
 func Test_PublishOffers_Success_NoOffers(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
-	redisMock := database.NewRedisClientMock(nil, "", nil)
+	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
 
 	a.Nil(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{}, nil), dewoonplaats.Info))
@@ -58,7 +57,7 @@ func Test_PublishOffers_Success_NoOffers(t *testing.T) {
 func Test_PublishOffers_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
-	redisMock := database.NewRedisClientMock(nil, "", nil)
+	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcher.NewService(logger, redisMock, nil, &mockCorporationService{}, nil)
 
 	a.Nil(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{{}}, nil), dewoonplaats.Info))
@@ -68,7 +67,7 @@ func Test_SubscribeOffers_RedisClientError(t *testing.T) {
 	a := assert.New(t)
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
-	redisMock := database.NewRedisClientMock(nil, "", err)
+	redisMock := database.NewRedisClientMock("", nil, err)
 	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
 
 	c := make(chan entity.OfferList)
@@ -81,14 +80,7 @@ func Test_SubscribeOffers_Success(t *testing.T) {
 	corpInfo, err := json.Marshal(entity.OfferList{Corporation: dewoonplaats.Info})
 	a.NoError(err)
 
-	redisChan := make(chan *redis.Message)
-	go func(corp []byte) {
-		redisChan <- &redis.Message{
-			Channel: "channel",
-			Payload: string(corp),
-		}
-	}(corpInfo)
-	redisMock := database.NewRedisClientMock(redisChan, "", err)
+	redisMock := database.NewRedisClientMock("", []string{string(corpInfo)}, err)
 	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
 
 	c := make(chan entity.OfferList)

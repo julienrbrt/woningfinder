@@ -56,7 +56,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 		// populate payment
 		plan, err := priceToPlan(paymentIntent.Amount)
 		if err != nil {
-			h.logger.Sugar().Warnf("⚠️ Unknown amount %d paid by %s€: %w", paymentIntent.Amount, paymentIntent.ReceiptEmail, err)
+			h.logger.Sugar().Warnf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)
 			return
 		}
 		payment := &entity.PaymentData{UserEmail: paymentIntent.ReceiptEmail, Plan: plan}
@@ -67,7 +67,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		h.logger.Sugar().Infof("🎉🎉🎉 New client %s paid %d€ 🎉🎉🎉", paymentIntent.ReceiptEmail, paymentIntent.Amount)
+		h.logger.Sugar().Infof("🎉🎉🎉 New client %s paid %d€ 🎉🎉🎉", paymentIntent.ReceiptEmail, paymentIntent.Amount/100)
 	}
 
 	// returns 200 by default
