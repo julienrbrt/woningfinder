@@ -2,13 +2,17 @@ package connector
 
 import (
 	"net/http/cookiejar"
-
-	"github.com/woningfinder/woningfinder/pkg/networking/retry"
+	"time"
 
 	"github.com/gocolly/colly/v2"
+	"github.com/gocolly/colly/v2/extensions"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/woningfinder/woningfinder/pkg/networking/retry"
 )
+
+// Note, if we start to get blocked investigate in proxy switcher
+// https://github.com/gocolly/colly/blob/v2.1.0/_examples/proxy_switcher/proxy_switcher.go
 
 // NewCollyConnector defines a go-colly collector, the collector is used by all the connector that does web scraping
 func NewCollyConnector(logger *logging.Logger, name string) (*colly.Collector, error) {
@@ -18,7 +22,6 @@ func NewCollyConnector(logger *logging.Logger, name string) (*colly.Collector, e
 	retryClient := retryablehttp.NewClient()
 	retryClient.HTTPClient.Timeout = retry.DefaultRetryCount
 	retryClient.RetryMax = 10
-
 	c.SetClient(retryClient.StandardClient())
 
 	// allow revisiting url between jobs
@@ -30,6 +33,14 @@ func NewCollyConnector(logger *logging.Logger, name string) (*colly.Collector, e
 		return nil, err
 	}
 	c.SetCookieJar(jar)
+
+	// set random desktop user agent
+	extensions.RandomUserAgent(c)
+
+	// set limit rules
+	c.Limit(&colly.LimitRule{
+		RandomDelay: 2 * time.Second, // add a random delay of maximum two seconds between requests
+	})
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {
