@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	DefaultTimeout          = 5 * time.Second
+	DefaultTimeout          = 8 * time.Second
 	DefaultRetryInitialWait = 2 * time.Second
 	DefaultRetryFactor      = 2
 	DefaultRetryJitter      = time.Second

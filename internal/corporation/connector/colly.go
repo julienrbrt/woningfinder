@@ -3,10 +3,11 @@ package connector
 import (
 	"net/http/cookiejar"
 
+	"github.com/woningfinder/woningfinder/pkg/networking/retry"
+
 	"github.com/gocolly/colly/v2"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/networking/retry"
 )
 
 // NewCollyConnector defines a go-colly collector, the collector is used by all the connector that does web scraping
@@ -15,7 +16,7 @@ func NewCollyConnector(logger *logging.Logger, name string) (*colly.Collector, e
 
 	// set custom networking client with retries and timeout
 	retryClient := retryablehttp.NewClient()
-	retryClient.HTTPClient.Timeout = retry.DefaultTimeout
+	retryClient.HTTPClient.Timeout = retry.DefaultRetryCount
 	retryClient.RetryMax = 10
 
 	c.SetClient(retryClient.StandardClient())

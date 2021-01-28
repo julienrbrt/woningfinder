@@ -276,3 +276,24 @@ func TestCreateRetryMiddleware_ContextShouldNotBeReused(t *testing.T) {
 		a.Equal(1, r.req.GetContext().Value("counter").(int))
 	}
 }
+
+func TestCreateRetryMiddleware_RequestTimeout(t *testing.T) {
+	backOffs := []time.Duration{1 * time.Second, 2 * time.Second}
+	req := networking.Request{
+		Method: "GET",
+		Path:   "/test123",
+	}
+	c := mockClient{err: context.DeadlineExceeded}
+	s := mockSleeper{}
+	w := middleware.CreateRetryMiddleware(mockRetryPolicy(backOffs), s.sleep)(middleware.CreateTimeoutMiddleware(-1 * time.Second)(&c))
+	_, err := w.Send(&req)
+
+	a := assert.New(t)
+	a.Error(err)
+	a.True(errors.Is(err, c.err))
+	a.Len(c.lastRequests, 3)
+	a.Equal(2, middleware.RetryCounterFromContext(c.lastRequests[2].req.GetContext()))
+	for _, r := range c.lastRequests {
+		a.Nil(r.body)
+	}
+}

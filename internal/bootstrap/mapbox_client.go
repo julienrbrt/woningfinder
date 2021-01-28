@@ -20,6 +20,7 @@ func CreateMapboxClient() mapbox.Client {
 		middleware.CreateHostMiddleware(&mapbox.APIEndpoint),
 		middleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
+		middleware.CreateTimeoutMiddleware(retry.DefaultTimeout),
 	}
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
