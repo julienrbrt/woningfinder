@@ -56,7 +56,6 @@ type Housing struct {
 	NumberRoom          int
 	NumberBedroom       int
 	BuildingYear        int
-	HousingAllowance    bool // HousingAllowance defines if the house can get housing allowance
 	Garden              bool
 	Garage              bool
 	Elevator            bool

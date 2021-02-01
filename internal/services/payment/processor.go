@@ -40,6 +40,7 @@ func (s *service) ProcessPayment() error {
 			// verify payment
 			if err := s.hasPaid(payment); err != nil {
 				s.logger.Sugar().Error(err)
+				continue
 			}
 		}
 	}

@@ -123,7 +123,6 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 
 		// TODO
 		// add size
-		// add housingallowance
 		// add garden
 		// add garage
 		// add elevator

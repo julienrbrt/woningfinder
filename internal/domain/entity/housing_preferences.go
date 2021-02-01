@@ -7,22 +7,21 @@ import (
 
 // HousingPreferences defines the user preference on a housing
 type HousingPreferences struct {
-	ID                  uint      `pg:",pk"`
-	CreatedAt           time.Time `pg:"default:now()"`
-	DeletedAt           time.Time `pg:",soft_delete" json:"-"`
-	UserID              uint
-	Type                []HousingType `pg:"many2many:housing_preferences_housing_types,join_fk:housing_type"`
-	MaximumPrice        float64
-	City                []City                           `pg:"many2many:housing_preferences_cities" json:",omitempty"`
-	CityDistrict        []HousingPreferencesCityDistrict `pg:"rel:has-many" json:",omitempty"`
-	NumberBedroom       int
-	HasBalcony          bool
-	HasGarage           bool
-	HasGarden           bool
-	HasElevator         bool
-	HasHousingAllowance bool
-	HasAttic            bool
-	IsAccessible        bool
+	ID            uint      `pg:",pk"`
+	CreatedAt     time.Time `pg:"default:now()"`
+	DeletedAt     time.Time `pg:",soft_delete" json:"-"`
+	UserID        uint
+	Type          []HousingType `pg:"many2many:housing_preferences_housing_types,join_fk:housing_type"`
+	MaximumPrice  float64
+	City          []City                           `pg:"many2many:housing_preferences_cities" json:",omitempty"`
+	CityDistrict  []HousingPreferencesCityDistrict `pg:"rel:has-many" json:",omitempty"`
+	NumberBedroom int
+	HasBalcony    bool
+	HasGarage     bool
+	HasGarden     bool
+	HasElevator   bool
+	HasAttic      bool
+	IsAccessible  bool
 }
 
 // HousingPreferencesCityDistrict defines the user preferences city districts

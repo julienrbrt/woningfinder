@@ -23,8 +23,7 @@
         }
       ],
       "MaximumPrice": 800,
-      "NumberBedroom": 2,
-      "HasHousingAllowance": true
+      "NumberBedroom": 2
     }
   ]
 }
