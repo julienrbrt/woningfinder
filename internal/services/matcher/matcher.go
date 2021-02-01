@@ -7,6 +7,7 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/domain/matcher"
 	"github.com/woningfinder/woningfinder/internal/services"
 )
 
@@ -67,7 +68,7 @@ func (s *service) MatchOffer(offerList entity.OfferList) error {
 					continue
 				}
 
-				if user.MatchPreferences(offer) && user.MatchCriteria(offer) {
+				if matcher.MatchPreferences(user, offer) && matcher.MatchCriteria(user, offer) {
 					// react to offer
 					if err := client.ReactToOffer(offer); err != nil {
 						s.logger.Sugar().Errorf("failed to react to %s with user %s: %w", offer.Housing.Address, user.Email, err)
