@@ -20,7 +20,7 @@ func NewCollyConnector(logger *logging.Logger, name string) (*colly.Collector, e
 
 	// set custom networking client with retries and timeout
 	retryClient := retryablehttp.NewClient()
-	retryClient.HTTPClient.Timeout = retry.DefaultRetryCount
+	retryClient.HTTPClient.Timeout = retry.DefaultTimeout
 	retryClient.RetryMax = 10
 	c.SetClient(retryClient.StandardClient())
 

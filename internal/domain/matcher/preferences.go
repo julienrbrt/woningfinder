@@ -10,7 +10,7 @@ import (
 func MatchPreferences(u *entity.User, offer entity.Offer) bool {
 	for _, pref := range u.HousingPreferences {
 		// match price
-		if offer.Housing.Price >= pref.MaximumPrice {
+		if offer.Housing.Price > pref.MaximumPrice {
 			continue
 		}
 
@@ -21,6 +21,11 @@ func MatchPreferences(u *entity.User, offer entity.Offer) bool {
 
 		// match location
 		if !matchCity(pref, offer.Housing) || !matchCityDistrict(pref, offer.Housing) {
+			continue
+		}
+
+		// verify housing allowance
+		if pref.HasHousingAllowance && offer.Housing.Price > maximalehuurgrens {
 			continue
 		}
 
