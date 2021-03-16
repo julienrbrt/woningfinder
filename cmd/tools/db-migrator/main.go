@@ -1,8 +1,6 @@
 package main
 
 import (
-	"flag"
-	"fmt"
 	"os"
 
 	"github.com/go-pg/migrations/v8"
@@ -22,40 +20,26 @@ func init() {
 	}
 }
 
-const usageText = `This program runs command on the db. Supported commands are:
-  - init - creates version info table in the database
-  - up - runs all available migrations.
-  - up [target] - runs available migrations up to the target one.
-  - down - reverts last migration.
-  - reset - reverts all migrations.
-  - version - prints current db version.
-  - set_version [version] - sets db version without running migrations.
-
-Usage:
-  go run *.go <command> [args]
-`
-
 func main() {
-	flag.Usage = usage
-	flag.Parse()
-
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 	dbClient := bootstrap.CreateDBClient(logger)
-	db := dbClient.Conn()
 
-	oldVersion, newVersion, err := migrations.Run(db, flag.Args()...)
-	if err != nil {
-		logger.Sugar().Fatal(err)
+	if len(os.Args) > 1 && os.Args[1] == "init" {
+		// initialize database
+		if _, _, err := migrations.Run(dbClient.Conn(), "init"); err != nil {
+			logger.Sugar().Fatalf("error while initializing database: %w", err)
+		}
 	}
+
+	// run migrations
+	oldVersion, newVersion, err := migrations.Run(dbClient.Conn())
+	if err != nil {
+		logger.Sugar().Fatalf("error while migrating database: %w", err)
+	}
+
 	if newVersion != oldVersion {
 		logger.Sugar().Infof("database schema migrated from version %d to %d\n", oldVersion, newVersion)
 	} else {
-		logger.Sugar().Infof("database schema version is %d\n", oldVersion)
+		logger.Sugar().Infof("database schema not updated: version stays %d\n", oldVersion)
 	}
-}
-
-func usage() {
-	fmt.Print(usageText)
-	flag.PrintDefaults()
-	os.Exit(2)
 }

@@ -6,15 +6,13 @@ WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _
 
 - _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for WoningFinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
 - _[HousingMatcher](../cmd/housing-matcher)_, is triggered by _HousingFinder_ via a queue (redis lists). It will match the new offers to the customer search option and react it.
-- _[PaymentValidator](../cmd/payment-validator)_, is triggered by a webhook and read from a queue (redis lists). It will validate that an user has paid in WoningFinder database.
-
 - _[Orchestrator](../cmd/orchestrator)_, permits to orchestrate the different jobs that needs to be often ran by WoningFinder.
   - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue.
   - _WeeklyUpdate_ generates and send the customer weekly updates.
 
 There is as well small tools that are run for special reasons:
 
-- _[db-migration](../cmd/tools/db-initiator)_ permits to initialize the database with default values (housing corporations, cities, housing types, selection methods...) and run the databases migrations.
+- _[db-migrator](../cmd/tools/db-migrator)_ permits to initialize the database with default values (housing corporations, cities, housing types, selection methods...) and run the databases migrations. It is run as a job before every deploy.
 - _[customer-delete](../cmd/tools/customer-delete)_ permits to delete customers given their email.
 
 ## Landing Page
@@ -46,7 +44,7 @@ More information on how built the token in the [code](../internal/auth/jwt.go).
 
 The payment is managed by Stripe. Stripe confirms that an user has paid via a webhook.
 The information returned by Stripe must be the user email address and the payment amount.
-Our webhook then add the paying information (user and plan) to a queue, that is processed by the _[PaymentValidator](../cmd/payment-validator)_ worker.
+Our webhook then update the paying information (user and plan) to the concerned user.
 
 More [documentation on how to test the webhook](https://stripe.com/docs/webhooks/test).
 

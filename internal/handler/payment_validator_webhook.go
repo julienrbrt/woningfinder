@@ -14,6 +14,8 @@ import (
 	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 )
 
+const stripeHeader = "Stripe-Signature"
+
 // ProcessPayment is called via the Stripe webhook and confirm that a user has paid
 func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 	// get request
@@ -37,7 +39,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// verify stripe authenticity
-	signatureHeader := r.Header.Get("Stripe-Signature")
+	signatureHeader := r.Header.Get(stripeHeader)
 	event, err = webhook.ConstructEvent(payload, signatureHeader, h.paymentWebhookSigningKey)
 	if err != nil {
 		render.Render(w, r, handlerEntity.ErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
@@ -59,11 +61,10 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 			h.logger.Sugar().Warnf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)
 			return
 		}
-		payment := &entity.PaymentData{UserEmail: paymentIntent.ReceiptEmail, Plan: plan}
 
-		// set payment to queue
-		if err := h.paymentService.QueuePayment(payment); err != nil {
-			render.Render(w, r, handlerEntity.ServerErrorRenderer(fmt.Errorf("error while queuing payment: %w", err)))
+		// set payment as proceed
+		if err := h.paymentService.ProcessPayment(&entity.PaymentData{UserEmail: paymentIntent.ReceiptEmail, Plan: plan}); err != nil {
+			render.Render(w, r, handlerEntity.ServerErrorRenderer(fmt.Errorf("error while processing payment: %w", err)))
 			return
 		}
 

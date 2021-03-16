@@ -8,13 +8,9 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-// paymentQueue defines on which channel the payment confirmation are sent via redis
-const paymentQueue = "queue:stripe"
-
 // Service permits to handle the management of the payments
 type Service interface {
-	QueuePayment(payment *entity.PaymentData) error
-	ProcessPayment() error
+	ProcessPayment(payment *entity.PaymentData) error
 }
 
 type service struct {
