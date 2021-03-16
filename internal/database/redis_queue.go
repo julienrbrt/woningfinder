@@ -20,7 +20,7 @@ func (r *redisClient) Push(listName string, data []byte) error {
 func (r *redisClient) BPop(listName string) ([]string, error) {
 	result := r.rdb.BLPop(0, listName) // timeout of zero to block indefinitely
 	if result.Err() != nil {
-		return nil, fmt.Errorf("error getting value from list %s", listName)
+		return nil, fmt.Errorf("error getting value from list %s: %w", listName, result.Err())
 	}
 
 	value := result.Val()
