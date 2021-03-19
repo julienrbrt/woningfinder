@@ -19,7 +19,7 @@ func (s *serviceMock) CreateUser(u *entity.User) error {
 // ExpectedMockGetHousingPreferencesMatchingCorporation is returned when mocking GetHousingPreferencesMatchingCorporation from userServoce
 var ExpectedMockGetHousingPreferencesMatchingCorporation = []entity.Corporation{{Name: "De Woonplaats"}}
 
-func (s *serviceMock) GetHousingPreferencesMatchingCorporation(u *entity.User) ([]entity.Corporation, error) {
+func (s *serviceMock) GetHousingPreferencesMatchingCorporation(_ *entity.User) ([]entity.Corporation, error) {
 	if s.err != nil {
 		return nil, s.err
 	}
@@ -27,6 +27,6 @@ func (s *serviceMock) GetHousingPreferencesMatchingCorporation(u *entity.User) (
 	return ExpectedMockGetHousingPreferencesMatchingCorporation, nil
 }
 
-func (s *serviceMock) CreateCorporationCredentials(u *entity.User, credentials entity.CorporationCredentials) error {
+func (s *serviceMock) CreateCorporationCredentials(_ *entity.User, _ entity.CorporationCredentials) error {
 	return s.err
 }

@@ -3,11 +3,11 @@ package matcher_test
 import (
 	"encoding/json"
 	"errors"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/dewoonplaats"
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
@@ -23,6 +23,21 @@ func (m *mockCorporationService) AddCities(cities []entity.City, corporation ent
 	return nil
 }
 
+var corporationInfo = entity.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "example.com"},
+	Name:        "OnsHuis",
+	URL:         "https://example.com",
+	Cities: []entity.City{
+		{Name: "Enschede"},
+		{Name: "Hengelo"},
+	},
+	SelectionMethod: []entity.SelectionMethod{
+		{
+			Method: entity.SelectionRandom,
+		},
+	},
+}
+
 func Test_PublishOffers_CorporationClientError(t *testing.T) {
 	a := assert.New(t)
 
@@ -31,7 +46,7 @@ func Test_PublishOffers_CorporationClientError(t *testing.T) {
 	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
 
-	a.Error(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{}, err), dewoonplaats.Info))
+	a.Error(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{}, err), corporationInfo))
 }
 
 func Test_PublishOffers_RedisClientError(t *testing.T) {
@@ -42,7 +57,7 @@ func Test_PublishOffers_RedisClientError(t *testing.T) {
 	redisMock := database.NewRedisClientMock("", nil, err)
 	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
 
-	a.Error(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{{}}, nil), dewoonplaats.Info))
+	a.Error(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{{}}, nil), corporationInfo))
 }
 
 func Test_PublishOffers_Success_NoOffers(t *testing.T) {
@@ -51,7 +66,7 @@ func Test_PublishOffers_Success_NoOffers(t *testing.T) {
 	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
 
-	a.Nil(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{}, nil), dewoonplaats.Info))
+	a.Nil(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{}, nil), corporationInfo))
 }
 
 func Test_PublishOffers_Success(t *testing.T) {
@@ -60,7 +75,7 @@ func Test_PublishOffers_Success(t *testing.T) {
 	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcher.NewService(logger, redisMock, nil, &mockCorporationService{}, nil)
 
-	a.Nil(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{{}}, nil), dewoonplaats.Info))
+	a.Nil(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{{}}, nil), corporationInfo))
 }
 
 func Test_SubscribeOffers_RedisClientError(t *testing.T) {
@@ -77,7 +92,7 @@ func Test_SubscribeOffers_RedisClientError(t *testing.T) {
 func Test_SubscribeOffers_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
-	corpInfo, err := json.Marshal(entity.OfferList{Corporation: dewoonplaats.Info})
+	corpInfo, err := json.Marshal(entity.OfferList{Corporation: corporationInfo})
 	a.NoError(err)
 
 	redisMock := database.NewRedisClientMock("", []string{string(corpInfo)}, err)
@@ -90,6 +105,6 @@ func Test_SubscribeOffers_Success(t *testing.T) {
 	}(c)
 
 	resultInfo, _ := <-c
-	a.Equal(dewoonplaats.Info.Name, resultInfo.Corporation.Name)
-	a.Equal(dewoonplaats.Info.Cities, resultInfo.Corporation.Cities)
+	a.Equal(corporationInfo.Name, resultInfo.Corporation.Name)
+	a.Equal(corporationInfo.Cities, resultInfo.Corporation.Cities)
 }

@@ -10,8 +10,6 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
-const name = "itris"
-
 type client struct {
 	collector    *colly.Collector
 	logger       *logging.Logger
@@ -21,9 +19,9 @@ type client struct {
 
 // NewClient allows to connect to itris ERP
 func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (corporation.Client, error) {
-	collector, err := connector.NewCollyConnector(logger, name)
+	collector, err := connector.NewCollyConnector(logger, "itris")
 	if err != nil {
-		return nil, fmt.Errorf("error creating %s connector: %w", name, err)
+		return nil, fmt.Errorf("error creating itris connector: %w", err)
 	}
 
 	return &client{

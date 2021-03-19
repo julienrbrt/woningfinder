@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
@@ -44,7 +46,7 @@ func main() {
 
 	// match offer
 	for offers := range ch {
-		if err := matcherService.MatchOffer(offers); err != nil {
+		if err := matcherService.MatchOffer(context.Background(), offers); err != nil {
 			logger.Sugar().Errorf("error while maching offers for corporation %s: %w", offers.Corporation.Name, err)
 		}
 	}

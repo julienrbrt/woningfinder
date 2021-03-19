@@ -1,6 +1,7 @@
 package matcher
 
 import (
+	"context"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -11,7 +12,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/services"
 )
 
-func (s *service) MatchOffer(offerList entity.OfferList) error {
+func (s *service) MatchOffer(ctx context.Context, offerList entity.OfferList) error {
 	// create housing corporation client
 	client, err := s.clientProvider.Get(offerList.Corporation)
 	if err != nil {

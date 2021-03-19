@@ -1,6 +1,8 @@
 package matcher
 
 import (
+	"context"
+
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
@@ -17,7 +19,7 @@ type Service interface {
 	PublishOffers(client corporation.Client, corporation entity.Corporation) error
 	SubscribeOffers(ch chan<- entity.OfferList) error
 
-	MatchOffer(offers entity.OfferList) error
+	MatchOffer(ctx context.Context, offers entity.OfferList) error
 }
 
 type service struct {
