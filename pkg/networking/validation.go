@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// responseValidator checks the statusCode of the response and returns an error if the statusCode range is >= 200 & < 300 is not respected
+// responseValidator checks the statusCode of the response and returns an error if the status code not in 200-299 range
 func responseValidator(r *Response) error {
 	if r.StatusCode >= http.StatusOK && r.StatusCode < http.StatusMultipleChoices {
 		return nil
@@ -18,11 +18,32 @@ func responseValidator(r *Response) error {
 	)
 
 	err := NewNetworkingError(r, message)
-	if r.StatusCode >= 500 {
+	if isTemporary(r.StatusCode) {
 		return NewTemporaryNetError(err)
 	}
 
 	return err
+}
+
+func isTemporary(status int) bool {
+	codes := []int{
+		http.StatusRequestTimeout,
+		http.StatusTooManyRequests,
+		http.StatusLocked,
+		http.StatusTooEarly,
+		http.StatusInternalServerError,
+		http.StatusBadGateway,
+		http.StatusServiceUnavailable,
+		http.StatusGatewayTimeout,
+		http.StatusInsufficientStorage,
+	}
+	for _, k := range codes {
+		if k == status {
+			return true
+		}
+	}
+
+	return false
 }
 
 func getResponseBody(resp *Response) string {

@@ -104,7 +104,7 @@ func Test_SubscribeOffers_Success(t *testing.T) {
 		a.NoError(err)
 	}(c)
 
-	resultInfo, _ := <-c
+	resultInfo := <-c
 	a.Equal(corporationInfo.Name, resultInfo.Corporation.Name)
 	a.Equal(corporationInfo.Cities, resultInfo.Corporation.Cities)
 }
