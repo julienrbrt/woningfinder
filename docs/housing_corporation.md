@@ -3,6 +3,17 @@
 Housing Corporation rarely develop their own systems. They use ERPs to achieve the publication and reaction of their housing offers.
 WoningFinder is implementing these systems permitting to interact with the housing corporations.
 
+## Adding Housing Corporation
+
+- Add new housing corporation in database (check documentation [here](https://github.com/WoningFinder/woningfinder/blob/main/docs/architecture.md))
+  - Write database migration
+  - Update client_provider with its client
+
+## Update Housing Corporation
+
+- New cities supported by the housing corporation are added automatically. Some work must be done however to update their cities in the codebase directly too (see Sentry warning).
+- Any other update must made directly in the database and then synchronize with the corporation struct.
+
 ## Supported ERP
 
 - [x] [Itris ERP](https://www.itris.nl/#itris) - Itris Connector
