@@ -78,7 +78,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 // note 1€ is 100 for stripe
 func priceToPlan(amount int64) (entity.Plan, error) {
 	switch amount {
-	case 2500:
+	case 3500:
 		return entity.PlanBasis, nil
 	case 7500:
 		return entity.PlanPro, nil
