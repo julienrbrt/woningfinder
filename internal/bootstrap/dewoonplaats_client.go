@@ -35,6 +35,7 @@ var dewoonplaatsInfo = entity.Corporation{
 		{Name: "Groenlo"},
 		{Name: "Bussum"},
 		{Name: "Bredevoort"},
+		{Name: "Ulft"},
 	},
 	SelectionMethod: []entity.SelectionMethod{
 		{
