@@ -43,7 +43,7 @@ func welcomeTpl(user *entity.User, jwtToken string) (html, plain string, err err
 					Button: hermes.Button{
 						Color: "#E46948",
 						Text:  "Mijn woningcorporaties",
-						Link:  fmt.Sprintf("https://app.woningfinder.com/woningcorporaties?jwt=%s", jwtToken),
+						Link:  fmt.Sprintf("https://woningfinder.com/woningcorporaties?jwt=%s", jwtToken),
 					},
 				},
 			},
