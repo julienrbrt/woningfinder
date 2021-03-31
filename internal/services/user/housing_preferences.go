@@ -1,7 +1,6 @@
 package user
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -19,12 +18,8 @@ func (s *service) CreateHousingPreferences(u *entity.User, preferences []entity.
 
 	for _, housingPreferences := range preferences {
 		// verify housing preferences
-		if len(housingPreferences.Type) == 0 {
-			return errors.New("error housing preferences invalid: housing type missing")
-		}
-
-		if len(housingPreferences.City) == 0 {
-			return errors.New("error housing preferences invalid: cities missing")
+		if err := housingPreferences.HasMinimal(); err != nil {
+			return err
 		}
 
 		// set and verify housing preferences city

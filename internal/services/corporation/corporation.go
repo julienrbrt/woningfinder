@@ -2,7 +2,6 @@ package corporation
 
 import (
 	"fmt"
-	"net/url"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
@@ -12,7 +11,7 @@ func (s *service) CreateOrUpdateCorporation(corp entity.Corporation) error {
 	db := s.dbClient.Conn()
 
 	// verify corporation
-	if err := isValid(corp); err != nil {
+	if err := corp.HasMinimal(); err != nil {
 		return fmt.Errorf("failing creating corporation %v: %w", corp, err)
 	}
 
@@ -52,26 +51,4 @@ func (s *service) DeleteCorporation(corp entity.Corporation) error {
 	// TODO to implement
 	// Delete all relationships and delete newly unsupported cities
 	panic("not implemented")
-}
-
-func isValid(coporation entity.Corporation) error {
-	if coporation.Name == "" || coporation.URL == "" {
-		return fmt.Errorf("corporation name or url missing")
-	}
-
-	if len(coporation.Cities) == 0 {
-		return fmt.Errorf("corporation cities missing")
-	}
-
-	for _, city := range coporation.Cities {
-		if city.Name == "" {
-			return fmt.Errorf("corporation cities invalid")
-		}
-	}
-
-	if _, err := url.Parse(coporation.URL); err != nil {
-		return fmt.Errorf("corporation url invalid")
-	}
-
-	return nil
 }

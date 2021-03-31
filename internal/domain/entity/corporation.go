@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"fmt"
 	"net/url"
 	"time"
 )
@@ -16,6 +17,29 @@ type Corporation struct {
 	Cities          []City            `pg:"many2many:corporation_cities"`
 	SelectionMethod []SelectionMethod `pg:"-"`
 	SelectionTime   time.Time
+}
+
+// HasMinimal ensure that the corporation contains the minimal required data
+func (c *Corporation) HasMinimal() error {
+	if c.Name == "" || c.URL == "" {
+		return fmt.Errorf("corporation name or url missing")
+	}
+
+	if len(c.Cities) == 0 {
+		return fmt.Errorf("corporation cities missing")
+	}
+
+	for _, city := range c.Cities {
+		if city.Name == "" {
+			return fmt.Errorf("corporation cities invalid")
+		}
+	}
+
+	if _, err := url.Parse(c.URL); err != nil {
+		return fmt.Errorf("corporation url invalid")
+	}
+
+	return nil
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

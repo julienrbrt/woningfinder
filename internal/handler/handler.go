@@ -15,6 +15,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/internal/services/payment"
 	"github.com/woningfinder/woningfinder/internal/services/user"
+	"github.com/woningfinder/woningfinder/pkg/email"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
@@ -24,11 +25,12 @@ type handler struct {
 	userService              user.Service
 	paymentService           payment.Service
 	paymentWebhookSigningKey string
+	emailClient              email.Client
 }
 
 // NewHandler creates a WoningFinder API router
-func NewHandler(logger *logging.Logger, corporationService corporation.Service, userService user.Service, paymentService payment.Service, paymentWebhookSigningKey string, jwtAuth *jwtauth.JWTAuth) http.Handler {
-	handler := &handler{logger, corporationService, userService, paymentService, paymentWebhookSigningKey}
+func NewHandler(logger *logging.Logger, corporationService corporation.Service, userService user.Service, paymentService payment.Service, paymentWebhookSigningKey string, jwtAuth *jwtauth.JWTAuth, emailClient email.Client) http.Handler {
+	handler := &handler{logger, corporationService, userService, paymentService, paymentWebhookSigningKey, emailClient}
 
 	// router configuration
 	r := chi.NewRouter()
@@ -58,6 +60,7 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 		r.Get("/offering", handler.GetOffering)
 		r.Post("/signup", handler.SignUp)
 		r.Post("/stripe-webhook", handler.ProcessPayment)
+		r.Post("/contact", handler.ContactForm)
 	})
 
 	// protected routes

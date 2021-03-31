@@ -1,22 +1,22 @@
 {
-  "Name": "Foo Baar",
-  "Email": "foobaar@example.com",
-  "BirthYear": 2000,
-  "YearlyIncome": 8000,
-  "FamilySize": 2,
-  "Plan": {
-    "Name": "BASIS"
+  "name": "Foo Baar",
+  "email": "foobaar@example.com",
+  "birth_year": 2000,
+  "yearly_income": 8000,
+  "family_size": 2,
+  "plan": {
+    "name": "BASIS"
   },
-  "HousingPreferences": [
+  "housing_preferences": [
     {
-      "Type": ["APPARTEMENT", "HOUSE"],
-      "City": [
+      "type": ["APPARTEMENT", "HOUSE"],
+      "city": [
         {
-          "Name": "enschede"
+          "name": "enschede"
         }
       ],
-      "MaximumPrice": 800,
-      "NumberBedroom": 2
+      "maximum_price": 800,
+      "number_bedroom": 2
     }
   ]
 }

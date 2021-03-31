@@ -1,6 +1,6 @@
 module github.com/woningfinder/woningfinder
 
-go 1.15
+go 1.16
 
 require (
 	github.com/TheZeroSlave/zapsentry v1.6.0

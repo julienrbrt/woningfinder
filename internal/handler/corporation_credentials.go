@@ -22,7 +22,7 @@ type credentialsRequest struct {
 // Bind permits go-chi router to verify the user input and marshal it
 func (c *credentialsRequest) Bind(r *http.Request) error {
 	if c.CorporationName == "" || c.Login == "" || c.Password == "" {
-		return errors.New("given credentials are invalid")
+		return errors.New("credentials cannot be empty")
 	}
 
 	return nil

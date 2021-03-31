@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -18,9 +19,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-var endpoint = ""
-
-func Test_SignUp_ErrEmptyRequest(t *testing.T) {
+func Test_ContactForm_ErrEmptyRequest(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -35,7 +34,7 @@ func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.ContactForm)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -47,41 +46,7 @@ func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 	a.Contains(rr.Body.String(), "Bad request")
 }
 
-func Test_SignUp_ErrUserService(t *testing.T) {
-	a := assert.New(t)
-	logger := logging.NewZapLoggerWithoutSentry()
-	expectedErr := errors.New("foo")
-
-	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(expectedErr)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
-
-	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request.json")
-	a.NoError(err)
-
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
-	req.Header.Set("Content-Type", "application/json")
-	a.NoError(err)
-
-	// record response
-	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
-
-	// server request
-	h.ServeHTTP(rr, req)
-
-	// verify status code
-	a.Equal(http.StatusInternalServerError, rr.Code)
-
-	// verify expected value
-	expected, err := json.Marshal(handlerEntity.ServerErrorRenderer(expectedErr))
-	a.NoError(err)
-	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
-}
-
-func Test_SignUp(t *testing.T) {
+func Test_ContactForm_Spam(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -91,7 +56,7 @@ func Test_SignUp(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request.json")
+	data, err := ioutil.ReadFile("testdata/contact-request-spam.json")
 	a.NoError(err)
 
 	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
@@ -100,14 +65,74 @@ func Test_SignUp(t *testing.T) {
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.ContactForm)
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusBadRequest, rr.Code)
+
+	// verify expected value
+	a.Contains(rr.Body.String(), "Bad request")
+}
+
+func Test_SignUp_ErrEmailClient(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	paymentServiceMock := paymentService.NewServiceMock(nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{Err: errors.New("foo")}}
+
+	// create request
+	data, err := ioutil.ReadFile("testdata/contact-request.json")
+	a.NoError(err)
+
+	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.ContactForm)
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusInternalServerError, rr.Code)
+
+	// verify expected value
+	expected, err := json.Marshal(handlerEntity.ServerErrorRenderer(fmt.Errorf("failed sending message: please try again")))
+	a.NoError(err)
+	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
+}
+
+func Test_ContactForm_Success(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	paymentServiceMock := paymentService.NewServiceMock(nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+
+	// create request
+	data, err := ioutil.ReadFile("testdata/contact-request.json")
+	a.NoError(err)
+
+	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.ContactForm)
 
 	// server request
 	h.ServeHTTP(rr, req)
 
 	// verify status code
 	a.Equal(http.StatusOK, rr.Code)
-
-	// verify expected value
-	a.Empty(rr.Body.String())
 }

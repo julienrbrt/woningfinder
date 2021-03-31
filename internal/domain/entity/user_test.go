@@ -32,19 +32,6 @@ func getUser() entity.User {
 	}
 }
 
-func Test_User_IsValid(t *testing.T) {
-	a := assert.New(t)
-	testUser := getUser()
-	a.Nil(testUser.IsValid())
-}
-
-func Test_User_IsValid_Invalid(t *testing.T) {
-	a := assert.New(t)
-	testUser := getUser()
-	testUser.HousingPreferences = nil
-	a.Error(testUser.IsValid())
-}
-
 func Test_User_HasPaid(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()

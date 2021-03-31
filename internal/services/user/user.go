@@ -14,7 +14,7 @@ func (s *service) CreateUser(u *entity.User) error {
 	db := s.dbClient.Conn()
 
 	// verify user
-	if err := u.IsValid(); err != nil {
+	if err := u.HasMinimal(); err != nil {
 		return fmt.Errorf("error user %s invalid: %w", u.Email, err)
 	}
 
