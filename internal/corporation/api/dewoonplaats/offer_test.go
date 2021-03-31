@@ -22,8 +22,8 @@ func Test_FetchOffer(t *testing.T) {
 	a.True(len(offers) > 0)
 	for _, offer := range offers {
 		// verify housing validity
-		a.NotEmpty(offer.Housing.Type.Type)
-		if offer.Housing.Type.Type == entity.HousingTypeUndefined {
+		a.NotEmpty(offer.Housing.Type)
+		if offer.Housing.Type == entity.HousingTypeUndefined {
 			continue
 		}
 
@@ -37,7 +37,7 @@ func Test_FetchOffer(t *testing.T) {
 		a.True(offer.Housing.NumberBedroom > 0)
 		a.True(offer.Housing.BuildingYear > 0)
 
-		a.NotNil(offer.SelectionMethod)
+		a.NotEmpty(offer.SelectionMethod)
 		a.NotNil(offer.SelectionDate)
 		a.NotEmpty(offer.URL)
 		a.NotEmpty(offer.ExternalID)

@@ -21,8 +21,8 @@ func getUser() entity.User {
 		HousingPreferences: []entity.HousingPreferences{
 			{
 				Type: []entity.HousingType{
-					{Type: entity.HousingTypeHouse},
-					{Type: entity.HousingTypeAppartement},
+					entity.HousingTypeHouse,
+					entity.HousingTypeAppartement,
 				},
 				MaximumPrice:  950,
 				NumberBedroom: 1,

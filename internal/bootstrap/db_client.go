@@ -24,7 +24,6 @@ func CreateDBClient(logger *logging.Logger) database.DBClient {
 // This should be done before dependant models are used.
 func RegisterModel() {
 	orm.RegisterTable((*entity.CorporationCity)(nil))
-	orm.RegisterTable((*entity.CorporationSelectionMethod)(nil))
 	orm.RegisterTable((*entity.HousingPreferencesHousingType)(nil))
 	orm.RegisterTable((*entity.HousingPreferencesCity)(nil))
 	orm.RegisterTable((*entity.HousingPreferencesCityDistrict)(nil))

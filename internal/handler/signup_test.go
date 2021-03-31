@@ -17,6 +17,8 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
+var endpoint = ""
+
 func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
@@ -27,7 +29,7 @@ func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/signup", nil)
+	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
 	a.NoError(err)
 
 	// record response
@@ -55,10 +57,10 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/example-signup.json")
+	data, err := ioutil.ReadFile("testdata/signup-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
@@ -88,10 +90,10 @@ func Test_SignUp(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/example-signup.json")
+	data, err := ioutil.ReadFile("testdata/signup-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 

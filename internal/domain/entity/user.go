@@ -51,11 +51,6 @@ func (u *User) IsValid() error {
 		return fmt.Errorf("user must have a housing preferences")
 	}
 
-	// verify plan
-	if !u.Plan.Name.Exists() {
-		return fmt.Errorf("user plan invalid")
-	}
-
 	if len(u.HousingPreferences) > u.Plan.Name.MaxHousingPreferences() {
 		return fmt.Errorf("error cannot create more than %d housing preferences in plan %s: got %d", u.Plan.Name.MaxHousingPreferences(), u.Plan.Name, len(u.HousingPreferences))
 	}
@@ -65,7 +60,7 @@ func (u *User) IsValid() error {
 
 // HasPaid checks if a user has a paid plan
 func (u *User) HasPaid() bool {
-	if u.Plan == (UserPlan{}) || !u.Plan.Name.Exists() {
+	if u.Plan == (UserPlan{}) {
 		return false
 	}
 

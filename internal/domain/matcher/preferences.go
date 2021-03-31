@@ -52,7 +52,7 @@ func matchHouseType(pref entity.HousingPreferences, housing entity.Housing) bool
 	}
 
 	for _, t := range pref.Type {
-		if t.Type == housing.Type.Type {
+		if t == housing.Type {
 			return true
 		}
 	}

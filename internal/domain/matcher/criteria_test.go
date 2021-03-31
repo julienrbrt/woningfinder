@@ -21,8 +21,8 @@ func getUser() *entity.User {
 		HousingPreferences: []entity.HousingPreferences{
 			{
 				Type: []entity.HousingType{
-					{Type: entity.HousingTypeHouse},
-					{Type: entity.HousingTypeAppartement},
+					entity.HousingTypeHouse,
+					entity.HousingTypeAppartement,
 				},
 				MaximumPrice:  950,
 				NumberBedroom: 1,
@@ -36,9 +36,7 @@ func getOffer() entity.Offer {
 	return entity.Offer{
 		ExternalID: "w758752",
 		Housing: entity.Housing{
-			Type: entity.HousingType{
-				Type: entity.HousingTypeHouse,
-			},
+			Type:          entity.HousingTypeHouse,
 			Latitude:      52.133,
 			Longitude:     6.61433,
 			Address:       "Beatrixstraat 1 R 7161 DJ Neede A",

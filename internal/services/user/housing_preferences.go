@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -18,8 +19,12 @@ func (s *service) CreateHousingPreferences(u *entity.User, preferences []entity.
 
 	for _, housingPreferences := range preferences {
 		// verify housing preferences
-		if err := housingPreferences.IsValid(); err != nil {
-			return fmt.Errorf("error housing preferences invalid: %w", err)
+		if len(housingPreferences.Type) == 0 {
+			return errors.New("error housing preferences invalid: housing type missing")
+		}
+
+		if len(housingPreferences.City) == 0 {
+			return errors.New("error housing preferences invalid: cities missing")
 		}
 
 		// set and verify housing preferences city
@@ -39,11 +44,11 @@ func (s *service) CreateHousingPreferences(u *entity.User, preferences []entity.
 		}
 
 		// add housing type relations
-		for _, t := range housingPreferences.Type {
-			if _, err := db.Model(&entity.HousingPreferencesHousingType{HousingPreferencesID: housingPreferences.ID, HousingType: t.Type}).
-				Where("housing_preferences_id = ? and housing_type = ?", housingPreferences.ID, t.Type).
+		for _, housingType := range housingPreferences.Type {
+			if _, err := db.Model(&entity.HousingPreferencesHousingType{HousingPreferencesID: housingPreferences.ID, HousingType: string(housingType)}).
+				Where("housing_preferences_id = ? and housing_type = ?", housingPreferences.ID, string(housingType)).
 				SelectOrInsert(); err != nil {
-				return fmt.Errorf("failing housing preferences for user %s: %w", u.Email, err)
+				return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
 			}
 		}
 
@@ -52,7 +57,7 @@ func (s *service) CreateHousingPreferences(u *entity.User, preferences []entity.
 			if _, err := db.Model(&entity.HousingPreferencesCity{HousingPreferencesID: housingPreferences.ID, CityName: city.Name}).
 				Where("housing_preferences_id = ? and city_name = ?", housingPreferences.ID, city.Name).
 				SelectOrInsert(); err != nil {
-				return fmt.Errorf("failing housing preferences for user %s: %w", u.Email, err)
+				return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
 			}
 
 			// add cities district
@@ -60,7 +65,7 @@ func (s *service) CreateHousingPreferences(u *entity.User, preferences []entity.
 				if _, err := db.Model(&entity.HousingPreferencesCityDistrict{HousingPreferencesID: housingPreferences.ID, CityName: city.Name, Name: district}).
 					Where("housing_preferences_id = ? and city_name = ? and name = ?", housingPreferences.ID, city.Name, district).
 					SelectOrInsert(); err != nil {
-					return fmt.Errorf("failing housing preferences for user %s: %w", u.Email, err)
+					return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
 				}
 			}
 		}

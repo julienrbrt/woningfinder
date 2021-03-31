@@ -10,7 +10,7 @@ import (
 
 // Service permits to handle the management of the payments
 type Service interface {
-	ProcessPayment(payment *entity.PaymentData) error
+	ProcessPayment(email string, plan entity.Plan) error
 }
 
 type service struct {

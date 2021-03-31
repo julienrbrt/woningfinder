@@ -14,12 +14,10 @@ func init() {
 	// models
 	models := []interface{}{
 		(*entity.CorporationCity)(nil),
-		(*entity.CorporationSelectionMethod)(nil),
 		(*entity.HousingPreferencesHousingType)(nil),
 		(*entity.HousingPreferencesCity)(nil),
 
 		(*entity.Corporation)(nil),
-		(*entity.SelectionMethod)(nil),
 		(*entity.HousingType)(nil),
 		(*entity.City)(nil),
 		(*entity.User)(nil),

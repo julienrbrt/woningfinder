@@ -19,9 +19,7 @@ var onshuisInfo = entity.Corporation{
 		{Name: "Hengelo"},
 	},
 	SelectionMethod: []entity.SelectionMethod{
-		{
-			Method: entity.SelectionRandom,
-		},
+		entity.SelectionRandom,
 	},
 }
 

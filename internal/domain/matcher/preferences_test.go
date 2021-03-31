@@ -46,9 +46,7 @@ func Test_MatchPreferences_HousingType(t *testing.T) {
 	testOffer := getOffer()
 
 	a.True(matcher.MatchPreferences(testUser, testOffer))
-	testOffer.Housing.Type = entity.HousingType{
-		Type: entity.HousingTypeUndefined,
-	}
+	testOffer.Housing.Type = entity.HousingTypeUndefined
 	a.False(matcher.MatchPreferences(testUser, testOffer))
 	testUser.HousingPreferences[0].Type = nil
 	a.True(matcher.MatchPreferences(testUser, testOffer))

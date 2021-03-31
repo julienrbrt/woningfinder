@@ -94,9 +94,7 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 		}
 
 		newHouse := entity.Housing{
-			Type: entity.HousingType{
-				Type: houseType,
-			},
+			Type:    houseType,
 			Address: fmt.Sprintf("%s %s %s", house.Address, house.Postcode, house.City),
 			City: entity.City{
 				Name: house.City,
@@ -119,17 +117,15 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 		}
 
 		offer := entity.Offer{
-			ExternalID: house.ID,
-			Housing:    newHouse,
-			URL:        fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", house.ID),
-			SelectionMethod: entity.SelectionMethod{
-				Method: c.parseSelectionMethod(house.IsSelectionRandom),
-			},
-			SelectionDate: c.parseSelectionDate(house.SelectionDate),
-			MinFamilySize: house.Criteria.MinGezinsgrootte,
-			MaxFamilySize: house.Criteria.MaxGezinsgrootte,
-			MinAge:        house.Criteria.MinLeeftijd,
-			MaxAge:        house.Criteria.MaxLeeftijd,
+			ExternalID:      house.ID,
+			Housing:         newHouse,
+			URL:             fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", house.ID),
+			SelectionMethod: c.parseSelectionMethod(house.IsSelectionRandom),
+			SelectionDate:   c.parseSelectionDate(house.SelectionDate),
+			MinFamilySize:   house.Criteria.MinGezinsgrootte,
+			MaxFamilySize:   house.Criteria.MaxGezinsgrootte,
+			MinAge:          house.Criteria.MinLeeftijd,
+			MaxAge:          house.Criteria.MaxLeeftijd,
 		}
 
 		offers = append(offers, offer)
@@ -167,7 +163,7 @@ func offerRequest() (networking.Request, error) {
 	return request, nil
 }
 
-func (c *client) parseHousingType(houseType []string) entity.Type {
+func (c *client) parseHousingType(houseType []string) entity.HousingType {
 	if len(houseType) == 0 {
 		return entity.HousingTypeUndefined
 	}
@@ -203,7 +199,7 @@ func (c *client) parseSelectionDate(str string) time.Time {
 	return date
 }
 
-func (c *client) parseSelectionMethod(random bool) entity.Method {
+func (c *client) parseSelectionMethod(random bool) entity.SelectionMethod {
 	if random {
 		return entity.SelectionRandom
 	}

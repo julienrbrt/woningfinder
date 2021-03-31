@@ -38,12 +38,8 @@ var dewoonplaatsInfo = entity.Corporation{
 		{Name: "Ulft"},
 	},
 	SelectionMethod: []entity.SelectionMethod{
-		{
-			Method: entity.SelectionRandom,
-		},
-		{
-			Method: entity.SelectionFirstComeFirstServed,
-		},
+		entity.SelectionRandom,
+		entity.SelectionFirstComeFirstServed,
 	},
 	SelectionTime: scheduler.CreateSelectionTime(18, 0, 0),
 }

@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
@@ -9,8 +10,12 @@ import (
 )
 
 func (s *service) CreateCorporationCredentials(u *entity.User, credentials entity.CorporationCredentials) error {
-	if err := credentials.IsValid(); err != nil {
-		return fmt.Errorf("error when creating corporation credentials: %w", err)
+	if credentials.Corporation.Name == "" {
+		return errors.New("error when creating corporation credentials: corporation invalid")
+	}
+
+	if credentials.Login == "" || credentials.Password == "" {
+		return errors.New("error when creating corporation credentials: login or password missing")
 	}
 
 	// check credentials validity

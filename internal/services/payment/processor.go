@@ -7,15 +7,15 @@ import (
 )
 
 // ProcessPayment set that the user has paid
-func (s *service) ProcessPayment(payment *entity.PaymentData) error {
+func (s *service) ProcessPayment(email string, plan entity.Plan) error {
 	// get user
-	user, err := s.userService.GetUser(&entity.User{Email: payment.UserEmail})
+	user, err := s.userService.GetUser(&entity.User{Email: email})
 	if err != nil {
 		return fmt.Errorf("error while processing payment data: cannot get user: %w", err)
 	}
 
 	// set that user has paid
-	if err := s.userService.SetPaid(user, payment.Plan); err != nil {
+	if err := s.userService.SetPaid(user, plan); err != nil {
 		return fmt.Errorf("error while processing payment data: %w", err)
 	}
 

@@ -17,7 +17,6 @@ type Service interface {
 	AddCities(cities []entity.City, corporation entity.Corporation) error
 	GetCities() (*[]entity.City, error)
 	GetCity(name string) (*entity.City, error)
-	DeleteCity(city entity.City) error
 }
 
 type service struct {

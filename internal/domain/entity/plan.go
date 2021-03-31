@@ -5,23 +5,15 @@ import (
 	"time"
 )
 
+// Plan defines the different plans name
+type Plan string
+
 const (
 	// PlanBasis is the normal plan
 	PlanBasis Plan = "BASIS"
 	// PlanPro is the high-end plan
-	PlanPro = "PRO"
+	PlanPro Plan = "PRO"
 )
-
-// UserPlan stores the user plan and payment details (when paid)
-type UserPlan struct {
-	UserID    uint      `pg:",pk"`
-	CreatedAt time.Time `pg:"default:now()"`
-	DeletedAt time.Time `pg:",soft_delete" json:"-"`
-	Name      Plan
-}
-
-// Plan defines the different plans name
-type Plan string
 
 // Scan implements the Scanner interface from reading from the database
 func (p *Plan) Scan(value interface{}) error {
@@ -38,11 +30,6 @@ func (p Plan) Value() (driver.Value, error) {
 	return string(p), nil
 }
 
-// Exists check if the plan exists
-func (p Plan) Exists() bool {
-	return p == PlanBasis || p == PlanPro
-}
-
 // MaxHousingPreferences returns the maximum autorized of housing preferences
 func (p Plan) MaxHousingPreferences() int {
 	switch p {
@@ -53,4 +40,24 @@ func (p Plan) MaxHousingPreferences() int {
 	default:
 		return 0
 	}
+}
+
+// Price returns the plan price in euro
+func (p Plan) Price() int {
+	switch p {
+	case PlanBasis:
+		return 35
+	case PlanPro:
+		return 75
+	default:
+		return 0
+	}
+}
+
+// UserPlan stores the user plan and payment details (when paid)
+type UserPlan struct {
+	UserID    uint      `pg:",pk"`
+	CreatedAt time.Time `pg:"default:now()"`
+	DeletedAt time.Time `pg:",soft_delete" json:"-"`
+	Name      Plan
 }

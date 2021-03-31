@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -32,19 +31,6 @@ type HousingPreferencesCityDistrict struct {
 	CityName             string
 }
 
-// IsValid verifies that the given HousingPreferences is valid
-func (h *HousingPreferences) IsValid() error {
-	if len(h.Type) == 0 {
-		return fmt.Errorf("housing preferences housing type missing")
-	}
-
-	if len(h.City) == 0 {
-		return fmt.Errorf("housing preferences cities missing")
-	}
-
-	return nil
-}
-
 // HousingPreferencesMatch defines an offer that matched with an user
 // It is used to determined to which offer WoningFinder has applied
 type HousingPreferencesMatch struct {
@@ -60,7 +46,7 @@ type HousingPreferencesMatch struct {
 // HousingPreferencesHousingType defines the many-to-many relationship table
 type HousingPreferencesHousingType struct {
 	HousingPreferencesID uint
-	HousingType          Type
+	HousingType          string
 }
 
 // HousingPreferencesCity defines the many-to-many relationship table

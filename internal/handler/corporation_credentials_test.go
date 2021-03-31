@@ -10,11 +10,9 @@ import (
 	"testing"
 
 	"github.com/go-chi/jwtauth"
-
+	"github.com/stretchr/testify/assert"
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
-
-	"github.com/stretchr/testify/assert"
 	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
@@ -32,7 +30,7 @@ func Test_GetCorporationCredentials_ErrUnauthorized(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/corporation-credentials", nil)
+	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
 	a.NoError(err)
 
 	// record response
@@ -60,7 +58,7 @@ func Test_GetCorporationCredentials_ErrUserService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/corporation-credentials", nil)
+	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
 	a.NoError(err)
 
 	// record response
@@ -89,7 +87,7 @@ func Test_GetCorporationCredentials(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/corporation-credentials", nil)
+	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
 	a.NoError(err)
 
 	// record response
@@ -102,10 +100,11 @@ func Test_GetCorporationCredentials(t *testing.T) {
 	// verify status code
 	a.Equal(http.StatusOK, rr.Code)
 
-	// verify expected value
-	expected, err := json.Marshal([]handlerEntity.CredentialsResponse{{CorporationName: userService.ExpectedMockGetHousingPreferencesMatchingCorporation[0].Name, IsKnown: false}})
+	data, err := ioutil.ReadFile("testdata/corporation-credentials-response.json")
 	a.NoError(err)
-	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
+
+	// verify body
+	a.Equal(string(data), rr.Body.String())
 }
 
 func Test_UpdateCorporationCredentials_ErrUnauthorized(t *testing.T) {
@@ -118,7 +117,7 @@ func Test_UpdateCorporationCredentials_ErrUnauthorized(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/corporation-credentials", nil)
+	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
 	a.NoError(err)
 
 	// record response
@@ -145,7 +144,7 @@ func Test_UpdateCorporationCredentials_ErrEmptyRequest(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/corporation-credentials", nil)
+	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
 	a.NoError(err)
 
 	// record response
@@ -173,10 +172,10 @@ func Test_UpdateCorporationCredentials_ErrUserService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/example-corporation-credentials.json")
+	data, err := ioutil.ReadFile("testdata/corporation-credentials-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/corporation-credentials", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
@@ -206,10 +205,10 @@ func Test_UpdateCorporationCredentials(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/example-corporation-credentials.json")
+	data, err := ioutil.ReadFile("testdata/corporation-credentials-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/corporation-credentials", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 

@@ -44,8 +44,3 @@ func (s *service) GetCities() (*[]entity.City, error) {
 
 	return &cities, nil
 }
-
-func (s *service) DeleteCity(city entity.City) error {
-	// TODO to implement
-	panic("not implemented")
-}

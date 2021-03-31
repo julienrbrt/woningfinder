@@ -1,48 +1,5 @@
 package entity
 
-import (
-	"database/sql/driver"
-	"errors"
-)
-
-const (
-	// HousingTypeHouse is a house type
-	HousingTypeHouse Type = "HOUSE"
-	// HousingTypeAppartement is a appartement type
-	HousingTypeAppartement = "APPARTEMENT"
-	// HousingTypeUndefined is an undefined type (probably parking but unsupported by WoningFinder)
-	HousingTypeUndefined = "UNDEFINED"
-)
-
-// Type defines the type of an HousingType (appartement, house)
-type Type string
-
-// Scan implements the Scanner interface from reading from the database
-func (u *Type) Scan(value interface{}) error {
-	if value == nil {
-		return errors.New("should not happen")
-	}
-
-	*u = Type(string(value.([]byte)))
-	return nil
-}
-
-// Value implements the Valuer interface for the storing in the database
-func (u Type) Value() (driver.Value, error) {
-	return string(u), nil
-}
-
-// HousingType is the database representation of (Housing)Type
-type HousingType struct {
-	Type Type `pg:",pk"`
-}
-
-// Exists verify that the given housing type is supported
-// Note HousingTypeUndefined is not returned as exists as it cannot be selected by a user
-func (h *HousingType) Exists() bool {
-	return h.Type == HousingTypeHouse || h.Type == HousingTypeAppartement
-}
-
 // Housing defines an appartement and a house
 type Housing struct {
 	Type                HousingType
@@ -63,3 +20,15 @@ type Housing struct {
 	Attic               bool
 	Accessible          bool // Assessible defines if the house is accessible for handicapt people
 }
+
+// HousingType defines the type of an HousingType (appartement, house)
+type HousingType string
+
+const (
+	// HousingTypeHouse is a house type
+	HousingTypeHouse HousingType = "HOUSE"
+	// HousingTypeAppartement is a appartement type
+	HousingTypeAppartement HousingType = "APPARTEMENT"
+	// HousingTypeUndefined is an undefined type (probably parking but unsupported by WoningFinder)
+	HousingTypeUndefined HousingType = "UNDEFINED"
+)

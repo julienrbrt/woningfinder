@@ -65,7 +65,7 @@ func buildSchedule(parser cron.Parser, hour, minute, second int) cron.Schedule {
 // hasFirstComeFirstServed returns true if a housing corporation select by first come first served
 func hasFirstComeFirstServed(corporation entity.Corporation) bool {
 	for _, s := range corporation.SelectionMethod {
-		if s.Method == entity.SelectionFirstComeFirstServed {
+		if s == entity.SelectionFirstComeFirstServed {
 			return true
 		}
 	}

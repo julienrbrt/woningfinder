@@ -63,9 +63,7 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 				URL:           c.url + e.ChildAttr(detailsHousingChildAttr, "href"),
 				ExternalID:    e.Attr("data-aanbod-id"),
 				Housing: entity.Housing{
-					Type: entity.HousingType{
-						Type: houseType,
-					},
+					Type:    houseType,
 					Address: address,
 					City: entity.City{
 						Name: city,
@@ -147,7 +145,7 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 	return offerList, nil
 }
 
-func parseHousingType(houseType string) entity.Type {
+func parseHousingType(houseType string) entity.HousingType {
 	houseType = strings.ToLower(houseType)
 
 	if strings.Contains(houseType, "appartement") {

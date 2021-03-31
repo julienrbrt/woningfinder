@@ -63,7 +63,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// set payment as proceed
-		if err := h.paymentService.ProcessPayment(&entity.PaymentData{UserEmail: paymentIntent.ReceiptEmail, Plan: plan}); err != nil {
+		if err := h.paymentService.ProcessPayment(paymentIntent.ReceiptEmail, plan); err != nil {
 			render.Render(w, r, handlerEntity.ServerErrorRenderer(fmt.Errorf("error while processing payment: %w", err)))
 			return
 		}
@@ -78,9 +78,9 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 // note 1€ is 100 for stripe
 func priceToPlan(amount int64) (entity.Plan, error) {
 	switch amount {
-	case 3500:
+	case int64(entity.PlanBasis.Price()) * 100:
 		return entity.PlanBasis, nil
-	case 7500:
+	case int64(entity.PlanPro.Price()) * 100:
 		return entity.PlanPro, nil
 	}
 

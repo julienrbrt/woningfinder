@@ -26,8 +26,9 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 
 | Endpoint Name            | Method     | Description                                                                          |
 | ------------------------ | ---------- | ------------------------------------------------------------------------------------ |
+| /contact                 | POST       | Powers the contact form to send an email to contact@woningfinder.nl                  |
+| /offering                | GET        | Gets all supported plans and type housing and cities                                 |
 | /signup                  | POST       | Handles the registration flow                                                        |
-| /cities                  | GET        | Gets all supported cities                                                            |
 | /housing-preferences     | PUT        | Updates the housing preferences of a given user                                      |
 | /corporation-credentials | GET + POST | Manages the different housing credentials for the supported corporation of the user. |
 | /stripe-webhook          | POST       | Endpoint where Stripe sends its webhook events (used for validating user payment)    |

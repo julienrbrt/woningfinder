@@ -9,14 +9,7 @@
   },
   "HousingPreferences": [
     {
-      "Type": [
-        {
-          "Type": "APPARTEMENT"
-        },
-        {
-          "Type": "HOUSE"
-        }
-      ],
+      "Type": ["APPARTEMENT", "HOUSE"],
       "City": [
         {
           "Name": "enschede"

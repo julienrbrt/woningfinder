@@ -4,21 +4,21 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/stretchr/testify/assert"
 	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-func Test_GetCities(t *testing.T) {
+func Test_GetOffering(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -29,12 +29,12 @@ func Test_GetCities(t *testing.T) {
 
 	// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
 	// pass 'nil' as the third parameter.
-	req, err := http.NewRequest(http.MethodGet, "/get-cities", nil)
+	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	a.NoError(err)
 
 	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.GetCities)
+	h := http.HandlerFunc(handler.GetOffering)
 
 	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
 	// directly and pass in our Request and ResponseRecorder.
@@ -44,12 +44,13 @@ func Test_GetCities(t *testing.T) {
 	a.Equal(rr.Code, http.StatusOK)
 
 	// verify expected value
-	expected, err := json.Marshal(corporationService.ExpectedMockGetCities)
+	data, err := ioutil.ReadFile("testdata/offering-response.json")
 	a.NoError(err)
-	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
+
+	a.Equal(string(data), rr.Body.String())
 }
 
-func Test_GetCities_ErrCorporationService(t *testing.T) {
+func Test_GetOffering_ErrCorporationService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -59,12 +60,12 @@ func Test_GetCities_ErrCorporationService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, ""}
 
 	// create request
-	req, err := http.NewRequest(http.MethodGet, "/get-cities", nil)
+	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.GetCities)
+	h := http.HandlerFunc(handler.GetOffering)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -73,7 +74,7 @@ func Test_GetCities_ErrCorporationService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(handlerEntity.ServerErrorRenderer(fmt.Errorf("error while getting cities")))
+	expected, err := json.Marshal(handlerEntity.ServerErrorRenderer(fmt.Errorf("error while getting offering")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
