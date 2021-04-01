@@ -81,6 +81,62 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
 
+func Test_SignUp_InvalidPlan(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	paymentServiceMock := paymentService.NewServiceMock(nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+
+	// create request
+	data, err := ioutil.ReadFile("testdata/signup-invalid-plan-request.json")
+	a.NoError(err)
+
+	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.SignUp)
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusBadRequest, rr.Code)
+}
+
+func Test_SignUp_InvalidHousingType(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	paymentServiceMock := paymentService.NewServiceMock(nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+
+	// create request
+	data, err := ioutil.ReadFile("testdata/signup-invalid-housing-type-request.json")
+	a.NoError(err)
+
+	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.SignUp)
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusBadRequest, rr.Code)
+}
+
 func Test_SignUp(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()

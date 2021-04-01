@@ -18,10 +18,10 @@ type User struct {
 	FamilySize   int       `json:"family_size"`
 	// only used when the user is less than 23, housing allowance depends on age
 	HasChildrenSameHousing  bool                      `json:"has_children_same_housing"`
-	Plan                    UserPlan                  `pg:"rel:has-one,fk:id" json:"plan"`
-	HousingPreferences      []HousingPreferences      `pg:"rel:has-many,join_fk:user_id" json:"housing_preferences"`
-	HousingPreferencesMatch []HousingPreferencesMatch `pg:"rel:has-many,join_fk:user_id" json:"housing_prefereces_match"`
-	CorporationCredentials  []CorporationCredentials  `pg:"rel:has-many,join_fk:user_id" json:"corporation_credentials"`
+	Plan                    UserPlan                  `pg:"rel:has-one,fk:id" json:"plan,omitempty"`
+	HousingPreferences      []HousingPreferences      `pg:"rel:has-many,join_fk:user_id" json:"housing_preferences,omitempty"`
+	HousingPreferencesMatch []HousingPreferencesMatch `pg:"rel:has-many,join_fk:user_id" json:"housing_prefereces_match,omitempty"`
+	CorporationCredentials  []CorporationCredentials  `pg:"rel:has-many,join_fk:user_id" json:"corporation_credentials,omitempty"`
 }
 
 // HasMinimal ensure that the user contains the minimal required data

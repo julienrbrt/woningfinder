@@ -9,7 +9,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
-func (s *service) CreateCorporationCredentials(u *entity.User, credentials entity.CorporationCredentials) error {
+func (s *service) CreateCorporationCredentials(userID uint, credentials entity.CorporationCredentials) error {
 	if credentials.Corporation.Name == "" {
 		return errors.New("error when creating corporation credentials: corporation invalid")
 	}
@@ -37,7 +37,7 @@ func (s *service) CreateCorporationCredentials(u *entity.User, credentials entit
 
 	// assign ids
 	credentials.CorporationName = credentials.Corporation.Name
-	credentials.UserID = u.ID
+	credentials.UserID = userID
 
 	// check if already existing
 	if _, err := s.dbClient.Conn().Model(&credentials).
@@ -49,15 +49,15 @@ func (s *service) CreateCorporationCredentials(u *entity.User, credentials entit
 	return nil
 }
 
-func (s *service) GetCorporationCredentials(u *entity.User, corporation entity.Corporation) (*entity.CorporationCredentials, error) {
+func (s *service) GetCorporationCredentials(userID uint, corporation entity.Corporation) (*entity.CorporationCredentials, error) {
 	credentials := entity.CorporationCredentials{
-		UserID:          u.ID,
+		UserID:          userID,
 		CorporationName: corporation.Name,
 	}
 
 	// get corporation credentials
 	if err := s.dbClient.Conn().Model(&credentials).Where("user_id = ? and corporation_name ILIKE ?", credentials.UserID, credentials.CorporationName).Select(); err != nil {
-		return nil, fmt.Errorf("error when getting corporation credentials for user %s: %w", u.Email, err)
+		return nil, fmt.Errorf("error when getting corporation credentials for userID %d: %w", userID, err)
 	}
 
 	// reassign corporation
@@ -84,8 +84,8 @@ func (s *service) GetAllCorporationCredentials(corporation entity.Corporation) (
 	return credentials, nil
 }
 
-func (s *service) DeleteCorporationCredentials(u *entity.User, corporation entity.Corporation) error {
-	credentials, err := s.GetCorporationCredentials(u, corporation)
+func (s *service) DeleteCorporationCredentials(userID uint, corporation entity.Corporation) error {
+	credentials, err := s.GetCorporationCredentials(userID, corporation)
 	if err != nil {
 		return fmt.Errorf("error when getting corporation credentials: %w", err)
 	}

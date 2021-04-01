@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/lestrrat-go/jwx/jwt"
@@ -35,9 +36,9 @@ func CreateJWTUserToken(jwtAuth *jwtauth.JWTAuth, user *entity.User) (jwt.Token,
 
 // ExtractUserFromJWT extracts an user from its JWT claims
 func ExtractUserFromJWT(claims map[string]interface{}) (*entity.User, error) {
-	userID, ok := claims[userIDKey].(uint)
-	if !ok {
-		return nil, fmt.Errorf("error extracting %s from claims, got %v", userIDKey, claims[userIDKey])
+	userID, err := strconv.ParseUint(fmt.Sprintf("%v", claims[userIDKey]), 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("error when parsing %v to uint: %w", claims[userIDKey], err)
 	}
 
 	userEmail, ok := claims[userEmailKey].(string)

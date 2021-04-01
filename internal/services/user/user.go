@@ -42,36 +42,35 @@ func (s *service) CreateUser(u *entity.User) error {
 func (s *service) GetUser(search *entity.User) (*entity.User, error) {
 	db := s.dbClient.Conn()
 
-	var u entity.User
+	var user entity.User
 	// get user (by id or email)
 	if search.ID > 0 {
-		if err := db.Model(&u).Where("id = ?", search.ID).Select(); err != nil {
+		if err := db.Model(&user).Where("id = ?", search.ID).Select(); err != nil {
 			return nil, fmt.Errorf("failed getting user %d: %w", search.ID, err)
 		}
 	} else {
-		if err := db.Model(&u).Where("email ILIKE ?", search.Email).Select(); err != nil {
+		if err := db.Model(&user).Where("email ILIKE ?", search.Email).Select(); err != nil {
 			return nil, fmt.Errorf("failed getting user %s: %w", search.Email, err)
 		}
 	}
 
 	// enrich user
 	var err error
-	u.HousingPreferences, err = s.GetHousingPreferences(&u)
+	user.HousingPreferences, err = s.GetHousingPreferences(&user)
 	if err != nil {
-		return nil, fmt.Errorf("failed getting user %s housing preferences: %w", u.Email, err)
+		return nil, fmt.Errorf("failed getting user %s housing preferences: %w", user.Email, err)
 	}
 
-	if err := db.Model(&u).Where("id = ?", u.ID).Relation("Plan").Select(); err != nil {
-		return nil, fmt.Errorf("failed getting user %s plan: %w", u.Email, err)
+	if err := db.Model(&user).Where("id = ?", user.ID).Relation("Plan").Select(); err != nil {
+		return nil, fmt.Errorf("failed getting user %s plan: %w", user.Email, err)
 	}
 
-	if err := db.Model(&u).Where("id = ?", u.ID).Relation("HousingPreferencesMatch").Select(); err != nil {
-		return nil, fmt.Errorf("failed getting user %s housing preferences match: %w", u.Email, err)
+	if err := db.Model(&user).Where("id = ?", user.ID).Relation("HousingPreferencesMatch").Select(); err != nil {
+		return nil, fmt.Errorf("failed getting user %s housing preferences match: %w", user.Email, err)
 	}
 
 	// enriching with corporation credentials is skipped because not useful
-
-	return &u, nil
+	return &user, nil
 }
 
 // TODO eventually use a prepare function to create it in one query only and improve performance

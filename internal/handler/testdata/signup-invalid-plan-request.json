@@ -5,11 +5,11 @@
   "yearly_income": 8000,
   "family_size": 2,
   "plan": {
-    "name": "pro"
+    "name": "invalid"
   },
   "housing_preferences": [
     {
-      "type": ["appartement", "house"],
+      "type": ["APPARTEMENT", "HOUSE"],
       "city": [
         {
           "name": "enschede"

@@ -26,9 +26,6 @@ func init() {
 	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
-
-	// register m2m models with go-pg
-	bootstrap.RegisterModel()
 }
 
 func main() {

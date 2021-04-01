@@ -15,7 +15,7 @@ func (s *service) ProcessPayment(email string, plan entity.Plan) error {
 	}
 
 	// set that user has paid
-	if err := s.userService.SetPaid(user, plan); err != nil {
+	if err := s.userService.SetPaid(user.ID, plan); err != nil {
 		return fmt.Errorf("error while processing payment data: %w", err)
 	}
 

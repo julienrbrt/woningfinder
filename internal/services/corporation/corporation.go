@@ -37,11 +37,13 @@ func (s *service) GetCorporation(name string) (*entity.Corporation, error) {
 	}
 
 	// enriching corporation
-	if err := db.Model(&corp).Where("name = ?", corp.Name).Relation("SelectionMethod").Select(); err != nil {
-		return nil, fmt.Errorf("failed getting corporation %s selection method: %w", name, err)
-	}
-	if err := db.Model(&corp).Where("name = ?", corp.Name).Relation("Cities").Select(); err != nil {
+	var cities []entity.CorporationCity
+	if err := db.Model(&cities).Where("corporation_name = ?", corp.Name).Select(); err != nil {
 		return nil, fmt.Errorf("failed getting corporation %s cities: %w", name, err)
+	}
+
+	for _, city := range cities {
+		corp.Cities = append(corp.Cities, entity.City{Name: city.CityName})
 	}
 
 	return &corp, nil

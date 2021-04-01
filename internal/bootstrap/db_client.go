@@ -3,9 +3,7 @@ package bootstrap
 import (
 	"os"
 
-	"github.com/go-pg/pg/v10/orm"
 	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
@@ -18,13 +16,4 @@ func CreateDBClient(logger *logging.Logger) database.DBClient {
 	}
 
 	return client
-}
-
-// RegisterModel many to many model so ORM can better recognize m2m relation.
-// This should be done before dependant models are used.
-func RegisterModel() {
-	orm.RegisterTable((*entity.CorporationCity)(nil))
-	orm.RegisterTable((*entity.HousingPreferencesHousingType)(nil))
-	orm.RegisterTable((*entity.HousingPreferencesCity)(nil))
-	orm.RegisterTable((*entity.HousingPreferencesCityDistrict)(nil))
 }

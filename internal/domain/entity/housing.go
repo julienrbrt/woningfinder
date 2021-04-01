@@ -26,9 +26,9 @@ type HousingType string
 
 const (
 	// HousingTypeHouse is a house type
-	HousingTypeHouse HousingType = "HOUSE"
+	HousingTypeHouse HousingType = "house"
 	// HousingTypeAppartement is a appartement type
-	HousingTypeAppartement HousingType = "APPARTEMENT"
+	HousingTypeAppartement HousingType = "appartement"
 	// HousingTypeUndefined is an undefined type (probably parking but unsupported by WoningFinder)
-	HousingTypeUndefined HousingType = "UNDEFINED"
+	HousingTypeUndefined HousingType = "undefined"
 )

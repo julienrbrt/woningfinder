@@ -17,7 +17,7 @@ type Service interface {
 	GetWeeklyUpdateUsers() ([]*entity.User, error)
 
 	// Payment
-	SetPaid(u *entity.User, plan entity.Plan) error
+	SetPaid(userID uint, plan entity.Plan) error
 
 	// Housing Preferences
 	CreateHousingPreferences(u *entity.User, preferences []entity.HousingPreferences) error
@@ -28,10 +28,10 @@ type Service interface {
 	CreateHousingPreferencesMatch(u *entity.User, offer entity.Offer, corporationName string) error
 
 	// Corporation Credentials
-	CreateCorporationCredentials(u *entity.User, credentials entity.CorporationCredentials) error
-	GetCorporationCredentials(u *entity.User, corporation entity.Corporation) (*entity.CorporationCredentials, error)
+	CreateCorporationCredentials(userID uint, credentials entity.CorporationCredentials) error
+	GetCorporationCredentials(userID uint, corporation entity.Corporation) (*entity.CorporationCredentials, error)
 	GetAllCorporationCredentials(corporation entity.Corporation) ([]entity.CorporationCredentials, error)
-	DeleteCorporationCredentials(u *entity.User, corporation entity.Corporation) error
+	DeleteCorporationCredentials(userID uint, corporation entity.Corporation) error
 	ValidateCredentials(credentials entity.CorporationCredentials) error
 	DecryptCredentials(credentials *entity.CorporationCredentials) (*entity.CorporationCredentials, error)
 }

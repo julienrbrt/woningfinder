@@ -19,20 +19,8 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	testOffer.Housing.City = hengelo
 	a.True(matcher.MatchPreferences(testUser, testOffer))
 	testOffer.Housing.City = enschede
-	testUser.HousingPreferences[0].CityDistrict = []entity.HousingPreferencesCityDistrict{
-		{
-			Name:     "roombeek",
-			CityName: "enschede",
-		},
-		{
-			Name:     "boddenkamp",
-			CityName: "enschede",
-		},
-		{
-			Name:     "lasonder-zeggelt",
-			CityName: "enschede",
-		},
-	}
+	enschede.District = []string{"roombeek", "boddenkamp", "lasonder-zeggelt"}
+	testUser.HousingPreferences[0].City[0] = enschede
 	a.False(matcher.MatchPreferences(testUser, testOffer))
 	testOffer.Housing.CityDistrict = "Enschede - Roombeek"
 	a.True(matcher.MatchPreferences(testUser, testOffer))

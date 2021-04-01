@@ -70,10 +70,11 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 		// Handle valid / invalid tokens.
 		r.Use(customMiddleware.CreateJWTValidatorMiddleware)
 
-		r.Route("/corporation-credentials", func(r chi.Router) {
-			r.Get("/", handler.GetCorporationCredentials)
-			r.Post("/", handler.UpdateCorporationCredentials)
-			r.Delete("/", handler.DeleteCorporationCredentials)
+		r.Route("/me", func(r chi.Router) {
+			r.Get("/", handler.GetUser)
+			r.Get("/corporation-credentials", handler.GetCorporationCredentials)
+			r.Post("/corporation-credentials", handler.UpdateCorporationCredentials)
+			r.Delete("/corporation-credentials", handler.DeleteCorporationCredentials)
 		})
 	})
 

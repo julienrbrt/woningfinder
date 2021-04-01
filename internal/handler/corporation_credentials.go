@@ -65,7 +65,14 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 
 	var credentials []response
 	for _, corporation := range corporations {
-		credentials = append(credentials, response{CorporationName: corporation.Name})
+		isKnown := false
+		if creds, err := h.userService.GetCorporationCredentials(user.ID, corporation); err == nil {
+			if creds.Login != "" {
+				isKnown = true
+			}
+		}
+
+		credentials = append(credentials, response{CorporationName: corporation.Name, IsKnown: isKnown})
 	}
 
 	json.NewEncoder(w).Encode(credentials)
@@ -100,7 +107,7 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 		Login:           credentials.Login,
 		Password:        credentials.Password,
 	}
-	if err := h.userService.CreateCorporationCredentials(user, corporationCredentials); err != nil {
+	if err := h.userService.CreateCorporationCredentials(user.ID, corporationCredentials); err != nil {
 		render.Render(w, r, handlerEntity.ServerErrorRenderer(err))
 		return
 	}
