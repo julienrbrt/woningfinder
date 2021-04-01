@@ -51,7 +51,8 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	messageTpl := `Hi,
+	messageTpl := `
+	Hi,
 
 	You have a new message from the WoningFinder contact form.
 	
@@ -63,7 +64,8 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	>
 	
 	Regards,
-	WoningFinder`
+	WoningFinder
+	`
 
 	// create body
 	tpl := template.Must(template.New("contact").Parse(messageTpl))
