@@ -43,5 +43,5 @@ type UserPlan struct {
 	UserID    uint      `pg:",pk" json:"user_id"`
 	CreatedAt time.Time `pg:"default:now()" json:"created_at"`
 	DeletedAt time.Time `pg:",soft_delete" json:"-"`
-	Name      Plan      `json:"plan"`
+	Name      Plan      `json:"name"`
 }
