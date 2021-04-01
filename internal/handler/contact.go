@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
 
 type contactFormRequest struct {
@@ -47,7 +47,7 @@ func (*contactFormRequest) Render(w http.ResponseWriter, r *http.Request) error 
 func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	message := &contactFormRequest{}
 	if err := render.Bind(r, message); err != nil {
-		render.Render(w, r, handlerEntity.ErrorRenderer(err))
+		render.Render(w, r, entity.ErrorRenderer(err))
 		return
 	}
 
@@ -72,13 +72,13 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	body := &bytes.Buffer{}
 	if err := tpl.Execute(body, message); err != nil {
 		fmt.Println(err)
-		render.Render(w, r, handlerEntity.ServerErrorRenderer(fmt.Errorf("failed creating message: please try again")))
+		render.Render(w, r, entity.ServerErrorRenderer(fmt.Errorf("failed creating message: please try again")))
 		return
 	}
 
 	// send mail
 	if err := h.emailClient.Send("WoningFinder Contact Submission", "", body.String(), "contact@woningfinder.nl"); err != nil {
-		render.Render(w, r, handlerEntity.ServerErrorRenderer(fmt.Errorf("failed sending message: please try again")))
+		render.Render(w, r, entity.ServerErrorRenderer(fmt.Errorf("failed sending message: please try again")))
 		return
 	}
 

@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
@@ -76,7 +76,7 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(handlerEntity.ServerErrorRenderer(expectedErr))
+	expected, err := json.Marshal(entity.ServerErrorRenderer(expectedErr))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }

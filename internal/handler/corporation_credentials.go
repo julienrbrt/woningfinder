@@ -9,7 +9,6 @@ import (
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 )
 
 // credentialsRequest defines an update and save the corporation credentials request
@@ -38,20 +37,20 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 	// extract jwt
 	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
-		render.Render(w, r, handlerEntity.ErrBadRequest)
+		render.Render(w, r, entity.ErrBadRequest)
 		return
 	}
 
 	// get user from jwt claims
 	user, err := auth.ExtractUserFromJWT(claims)
 	if err != nil {
-		render.Render(w, r, handlerEntity.ErrBadRequest)
+		render.Render(w, r, entity.ErrBadRequest)
 		return
 	}
 
 	corporations, err := h.userService.GetHousingPreferencesMatchingCorporation(user)
 	if err != nil {
-		render.Render(w, r, handlerEntity.ServerErrorRenderer(err))
+		render.Render(w, r, entity.ServerErrorRenderer(err))
 		return
 	}
 
@@ -83,20 +82,20 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 	// extract jwt
 	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
-		render.Render(w, r, handlerEntity.ErrBadRequest)
+		render.Render(w, r, entity.ErrBadRequest)
 		return
 	}
 
 	// get user from jwt claims
 	user, err := auth.ExtractUserFromJWT(claims)
 	if err != nil {
-		render.Render(w, r, handlerEntity.ErrBadRequest)
+		render.Render(w, r, entity.ErrBadRequest)
 		return
 	}
 
 	var credentials credentialsRequest
 	if err := render.Bind(r, &credentials); err != nil {
-		render.Render(w, r, handlerEntity.ErrBadRequest)
+		render.Render(w, r, entity.ErrBadRequest)
 		return
 	}
 
@@ -108,7 +107,7 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 		Password:        credentials.Password,
 	}
 	if err := h.userService.CreateCorporationCredentials(user.ID, corporationCredentials); err != nil {
-		render.Render(w, r, handlerEntity.ServerErrorRenderer(err))
+		render.Render(w, r, entity.ServerErrorRenderer(err))
 		return
 	}
 

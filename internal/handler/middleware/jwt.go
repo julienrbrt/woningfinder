@@ -6,7 +6,7 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 	"github.com/lestrrat-go/jwx/jwt"
-	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 )
 
 // JWTVerifierMiddleware verify if the JWT token is present in the request
@@ -22,12 +22,12 @@ func CreateJWTValidatorMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, _, err := jwtauth.FromContext(r.Context())
 		if err != nil {
-			render.Render(w, r, handlerEntity.ErrUnauthorized)
+			render.Render(w, r, entity.ErrUnauthorized)
 			return
 		}
 
 		if token == nil || jwt.Validate(token) != nil {
-			render.Render(w, r, handlerEntity.ErrUnauthorized)
+			render.Render(w, r, entity.ErrUnauthorized)
 			return
 		}
 

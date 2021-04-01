@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/httprate"
 	"github.com/go-chi/render"
-	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
+	"github.com/woningfinder/woningfinder/internal/domain/entity"
 	customMiddleware "github.com/woningfinder/woningfinder/internal/handler/middleware"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/internal/services/payment"
@@ -46,11 +46,11 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 	// register default routes
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		render.Render(w, r, handlerEntity.ErrNotFound)
+		render.Render(w, r, entity.ErrNotFound)
 	})
 	r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		render.Render(w, r, handlerEntity.ErrMethodNotAllowed)
+		render.Render(w, r, entity.ErrMethodNotAllowed)
 	})
 
 	// register routes

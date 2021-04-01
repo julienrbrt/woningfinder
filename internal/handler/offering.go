@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 )
 
 // GetOffering gets the offering of WoningFinder (plans, cities and housing type)
@@ -28,7 +27,7 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	// get cities
 	cities, err := h.corporationService.GetCities()
 	if err != nil {
-		render.Render(w, r, handlerEntity.ServerErrorRenderer(fmt.Errorf("error while getting offering")))
+		render.Render(w, r, entity.ServerErrorRenderer(fmt.Errorf("error while getting offering")))
 		return
 	}
 

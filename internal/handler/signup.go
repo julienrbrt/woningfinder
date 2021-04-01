@@ -5,19 +5,18 @@ import (
 
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 )
 
 // SignUp contains the handler for registering on WoningFinder
 func (h *handler) SignUp(w http.ResponseWriter, r *http.Request) {
 	user := &entity.User{}
 	if err := render.Bind(r, user); err != nil {
-		render.Render(w, r, handlerEntity.ErrorRenderer(err))
+		render.Render(w, r, entity.ErrorRenderer(err))
 		return
 	}
 
 	if err := h.userService.CreateUser(user); err != nil {
-		render.Render(w, r, handlerEntity.ServerErrorRenderer(err))
+		render.Render(w, r, entity.ServerErrorRenderer(err))
 		return
 	}
 

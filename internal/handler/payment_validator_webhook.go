@@ -11,7 +11,6 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/webhook"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	handlerEntity "github.com/woningfinder/woningfinder/internal/handler/entity"
 )
 
 const stripeHeader = "Stripe-Signature"
@@ -23,7 +22,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, MaxBodyBytes)
 	payload, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		render.Render(w, r, &handlerEntity.ErrorResponse{
+		render.Render(w, r, &entity.ErrorResponse{
 			Err:        err,
 			StatusCode: http.StatusServiceUnavailable,
 			StatusText: "Service Unavailable",
@@ -34,7 +33,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 	// parse event
 	event := stripe.Event{}
 	if err := json.Unmarshal(payload, &event); err != nil {
-		render.Render(w, r, handlerEntity.ErrorRenderer(fmt.Errorf("failed to parse webhook body json: %w", err)))
+		render.Render(w, r, entity.ErrorRenderer(fmt.Errorf("failed to parse webhook body json: %w", err)))
 		return
 	}
 
@@ -42,7 +41,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 	signatureHeader := r.Header.Get(stripeHeader)
 	event, err = webhook.ConstructEvent(payload, signatureHeader, h.paymentWebhookSigningKey)
 	if err != nil {
-		render.Render(w, r, handlerEntity.ErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
+		render.Render(w, r, entity.ErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
 		return
 	}
 
@@ -51,7 +50,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 		var paymentIntent stripe.PaymentIntent
 		err := json.Unmarshal(event.Data.Raw, &paymentIntent)
 		if err != nil {
-			render.Render(w, r, handlerEntity.ErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
+			render.Render(w, r, entity.ErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
 			return
 		}
 
@@ -64,7 +63,7 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 
 		// set payment as proceed
 		if err := h.paymentService.ProcessPayment(paymentIntent.ReceiptEmail, plan); err != nil {
-			render.Render(w, r, handlerEntity.ServerErrorRenderer(fmt.Errorf("error while processing payment: %w", err)))
+			render.Render(w, r, entity.ServerErrorRenderer(fmt.Errorf("error while processing payment: %w", err)))
 			return
 		}
 
