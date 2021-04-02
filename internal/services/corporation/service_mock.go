@@ -13,12 +13,18 @@ func NewServiceMock(err error) Service {
 }
 
 // ExpectedMockGetCities is returned when mocking GetCities from corporationService
-var ExpectedMockGetCities = []entity.City{{Name: "Enschede"}, {Name: "Hengelo"}}
+var ExpectedMockGetCities = []entity.City{
+	{Name: "Enschede", District: []entity.CityDistrict{
+		{CityName: "Enschede", Name: "Roombeek"},
+		{CityName: "Enschede", Name: "Centrum"},
+	}},
+	{Name: "Hengelo"},
+}
 
-func (s *serviceMock) GetCities() (*[]entity.City, error) {
+func (s *serviceMock) GetCities() ([]entity.City, error) {
 	if s.err != nil {
 		return nil, s.err
 	}
 
-	return &ExpectedMockGetCities, nil
+	return ExpectedMockGetCities, nil
 }

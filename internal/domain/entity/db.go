@@ -14,8 +14,8 @@ type HousingPreferencesHousingType struct {
 
 type HousingPreferencesCityDistrict struct {
 	HousingPreferencesID uint
-	Name                 string
 	CityName             string
+	Name                 string
 }
 
 type HousingPreferencesCity struct {

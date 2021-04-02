@@ -21,7 +21,7 @@ func (s *service) CreateOrUpdateCorporation(corp entity.Corporation) error {
 	}
 
 	// add cities and cities relation
-	if err := s.AddCities(corp.Cities, corp); err != nil {
+	if err := s.AAACities(corp.Cities, corp); err != nil {
 		return fmt.Errorf("failing adding cities to corporation: %w", err)
 	}
 

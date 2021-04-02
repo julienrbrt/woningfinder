@@ -8,6 +8,7 @@ WoningFinder is implementing these systems permitting to interact with the housi
 - Add new housing corporation in database (check documentation [here](https://github.com/WoningFinder/woningfinder/blob/main/docs/architecture.md))
   - Write database migration
   - Update client_provider with its client
+  - If a new city is supported add all city districts in the database for that city
 
 ## Update Housing Corporation
 

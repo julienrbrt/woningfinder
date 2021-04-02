@@ -7,16 +7,14 @@
   "plan": {
     "name": "basis"
   },
-  "housing_preferences": [
-    {
-      "type": ["appartement", "house", "invalid"],
-      "city": [
-        {
-          "name": "enschede"
-        }
-      ],
-      "maximum_price": 800,
-      "number_bedroom": 2
-    }
-  ]
+  "housing_preferences": {
+    "type": ["appartement", "house", "invalid"],
+    "city": [
+      {
+        "name": "enschede"
+      }
+    ],
+    "maximum_price": 800,
+    "number_bedroom": 2
+  }
 }

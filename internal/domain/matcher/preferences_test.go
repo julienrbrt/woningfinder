@@ -14,13 +14,23 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	testOffer := getOffer()
 
 	a.True(matcher.MatchPreferences(testUser, testOffer))
-	testUser.HousingPreferences[0].City = []entity.City{enschede, hengelo}
+	testUser.HousingPreferences.City = []entity.City{enschede, hengelo}
 	a.False(matcher.MatchPreferences(testUser, testOffer))
 	testOffer.Housing.City = hengelo
 	a.True(matcher.MatchPreferences(testUser, testOffer))
 	testOffer.Housing.City = enschede
-	enschede.District = []string{"roombeek", "boddenkamp", "lasonder-zeggelt"}
-	testUser.HousingPreferences[0].City[0] = enschede
+	enschede.District = []entity.CityDistrict{
+		{
+			Name: "roombeek",
+		},
+		{
+			Name: "boddenkamp",
+		},
+		{
+			Name: "lasonder-zeggelt",
+		},
+	}
+	testUser.HousingPreferences.City[0] = enschede
 	a.False(matcher.MatchPreferences(testUser, testOffer))
 	testOffer.Housing.CityDistrict = "Enschede - Roombeek"
 	a.True(matcher.MatchPreferences(testUser, testOffer))
@@ -36,7 +46,7 @@ func Test_MatchPreferences_HousingType(t *testing.T) {
 	a.True(matcher.MatchPreferences(testUser, testOffer))
 	testOffer.Housing.Type = entity.HousingTypeUndefined
 	a.False(matcher.MatchPreferences(testUser, testOffer))
-	testUser.HousingPreferences[0].Type = nil
+	testUser.HousingPreferences.Type = nil
 	a.True(matcher.MatchPreferences(testUser, testOffer))
 }
 
@@ -57,10 +67,10 @@ func Test_MatchPreferences_HousingAllowance(t *testing.T) {
 
 	a.True(matcher.MatchPreferences(testUser, testOffer))
 	testOffer.Housing.Price = 1000
-	testUser.HousingPreferences[0].MaximumPrice = 1000
-	testUser.HousingPreferences[0].HasHousingAllowance = false
+	testUser.HousingPreferences.MaximumPrice = 1000
+	testUser.HousingPreferences.HasHousingAllowance = false
 	a.True(matcher.MatchPreferences(testUser, testOffer))
-	testUser.HousingPreferences[0].HasHousingAllowance = true
+	testUser.HousingPreferences.HasHousingAllowance = true
 	a.False(matcher.MatchPreferences(testUser, testOffer))
 }
 
@@ -71,8 +81,8 @@ func Test_MatchPreferences_Criteria(t *testing.T) {
 
 	a.True(matcher.MatchPreferences(testUser, testOffer))
 	testOffer.Housing.Garden = true
-	testUser.HousingPreferences[0].HasGarden = false
+	testUser.HousingPreferences.HasGarden = false
 	a.True(matcher.MatchPreferences(testUser, testOffer))
-	testUser.HousingPreferences[0].NumberBedroom = 5
+	testUser.HousingPreferences.NumberBedroom = 5
 	a.False(matcher.MatchPreferences(testUser, testOffer))
 }

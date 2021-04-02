@@ -19,7 +19,7 @@ type mockCorporationService struct {
 	corporationService.Service
 }
 
-func (m *mockCorporationService) AddCities(cities []entity.City, corporation entity.Corporation) error {
+func (m *mockCorporationService) AAACities(cities []entity.City, corporation ...entity.Corporation) error {
 	return nil
 }
 

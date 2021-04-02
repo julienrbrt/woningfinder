@@ -19,7 +19,7 @@ type User struct {
 	// only used when the user is less than 23, housing allowance depends on age
 	HasChildrenSameHousing  bool                      `json:"has_children_same_housing"`
 	Plan                    UserPlan                  `pg:"rel:has-one,fk:id" json:"plan,omitempty"`
-	HousingPreferences      []HousingPreferences      `pg:"rel:has-many,join_fk:user_id" json:"housing_preferences,omitempty"`
+	HousingPreferences      HousingPreferences        `pg:"rel:has-one,fk:id" json:"housing_preferences,omitempty"`
 	HousingPreferencesMatch []HousingPreferencesMatch `pg:"rel:has-many,join_fk:user_id" json:"housing_prefereces_match,omitempty"`
 	CorporationCredentials  []CorporationCredentials  `pg:"rel:has-many,join_fk:user_id" json:"corporation_credentials,omitempty"`
 }
@@ -38,19 +38,12 @@ func (u *User) HasMinimal() error {
 		return fmt.Errorf("user yearly income invalid")
 	}
 
-	if len(u.HousingPreferences) == 0 {
-		return fmt.Errorf("user must have a housing preferences")
+	if u.Plan.Name.Price() == 0 {
+		return fmt.Errorf("error plan %s does not exist", u.Plan.Name)
 	}
 
-	// verify housing preferences
-	if len(u.HousingPreferences) > u.Plan.Name.MaxHousingPreferences() {
-		return fmt.Errorf("error cannot create more than %d housing preferences in plan %s: got %d", u.Plan.Name.MaxHousingPreferences(), u.Plan.Name, len(u.HousingPreferences))
-	}
-
-	for _, housingPreferences := range u.HousingPreferences {
-		if err := housingPreferences.HasMinimal(); err != nil {
-			return fmt.Errorf("user housing preferences invalid: %w", err)
-		}
+	if err := u.HousingPreferences.HasMinimal(); err != nil {
+		return fmt.Errorf("user housing preferences invalid: %w", err)
 	}
 
 	return nil

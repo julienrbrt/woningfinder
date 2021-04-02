@@ -10,6 +10,7 @@ func init() {
 	// models
 	models := []interface{}{
 		(*entity.City)(nil),
+		(*entity.CityDistrict)(nil),
 		(*entity.User)(nil),
 		(*entity.UserPlan)(nil),
 		(*entity.Corporation)(nil),

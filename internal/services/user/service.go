@@ -20,12 +20,10 @@ type Service interface {
 	SetPaid(userID uint, plan entity.Plan) error
 
 	// Housing Preferences
-	CreateHousingPreferences(u *entity.User, preferences []entity.HousingPreferences) error
-	GetHousingPreferences(u *entity.User) ([]entity.HousingPreferences, error)
-	DeleteHousingPreferences(u *entity.User) error
-	GetHousingPreferencesMatchingCorporation(u *entity.User) ([]entity.Corporation, error)
-
+	CreateHousingPreferences(u *entity.User, preferences entity.HousingPreferences) error
+	GetHousingPreferences(u *entity.User) (entity.HousingPreferences, error)
 	CreateHousingPreferencesMatch(u *entity.User, offer entity.Offer, corporationName string) error
+	GetHousingPreferencesMatchingCorporation(u *entity.User) ([]entity.Corporation, error)
 
 	// Corporation Credentials
 	CreateCorporationCredentials(userID uint, credentials entity.CorporationCredentials) error

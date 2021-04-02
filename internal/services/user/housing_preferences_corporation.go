@@ -36,16 +36,9 @@ func (s *service) GetHousingPreferencesMatchingCorporation(u *entity.User) ([]en
 }
 
 // buildCityList extract the cities from the user housing preferences
-func buildCityList(housingPreferences []entity.HousingPreferences) string {
-	citiesMap := make(map[string]entity.City)
-	for _, pref := range housingPreferences {
-		for _, city := range pref.City {
-			citiesMap[city.Name] = city
-		}
-	}
-
+func buildCityList(housingPreferences entity.HousingPreferences) string {
 	var cities []string
-	for _, city := range citiesMap {
+	for _, city := range housingPreferences.City {
 		cities = append(cities, city.Name)
 	}
 

@@ -18,16 +18,15 @@ func getUser() *entity.User {
 		Plan: entity.UserPlan{
 			Name: entity.PlanBasis,
 		},
-		HousingPreferences: []entity.HousingPreferences{
-			{
-				Type: []entity.HousingType{
-					entity.HousingTypeHouse,
-					entity.HousingTypeAppartement,
-				},
-				MaximumPrice:  950,
-				NumberBedroom: 1,
-				HasElevator:   true,
+		HousingPreferences: entity.HousingPreferences{
+
+			Type: []entity.HousingType{
+				entity.HousingTypeHouse,
+				entity.HousingTypeAppartement,
 			},
+			MaximumPrice:  950,
+			NumberBedroom: 1,
+			HasElevator:   true,
 		},
 	}
 }

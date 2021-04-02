@@ -17,9 +17,9 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type response struct {
-		Plan                 []plan   `json:"plan"`
-		SupportedCities      []string `json:"supported_cities"`
-		SupportedHousingType []string `json:"supported_housing_type"`
+		Plan                 []plan        `json:"plan"`
+		SupportedCities      []entity.City `json:"supported_cities"`
+		SupportedHousingType []string      `json:"supported_housing_type"`
 	}
 
 	var offering response
@@ -30,10 +30,7 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, entity.ServerErrorRenderer(fmt.Errorf("error while getting offering")))
 		return
 	}
-
-	for _, c := range *cities {
-		offering.SupportedCities = append(offering.SupportedCities, c.Name)
-	}
+	offering.SupportedCities = cities
 
 	// add supported types
 	offering.SupportedHousingType = append(offering.SupportedHousingType, []string{string(entity.HousingTypeAppartement), string(entity.HousingTypeHouse)}...)

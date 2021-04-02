@@ -8,42 +8,38 @@ import (
 
 // MatchPreferences verifies that an offer match the user preferences
 func MatchPreferences(u *entity.User, offer entity.Offer) bool {
-	for _, pref := range u.HousingPreferences {
-		// match price
-		if offer.Housing.Price > pref.MaximumPrice {
-			continue
-		}
-
-		// match house type
-		if !matchHouseType(pref, offer.Housing) {
-			continue
-		}
-
-		// match location
-		if !matchLocation(pref, offer.Housing) {
-			continue
-		}
-
-		// verify housing allowance
-		if pref.HasHousingAllowance && offer.Housing.Price > maximalehuurgrens {
-			continue
-		}
-
-		// match characteristics
-		if (pref.NumberBedroom > 0 && pref.NumberBedroom > offer.Housing.NumberBedroom) ||
-			(pref.HasBalcony && !offer.Housing.Balcony) ||
-			(pref.HasGarden && !offer.Housing.Garden) ||
-			(pref.HasElevator && !offer.Housing.Elevator) ||
-			(pref.IsAccessible && !offer.Housing.Accessible) ||
-			(pref.HasGarage && !offer.Housing.Garage) ||
-			(pref.HasAttic && !offer.Housing.Attic) {
-			continue
-		}
-
-		return true
+	// match price
+	if offer.Housing.Price > u.HousingPreferences.MaximumPrice {
+		return false
 	}
 
-	return false
+	// match house type
+	if !matchHouseType(u.HousingPreferences, offer.Housing) {
+		return false
+	}
+
+	// match location
+	if !matchLocation(u.HousingPreferences, offer.Housing) {
+		return false
+	}
+
+	// verify housing allowance
+	if u.HousingPreferences.HasHousingAllowance && offer.Housing.Price > maximalehuurgrens {
+		return false
+	}
+
+	// match characteristics
+	if (u.HousingPreferences.NumberBedroom > 0 && u.HousingPreferences.NumberBedroom > offer.Housing.NumberBedroom) ||
+		(u.HousingPreferences.HasBalcony && !offer.Housing.Balcony) ||
+		(u.HousingPreferences.HasGarden && !offer.Housing.Garden) ||
+		(u.HousingPreferences.HasElevator && !offer.Housing.Elevator) ||
+		(u.HousingPreferences.IsAccessible && !offer.Housing.Accessible) ||
+		(u.HousingPreferences.HasGarage && !offer.Housing.Garage) ||
+		(u.HousingPreferences.HasAttic && !offer.Housing.Attic) {
+		return false
+	}
+
+	return true
 }
 
 func matchHouseType(housingPreference entity.HousingPreferences, housing entity.Housing) bool {
@@ -75,7 +71,7 @@ func matchLocation(housingPreference entity.HousingPreferences, housing entity.H
 				}
 
 				for _, district := range cityPreferences.District {
-					if strings.Contains(strings.ToLower(housing.CityDistrict), strings.ToLower(district)) {
+					if strings.Contains(strings.ToLower(housing.CityDistrict), strings.ToLower(district.Name)) {
 						return true
 					}
 				}

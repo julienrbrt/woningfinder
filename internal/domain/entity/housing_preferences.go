@@ -10,7 +10,6 @@ import (
 type HousingPreferences struct {
 	ID                  uint          `pg:",pk" json:"id"`
 	CreatedAt           time.Time     `pg:"default:now()" json:"created_at"`
-	DeletedAt           time.Time     `pg:",soft_delete" json:"-"`
 	UserID              uint          `json:"user_id"`
 	Type                []HousingType `pg:"-" json:"type"` // linked to HousingPreferencesHousingType
 	MaximumPrice        float64       `json:"maximum_price"`
