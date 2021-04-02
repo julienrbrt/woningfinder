@@ -26,7 +26,6 @@ var dewoonplaatsInfo = entity.Corporation{
 	Cities: []entity.City{
 		{Name: "Enschede"},
 		{Name: "Zwolle"},
-		{Name: "Aatlen"},
 		{Name: "Dinxperlo"},
 		{Name: "Winterswijk"},
 		{Name: "Neede"},

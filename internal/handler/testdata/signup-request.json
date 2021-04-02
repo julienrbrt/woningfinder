@@ -11,7 +11,15 @@
     "type": ["appartement", "house"],
     "city": [
       {
-        "name": "enschede"
+        "name": "enschede",
+        "district": [
+          {
+            "name": "Cetrum"
+          },
+          {
+            "name": "Roombeek"
+          }
+        ]
       }
     ],
     "maximum_price": 800,

@@ -33,8 +33,8 @@ The mapping of the corporation and the client is made in the `client_provider`. 
 
 ## Supported Housing Corporation
 
-| Housing Corporation | Selection Method                | Running Cities                                                | Implemented |
-| ------------------- | ------------------------------- | ------------------------------------------------------------- | ----------- |
-| De Woonplaats       | Random, First-Come First-Served | Enschede, Aatlen, Winterswijk, Dinxperlo, Neede, Wehl, Zwolle | ✅          |
-| OnsHuis             | Random                          | Enschede, Hengelo                                             |             |
-| Domijn              | Random                          | Enschede, Haaksbergen, Losser, Overdinkel                     |             |
+| Housing Corporation | Selection Method                |
+| ------------------- | ------------------------------- |
+| De Woonplaats       | Random, First-Come First-Served |
+| OnsHuis             | Random                          |
+| Domijn              | Random                          |
