@@ -36,7 +36,7 @@ func (h *HousingPreferences) HasMinimal() error {
 		}
 	}
 
-	if h.MaximumPrice == 0 {
+	if h.MaximumPrice <= 0 {
 		return errors.New("error housing preferences invalid: maximum price must be greater than 0")
 	}
 

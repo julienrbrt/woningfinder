@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/TheZeroSlave/zapsentry v1.6.0
+	github.com/getsentry/sentry-go v0.10.0 // indirect
 	github.com/go-chi/chi v1.5.2
 	github.com/go-chi/httprate v0.4.0
 	github.com/go-chi/jwtauth v1.2.0
