@@ -58,9 +58,9 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 	// public routes
 	r.Group(func(r chi.Router) {
 		r.Get("/offering", handler.GetOffering)
-		r.Post("/signup", handler.SignUp)
-		r.Post("/stripe-webhook", handler.ProcessPayment)
 		r.Post("/contact", handler.ContactForm)
+		r.Post("/signup", handler.SignUp)
+		r.Post("/stripe-webhook", handler.PaymentValidator)
 	})
 
 	// protected routes

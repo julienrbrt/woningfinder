@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/render"
@@ -16,9 +17,12 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.userService.CreateUser(user); err != nil {
-		render.Render(w, r, entity.ServerErrorRenderer(err))
+		errorMsg := fmt.Errorf("error while creating user")
+		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
 		return
 	}
 
-	// returns 200 by default
+	// process payment
+	h.createCheckoutSession(user.Email, user.Plan.Name, w, r)
 }

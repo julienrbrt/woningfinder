@@ -71,14 +71,17 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	tpl := template.Must(template.New("contact").Parse(messageTpl))
 	body := &bytes.Buffer{}
 	if err := tpl.Execute(body, message); err != nil {
-		fmt.Println(err)
-		render.Render(w, r, entity.ServerErrorRenderer(fmt.Errorf("failed creating message: please try again")))
+		errorMsg := fmt.Errorf("failed creating message: please try again")
+		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
 		return
 	}
 
 	// send mail
 	if err := h.emailClient.Send("WoningFinder Contact Submission", "", body.String(), "contact@woningfinder.nl"); err != nil {
-		render.Render(w, r, entity.ServerErrorRenderer(fmt.Errorf("failed sending message: please try again")))
+		errorMsg := fmt.Errorf("failed sending message: please try again")
+		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
 		return
 	}
 

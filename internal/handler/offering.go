@@ -27,7 +27,9 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	// get cities
 	cities, err := h.corporationService.GetCities()
 	if err != nil {
-		render.Render(w, r, entity.ServerErrorRenderer(fmt.Errorf("error while getting offering")))
+		errorMsg := fmt.Errorf("error while getting offering")
+		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
 		return
 	}
 	offering.SupportedCities = cities

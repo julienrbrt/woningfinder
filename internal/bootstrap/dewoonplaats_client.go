@@ -6,17 +6,16 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/woningfinder/woningfinder/pkg/networking/retry"
-
-	"github.com/woningfinder/woningfinder/pkg/logging"
-
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/api/dewoonplaats"
 	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/domain/entity/city.go"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
+	"github.com/woningfinder/woningfinder/pkg/networking/retry"
 )
 
 var dewoonplaatsInfo = entity.Corporation{
@@ -24,7 +23,7 @@ var dewoonplaatsInfo = entity.Corporation{
 	Name:        "De Woonplaats",
 	URL:         "https://dewoonplaats.nl",
 	Cities: []entity.City{
-		{Name: "Enschede"},
+		city.Enschede,
 		{Name: "Zwolle"},
 		{Name: "Dinxperlo"},
 		{Name: "Winterswijk"},

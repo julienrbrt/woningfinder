@@ -10,6 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/domain/entity/city.go"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/internal/services/matcher"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -28,8 +29,8 @@ var corporationInfo = entity.Corporation{
 	Name:        "OnsHuis",
 	URL:         "https://example.com",
 	Cities: []entity.City{
-		{Name: "Enschede"},
-		{Name: "Hengelo"},
+		city.Enschede,
+		city.Hengelo,
 	},
 	SelectionMethod: []entity.SelectionMethod{
 		entity.SelectionRandom,

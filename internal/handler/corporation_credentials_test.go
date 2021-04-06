@@ -50,10 +50,9 @@ func Test_GetCorporationCredentials_ErrUnauthorized(t *testing.T) {
 func Test_GetCorporationCredentials_ErrUserService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
-	expectedErr := errors.New("foo")
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(expectedErr)
+	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	paymentServiceMock := paymentService.NewServiceMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
@@ -72,7 +71,7 @@ func Test_GetCorporationCredentials_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(entity.ServerErrorRenderer(expectedErr))
+	expected, err := json.Marshal(entity.ServerErrorRenderer(errors.New("failed getting housing corporation relevant for you")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
@@ -164,10 +163,9 @@ func Test_UpdateCorporationCredentials_ErrEmptyRequest(t *testing.T) {
 func Test_UpdateCorporationCredentials_ErrUserService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
-	expectedErr := errors.New("foo")
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(expectedErr)
+	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	paymentServiceMock := paymentService.NewServiceMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
@@ -190,7 +188,7 @@ func Test_UpdateCorporationCredentials_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(entity.ServerErrorRenderer(expectedErr))
+	expected, err := json.Marshal(entity.ServerErrorRenderer(errors.New("failed creating corporation credentials")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }

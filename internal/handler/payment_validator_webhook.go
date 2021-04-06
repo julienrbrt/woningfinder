@@ -15,8 +15,8 @@ import (
 
 const stripeHeader = "Stripe-Signature"
 
-// ProcessPayment is called via the Stripe webhook and confirm that a user has paid
-func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
+// PaymentValidator is called via the Stripe webhook and confirm that a user has paid
+func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
 	// get request
 	const MaxBodyBytes = int64(65536)
 	r.Body = http.MaxBytesReader(w, r.Body, MaxBodyBytes)
@@ -63,7 +63,9 @@ func (h *handler) ProcessPayment(w http.ResponseWriter, r *http.Request) {
 
 		// set payment as proceed
 		if err := h.paymentService.ProcessPayment(paymentIntent.ReceiptEmail, plan); err != nil {
-			render.Render(w, r, entity.ServerErrorRenderer(fmt.Errorf("error while processing payment: %w", err)))
+			errorMsg := fmt.Errorf("error while processing payment")
+			h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+			render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
 			return
 		}
 

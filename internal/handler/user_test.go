@@ -48,10 +48,9 @@ func Test_GetUser_ErrUnauthorized(t *testing.T) {
 func Test_GetUser_ErrUserService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
-	expectedErr := errors.New("foo")
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(expectedErr)
+	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	paymentServiceMock := paymentService.NewServiceMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
@@ -70,7 +69,7 @@ func Test_GetUser_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(entity.ServerErrorRenderer(expectedErr))
+	expected, err := json.Marshal(entity.ServerErrorRenderer(errors.New("failed get user information")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }

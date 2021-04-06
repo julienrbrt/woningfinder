@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/jwtauth"
@@ -50,7 +51,9 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 
 	corporations, err := h.userService.GetHousingPreferencesMatchingCorporation(user)
 	if err != nil {
-		render.Render(w, r, entity.ServerErrorRenderer(err))
+		errorMsg := fmt.Errorf("failed getting housing corporation relevant for you")
+		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
 		return
 	}
 
@@ -107,7 +110,9 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 		Password:        credentials.Password,
 	}
 	if err := h.userService.CreateCorporationCredentials(user.ID, corporationCredentials); err != nil {
-		render.Render(w, r, entity.ServerErrorRenderer(err))
+		errorMsg := fmt.Errorf("failed creating corporation credentials")
+		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
 		return
 	}
 

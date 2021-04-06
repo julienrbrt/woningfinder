@@ -6,6 +6,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris"
 	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/domain/entity/city.go"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
@@ -15,8 +16,8 @@ var onshuisInfo = entity.Corporation{
 	Name:        "OnsHuis",
 	URL:         "https://mijn.onshuis.com",
 	Cities: []entity.City{
-		{Name: "Enschede"},
-		{Name: "Hengelo"},
+		city.Enschede,
+		city.Hengelo,
 	},
 	SelectionMethod: []entity.SelectionMethod{
 		entity.SelectionRandom,

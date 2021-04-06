@@ -19,10 +19,12 @@ func getUser() *entity.User {
 			Name: entity.PlanBasis,
 		},
 		HousingPreferences: entity.HousingPreferences{
-
 			Type: []entity.HousingType{
 				entity.HousingTypeHouse,
 				entity.HousingTypeAppartement,
+			},
+			City: []entity.City{
+				{Name: "Enschede"},
 			},
 			MaximumPrice:  950,
 			NumberBedroom: 1,
@@ -38,7 +40,9 @@ func getOffer() entity.Offer {
 			Type:          entity.HousingTypeHouse,
 			Latitude:      52.133,
 			Longitude:     6.61433,
-			Address:       "Beatrixstraat 1 R 7161 DJ Neede A",
+			City:          entity.City{Name: "Enschede"},
+			CityDistrict:  "deppenbroek",
+			Address:       "Beatrixstraat 1 R 7142BM Enschede",
 			EnergieLabel:  "A",
 			Price:         656.39,
 			Size:          80,
@@ -54,8 +58,6 @@ func getOffer() entity.Offer {
 		},
 	}
 }
-
-var enschede, hengelo = entity.City{Name: "Enschede"}, entity.City{Name: "Hengelo"}
 
 func Test_MatchCriteria_Age(t *testing.T) {
 	a := assert.New(t)

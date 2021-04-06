@@ -12,30 +12,34 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	testOffer := getOffer()
+	a.True(matcher.MatchPreferences(testUser, testOffer))
 
-	a.True(matcher.MatchPreferences(testUser, testOffer))
-	testUser.HousingPreferences.City = []entity.City{enschede, hengelo}
+	// change city preferences
+	testUser.HousingPreferences.City = []entity.City{{Name: "Neede"}}
 	a.False(matcher.MatchPreferences(testUser, testOffer))
-	testOffer.Housing.City = hengelo
-	a.True(matcher.MatchPreferences(testUser, testOffer))
-	testOffer.Housing.City = enschede
-	enschede.District = []entity.CityDistrict{
+
+	// add district preferences
+	testUser.HousingPreferences.City = []entity.City{
 		{
-			Name: "roombeek",
-		},
-		{
-			Name: "boddenkamp",
-		},
-		{
-			Name: "lasonder-zeggelt",
+			Name: "Enschede",
+			District: []entity.CityDistrict{
+				{
+					Name: "roombeek",
+				},
+				{
+					Name: "boddenkamp",
+				},
+				{
+					Name: "lasonder-zeggelt",
+				},
+			},
 		},
 	}
-	testUser.HousingPreferences.City[0] = enschede
 	a.False(matcher.MatchPreferences(testUser, testOffer))
+
+	// add housing city district
 	testOffer.Housing.CityDistrict = "Enschede - Roombeek"
 	a.True(matcher.MatchPreferences(testUser, testOffer))
-	testOffer.Housing.CityDistrict = "deppenbroek"
-	a.False(matcher.MatchPreferences(testUser, testOffer))
 }
 
 func Test_MatchPreferences_HousingType(t *testing.T) {

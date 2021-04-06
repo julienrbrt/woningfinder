@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/jwtauth"
@@ -28,7 +29,9 @@ func (h *handler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.userService.GetUser(userFromJTW)
 	if err != nil {
-		render.Render(w, r, entity.ServerErrorRenderer(err))
+		errorMsg := fmt.Errorf("failed get user information")
+		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
 		return
 	}
 
