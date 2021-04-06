@@ -58,13 +58,11 @@ func (c *client) getCityDistrict(search string) (string, error) {
 		return "", err
 	}
 
-	if len(response.Features) == 0 {
-		return "", fmt.Errorf("error finding city district for %s: no match found", search)
-	}
-
-	for _, c := range response.Features[0].Context {
-		if strings.Contains(c.ID, "neighborhood") {
-			return strings.ToLower(c.Text), nil
+	for _, feature := range response.Features {
+		for _, c := range feature.Context {
+			if strings.Contains(c.ID, "neighborhood") {
+				return strings.ToLower(c.Text), nil
+			}
 		}
 	}
 

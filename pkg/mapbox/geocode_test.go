@@ -11,9 +11,9 @@ import (
 func Test_Mapbox_Geocoding_CityDistrictFromAdress(t *testing.T) {
 	a := assert.New(t)
 	mapboxClient := bootstrap.CreateMapboxClient()
-	districtFromAddress, err := mapboxClient.CityDistrictFromAddress("Zuid Esmarkerrondweg 19, Enschede")
+	districtFromAddress, err := mapboxClient.CityDistrictFromAddress("Oogstplein 26, 7545 HP Enschede")
 	a.NoError(err)
-	a.Equal("de leuriks", districtFromAddress)
+	a.Equal("stevenfenne", districtFromAddress)
 }
 
 func Test_Mapbox_Geocoding_CityDistrictFromCoords(t *testing.T) {

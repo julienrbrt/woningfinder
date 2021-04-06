@@ -27,10 +27,10 @@ func Test_MatchPreferences_Location(t *testing.T) {
 					Name: "roombeek",
 				},
 				{
-					Name: "boddenkamp",
+					Name: "city (oude markt)",
 				},
 				{
-					Name: "lasonder-zeggelt",
+					Name: "ribbelt - stokhorst",
 				},
 			},
 		},
@@ -38,7 +38,7 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	a.False(matcher.MatchPreferences(testUser, testOffer))
 
 	// add housing city district
-	testOffer.Housing.CityDistrict = "Enschede - Roombeek"
+	testOffer.Housing.CityDistrict = "city"
 	a.True(matcher.MatchPreferences(testUser, testOffer))
 }
 

@@ -71,7 +71,7 @@ func matchLocation(housingPreference entity.HousingPreferences, housing entity.H
 				}
 
 				for _, district := range cityPreferences.District {
-					if strings.Contains(strings.ToLower(housing.CityDistrict), strings.ToLower(district.Name)) {
+					if strings.Contains(strings.ToLower(district.Name), strings.ToLower(housing.CityDistrict)) {
 						return true
 					}
 				}

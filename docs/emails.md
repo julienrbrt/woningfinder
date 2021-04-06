@@ -42,7 +42,7 @@ Team WoningFinder
 
 Als de _Mijn woningcorporaties_ knop niet voor jou werkt, je kan de URL hieronder klikken of kopiëren.
 
-_https://woningfinder.com/woningcorporaties?jwt=_
+_https://woningfinder.nl/mijn-zoekopdracht?jwt=_
 ```
 
 **Weekly update**

@@ -42,8 +42,8 @@ func welcomeTpl(user *entity.User, jwtToken string) (html, plain string, err err
 					Instructions: "We raden je aan bij elke in te loggen zodat je sneller een huis kunt vinden.",
 					Button: hermes.Button{
 						Color: "#E46948",
-						Text:  "Mijn woningcorporaties",
-						Link:  fmt.Sprintf("https://woningfinder.com/woningcorporaties?jwt=%s", jwtToken),
+						Text:  "Mijn zoekopdracht",
+						Link:  fmt.Sprintf("https://woningfinder.nl/mijn-zoekopdracht?jwt=%s", jwtToken),
 					},
 				},
 			},

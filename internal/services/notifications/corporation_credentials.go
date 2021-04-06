@@ -40,8 +40,8 @@ func corporationCredentialsErrorTpl(user *entity.User, jwtToken, corporationName
 					Instructions: fmt.Sprintf("Als je nog steeds wilt dat we reageren op het %s aanbod log dan in om je inloggegevens voor deze woningcorporatie opnieuw in te stellen.", corporationName),
 					Button: hermes.Button{
 						Color: "#E46948",
-						Text:  "Mijn woningcorporaties",
-						Link:  fmt.Sprintf("https://woningfinder.com/woningcorporaties?jwt=%s", jwtToken),
+						Text:  "Mijn zoekopdracht",
+						Link:  fmt.Sprintf("https://woningfinder.nl/mijn-zoekopdracht?jwt=%s", jwtToken),
 					},
 				},
 			},

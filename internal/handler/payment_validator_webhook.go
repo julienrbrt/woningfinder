@@ -69,7 +69,7 @@ func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		h.logger.Sugar().Infof("🎉🎉🎉 New client %s paid %d€ 🎉🎉🎉", paymentIntent.ReceiptEmail, paymentIntent.Amount/100)
+		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s paid %d€ 🎉🎉🎉", paymentIntent.ReceiptEmail, paymentIntent.Amount/100)
 	}
 
 	// returns 200 by default
