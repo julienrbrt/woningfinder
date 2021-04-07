@@ -57,11 +57,10 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// TODO gets if the credentials are stored or not
-
 	// used to display which housing corporation are supported for the user housing preferences
 	type response struct {
 		CorporationName string `json:"corporation_name"`
+		CorporationURL  string `json:"corporation_url"`
 		IsKnown         bool   `json:"is_known"`
 	}
 
@@ -74,7 +73,11 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 			}
 		}
 
-		credentials = append(credentials, response{CorporationName: corporation.Name, IsKnown: isKnown})
+		credentials = append(credentials, response{
+			CorporationName: corporation.Name,
+			CorporationURL:  corporation.URL,
+			IsKnown:         isKnown,
+		})
 	}
 
 	json.NewEncoder(w).Encode(credentials)

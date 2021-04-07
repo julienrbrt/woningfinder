@@ -47,7 +47,7 @@ func (s *serviceMock) GetHousingPreferencesMatchingCorporation(_ *entity.User) (
 		return nil, s.err
 	}
 
-	return []entity.Corporation{{Name: "De Woonplaats"}}, nil
+	return []entity.Corporation{{Name: "De Woonplaats", URL: "https://dewoonplaats.nl"}}, nil
 }
 
 func (s *serviceMock) CreateCorporationCredentials(_ uint, _ entity.CorporationCredentials) error {
