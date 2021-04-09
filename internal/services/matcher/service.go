@@ -7,6 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
+	"github.com/woningfinder/woningfinder/internal/services/notifications"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
@@ -23,20 +24,22 @@ type Service interface {
 }
 
 type service struct {
-	logger             *logging.Logger
-	redisClient        database.RedisClient
-	userService        userService.Service
-	corporationService corporationService.Service
-	clientProvider     corporation.ClientProvider
+	logger               *logging.Logger
+	redisClient          database.RedisClient
+	userService          userService.Service
+	notificationsService notifications.Service
+	corporationService   corporationService.Service
+	clientProvider       corporation.ClientProvider
 }
 
 // NewService instantiate the matcher service
-func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, corporationService corporationService.Service, clientProvider corporation.ClientProvider) Service {
+func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, notificationsService notifications.Service, corporationService corporationService.Service, clientProvider corporation.ClientProvider) Service {
 	return &service{
-		logger:             logger,
-		redisClient:        redisClient,
-		userService:        userService,
-		corporationService: corporationService,
-		clientProvider:     clientProvider,
+		logger:               logger,
+		redisClient:          redisClient,
+		userService:          userService,
+		notificationsService: notificationsService,
+		corporationService:   corporationService,
+		clientProvider:       clientProvider,
 	}
 }

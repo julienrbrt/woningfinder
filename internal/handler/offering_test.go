@@ -30,7 +30,7 @@ func Test_GetOffering(t *testing.T) {
 
 	// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
 	// pass 'nil' as the third parameter.
-	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
+	req, err := http.NewRequest(http.MethodGet, "/offering", nil)
 	a.NoError(err)
 
 	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
@@ -61,7 +61,7 @@ func Test_GetOffering_ErrCorporationService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
+	req, err := http.NewRequest(http.MethodGet, "/offering", nil)
 	a.NoError(err)
 
 	// record response

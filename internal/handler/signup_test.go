@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stripe/stripe-go"
 	"github.com/woningfinder/woningfinder/internal/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
@@ -17,8 +18,6 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/email"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
-
-var endpoint = ""
 
 func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 	a := assert.New(t)
@@ -30,7 +29,7 @@ func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/signup", nil)
 	a.NoError(err)
 
 	// record response
@@ -60,7 +59,7 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/signup-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
@@ -93,7 +92,7 @@ func Test_SignUp_InvalidPlan(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/signup-invalid-plan-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
@@ -121,7 +120,7 @@ func Test_SignUp_InvalidHousingType(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/signup-invalid-housing-type-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
@@ -149,9 +148,13 @@ func Test_SignUp(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/signup-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
+
+	// init stripe library
+	// we do that because the signup handler directly talks to stripe
+	stripe.Key = stripeKeyTest
 
 	// record response
 	rr := httptest.NewRecorder()

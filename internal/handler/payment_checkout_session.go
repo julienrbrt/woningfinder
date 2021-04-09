@@ -39,6 +39,7 @@ func (h *handler) createCheckoutSession(email string, plan entity.Plan, w http.R
 		errorMsg := fmt.Errorf("error while creating stripe new checkout session")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
 		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		return
 	}
 
 	// return response

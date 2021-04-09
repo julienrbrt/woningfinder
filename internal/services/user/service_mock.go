@@ -54,6 +54,6 @@ func (s *serviceMock) CreateCorporationCredentials(_ uint, _ entity.CorporationC
 	return s.err
 }
 
-func (s *serviceMock) GetCorporationCredentials(userID uint, corporation entity.Corporation) (*entity.CorporationCredentials, error) {
+func (s *serviceMock) GetCorporationCredentials(userID uint, corporationName string) (*entity.CorporationCredentials, error) {
 	return &entity.CorporationCredentials{}, s.err
 }

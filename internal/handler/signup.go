@@ -23,6 +23,6 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// process payment
+	// process payment by creating a session id from Stripe
 	h.createCheckoutSession(user.Email, user.Plan.Name, w, r)
 }

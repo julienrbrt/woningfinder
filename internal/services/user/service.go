@@ -27,10 +27,9 @@ type Service interface {
 
 	// Corporation Credentials
 	CreateCorporationCredentials(userID uint, credentials entity.CorporationCredentials) error
-	GetCorporationCredentials(userID uint, corporation entity.Corporation) (*entity.CorporationCredentials, error)
-	GetAllCorporationCredentials(corporation entity.Corporation) ([]entity.CorporationCredentials, error)
-	DeleteCorporationCredentials(userID uint, corporation entity.Corporation) error
-	ValidateCredentials(credentials entity.CorporationCredentials) error
+	GetCorporationCredentials(userID uint, corporationName string) (*entity.CorporationCredentials, error)
+	GetAllCorporationCredentials(corporationName string) ([]entity.CorporationCredentials, error)
+	DeleteCorporationCredentials(userID uint, corporationName string) error
 	DecryptCredentials(credentials *entity.CorporationCredentials) (*entity.CorporationCredentials, error)
 }
 

@@ -13,6 +13,7 @@ type CorporationCredentials struct {
 	CorporationName string    `pg:",pk" json:"corporation_name"`
 	Login           string    `json:"login"`
 	Password        string    `json:"password"`
+	FailureCount    int       `json:"-"` // FailureCount measures the number of login failure
 }
 
 // Bind permits go-chi router to verify the user input and marshal it

@@ -28,7 +28,7 @@ func Test_GetUser_ErrUnauthorized(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/me", nil)
 	a.NoError(err)
 
 	// record response
@@ -55,7 +55,7 @@ func Test_GetUser_ErrUserService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/me", nil)
 	a.NoError(err)
 
 	// record response
@@ -84,7 +84,7 @@ func Test_GetUser(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/me", nil)
 	a.NoError(err)
 
 	// record response

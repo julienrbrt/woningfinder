@@ -45,7 +45,7 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 	var credentials []response
 	for _, corporation := range corporations {
 		var isKnown bool
-		if creds, err := h.userService.GetCorporationCredentials(user.ID, corporation); err == nil {
+		if creds, err := h.userService.GetCorporationCredentials(user.ID, corporation.Name); err == nil {
 			if creds.Login != "" {
 				isKnown = true
 			}
@@ -102,4 +102,5 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 // DeleteCorporationCredentials permits to delete a corporation credentials
 func (h *handler) DeleteCorporationCredentials(w http.ResponseWriter, r *http.Request) {
 	// TODO implement DeleteCorporationCredentials
+	panic("not implemented")
 }

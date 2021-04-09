@@ -43,7 +43,7 @@ func Test_PublishOffers_CorporationClientError(t *testing.T) {
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
+	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil, nil)
 
 	a.Error(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{}, err), corporationInfo))
 }
@@ -54,7 +54,7 @@ func Test_PublishOffers_RedisClientError(t *testing.T) {
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, err)
-	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
+	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil, nil)
 
 	a.Error(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{{}}, nil), corporationInfo))
 }
@@ -63,7 +63,7 @@ func Test_PublishOffers_Success_NoOffers(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
+	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil, nil)
 
 	a.Nil(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{}, nil), corporationInfo))
 }
@@ -72,7 +72,7 @@ func Test_PublishOffers_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcher.NewService(logger, redisMock, nil, &mockCorporationService{}, nil)
+	matcherService := matcher.NewService(logger, redisMock, nil, nil, &mockCorporationService{}, nil)
 
 	a.Nil(matcherService.PublishOffers(corporation.NewClientMock([]entity.Offer{{}}, nil), corporationInfo))
 }
@@ -82,7 +82,7 @@ func Test_SubscribeOffers_RedisClientError(t *testing.T) {
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, err)
-	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
+	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil, nil)
 
 	c := make(chan entity.OfferList)
 	a.Error(matcherService.SubscribeOffers(c))
@@ -95,7 +95,7 @@ func Test_SubscribeOffers_Success(t *testing.T) {
 	a.NoError(err)
 
 	redisMock := database.NewRedisClientMock("", []string{string(corpInfo)}, err)
-	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil)
+	matcherService := matcher.NewService(logger, redisMock, nil, nil, nil, nil)
 
 	c := make(chan entity.OfferList)
 	go func(c chan entity.OfferList) {

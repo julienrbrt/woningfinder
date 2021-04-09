@@ -30,7 +30,7 @@ func Test_GetCorporationCredentials_ErrUnauthorized(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
 	a.NoError(err)
 
 	// record response
@@ -57,7 +57,7 @@ func Test_GetCorporationCredentials_ErrUserService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
 	a.NoError(err)
 
 	// record response
@@ -86,7 +86,7 @@ func Test_GetCorporationCredentials(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
 	a.NoError(err)
 
 	// record response
@@ -116,7 +116,7 @@ func Test_UpdateCorporationCredentials_ErrUnauthorized(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
 	a.NoError(err)
 
 	// record response
@@ -143,7 +143,7 @@ func Test_UpdateCorporationCredentials_ErrEmptyRequest(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
 	a.NoError(err)
 
 	// record response
@@ -173,7 +173,7 @@ func Test_UpdateCorporationCredentials_ErrUserService(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/corporation-credentials-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
@@ -206,7 +206,7 @@ func Test_UpdateCorporationCredentials(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/corporation-credentials-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 

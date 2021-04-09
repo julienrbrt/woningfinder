@@ -29,7 +29,7 @@ func Test_ContactForm_ErrEmptyRequest(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, endpoint, nil)
+	req, err := http.NewRequest(http.MethodPost, "/contact", nil)
 	a.NoError(err)
 
 	// record response
@@ -59,7 +59,7 @@ func Test_ContactForm_Spam(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/contact-request-spam.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/contact", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
@@ -89,7 +89,7 @@ func Test_SignUp_ErrEmailClient(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/contact-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/contact", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
@@ -122,7 +122,7 @@ func Test_ContactForm_Success(t *testing.T) {
 	data, err := ioutil.ReadFile("testdata/contact-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, endpoint, strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/contact", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 

@@ -12,15 +12,15 @@ import (
 	"github.com/woningfinder/woningfinder/internal/services"
 )
 
-func (s *service) MatchOffer(ctx context.Context, offerList entity.OfferList) error {
+func (s *service) MatchOffer(ctx context.Context, offers entity.OfferList) error {
 	// create housing corporation client
-	client, err := s.clientProvider.GetByName(offerList.Corporation)
+	client, err := s.clientProvider.GetByName(offers.Corporation)
 	if err != nil {
 		return err
 	}
 
 	// find users corporation credentials for this offers
-	credentials, err := s.userService.GetAllCorporationCredentials(offerList.Corporation)
+	credentials, err := s.userService.GetAllCorporationCredentials(offers.Corporation.Name)
 	if err != nil {
 		// no users found, exit silently
 		if errors.Is(err, services.ErrNoMatchFound) {
@@ -56,11 +56,16 @@ func (s *service) MatchOffer(ctx context.Context, offerList entity.OfferList) er
 
 			// login to housing corporation
 			if err := client.Login(creds.Login, creds.Password); err != nil {
-				s.logger.Sugar().Errorf("failed to login to corporation %s for %s: %w", offerList.Corporation.Name, user.Email, err)
+				s.logger.Sugar().Errorf("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
+
+				if err = s.hasFailedLogin(user, creds); err != nil {
+					s.logger.Sugar().Warn(err)
+				}
+
 				return
 			}
 
-			for _, offer := range offerList.Offer {
+			for _, offer := range offers.Offer {
 				s.logger.Sugar().Debugf("checking match of %s for %s...", offer.Housing.Address, user.Email)
 
 				// check if we already check this offer
@@ -88,6 +93,30 @@ func (s *service) MatchOffer(ctx context.Context, offerList entity.OfferList) er
 				s.storeReaction(uuid)
 			}
 		}(user, cred)
+	}
+
+	return nil
+}
+
+// hasFailedLogin increased the failed login count of a corporation
+// after 3 failure the login credentials of that user are deleted and the user get notified
+func (s *service) hasFailedLogin(user *entity.User, credentials *entity.CorporationCredentials) error {
+	// update failure count
+	credentials.FailureCount += 1
+
+	if credentials.FailureCount > 3 {
+		if err := s.userService.DeleteCorporationCredentials(credentials.UserID, credentials.CorporationName); err != nil {
+			return fmt.Errorf("failed to delete %s corporation credentials of user %s: %w", user.Email, credentials.CorporationName, err)
+		}
+
+		if err := s.notificationsService.SendCorporationCredentialsError(user, credentials.CorporationName); err != nil {
+			return fmt.Errorf("failed notifying user %s about %s corporation credentials deletion: %w", user.Email, credentials.CorporationName, err)
+		}
+	}
+
+	// update failure count
+	if err := s.userService.CreateCorporationCredentials(credentials.UserID, *credentials); err != nil {
+		return fmt.Errorf("failed to updating %s corporation credentials login failure count of user %s: %w", user.Email, credentials.CorporationName, err)
 	}
 
 	return nil

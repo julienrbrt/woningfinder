@@ -40,8 +40,8 @@ func main() {
 	clientProvider := bootstrap.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
-	matcherService := matcherService.NewService(logger, redisClient, userService, corporationService, clientProvider)
 	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
+	matcherService := matcherService.NewService(logger, redisClient, userService, notificationsService, corporationService, clientProvider)
 
 	// set location to the netherlands
 	nl, err := time.LoadLocation("Europe/Amsterdam")

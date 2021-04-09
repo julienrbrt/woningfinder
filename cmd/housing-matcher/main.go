@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"github.com/joho/godotenv"
+	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/internal/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
+	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -25,13 +27,17 @@ func init() {
 
 func main() {
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
+	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
+	emailClient := bootstrap.CreateEmailClient()
+
 	clientProvider := bootstrap.CreateClientProvider(logger, nil) // mapboxClient not required in the matcher
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
-	matcherService := matcherService.NewService(logger, redisClient, userService, corporationService, clientProvider)
+	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
+	matcherService := matcherService.NewService(logger, redisClient, userService, notificationsService, corporationService, clientProvider)
 
 	// subscribe to offers queue inside a new go routine
 	ch := make(chan entity.OfferList)

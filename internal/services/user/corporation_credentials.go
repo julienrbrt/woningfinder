@@ -19,7 +19,7 @@ func (s *service) CreateCorporationCredentials(userID uint, credentials entity.C
 	}
 
 	// check credentials validity
-	if err := s.ValidateCredentials(credentials); err != nil {
+	if err := s.validateCredentials(credentials); err != nil {
 		return fmt.Errorf("error when validation corporation credentials: %w", err)
 	}
 
@@ -49,25 +49,25 @@ func (s *service) CreateCorporationCredentials(userID uint, credentials entity.C
 	return nil
 }
 
-func (s *service) GetCorporationCredentials(userID uint, corporation entity.Corporation) (*entity.CorporationCredentials, error) {
+func (s *service) GetCorporationCredentials(userID uint, corporationName string) (*entity.CorporationCredentials, error) {
 	credentials := entity.CorporationCredentials{
 		UserID:          userID,
-		CorporationName: corporation.Name,
+		CorporationName: corporationName,
 	}
 
 	// get corporation credentials
-	if err := s.dbClient.Conn().Model(&credentials).Where("user_id = ? and corporation_name ILIKE ?", credentials.UserID, credentials.CorporationName).Select(); err != nil {
+	if err := s.dbClient.Conn().Model(&credentials).Where("user_id = ? and corporation_name ILIKE ?", credentials.UserID, corporationName).Select(); err != nil {
 		return nil, fmt.Errorf("error when getting corporation credentials for userID %d: %w", userID, err)
 	}
 
 	return &credentials, nil
 }
 
-func (s *service) GetAllCorporationCredentials(corporation entity.Corporation) ([]entity.CorporationCredentials, error) {
+func (s *service) GetAllCorporationCredentials(corporationName string) ([]entity.CorporationCredentials, error) {
 	credentials := []entity.CorporationCredentials{}
 	if err := s.dbClient.Conn().
 		Model(&credentials).
-		Where("corporation_name ILIKE ?", corporation.Name).
+		Where("corporation_name ILIKE ?", corporationName).
 		Order("created_at ASC"). // people having registered their credentials for the longer get reaction priority (see documentation)
 		Select(); err != nil {
 		return nil, fmt.Errorf("error getting user credentials: %w", err)
@@ -81,28 +81,15 @@ func (s *service) GetAllCorporationCredentials(corporation entity.Corporation) (
 	return credentials, nil
 }
 
-func (s *service) DeleteCorporationCredentials(userID uint, corporation entity.Corporation) error {
-	credentials, err := s.GetCorporationCredentials(userID, corporation)
+func (s *service) DeleteCorporationCredentials(userID uint, corporationName string) error {
+	credentials, err := s.GetCorporationCredentials(userID, corporationName)
 	if err != nil {
 		return fmt.Errorf("error when getting corporation credentials: %w", err)
 	}
 
 	// delete permanently
-	credentials.Login = ""
-	credentials.Password = ""
-
-	// TODO to implement
-	// delete corporations credentials
-	panic("not implemented")
-}
-
-func (s *service) ValidateCredentials(credentials entity.CorporationCredentials) error {
-	client, err := s.clientProvider.GetByName(entity.Corporation{Name: credentials.CorporationName})
-	if err != nil {
-		return err
-	}
-	if err := client.Login(credentials.Login, credentials.Password); err != nil {
-		return fmt.Errorf("error when authenticating to %s with given credentials: %w", credentials.CorporationName, err)
+	if _, err := s.dbClient.Conn().Model(&credentials).Where("user_id = ? and corporation_name ILIKE ?", credentials.UserID, credentials.CorporationName).Delete(); err != nil {
+		return fmt.Errorf("error when getting corporation credentials for userID %d: %w", userID, err)
 	}
 
 	return nil
@@ -121,4 +108,16 @@ func (s *service) DecryptCredentials(credentials *entity.CorporationCredentials)
 	}
 
 	return credentials, nil
+}
+
+func (s *service) validateCredentials(credentials entity.CorporationCredentials) error {
+	client, err := s.clientProvider.GetByName(entity.Corporation{Name: credentials.CorporationName})
+	if err != nil {
+		return err
+	}
+	if err := client.Login(credentials.Login, credentials.Password); err != nil {
+		return fmt.Errorf("error when authenticating to %s with given credentials: %w", credentials.CorporationName, err)
+	}
+
+	return nil
 }
