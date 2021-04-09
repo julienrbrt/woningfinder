@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
@@ -92,7 +93,11 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 	if err := h.userService.CreateCorporationCredentials(user.ID, corporationCredentials); err != nil {
 		errorMsg := fmt.Errorf("failed creating corporation credentials")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		if strings.Contains(err.Error(), "error when validation corporation credentials") {
+			render.Render(w, r, entity.ErrUnauthorized)
+		} else {
+			render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		}
 		return
 	}
 
