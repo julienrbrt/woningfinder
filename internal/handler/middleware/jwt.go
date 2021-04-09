@@ -6,7 +6,7 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 	"github.com/lestrrat-go/jwx/jwt"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 // JWTVerifierMiddleware verify if the JWT token is present in the request

@@ -8,7 +8,7 @@ import (
 
 // User defines an user of WoningFinder
 type User struct {
-	ID           uint      `json:"id"`
+	ID           uint      `json:"-"`
 	CreatedAt    time.Time `pg:"default:now()" json:"created_at"`
 	DeletedAt    time.Time `json:"-"`
 	Name         string    `json:"name"`
@@ -20,7 +20,7 @@ type User struct {
 	HasChildrenSameHousing  bool                      `json:"has_children_same_housing"`
 	Plan                    UserPlan                  `pg:"rel:has-one,fk:id" json:"plan,omitempty"`
 	HousingPreferences      HousingPreferences        `pg:"rel:has-one,fk:id" json:"housing_preferences,omitempty"`
-	HousingPreferencesMatch []HousingPreferencesMatch `pg:"rel:has-many,join_fk:user_id" json:"housing_prefereces_match,omitempty"`
+	HousingPreferencesMatch []HousingPreferencesMatch `pg:"rel:has-many,join_fk:user_id" json:"housing_preferences_match,omitempty"`
 	CorporationCredentials  []CorporationCredentials  `pg:"rel:has-many,join_fk:user_id" json:"corporation_credentials,omitempty"`
 }
 

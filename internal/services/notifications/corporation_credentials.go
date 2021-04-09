@@ -5,7 +5,7 @@ import (
 
 	"github.com/matcornic/hermes/v2"
 	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
 )
 

@@ -7,7 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 func Test_CorporationScheduler_NoSelectionTime(t *testing.T) {

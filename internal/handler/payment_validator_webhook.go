@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/render"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/webhook"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 const stripeHeader = "Stripe-Signature"

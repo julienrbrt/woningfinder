@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 func (s *service) GetHousingPreferencesMatchingCorporation(u *entity.User) ([]entity.Corporation, error) {
@@ -28,8 +28,15 @@ func (s *service) GetHousingPreferencesMatchingCorporation(u *entity.User) ([]en
 	}
 
 	var corporations []entity.Corporation
-	for _, corporation := range corporationCities {
-		corporations = append(corporations, entity.Corporation{Name: corporation.CorporationName})
+	for _, c := range corporationCities {
+		// enriching corporation
+		corporation, err := s.corporationService.GetCorporation(c.CorporationName)
+		if err != nil {
+			return nil, fmt.Errorf("error failing enriching matching corporations: %w", err)
+
+		}
+
+		corporations = append(corporations, *corporation)
 	}
 
 	return corporations, nil

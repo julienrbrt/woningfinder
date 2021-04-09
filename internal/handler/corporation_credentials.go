@@ -2,36 +2,14 @@ package handler
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
-
-// credentialsRequest defines an update and save the corporation credentials request
-type credentialsRequest struct {
-	CorporationName string `json:"corporation_name"`
-	Login           string `json:"login"`
-	Password        string `json:"password"`
-}
-
-// Bind permits go-chi router to verify the user input and marshal it
-func (c *credentialsRequest) Bind(r *http.Request) error {
-	if c.CorporationName == "" || c.Login == "" || c.Password == "" {
-		return errors.New("credentials cannot be empty")
-	}
-
-	return nil
-}
-
-// Render permits go-chi router to render the user
-func (*credentialsRequest) Render(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}
 
 // GetCorporationCredentials gets a list of corporation credentials that match the user housing preferences
 func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +44,7 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 
 	var credentials []response
 	for _, corporation := range corporations {
-		isKnown := false
+		var isKnown bool
 		if creds, err := h.userService.GetCorporationCredentials(user.ID, corporation); err == nil {
 			if creds.Login != "" {
 				isKnown = true
@@ -99,7 +77,7 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	var credentials credentialsRequest
+	var credentials entity.CorporationCredentials
 	if err := render.Bind(r, &credentials); err != nil {
 		render.Render(w, r, entity.ErrBadRequest)
 		return
@@ -108,7 +86,6 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 	corporationCredentials := entity.CorporationCredentials{
 		UserID:          user.ID,
 		CorporationName: credentials.CorporationName,
-		Corporation:     entity.Corporation{Name: credentials.CorporationName},
 		Login:           credentials.Login,
 		Password:        credentials.Password,
 	}

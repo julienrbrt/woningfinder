@@ -5,7 +5,7 @@ import (
 
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 
 	"github.com/woningfinder/woningfinder/pkg/logging"
 

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/gocolly/colly/v2"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 const detailsHousingChildAttr = "li.link a"

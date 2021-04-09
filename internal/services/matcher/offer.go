@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 func (s *service) PublishOffers(client corporation.Client, corporation entity.Corporation) error {

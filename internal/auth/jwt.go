@@ -8,7 +8,7 @@ import (
 	"github.com/lestrrat-go/jwx/jwt"
 
 	"github.com/go-chi/jwtauth"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 const (

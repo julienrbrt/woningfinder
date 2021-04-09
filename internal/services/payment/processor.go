@@ -3,7 +3,7 @@ package payment
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 // ProcessPayment set that the user has paid

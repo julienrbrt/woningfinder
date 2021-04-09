@@ -2,7 +2,7 @@ package notifications
 
 import (
 	"github.com/go-chi/jwtauth"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 	"github.com/woningfinder/woningfinder/pkg/email"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )

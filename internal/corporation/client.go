@@ -3,7 +3,7 @@ package corporation
 import (
 	"errors"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 // ErrAuthFailed is retuned when the authentication to the housing coporation has failed

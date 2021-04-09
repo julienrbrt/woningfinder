@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 // AAACities stands for Add And Associate cities

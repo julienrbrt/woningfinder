@@ -7,14 +7,14 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	"github.com/woningfinder/woningfinder/internal/domain/matcher"
+	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/matcher"
 	"github.com/woningfinder/woningfinder/internal/services"
 )
 
 func (s *service) MatchOffer(ctx context.Context, offerList entity.OfferList) error {
 	// create housing corporation client
-	client, err := s.clientProvider.Get(offerList.Corporation)
+	client, err := s.clientProvider.GetByName(offerList.Corporation)
 	if err != nil {
 		return err
 	}

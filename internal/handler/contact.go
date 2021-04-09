@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 type contactFormRequest struct {
@@ -53,15 +53,11 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 
 	messageTpl := `
 	Hi,
-
-	You have a new message from the WoningFinder contact form.
+	You have a new message from the WoningFinder contact form:
 	
-	- {{ .Name }}
-	- {{ .Email }}
-	
-	>
-	> {{ .Message }}
-	>
+	- Name: {{ .Name }}
+	- Email: {{ .Email }}
+	- Message: {{ .Message }}
 	
 	Regards,
 	WoningFinder

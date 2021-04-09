@@ -8,9 +8,9 @@ import (
 
 // HousingPreferences defines the user preference on a housing
 type HousingPreferences struct {
-	ID                  uint          `pg:",pk" json:"id"`
+	ID                  uint          `pg:",pk" json:"-"`
 	CreatedAt           time.Time     `pg:"default:now()" json:"created_at"`
-	UserID              uint          `json:"user_id"`
+	UserID              uint          `json:"-"`
 	Type                []HousingType `pg:"-" json:"type"` // linked to HousingPreferencesHousingType
 	MaximumPrice        float64       `json:"maximum_price"`
 	City                []City        `pg:"-" json:"city,omitempty"` // linked to HousingPreferencesCity and HousingPreferencesCityDistrict
@@ -53,7 +53,7 @@ type HousingPreferencesMatch struct {
 	ID              uint      `pg:",pk" json:"id"`
 	CreatedAt       time.Time `pg:"default:now()" json:"created_at"`
 	DeletedAt       time.Time `pg:",soft_delete" json:"-"`
-	UserID          uint      `json:"user_id"`
+	UserID          uint      `json:"-"`
 	HousingAddress  string    `json:"housing_address"`
 	CorporationName string    `json:"corporation_name"`
 	OfferURL        string    `json:"offer_url"`

@@ -3,7 +3,7 @@ package corporation
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 // Provider provides a client to an housing corporation
@@ -15,7 +15,7 @@ type Provider struct {
 // ClientProvider permits to get the corporation's client
 type ClientProvider interface {
 	List() []entity.Corporation
-	Get(corporation entity.Corporation) (Client, error)
+	GetByName(corporation entity.Corporation) (Client, error)
 }
 
 type clientProvider struct {
@@ -40,7 +40,7 @@ func (c *clientProvider) List() []entity.Corporation {
 }
 
 // Get gives the client used to query a corporation
-func (c *clientProvider) Get(corporation entity.Corporation) (Client, error) {
+func (c *clientProvider) GetByName(corporation entity.Corporation) (Client, error) {
 	for _, c := range c.providers {
 		if c.Corporation.Name != corporation.Name {
 			continue

@@ -3,7 +3,7 @@ package matcher
 import (
 	"strings"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 // MatchPreferences verifies that an offer match the user preferences

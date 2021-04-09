@@ -3,7 +3,7 @@ package corporation
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 // TODO eventually use a prepare function to create it in one query only

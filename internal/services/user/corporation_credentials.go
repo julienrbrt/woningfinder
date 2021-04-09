@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/auth"
+	"github.com/woningfinder/woningfinder/internal/entity"
 	"github.com/woningfinder/woningfinder/internal/services"
-	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 func (s *service) CreateCorporationCredentials(userID uint, credentials entity.CorporationCredentials) error {
-	if credentials.Corporation.Name == "" {
+	if credentials.CorporationName == "" {
 		return errors.New("error when creating corporation credentials: corporation invalid")
 	}
 
@@ -25,18 +25,18 @@ func (s *service) CreateCorporationCredentials(userID uint, credentials entity.C
 
 	// encrypt credentials
 	var err error
-	credentials.Login, err = util.AESEncrypt(credentials.Login, s.aesSecret)
+	secretKey := auth.BuildAESKey(userID, credentials.CorporationName, s.aesSecret)
+	credentials.Login, err = auth.EncryptString(credentials.Login, secretKey)
 	if err != nil {
 		return fmt.Errorf("error when encrypting corporation credentials: %w", err)
 	}
 
-	credentials.Password, err = util.AESEncrypt(credentials.Password, s.aesSecret)
+	credentials.Password, err = auth.EncryptString(credentials.Password, secretKey)
 	if err != nil {
 		return fmt.Errorf("error when encrypting corporation credentials: %w", err)
 	}
 
 	// assign ids
-	credentials.CorporationName = credentials.Corporation.Name
 	credentials.UserID = userID
 
 	// check if already existing
@@ -59,9 +59,6 @@ func (s *service) GetCorporationCredentials(userID uint, corporation entity.Corp
 	if err := s.dbClient.Conn().Model(&credentials).Where("user_id = ? and corporation_name ILIKE ?", credentials.UserID, credentials.CorporationName).Select(); err != nil {
 		return nil, fmt.Errorf("error when getting corporation credentials for userID %d: %w", userID, err)
 	}
-
-	// reassign corporation
-	credentials.Corporation = corporation
 
 	return &credentials, nil
 }
@@ -100,12 +97,12 @@ func (s *service) DeleteCorporationCredentials(userID uint, corporation entity.C
 }
 
 func (s *service) ValidateCredentials(credentials entity.CorporationCredentials) error {
-	client, err := s.clientProvider.Get(credentials.Corporation)
+	client, err := s.clientProvider.GetByName(entity.Corporation{Name: credentials.CorporationName})
 	if err != nil {
 		return err
 	}
 	if err := client.Login(credentials.Login, credentials.Password); err != nil {
-		return fmt.Errorf("error when authenticating to %s with given credentials: %w", credentials.Corporation.Name, err)
+		return fmt.Errorf("error when authenticating to %s with given credentials: %w", credentials.CorporationName, err)
 	}
 
 	return nil
@@ -114,12 +111,12 @@ func (s *service) ValidateCredentials(credentials entity.CorporationCredentials)
 func (s *service) DecryptCredentials(credentials *entity.CorporationCredentials) (*entity.CorporationCredentials, error) {
 	// decrypt credentials
 	var err error
-
-	if credentials.Login, err = util.AESDecrypt(credentials.Login, s.aesSecret); err != nil {
+	secretKey := auth.BuildAESKey(credentials.UserID, credentials.CorporationName, s.aesSecret)
+	if credentials.Login, err = auth.DecryptString(credentials.Login, secretKey); err != nil {
 		return nil, fmt.Errorf("error when decrypting corporation credentials: %w", err)
 	}
 
-	if credentials.Password, err = util.AESDecrypt(credentials.Password, s.aesSecret); err != nil {
+	if credentials.Password, err = auth.DecryptString(credentials.Password, secretKey); err != nil {
 		return nil, fmt.Errorf("error when decrypting corporation credentials: %w", err)
 	}
 

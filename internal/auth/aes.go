@@ -1,29 +1,26 @@
-package util
+package auth
 
 import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"io"
 )
 
-// AESGenerateKey for AES-256
-func AESGenerateKey() string {
-	bytes := make([]byte, 32) // generate a random 32 byte key for AES-256
-	if _, err := rand.Read(bytes); err != nil {
-		panic(err.Error())
-	}
-
-	key := hex.EncodeToString(bytes) // encode key in bytes to string for saving
-	return key
+// BuildAESKey creates a secret key for encrypting the credentials dependent of the user idm the encrypted corporation name
+// and a aes secret key. This permits to use a different key per user and per corporation
+func BuildAESKey(userID uint, corporationName, aesSecret string) string {
+	hash := sha256.Sum256([]byte(fmt.Sprintf("%d:%s:%s", userID, corporationName, aesSecret)))
+	return hex.EncodeToString(hash[:])
 }
 
-// AESEncrypt a string given a key
-func AESEncrypt(stringToEncrypt string, keyString string) (encryptedString string, err error) {
+// EncryptString a string given a key
+func EncryptString(stringToEncrypt string, aesKey string) (encryptedString string, err error) {
 	// Since the key is in string, we need to convert decode it to bytes
-	key, _ := hex.DecodeString(keyString)
+	key, _ := hex.DecodeString(aesKey)
 	plaintext := []byte(stringToEncrypt)
 
 	// Create a new Cipher Block from the key
@@ -51,10 +48,10 @@ func AESEncrypt(stringToEncrypt string, keyString string) (encryptedString strin
 	return fmt.Sprintf("%x", ciphertext), nil
 }
 
-// AESDecrypt a string given a key
-func AESDecrypt(encryptedString string, keyString string) (decryptedString string, err error) {
+// DecryptString a string given a key
+func DecryptString(encryptedString string, aesKey string) (decryptedString string, err error) {
 
-	key, _ := hex.DecodeString(keyString)
+	key, _ := hex.DecodeString(aesKey)
 	enc, _ := hex.DecodeString(encryptedString)
 
 	//Create a new Cipher Block from the key

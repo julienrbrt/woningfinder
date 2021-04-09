@@ -5,8 +5,8 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	"github.com/woningfinder/woningfinder/internal/domain/entity/city.go"
+	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/entity/city.go"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )

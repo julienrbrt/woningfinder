@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/render"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/checkout/session"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 type createCheckoutSessionResponse struct {

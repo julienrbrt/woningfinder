@@ -1,6 +1,6 @@
 package city
 
-import "github.com/woningfinder/woningfinder/internal/domain/entity"
+import "github.com/woningfinder/woningfinder/internal/entity"
 
 var Zwolle = entity.City{
 	Name: "Zwolle",

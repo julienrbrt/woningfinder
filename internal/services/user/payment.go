@@ -3,7 +3,7 @@ package user
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
+	"github.com/woningfinder/woningfinder/internal/entity"
 )
 
 func (s *service) SetPaid(userID uint, plan entity.Plan) error {

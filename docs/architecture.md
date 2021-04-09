@@ -10,10 +10,11 @@ WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _
   - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue.
   - _WeeklyUpdate_ generates and send the customer weekly updates.
 
-There is as well small tools that are run for special reasons:
+There is as well small **tools** that are run for special reasons:
 
 - _[db-migrator](../cmd/tools/db-migrator)_ permits to initialize the database with default values (housing corporations, cities, housing types, selection methods...) and run the databases migrations. It is run as a job before every deploy.
 - _[customer-delete](../cmd/tools/customer-delete)_ permits to delete customers given their email.
+- _[impersonate](../cmd/tools/impersonate)_ permits to get a JWT token for an user in order to impersonate it.
 
 ## Landing Page
 

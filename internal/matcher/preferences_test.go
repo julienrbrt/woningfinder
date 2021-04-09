@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/domain/entity"
-	"github.com/woningfinder/woningfinder/internal/domain/matcher"
+	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/matcher"
 )
 
 func Test_MatchPreferences_Location(t *testing.T) {

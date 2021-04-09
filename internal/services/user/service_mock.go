@@ -1,6 +1,6 @@
 package user
 
-import "github.com/woningfinder/woningfinder/internal/domain/entity"
+import "github.com/woningfinder/woningfinder/internal/entity"
 
 type serviceMock struct {
 	Service

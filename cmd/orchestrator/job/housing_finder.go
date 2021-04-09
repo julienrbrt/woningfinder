@@ -15,7 +15,7 @@ func HousingFinder(logger *logging.Logger, c *cron.Cron, clientProvider corporat
 		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 
 		// get corporation client
-		client, err := clientProvider.Get(corp)
+		client, err := clientProvider.GetByName(corp)
 		if err != nil {
 			logger.Sugar().Error(err)
 			continue
