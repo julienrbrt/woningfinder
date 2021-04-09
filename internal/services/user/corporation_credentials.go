@@ -56,7 +56,7 @@ func (s *service) GetCorporationCredentials(userID uint, corporationName string)
 	}
 
 	// get corporation credentials
-	if err := s.dbClient.Conn().Model(&credentials).Where("user_id = ? and corporation_name ILIKE ?", credentials.UserID, corporationName).Select(); err != nil {
+	if err := s.dbClient.Conn().Model(&credentials).Where("user_id = ? and corporation_name = ?", credentials.UserID, corporationName).Select(); err != nil {
 		return nil, fmt.Errorf("error when getting corporation credentials for userID %d: %w", userID, err)
 	}
 
@@ -69,7 +69,7 @@ func (s *service) GetAllCorporationCredentials(corporationName string) ([]entity
 	credentials := []entity.CorporationCredentials{}
 	if err := s.dbClient.Conn().
 		Model(&credentials).
-		Where("corporation_name ILIKE ?", corporationName).
+		Where("corporation_name = ?", corporationName).
 		Order("created_at ASC"). // people having registered their credentials for the longer get reaction priority
 		Select(); err != nil {
 		return nil, fmt.Errorf("error getting user credentials: %w", err)
@@ -90,7 +90,7 @@ func (s *service) DeleteCorporationCredentials(userID uint, corporationName stri
 	}
 
 	// delete permanently
-	if _, err := s.dbClient.Conn().Model(&credentials).Where("user_id = ? and corporation_name ILIKE ?", credentials.UserID, credentials.CorporationName).Delete(); err != nil {
+	if _, err := s.dbClient.Conn().Model(&credentials).Where("user_id = ? and corporation_name = ?", credentials.UserID, credentials.CorporationName).Delete(); err != nil {
 		return fmt.Errorf("error when getting corporation credentials for userID %d: %w", userID, err)
 	}
 

@@ -32,7 +32,7 @@ func (s *service) GetCorporation(name string) (*entity.Corporation, error) {
 	db := s.dbClient.Conn()
 
 	var corp entity.Corporation
-	if err := db.Model(&corp).Where("name ILIKE ?", name).Select(); err != nil {
+	if err := db.Model(&corp).Where("name = ?", name).Select(); err != nil {
 		return nil, fmt.Errorf("failed getting corporation %s: %w", name, err)
 	}
 
