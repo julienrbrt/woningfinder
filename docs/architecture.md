@@ -28,7 +28,7 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 | Endpoint Name               | Method     | Description                                                                       |
 | --------------------------- | ---------- | --------------------------------------------------------------------------------- |
 | /offering                   | GET        | Gets all supported plans and type housing and cities                              |
-| /login                      | POST       | Sends a link to the user in order to log him. The link is valid 12h               |
+| /login                      | POST       | Sends a link to the user in order to log him. The link is valid 6h                |
 | /signup                     | POST       | Handles the registration flow                                                     |
 | /contact                    | POST       | Handles the contact form to send an email to _contact@woningfinder.nl_            |
 | /me                         | GET        | Get all the user information                                                      |
@@ -40,7 +40,7 @@ WoningFinder's API is available at https://woningfinder.nl/api.
 
 ### Authentication
 
-The authentication works with JWT. The token are generated in the sent mail and valid for 12h.
+The authentication works with JWT. The token are generated in the sent mail and valid for 6h.
 One can use the token as header (`Authorization`) and as query parameter (`jwt`).
 More information on how built the token in the [code](../internal/auth/jwt.go).
 

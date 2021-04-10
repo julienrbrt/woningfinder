@@ -32,7 +32,7 @@ func loginTpl(user *entity.User, jwtToken string) (html, plain string, err error
 		Body: hermes.Body{
 			Title: fmt.Sprintf("Hallo %s,", user.Name),
 			Intros: []string{
-				"Alstublieft jouw link om in te loggen. De link is 12 uur geldig.",
+				"Alstublieft jouw link om in te loggen. De link is 6 uur geldig.",
 				"Heb je dit niet gevraagd? Je kun deze e-mail weigeren, jouw account blijft veilig.",
 			},
 			Actions: []hermes.Action{

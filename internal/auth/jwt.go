@@ -21,10 +21,10 @@ func CreateJWTAuthenticationToken(secret string) *jwtauth.JWTAuth {
 	return jwtauth.New("HS256", []byte(secret), nil)
 }
 
-// CreateJWTUserToken builds an authentication token valid 12 hours for a given user
+// CreateJWTUserToken builds an authentication token valid 6h for a given user
 func CreateJWTUserToken(jwtAuth *jwtauth.JWTAuth, user *entity.User) (jwt.Token, string, error) {
 	claims := map[string]interface{}{userIDKey: user.ID, userEmailKey: user.Email}
-	jwtauth.SetExpiryIn(claims, time.Hour*12)
+	jwtauth.SetExpiryIn(claims, time.Hour*6)
 	jwtauth.SetIssuedNow(claims)
 	token, tokenString, err := jwtAuth.Encode(claims)
 	if err != nil {
