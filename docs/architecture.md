@@ -9,6 +9,7 @@ WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _
 - _[Orchestrator](../cmd/orchestrator)_, permits to orchestrate the different jobs that needs to be often ran by WoningFinder.
   - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue (triggering _HousingMatcher_).
   - _WeeklyUpdate_ generates and send the customer weekly updates.
+  - _CustomerAutoDelete_ deletes the customers that did not paid within 24 hours.
 
 There is as well small **tools** that are run for special reasons:
 

@@ -7,8 +7,8 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-// BatchWeeklyUpdate populates the weekly updates cron jobs (once a week)
-func BatchWeeklyUpdate(logger *logging.Logger, c *cron.Cron, userService userService.Service, notificationsService notificationsService.Service) {
+// SendWeeklyUpdate populates the weekly updates cron jobs (once a week)
+func SendWeeklyUpdate(logger *logging.Logger, c *cron.Cron, userService userService.Service, notificationsService notificationsService.Service) {
 	// emails update are send every fridays at 16:00
 	spec := "0 0 16 * * 5"
 

@@ -53,8 +53,9 @@ func main() {
 	c := cron.New(cron.WithLocation(nl), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
 
 	// populate crons
+	job.CustomerAutoDelete(logger, c, userService)
 	job.HousingFinder(logger, c, clientProvider, matcherService)
-	job.BatchWeeklyUpdate(logger, c, userService, notificationsService)
+	job.SendWeeklyUpdate(logger, c, userService, notificationsService)
 
 	// start cron scheduler
 	c.Run()
