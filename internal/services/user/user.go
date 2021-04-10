@@ -29,7 +29,7 @@ func (s *service) CreateUser(u *entity.User) error {
 	// create user housing preferences
 	if err := s.CreateHousingPreferences(u, u.HousingPreferences); err != nil {
 		// rollback
-		if _, err2 := db.Model(u).Where("email = ?", u.Email).Delete(); err2 != nil {
+		if _, err2 := db.Model(u).Where("email ILIKE ?", u.Email).Delete(); err2 != nil {
 			s.logger.Sugar().Errorf("error %w and error when rolling back user creation: %w", err, err2)
 		}
 

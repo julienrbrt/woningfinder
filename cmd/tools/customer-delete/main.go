@@ -2,19 +2,16 @@ package main
 
 import (
 	"os"
-	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/entity"
-
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/internal/services/user"
-
 	"github.com/woningfinder/woningfinder/pkg/logging"
-
-	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/woningfinder/woningfinder/pkg/util"
 
 	"github.com/joho/godotenv"
+	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/pkg/config"
 )
 
 // init is invoked before main()
@@ -35,8 +32,8 @@ func main() {
 		logger.Sugar().Fatal("customer-delete must have an user email as (only) argument\n")
 	}
 	email := os.Args[0]
-	if email == "" || !strings.Contains(email, "@") {
-		logger.Sugar().Fatal("incorrect argument for user to delete, have %s, expect a correct email", email)
+	if !util.IsEmailValid(email) {
+		logger.Sugar().Fatal("incorrect argument for user to delete, have %s, expect a valid email", email)
 	}
 
 	dbClient := bootstrap.CreateDBClient(logger)

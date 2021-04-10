@@ -31,7 +31,7 @@ We hebben voor jou alleen de woningcorporaties geselecteerd die met jouw zoekopd
 
 We raden je aan bij elke in te loggen zodat je sneller een huis kunt vinden.
 
-<Mijn woningcorporaties>
+<Mijn zoekopdracht>
 
 Dan kan je ontspannen, we reageren voor jou. Je hoeft verder niets meer te doen.
 
@@ -40,7 +40,7 @@ Hulp nodig of vragen? Antwoord deze e-mail, we helpen je graag.
 Groetjes,
 Team WoningFinder
 
-Als de _Mijn woningcorporaties_ knop niet voor jou werkt, je kan de URL hieronder klikken of kopiëren.
+Als de _Mijn zoekopdracht_ knop niet voor jou werkt, je kan de URL hieronder klikken of kopiëren.
 
 _https://woningfinder.nl/mijn-zoekopdracht?jwt=_
 ```
@@ -116,6 +116,22 @@ We hebben gezien dat je een huis hebt gevonden. Van harte gefeliciteerd!
 Omdat je ons niet meer nodig hebt, zijn al je gegevens van ons systeem verwijderd (we zijn pricacy-freaks, weet je nog).
 
 Bedankt voor je vertrouwen in ons en geniet van jouw nieuwe woning.
+
+Groetjes,
+Team WoningFinder
+```
+
+**Login**
+
+```
+## Jouw WoningFinder login link
+
+Hallo <naam>,
+
+Alstublieft jouw link om in te loggen. De link is 12 uur geldig.
+Heb je dit niet gevraagd? Je kun deze e-mail weigeren, jouw account blijft veilig.
+
+<Mijn zoekopdracht>
 
 Groetjes,
 Team WoningFinder

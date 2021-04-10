@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/woningfinder/woningfinder/internal/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
+	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/email"
@@ -25,8 +26,9 @@ func Test_ContactForm_ErrEmptyRequest(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/contact", nil)
@@ -52,8 +54,9 @@ func Test_ContactForm_Spam(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/contact-request-spam.json")
@@ -82,8 +85,9 @@ func Test_SignUp_ErrEmailClient(t *testing.T) {
 	logger := logging.NewZapLoggerWithoutSentry()
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{Err: errors.New("foo")}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{Err: errors.New("foo")}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/contact-request.json")
@@ -115,8 +119,9 @@ func Test_ContactForm_Success(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/contact-request.json")

@@ -38,7 +38,7 @@ func main() {
 	bootstrap.CreateSripeClient(logger) // init stripe library
 	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
 	paymentService := paymentService.NewService(logger, redisClient, userService, notificationsService)
-	router := handler.NewHandler(logger, corporationService, userService, paymentService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), jwtAuth, emailClient)
+	router := handler.NewHandler(logger, corporationService, userService, notificationsService, paymentService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), jwtAuth, emailClient)
 
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
 		logger.Sugar().Fatalf("failed to start server: %w", err)

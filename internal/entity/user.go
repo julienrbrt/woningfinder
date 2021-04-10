@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 // User defines an user of WoningFinder
@@ -26,8 +28,12 @@ type User struct {
 
 // HasMinimal ensure that the user contains the minimal required data
 func (u *User) HasMinimal() error {
-	if u.Name == "" || u.Email == "" {
-		return fmt.Errorf("user name or email missing")
+	if u.Name == "" {
+		return fmt.Errorf("user name missing")
+	}
+
+	if !util.IsEmailValid(u.Email) {
+		return fmt.Errorf("user email invalid")
 	}
 
 	if u.BirthYear < 1900 || u.BirthYear >= time.Now().Year() {

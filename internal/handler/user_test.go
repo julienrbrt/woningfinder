@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/woningfinder/woningfinder/internal/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
+	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/email"
@@ -24,8 +25,9 @@ func Test_GetUser_ErrUnauthorized(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me", nil)
@@ -51,8 +53,9 @@ func Test_GetUser_ErrUserService(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me", nil)
@@ -80,8 +83,9 @@ func Test_GetUser(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me", nil)

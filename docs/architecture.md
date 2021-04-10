@@ -1,13 +1,13 @@
 # Architecture
 
-This document defines the archtitecture of WoningFinder. Its data schema is found [here](db_schema.png).
+This document defines the archtitecture of WoningFinder. Its data schema can be found [here](db_schema.png).
 
 WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _HousingMatcher_ and a landing page.
 
-- _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for WoningFinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
-- _[HousingMatcher](../cmd/housing-matcher)_, is triggered by _HousingFinder_ via a queue (redis lists). It will match the new offers to the customer search option and react it.
+- _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for woningfinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
+- _[HousingMatcher](../cmd/housing-matcher)_, is triggered by _HousingFinder_ via a queue (redis list). It will match the new offers to the customer search option and react to it.
 - _[Orchestrator](../cmd/orchestrator)_, permits to orchestrate the different jobs that needs to be often ran by WoningFinder.
-  - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue.
+  - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue (triggering _HousingMatcher_).
   - _WeeklyUpdate_ generates and send the customer weekly updates.
 
 There is as well small **tools** that are run for special reasons:
@@ -28,8 +28,9 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 | Endpoint Name               | Method     | Description                                                                       |
 | --------------------------- | ---------- | --------------------------------------------------------------------------------- |
 | /offering                   | GET        | Gets all supported plans and type housing and cities                              |
+| /login                      | POST       | Sends a link to the user in order to log him. The link is valid 12h               |
 | /signup                     | POST       | Handles the registration flow                                                     |
-| /contact                    | POST       | Handles the contact form to send an email to contact@woningfinder.nl              |
+| /contact                    | POST       | Handles the contact form to send an email to _contact@woningfinder.nl_            |
 | /me                         | GET        | Get all the user information                                                      |
 | /me/housing-preferences     | PUT        | Updates the user housing preferences                                              |
 | /me/corporation-credentials | GET + POST | Manages the user the different housing credentials for the supported corporation. |
@@ -45,7 +46,8 @@ More information on how built the token in the [code](../internal/auth/jwt.go).
 
 ### Payment
 
-The payment is managed by Stripe. Stripe confirms that an user has paid via a webhook.
+The payment is managed by Stripe. We use Stripe Checkout Session in order to redirect the user after signup to a payment page.
+Stripe will then confirms that an user has paid via a webhook (_/stripe-webhook_).
 The information returned by Stripe must be the user email address and the payment amount.
 Our webhook then update the paying information (user and plan) to the concerned user.
 
@@ -70,7 +72,7 @@ This permits to do not have to re-check multiple times an offer as offers stay p
 
 People having registered their credentials for the longest get reaction priority, regardless of their plans (probably should be changed on day).
 
-### Security
+### Corporation Credentials
 
 For reacting to an offer, WoningFinder must authenticate itself as the customer. This means that WoningFinder stores the consumer credentials in the database (`CorporationCredentials`).
-Storing it plaintext is obviously not allowed. WoningFinder supports privacy and security of its customers. We use AES encryption to encrypt and store the user password in the datababse. The password is only decrypted to login to the housing corporation with a private key. No plaintext password is ever stored.
+WoningFinder supports privacy and security of its customers. We use AES encryption to encrypt and store the user password in the datababse. The password is only decrypted to login to the housing corporation with a private key. No plaintext password is ever stored.

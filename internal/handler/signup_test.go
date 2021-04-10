@@ -13,6 +13,7 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/woningfinder/woningfinder/internal/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
+	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/email"
@@ -25,8 +26,9 @@ func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/signup", nil)
@@ -52,8 +54,9 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/signup-request.json")
@@ -85,8 +88,9 @@ func Test_SignUp_InvalidPlan(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/signup-invalid-plan-request.json")
@@ -113,8 +117,9 @@ func Test_SignUp_InvalidHousingType(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/signup-invalid-housing-type-request.json")
@@ -141,8 +146,9 @@ func Test_SignUp(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/signup-request.json")
