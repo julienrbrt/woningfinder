@@ -71,6 +71,7 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 		r.Post("/contact", handler.ContactForm)
 		r.Post("/login", handler.Login)
 		r.Post("/signup", handler.SignUp)
+		r.Post("/payment", handler.PaymentProcessor)
 		r.Post("/stripe-webhook", handler.PaymentValidator)
 	})
 
