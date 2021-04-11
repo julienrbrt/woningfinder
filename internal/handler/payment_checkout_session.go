@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -9,7 +10,42 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/checkout/session"
 	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/pkg/util"
 )
+
+type paymentProcessorRequest struct {
+	Email string      `json:"email"`
+	Plan  entity.Plan `json:"plan"`
+}
+
+// Bind permits go-chi router to verify the user input and marshal it
+func (p *paymentProcessorRequest) Bind(r *http.Request) error {
+	if !util.IsEmailValid(p.Email) {
+		return errors.New("please give a valid email")
+	}
+
+	if p.Plan.Price() == 0 {
+		return fmt.Errorf("error plan %s does not exist", p.Plan)
+	}
+
+	return nil
+}
+
+// Render permits go-chi router to render the user
+func (*paymentProcessorRequest) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
+}
+
+func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
+	request := &paymentProcessorRequest{}
+	if err := render.Bind(r, request); err != nil {
+		render.Render(w, r, entity.ErrorRenderer(err))
+		return
+	}
+
+	// process payment by creating a session id from Stripe
+	h.createCheckoutSession(request.Email, request.Plan, w, r)
+}
 
 type createCheckoutSessionResponse struct {
 	SessionID string `json:"id"`
