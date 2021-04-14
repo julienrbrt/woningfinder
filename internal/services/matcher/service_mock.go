@@ -3,7 +3,7 @@ package matcher
 import (
 	"context"
 
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
 type serviceMock struct {
@@ -16,6 +16,6 @@ func NewServiceMock(err error) Service {
 	return &serviceMock{err: err}
 }
 
-func (s *serviceMock) MatchOffer(_ context.Context, _ entity.OfferList) error {
+func (s *serviceMock) MatchOffer(_ context.Context, _ corporation.Offers) error {
 	return nil
 }

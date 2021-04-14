@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
 // TODO eventually use a prepare function to create it in one query only
-func (s *service) CreateHousingPreferences(u *entity.User, housingPreferences entity.HousingPreferences) error {
+func (s *service) CreateHousingPreferences(u *customer.User, housingPreferences customer.HousingPreferences) error {
 	db := s.dbClient.Conn()
 
 	// verify housing preferences
@@ -34,7 +35,7 @@ func (s *service) CreateHousingPreferences(u *entity.User, housingPreferences en
 
 	// add housing type relations
 	for _, housingType := range housingPreferences.Type {
-		if _, err := db.Model(&entity.HousingPreferencesHousingType{HousingPreferencesID: housingPreferences.ID, HousingType: string(housingType)}).
+		if _, err := db.Model(&customer.HousingPreferencesHousingType{HousingPreferencesID: housingPreferences.ID, HousingType: string(housingType)}).
 			Where("housing_preferences_id = ? and housing_type = ?", housingPreferences.ID, string(housingType)).
 			SelectOrInsert(); err != nil {
 			return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
@@ -43,7 +44,7 @@ func (s *service) CreateHousingPreferences(u *entity.User, housingPreferences en
 
 	// add cities relation
 	for _, city := range housingPreferences.City {
-		if _, err := db.Model(&entity.HousingPreferencesCity{HousingPreferencesID: housingPreferences.ID, CityName: city.Name}).
+		if _, err := db.Model(&customer.HousingPreferencesCity{HousingPreferencesID: housingPreferences.ID, CityName: city.Name}).
 			Where("housing_preferences_id = ? and city_name = ?", housingPreferences.ID, city.Name).
 			SelectOrInsert(); err != nil {
 			return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
@@ -51,7 +52,7 @@ func (s *service) CreateHousingPreferences(u *entity.User, housingPreferences en
 
 		// add cities district
 		for _, district := range city.District {
-			if _, err := db.Model(&entity.HousingPreferencesCityDistrict{HousingPreferencesID: housingPreferences.ID, CityName: city.Name, Name: district.Name}).
+			if _, err := db.Model(&customer.HousingPreferencesCityDistrict{HousingPreferencesID: housingPreferences.ID, CityName: city.Name, Name: district.Name}).
 				Where("housing_preferences_id = ? and city_name = ? and name = ?", housingPreferences.ID, city.Name, district).
 				SelectOrInsert(); err != nil {
 				return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
@@ -62,9 +63,9 @@ func (s *service) CreateHousingPreferences(u *entity.User, housingPreferences en
 	return nil
 }
 
-func (s *service) GetHousingPreferences(user *entity.User) (entity.HousingPreferences, error) {
+func (s *service) GetHousingPreferences(user *customer.User) (customer.HousingPreferences, error) {
 	db := s.dbClient.Conn()
-	var housingPreferences entity.HousingPreferences
+	var housingPreferences customer.HousingPreferences
 
 	// get housing preferences
 	if err := db.Model(&housingPreferences).Where("user_id = ?", user.ID).Select(); err != nil {
@@ -74,44 +75,44 @@ func (s *service) GetHousingPreferences(user *entity.User) (entity.HousingPrefer
 	// enriching housing preferences
 
 	// add the housing types
-	var housingTypes []entity.HousingPreferencesHousingType
+	var housingTypes []customer.HousingPreferencesHousingType
 	if err := db.Model(&housingTypes).Where("housing_preferences_id = ?", housingPreferences.ID).Select(); err != nil {
 		return housingPreferences, fmt.Errorf("failed getting user %s housing preferences type: %w", user.Email, err)
 	}
 
 	for _, housingType := range housingTypes {
-		housingPreferences.Type = append(housingPreferences.Type, entity.HousingType(housingType.HousingType))
+		housingPreferences.Type = append(housingPreferences.Type, corporation.HousingType(housingType.HousingType))
 	}
 
 	// add its city districts
-	var cityDistricts []entity.HousingPreferencesCityDistrict
+	var cityDistricts []customer.HousingPreferencesCityDistrict
 	if err := db.Model(&cityDistricts).Where("housing_preferences_id = ?", housingPreferences.ID).Select(); err != nil {
 		return housingPreferences, fmt.Errorf("failed getting user %s housing preferences city districts: %w", user.Email, err)
 	}
 
 	// add its city
-	var cities []entity.HousingPreferencesCity
+	var cities []customer.HousingPreferencesCity
 	if err := db.Model(&cities).Where("housing_preferences_id = ?", housingPreferences.ID).Select(); err != nil {
 		return housingPreferences, fmt.Errorf("failed getting user %s housing preferences cities: %w", user.Email, err)
 	}
 
 	for _, city := range cities {
-		var districts []entity.CityDistrict
+		var districts []corporation.CityDistrict
 		for _, district := range cityDistricts {
 			if district.CityName == city.CityName {
-				districts = append(districts, entity.CityDistrict{CityName: district.CityName, Name: district.Name})
+				districts = append(districts, corporation.CityDistrict{CityName: district.CityName, Name: district.Name})
 			}
 		}
 
-		housingPreferences.City = append(housingPreferences.City, entity.City{Name: city.CityName, District: districts})
+		housingPreferences.City = append(housingPreferences.City, corporation.City{Name: city.CityName, District: districts})
 
 	}
 
 	return housingPreferences, nil
 }
 
-func (s *service) CreateHousingPreferencesMatch(user *entity.User, offer entity.Offer, corporationName string) error {
-	match := entity.HousingPreferencesMatch{
+func (s *service) CreateHousingPreferencesMatch(user *customer.User, offer corporation.Offer, corporationName string) error {
+	match := customer.HousingPreferencesMatch{
 		UserID:          user.ID,
 		HousingAddress:  offer.Housing.Address,
 		CorporationName: corporationName,

@@ -6,7 +6,9 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/customer"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
 
 // GetOffering gets the offering of WoningFinder (plans, cities and housing type)
@@ -17,9 +19,9 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type response struct {
-		Plan                 []plan        `json:"plan"`
-		SupportedCities      []entity.City `json:"supported_cities"`
-		SupportedHousingType []string      `json:"supported_housing_type"`
+		Plan                 []plan             `json:"plan"`
+		SupportedCities      []corporation.City `json:"supported_cities"`
+		SupportedHousingType []string           `json:"supported_housing_type"`
 	}
 
 	var offering response
@@ -29,17 +31,17 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorMsg := fmt.Errorf("error while getting offering")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
 	offering.SupportedCities = cities
 
 	// add supported types
-	offering.SupportedHousingType = append(offering.SupportedHousingType, []string{string(entity.HousingTypeAppartement), string(entity.HousingTypeHouse)}...)
+	offering.SupportedHousingType = append(offering.SupportedHousingType, []string{string(corporation.HousingTypeAppartement), string(corporation.HousingTypeHouse)}...)
 
 	// add supported plans
-	offering.Plan = append(offering.Plan, plan{Name: string(entity.PlanBasis), Price: entity.PlanBasis.Price()})
-	offering.Plan = append(offering.Plan, plan{Name: string(entity.PlanPro), Price: entity.PlanPro.Price()})
+	offering.Plan = append(offering.Plan, plan{Name: string(customer.PlanBasis), Price: customer.PlanBasis.Price()})
+	offering.Plan = append(offering.Plan, plan{Name: string(customer.PlanPro), Price: customer.PlanPro.Price()})
 
 	// return response
 	json.NewEncoder(w).Encode(offering)

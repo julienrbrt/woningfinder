@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
-func (s *service) GetHousingPreferencesMatchingCorporation(u *entity.User) ([]entity.Corporation, error) {
+func (s *service) GetHousingPreferencesMatchingCorporation(u *customer.User) ([]corporation.Corporation, error) {
 	db := s.dbClient.Conn()
 
 	housingPreferences, err := s.GetHousingPreferences(u)
@@ -16,12 +17,12 @@ func (s *service) GetHousingPreferencesMatchingCorporation(u *entity.User) ([]en
 	}
 
 	// get corporation relevant to user housing preferences
-	var corporationsMatch []entity.CorporationCity
+	var corporationsMatch []corporation.CorporationCity
 	if err := db.Model(&corporationsMatch).Where(fmt.Sprintf("city_name IN (%s)", buildCityList(housingPreferences))).DistinctOn("corporation_name").Select(); err != nil {
 		return nil, fmt.Errorf("error when getting matching corporations: %w", err)
 	}
 
-	var corporations []entity.Corporation
+	var corporations []corporation.Corporation
 	for _, c := range corporationsMatch {
 		// enriching corporation
 		corporation, err := s.corporationService.GetCorporation(c.CorporationName)
@@ -37,7 +38,7 @@ func (s *service) GetHousingPreferencesMatchingCorporation(u *entity.User) ([]en
 }
 
 // buildCityList extract the cities from the user housing preferences
-func buildCityList(housingPreferences entity.HousingPreferences) string {
+func buildCityList(housingPreferences customer.HousingPreferences) string {
 	var cities []string
 	for _, city := range housingPreferences.City {
 		cities = append(cities, fmt.Sprintf("'%s'", city.Name))

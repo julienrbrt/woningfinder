@@ -12,7 +12,8 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/stretchr/testify/assert"
 	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
@@ -74,7 +75,7 @@ func Test_GetCorporationCredentials_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(entity.ServerErrorRenderer(errors.New("failed getting housing corporation relevant for you")))
+	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("failed getting housing corporation relevant for you")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
@@ -195,7 +196,7 @@ func Test_UpdateCorporationCredentials_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(entity.ServerErrorRenderer(errors.New("failed creating corporation credentials")))
+	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("failed creating corporation credentials")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
@@ -235,7 +236,7 @@ func Test_UpdateCorporationCredentials(t *testing.T) {
 // authenticateRequest mock the login of an user
 func authenticateRequest(req *http.Request) *http.Request {
 	ctx := req.Context()
-	user := entity.User{ID: 3, Email: "foo@bar.com"}
+	user := customer.User{ID: 3, Email: "foo@bar.com"}
 	token, _, _ := auth.CreateJWTUserToken(auth.CreateJWTAuthenticationToken("foo"), &user)
 	ctx = jwtauth.NewContext(ctx, token, nil)
 

@@ -9,7 +9,8 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
 
 // GetCorporationCredentials gets a list of corporation credentials that match the user housing preferences
@@ -17,14 +18,14 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 	// extract jwt
 	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
-		render.Render(w, r, entity.ErrBadRequest)
+		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
 
 	// get user from jwt claims
 	user, err := auth.ExtractUserFromJWT(claims)
 	if err != nil {
-		render.Render(w, r, entity.ErrBadRequest)
+		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
 
@@ -32,7 +33,7 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		errorMsg := fmt.Errorf("failed getting housing corporation relevant for you")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
 
@@ -67,24 +68,24 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 	// extract jwt
 	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
-		render.Render(w, r, entity.ErrBadRequest)
+		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
 
 	// get user from jwt claims
 	user, err := auth.ExtractUserFromJWT(claims)
 	if err != nil {
-		render.Render(w, r, entity.ErrBadRequest)
+		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
 
-	var credentials entity.CorporationCredentials
+	var credentials customer.CorporationCredentials
 	if err := render.Bind(r, &credentials); err != nil {
-		render.Render(w, r, entity.ErrBadRequest)
+		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
 
-	corporationCredentials := entity.CorporationCredentials{
+	corporationCredentials := customer.CorporationCredentials{
 		UserID:          user.ID,
 		CorporationName: credentials.CorporationName,
 		Login:           credentials.Login,
@@ -94,9 +95,9 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 		errorMsg := fmt.Errorf("failed creating corporation credentials")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
 		if strings.Contains(err.Error(), "error when validation corporation credentials") {
-			render.Render(w, r, entity.ErrUnauthorized)
+			render.Render(w, r, handlerErrors.ErrUnauthorized)
 		} else {
-			render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		}
 		return
 	}

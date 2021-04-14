@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -42,7 +42,7 @@ func main() {
 	userService := user.NewService(logger, dbClient, nil, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
 	// get user
-	u, err := userService.GetUser(&entity.User{Email: email})
+	u, err := userService.GetUser(&customer.User{Email: email})
 	if err != nil {
 		logger.Sugar().Fatal(err)
 	}

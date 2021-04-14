@@ -6,7 +6,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
@@ -32,13 +33,13 @@ func (*loginRequest) Render(w http.ResponseWriter, r *http.Request) error {
 func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 	login := &loginRequest{}
 	if err := render.Bind(r, login); err != nil {
-		render.Render(w, r, entity.ErrorRenderer(err))
+		render.Render(w, r, handlerErrors.ErrorRenderer(err))
 		return
 	}
 
-	user, err := h.userService.GetUser(&entity.User{Email: login.Email})
+	user, err := h.userService.GetUser(&customer.User{Email: login.Email})
 	if err != nil {
-		render.Render(w, r, entity.ErrNotFound)
+		render.Render(w, r, handlerErrors.ErrNotFound)
 		return
 	}
 
@@ -46,7 +47,7 @@ func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 	if err := h.notificationsService.SendLogin(user); err != nil {
 		errorMsg := fmt.Errorf("error while sending login email")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 	}
 
 	// returns 200 by default

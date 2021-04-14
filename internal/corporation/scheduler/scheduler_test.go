@@ -4,17 +4,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
-
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 )
 
 func Test_CorporationScheduler_NoSelectionTime(t *testing.T) {
 	a := assert.New(t)
-	corporation := entity.Corporation{
-		SelectionMethod: []entity.SelectionMethod{
-			entity.SelectionFirstComeFirstServed,
+	corporation := corporation.Corporation{
+		SelectionMethod: []corporation.SelectionMethod{
+			corporation.SelectionFirstComeFirstServed,
 		},
 	}
 
@@ -29,10 +28,10 @@ func Test_CorporationScheduler_NoSelectionTime(t *testing.T) {
 
 func Test_CorporationScheduler_WithSelectionTime(t *testing.T) {
 	a := assert.New(t)
-	corporation := entity.Corporation{
+	corporation := corporation.Corporation{
 		SelectionTime: scheduler.CreateSelectionTime(12, 55, 0),
-		SelectionMethod: []entity.SelectionMethod{
-			entity.SelectionRandom,
+		SelectionMethod: []corporation.SelectionMethod{
+			corporation.SelectionRandom,
 		},
 	}
 
@@ -48,10 +47,10 @@ func Test_CorporationScheduler_WithSelectionTime(t *testing.T) {
 func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 	a := assert.New(t)
 
-	corporation := entity.Corporation{
+	corporation := corporation.Corporation{
 		SelectionTime: scheduler.CreateSelectionTime(17, 59, 15),
-		SelectionMethod: []entity.SelectionMethod{
-			entity.SelectionFirstComeFirstServed,
+		SelectionMethod: []corporation.SelectionMethod{
+			corporation.SelectionFirstComeFirstServed,
 		},
 	}
 

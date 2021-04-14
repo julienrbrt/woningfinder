@@ -3,13 +3,13 @@ package payment
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
 // ProcessPayment set that the user has paid
-func (s *service) ProcessPayment(email string, plan entity.Plan) error {
+func (s *service) ProcessPayment(email string, plan customer.Plan) error {
 	// get user
-	user, err := s.userService.GetUser(&entity.User{Email: email})
+	user, err := s.userService.GetUser(&customer.User{Email: email})
 	if err != nil {
 		return fmt.Errorf("error while processing payment data: cannot get user: %w", err)
 	}
@@ -27,6 +27,6 @@ func (s *service) ProcessPayment(email string, plan entity.Plan) error {
 }
 
 // notifyUser sends confirmation email
-func (s *service) notifyUser(user *entity.User) error {
+func (s *service) notifyUser(user *customer.User) error {
 	return s.notificationsService.SendWelcome(user)
 }

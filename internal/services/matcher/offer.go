@@ -5,32 +5,31 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 )
 
-func (s *service) PublishOffers(client corporation.Client, corporation entity.Corporation) error {
-	offers, err := client.FetchOffer()
+// PublishOffers publish the offers of a housing corporation to redis queue
+func (s *service) PublishOffers(client connector.Client, corp corporation.Corporation) error {
+	offers, err := client.GetOffers()
 	if err != nil {
-		return fmt.Errorf("error while fetching offers for %s: %w", corporation.Name, err)
+		return fmt.Errorf("error while fetching offers for %s: %w", corp.Name, err)
 	}
 
 	// log number of offers found
 	if len(offers) == 0 {
-		s.logger.Sugar().Infof("no offers found for %s", corporation.Name)
+		s.logger.Sugar().Infof("no offers found for %s", corp.Name)
 		return nil
 	}
 
-	s.logger.Sugar().Infof("%d offers found for %s", len(offers), corporation.Name)
+	s.logger.Sugar().Infof("%d offers found for %s", len(offers), corp.Name)
 
 	// build offers list
-	offerList := entity.OfferList{
-		Corporation: corporation,
+	result, err := json.Marshal(corporation.Offers{
+		Corporation: corp,
 		Offer:       offers,
-	}
-
-	result, err := json.Marshal(offerList)
+	})
 	if err != nil {
-		return fmt.Errorf("error while marshaling offers for %s: %w", corporation.Name, err)
+		return fmt.Errorf("error while marshaling offers for %s: %w", corp.Name, err)
 	}
 
 	// add to redis queue
@@ -39,16 +38,16 @@ func (s *service) PublishOffers(client corporation.Client, corporation entity.Co
 	}
 
 	// verify supported cities
-	if err := s.verifyCorporationCities(offers, corporation); err != nil {
-		return fmt.Errorf("error verifying corporation %s cities: %w", corporation.Name, err)
+	if err := s.verifyCorporationCities(offers, corp); err != nil {
+		return fmt.Errorf("error verifying corporation %s cities: %w", corp.Name, err)
 	}
 
 	return nil
 }
 
 // gets and verify if all cities from the offers are present the supported cities by the corporation
-func (s *service) verifyCorporationCities(offers []entity.Offer, corporation entity.Corporation) error {
-	cities := make(map[string]entity.City)
+func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corporation.Corporation) error {
+	cities := make(map[string]corporation.City)
 	// get cities from offers
 	for _, offer := range offers {
 		city := offer.Housing.City
@@ -56,7 +55,7 @@ func (s *service) verifyCorporationCities(offers []entity.Offer, corporation ent
 	}
 
 	// check against cities from housing corporation
-	for _, city := range corporation.Cities {
+	for _, city := range corp.Cities {
 		_, ok := cities[city.Name]
 		if ok {
 			delete(cities, city.Name)
@@ -69,22 +68,22 @@ func (s *service) verifyCorporationCities(offers []entity.Offer, corporation ent
 	}
 
 	// transform map to array
-	var notFound []entity.City
+	var notFound []corporation.City
 	for _, city := range cities {
 		notFound = append(notFound, city)
 	}
 
 	// add cities and cities relation
-	if err := s.corporationService.AAACities(notFound, corporation); err != nil {
+	if err := s.corporationService.AAACities(notFound, corp); err != nil {
 		return fmt.Errorf("failing adding cities to corporation: %w", err)
 	}
 
-	s.logger.Sugar().Warnf("%d cities (%+v) added for %s: please update housing corporation informations", len(notFound), notFound, corporation.Name)
+	s.logger.Sugar().Warnf("%d cities (%+v) added for %s: please update housing corporation informations", len(notFound), notFound, corp.Name)
 
 	return nil
 }
 
-func (s *service) SubscribeOffers(ch chan<- entity.OfferList) error {
+func (s *service) SubscribeOffers(ch chan<- corporation.Offers) error {
 	for {
 		offers, err := s.redisClient.BPop(offersQueue)
 		if err != nil {
@@ -93,7 +92,7 @@ func (s *service) SubscribeOffers(ch chan<- entity.OfferList) error {
 
 		// Consume offers from queue
 		for _, o := range offers {
-			var offers entity.OfferList
+			var offers corporation.Offers
 			err := json.Unmarshal([]byte(o), &offers)
 			if err != nil {
 				s.logger.Sugar().Errorf("error while unmarshaling offers: %w", err)

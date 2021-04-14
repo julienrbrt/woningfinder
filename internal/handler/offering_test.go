@@ -11,7 +11,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
@@ -78,7 +78,7 @@ func Test_GetOffering_ErrCorporationService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(entity.ServerErrorRenderer(fmt.Errorf("error while getting offering")))
+	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(fmt.Errorf("error while getting offering")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }

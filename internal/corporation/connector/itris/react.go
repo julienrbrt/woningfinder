@@ -1,7 +1,7 @@
 package itris
 
-import "github.com/woningfinder/woningfinder/internal/entity"
+import "github.com/woningfinder/woningfinder/internal/corporation"
 
-func (c *client) ReactToOffer(offer entity.Offer) error {
+func (c *client) React(offer corporation.Offer) error {
 	return nil
 }

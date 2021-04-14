@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/matcornic/hermes/v2"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
 )
 
-func (s *service) SendBye(user *entity.User) error {
+func (s *service) SendBye(user *customer.User) error {
 	html, plain, err := byeTpl(user)
 	if err != nil {
 		return fmt.Errorf("error sending bye notification: %w", err)
@@ -21,7 +21,7 @@ func (s *service) SendBye(user *entity.User) error {
 	return nil
 }
 
-func byeTpl(user *entity.User) (html, plain string, err error) {
+func byeTpl(user *customer.User) (html, plain string, err error) {
 	email := hermes.Email{
 		Body: hermes.Body{
 			Title: fmt.Sprintf("Hallo %s,", user.Name),

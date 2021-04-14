@@ -5,11 +5,11 @@ import (
 
 	"github.com/matcornic/hermes/v2"
 	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
 )
 
-func (s *service) SendLogin(user *entity.User) error {
+func (s *service) SendLogin(user *customer.User) error {
 	_, jwtToken, err := auth.CreateJWTUserToken(s.jwtAuth, user)
 	if err != nil {
 		return fmt.Errorf("error sending login notification: %w", err)
@@ -27,7 +27,7 @@ func (s *service) SendLogin(user *entity.User) error {
 	return nil
 }
 
-func loginTpl(user *entity.User, jwtToken string) (html, plain string, err error) {
+func loginTpl(user *customer.User, jwtToken string) (html, plain string, err error) {
 	email := hermes.Email{
 		Body: hermes.Body{
 			Title: fmt.Sprintf("Hallo %s,", user.Name),

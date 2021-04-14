@@ -10,6 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/cmd/orchestrator/job"
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
 	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
@@ -41,7 +42,7 @@ func main() {
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, notificationsService, corporationService, clientProvider)
+	matcherService := matcherService.NewService(logger, redisClient, userService, notificationsService, corporationService, matcher.NewMatcher(), clientProvider)
 
 	// set location to the netherlands
 	nl, err := time.LoadLocation("Europe/Amsterdam")
