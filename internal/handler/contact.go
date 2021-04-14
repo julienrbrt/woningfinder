@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
 
 type contactFormRequest struct {
@@ -47,7 +47,7 @@ func (*contactFormRequest) Render(w http.ResponseWriter, r *http.Request) error 
 func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	message := &contactFormRequest{}
 	if err := render.Bind(r, message); err != nil {
-		render.Render(w, r, entity.ErrorRenderer(err))
+		render.Render(w, r, handlerErrors.ErrorRenderer(err))
 		return
 	}
 
@@ -69,7 +69,7 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	if err := tpl.Execute(body, message); err != nil {
 		errorMsg := fmt.Errorf("failed creating message: please try again")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
 
@@ -77,7 +77,7 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	if err := h.emailClient.Send("WoningFinder Contact Submission", "", body.String(), "contact@woningfinder.nl"); err != nil {
 		errorMsg := fmt.Errorf("failed sending message: please try again")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
 

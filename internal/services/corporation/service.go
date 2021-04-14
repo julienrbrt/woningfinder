@@ -1,22 +1,22 @@
 package corporation
 
 import (
+	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/internal/entity"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 // Service permits to handle the persistence of a corporation
 type Service interface {
 	// Corporation
-	CreateOrUpdateCorporation(corporation entity.Corporation) error
-	GetCorporation(name string) (*entity.Corporation, error)
-	DeleteCorporation(corp entity.Corporation) error
+	CreateOrUpdateCorporation(corporation corporation.Corporation) error
+	GetCorporation(name string) (*corporation.Corporation, error)
+	DeleteCorporation(corp corporation.Corporation) error
 
 	// Cities
-	AAACities(cities []entity.City, corporation ...entity.Corporation) error
-	GetCities() ([]entity.City, error)
-	GetCity(name string) (entity.City, error)
+	AAACities(cities []corporation.City, corp ...corporation.Corporation) error
+	GetCities() ([]corporation.City, error)
+	GetCity(name string) (corporation.City, error)
 }
 
 type service struct {

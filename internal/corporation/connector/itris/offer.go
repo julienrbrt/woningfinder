@@ -7,19 +7,19 @@ import (
 	"time"
 
 	"github.com/gocolly/colly/v2"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
 const detailsHousingChildAttr = "li.link a"
 
-func (c *client) FetchOffer() ([]entity.Offer, error) {
-	offers := map[string]*entity.Offer{}
+func (c *client) GetOffers() ([]corporation.Offer, error) {
+	offers := map[string]*corporation.Offer{}
 
 	// add offer
 	c.collector.OnHTML("div.aanbodListItems", func(el *colly.HTMLElement) {
 		el.ForEach("div.woningaanbod", func(_ int, e *colly.HTMLElement) {
 			houseType := parseHousingType(e.Text)
-			if houseType == entity.HousingTypeUndefined {
+			if houseType == corporation.HousingTypeUndefined {
 				return
 			}
 
@@ -58,14 +58,14 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 				return
 			}
 
-			offer := entity.Offer{
+			offer := corporation.Offer{
 				SelectionDate: reactionDate,
 				URL:           c.url + e.ChildAttr(detailsHousingChildAttr, "href"),
 				ExternalID:    e.Attr("data-aanbod-id"),
-				Housing: entity.Housing{
+				Housing: corporation.Housing{
 					Type:    houseType,
 					Address: address,
-					City: entity.City{
+					City: corporation.City{
 						Name: city,
 					},
 					CityDistrict:  cityDistrict,
@@ -137,7 +137,7 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 	}
 
 	// get all offers as array
-	var offerList []entity.Offer
+	var offerList []corporation.Offer
 	for _, offer := range offers {
 		offerList = append(offerList, *offer)
 	}
@@ -145,18 +145,18 @@ func (c *client) FetchOffer() ([]entity.Offer, error) {
 	return offerList, nil
 }
 
-func parseHousingType(houseType string) entity.HousingType {
+func parseHousingType(houseType string) corporation.HousingType {
 	houseType = strings.ToLower(houseType)
 
 	if strings.Contains(houseType, "appartement") {
-		return entity.HousingTypeAppartement
+		return corporation.HousingTypeAppartement
 	}
 
 	if strings.Contains(houseType, "woning") {
-		return entity.HousingTypeHouse
+		return corporation.HousingTypeHouse
 	}
 
-	return entity.HousingTypeUndefined
+	return corporation.HousingTypeUndefined
 }
 
 func parseLocation(entry, address string) (string, string, error) {

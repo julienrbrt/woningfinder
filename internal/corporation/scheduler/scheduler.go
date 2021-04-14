@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/woningfinder/woningfinder/internal/entity"
-
 	"github.com/robfig/cron/v3"
+	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
 var (
@@ -15,7 +14,7 @@ var (
 )
 
 // CorporationScheduler creates schedules (when to fetch their offer) given a selection time for a housing corporation
-func CorporationScheduler(corporation entity.Corporation) []cron.Schedule {
+func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
 	var schedules []cron.Schedule
 
 	parser := cron.NewParser(cron.Second | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor)
@@ -63,9 +62,9 @@ func buildSchedule(parser cron.Parser, hour, minute, second int) cron.Schedule {
 }
 
 // hasFirstComeFirstServed returns true if a housing corporation select by first come first served
-func hasFirstComeFirstServed(corporation entity.Corporation) bool {
-	for _, s := range corporation.SelectionMethod {
-		if s == entity.SelectionFirstComeFirstServed {
+func hasFirstComeFirstServed(corp corporation.Corporation) bool {
+	for _, s := range corp.SelectionMethod {
+		if s == corporation.SelectionFirstComeFirstServed {
 			return true
 		}
 	}

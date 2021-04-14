@@ -3,14 +3,13 @@ package notifications
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/auth"
-
 	"github.com/matcornic/hermes/v2"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/auth"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
 )
 
-func (s *service) SendWelcome(user *entity.User) error {
+func (s *service) SendWelcome(user *customer.User) error {
 	_, jwtToken, err := auth.CreateJWTUserToken(s.jwtAuth, user)
 	if err != nil {
 		return fmt.Errorf("error sending welcome notification: %w", err)
@@ -28,7 +27,7 @@ func (s *service) SendWelcome(user *entity.User) error {
 	return nil
 }
 
-func welcomeTpl(user *entity.User, jwtToken string) (html, plain string, err error) {
+func welcomeTpl(user *customer.User, jwtToken string) (html, plain string, err error) {
 	email := hermes.Email{
 		Body: hermes.Body{
 			Title: "Welkom bij WoningFinder!",

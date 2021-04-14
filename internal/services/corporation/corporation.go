@@ -3,11 +3,11 @@ package corporation
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
 // TODO eventually use a prepare function to create it in one query only
-func (s *service) CreateOrUpdateCorporation(corp entity.Corporation) error {
+func (s *service) CreateOrUpdateCorporation(corp corporation.Corporation) error {
 	db := s.dbClient.Conn()
 
 	// verify corporation
@@ -28,28 +28,28 @@ func (s *service) CreateOrUpdateCorporation(corp entity.Corporation) error {
 	return nil
 }
 
-func (s *service) GetCorporation(name string) (*entity.Corporation, error) {
+func (s *service) GetCorporation(name string) (*corporation.Corporation, error) {
 	db := s.dbClient.Conn()
 
-	var corp entity.Corporation
+	var corp corporation.Corporation
 	if err := db.Model(&corp).Where("name = ?", name).Select(); err != nil {
 		return nil, fmt.Errorf("failed getting corporation %s: %w", name, err)
 	}
 
 	// enriching corporation
-	var cities []entity.CorporationCity
+	var cities []corporation.CorporationCity
 	if err := db.Model(&cities).Where("corporation_name = ?", corp.Name).Select(); err != nil {
 		return nil, fmt.Errorf("failed getting corporation %s cities: %w", name, err)
 	}
 
 	for _, city := range cities {
-		corp.Cities = append(corp.Cities, entity.City{Name: city.CityName})
+		corp.Cities = append(corp.Cities, corporation.City{Name: city.CityName})
 	}
 
 	return &corp, nil
 }
 
-func (s *service) DeleteCorporation(corp entity.Corporation) error {
+func (s *service) DeleteCorporation(corp corporation.Corporation) error {
 	// TODO to implement
 	// Delete all relationships and delete newly unsupported cities
 	panic("not implemented")

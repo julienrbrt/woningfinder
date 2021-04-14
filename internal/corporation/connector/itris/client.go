@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/gocolly/colly/v2"
-	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
@@ -18,8 +17,8 @@ type client struct {
 }
 
 // NewClient allows to connect to itris ERP
-func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (corporation.Client, error) {
-	collector, err := connector.NewCollyConnector(logger, "itris")
+func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (connector.Client, error) {
+	collector, err := connector.NewWebParsingConnector(logger, "itris")
 	if err != nil {
 		return nil, fmt.Errorf("error creating itris connector: %w", err)
 	}

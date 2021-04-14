@@ -3,24 +3,25 @@ package main
 import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/go-pg/pg/v10/orm"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
 func init() {
 	// models
 	models := []interface{}{
-		(*entity.City)(nil),
-		(*entity.CityDistrict)(nil),
-		(*entity.User)(nil),
-		(*entity.UserPlan)(nil),
-		(*entity.Corporation)(nil),
-		(*entity.CorporationCity)(nil),
-		(*entity.HousingPreferences)(nil),
-		(*entity.HousingPreferencesHousingType)(nil),
-		(*entity.HousingPreferencesCity)(nil),
-		(*entity.HousingPreferencesCityDistrict)(nil),
-		(*entity.HousingPreferencesMatch)(nil),
-		(*entity.CorporationCredentials)(nil),
+		(*corporation.City)(nil),
+		(*corporation.CityDistrict)(nil),
+		(*customer.User)(nil),
+		(*customer.UserPlan)(nil),
+		(*corporation.Corporation)(nil),
+		(*corporation.CorporationCity)(nil),
+		(*customer.HousingPreferences)(nil),
+		(*customer.HousingPreferencesHousingType)(nil),
+		(*customer.HousingPreferencesCity)(nil),
+		(*customer.HousingPreferencesCityDistrict)(nil),
+		(*customer.HousingPreferencesMatch)(nil),
+		(*customer.CorporationCredentials)(nil),
 	}
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {

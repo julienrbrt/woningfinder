@@ -10,7 +10,8 @@ import (
 	"github.com/go-chi/render"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/webhook"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
 
 const stripeHeader = "Stripe-Signature"
@@ -22,7 +23,7 @@ func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, MaxBodyBytes)
 	payload, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		render.Render(w, r, &entity.ErrorResponse{
+		render.Render(w, r, &handlerErrors.ErrorResponse{
 			Err:        err,
 			StatusCode: http.StatusServiceUnavailable,
 			StatusText: "Service Unavailable",
@@ -33,7 +34,7 @@ func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
 	// parse event
 	event := stripe.Event{}
 	if err := json.Unmarshal(payload, &event); err != nil {
-		render.Render(w, r, entity.ErrorRenderer(fmt.Errorf("failed to parse webhook body json: %w", err)))
+		render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("failed to parse webhook body json: %w", err)))
 		return
 	}
 
@@ -41,7 +42,7 @@ func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
 	signatureHeader := r.Header.Get(stripeHeader)
 	event, err = webhook.ConstructEvent(payload, signatureHeader, h.paymentWebhookSigningKey)
 	if err != nil {
-		render.Render(w, r, entity.ErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
+		render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
 		return
 	}
 
@@ -50,7 +51,7 @@ func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
 		var paymentIntent stripe.PaymentIntent
 		err := json.Unmarshal(event.Data.Raw, &paymentIntent)
 		if err != nil {
-			render.Render(w, r, entity.ErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
+			render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
 			return
 		}
 
@@ -65,7 +66,7 @@ func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
 		if err := h.paymentService.ProcessPayment(paymentIntent.ReceiptEmail, plan); err != nil {
 			errorMsg := fmt.Errorf("error while processing payment")
 			h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-			render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 			return
 		}
 
@@ -77,12 +78,12 @@ func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
 
 // priceToPlan gets the stripe price and converts it to a plan
 // note 1€ is 100 for stripe
-func priceToPlan(amount int64) (entity.Plan, error) {
+func priceToPlan(amount int64) (customer.Plan, error) {
 	switch amount {
-	case int64(entity.PlanBasis.Price()) * 100:
-		return entity.PlanBasis, nil
-	case int64(entity.PlanPro.Price()) * 100:
-		return entity.PlanPro, nil
+	case int64(customer.PlanBasis.Price()) * 100:
+		return customer.PlanBasis, nil
+	case int64(customer.PlanPro.Price()) * 100:
+		return customer.PlanPro, nil
 	}
 
 	return "", errors.New("error plan does not exists")

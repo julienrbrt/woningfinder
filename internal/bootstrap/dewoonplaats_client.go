@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/api/dewoonplaats"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector/dewoonplaats"
 	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
-	"github.com/woningfinder/woningfinder/internal/entity"
-	"github.com/woningfinder/woningfinder/internal/entity/city.go"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 	"github.com/woningfinder/woningfinder/pkg/networking"
@@ -18,11 +18,11 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking/retry"
 )
 
-var dewoonplaatsInfo = entity.Corporation{
+var dewoonplaatsInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: "/wh_services"},
 	Name:        "De Woonplaats",
 	URL:         "https://dewoonplaats.nl",
-	Cities: []entity.City{
+	Cities: []corporation.City{
 		city.Enschede,
 		city.Zwolle,
 		city.Dinxperlo,
@@ -35,15 +35,15 @@ var dewoonplaatsInfo = entity.Corporation{
 		city.Bredevoort,
 		city.Ulft,
 	},
-	SelectionMethod: []entity.SelectionMethod{
-		entity.SelectionRandom,
-		entity.SelectionFirstComeFirstServed,
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRandom,
+		corporation.SelectionFirstComeFirstServed,
 	},
 	SelectionTime: scheduler.CreateSelectionTime(18, 0, 0),
 }
 
 // CreateDeWoonplaatsClient creates a client for De Woonplaats
-func CreateDeWoonplaatsClient(logger *logging.Logger, mapboxClient mapbox.Client) corporation.Client {
+func CreateDeWoonplaatsClient(logger *logging.Logger, mapboxClient mapbox.Client) connector.Client {
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
 	if err != nil {

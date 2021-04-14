@@ -4,8 +4,9 @@ import (
 	"context"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector"
+	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/internal/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/internal/services/notifications"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
@@ -17,10 +18,10 @@ const offersQueue = "queue:offers"
 
 // Service permits to handle the persistence of matcher
 type Service interface {
-	PublishOffers(client corporation.Client, corporation entity.Corporation) error
-	SubscribeOffers(ch chan<- entity.OfferList) error
+	PublishOffers(client connector.Client, corporation corporation.Corporation) error
+	SubscribeOffers(ch chan<- corporation.Offers) error
 
-	MatchOffer(ctx context.Context, offers entity.OfferList) error
+	MatchOffer(ctx context.Context, offers corporation.Offers) error
 }
 
 type service struct {
@@ -29,17 +30,19 @@ type service struct {
 	userService          userService.Service
 	notificationsService notifications.Service
 	corporationService   corporationService.Service
-	clientProvider       corporation.ClientProvider
+	matcher              matcher.Matcher
+	clientProvider       connector.ClientProvider
 }
 
 // NewService instantiate the matcher service
-func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, notificationsService notifications.Service, corporationService corporationService.Service, clientProvider corporation.ClientProvider) Service {
+func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, notificationsService notifications.Service, corporationService corporationService.Service, matcher matcher.Matcher, clientProvider connector.ClientProvider) Service {
 	return &service{
 		logger:               logger,
 		redisClient:          redisClient,
 		userService:          userService,
 		notificationsService: notificationsService,
 		corporationService:   corporationService,
+		matcher:              matcher,
 		clientProvider:       clientProvider,
 	}
 }

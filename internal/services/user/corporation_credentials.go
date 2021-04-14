@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services"
 )
 
-func (s *service) CreateCorporationCredentials(userID uint, credentials entity.CorporationCredentials) error {
+func (s *service) CreateCorporationCredentials(userID uint, credentials customer.CorporationCredentials) error {
 	if credentials.CorporationName == "" {
 		return errors.New("error when creating corporation credentials: corporation invalid")
 	}
@@ -49,8 +49,8 @@ func (s *service) CreateCorporationCredentials(userID uint, credentials entity.C
 	return nil
 }
 
-func (s *service) GetCorporationCredentials(userID uint, corporationName string) (*entity.CorporationCredentials, error) {
-	credentials := entity.CorporationCredentials{
+func (s *service) GetCorporationCredentials(userID uint, corporationName string) (*customer.CorporationCredentials, error) {
+	credentials := customer.CorporationCredentials{
 		UserID:          userID,
 		CorporationName: corporationName,
 	}
@@ -65,8 +65,8 @@ func (s *service) GetCorporationCredentials(userID uint, corporationName string)
 
 // GetAllCorporationCredentials gets all the user corporation credentials that we need to react for
 // The corporation credentials are sorted by account creation date (and not by plan - see issue #21)
-func (s *service) GetAllCorporationCredentials(corporationName string) ([]entity.CorporationCredentials, error) {
-	credentials := []entity.CorporationCredentials{}
+func (s *service) GetAllCorporationCredentials(corporationName string) ([]customer.CorporationCredentials, error) {
+	credentials := []customer.CorporationCredentials{}
 	if err := s.dbClient.Conn().
 		Model(&credentials).
 		Where("corporation_name = ?", corporationName).
@@ -97,7 +97,7 @@ func (s *service) DeleteCorporationCredentials(userID uint, corporationName stri
 	return nil
 }
 
-func (s *service) DecryptCredentials(credentials *entity.CorporationCredentials) (*entity.CorporationCredentials, error) {
+func (s *service) DecryptCredentials(credentials *customer.CorporationCredentials) (*customer.CorporationCredentials, error) {
 	// decrypt credentials
 	var err error
 	secretKey := auth.BuildAESKey(credentials.UserID, credentials.CorporationName, s.aesSecret)
@@ -112,8 +112,8 @@ func (s *service) DecryptCredentials(credentials *entity.CorporationCredentials)
 	return credentials, nil
 }
 
-func (s *service) validateCredentials(credentials entity.CorporationCredentials) error {
-	client, err := s.clientProvider.GetByName(entity.Corporation{Name: credentials.CorporationName})
+func (s *service) validateCredentials(credentials customer.CorporationCredentials) error {
+	client, err := s.clientProvider.Get(credentials.CorporationName)
 	if err != nil {
 		return err
 	}

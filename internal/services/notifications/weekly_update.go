@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/matcornic/hermes/v2"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
 )
 
-func (s *service) SendWeeklyUpdate(user *entity.User, housingMatch []entity.HousingPreferencesMatch) error {
+func (s *service) SendWeeklyUpdate(user *customer.User, housingMatch []customer.HousingPreferencesMatch) error {
 	html, plain, err := weeklyUpdateTpl(user, housingMatch)
 	if err != nil {
 		return fmt.Errorf("error sending weekly update notification: %w", err)
@@ -21,7 +21,7 @@ func (s *service) SendWeeklyUpdate(user *entity.User, housingMatch []entity.Hous
 	return nil
 }
 
-func weeklyUpdateTpl(user *entity.User, housingMatch []entity.HousingPreferencesMatch) (html, plain string, err error) {
+func weeklyUpdateTpl(user *customer.User, housingMatch []customer.HousingPreferencesMatch) (html, plain string, err error) {
 	var email hermes.Email
 
 	if len(housingMatch) > 0 {

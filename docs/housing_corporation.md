@@ -29,12 +29,4 @@ Some housing corporation (or group of housing corporation) have their home-made 
 - Woonkeus Stedendriehoek - JSON API
 
 The definition of corporation are something done offline, once a corporation is supported and a client is created.
-The mapping of the corporation and the client is made in the `client_provider`. The matching is done using the name and the url of the housing corporation.
-
-## Supported Housing Corporation
-
-| Housing Corporation | Selection Method                |
-| ------------------- | ------------------------------- |
-| De Woonplaats       | Random, First-Come First-Served |
-| OnsHuis             | Random                          |
-| Domijn              | Random                          |
+The mapping of the corporation and the client is made in the `client_provider` using the name of the housing corporation.

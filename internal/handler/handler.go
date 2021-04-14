@@ -4,13 +4,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-chi/jwtauth"
-
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/httprate"
+	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	customMiddleware "github.com/woningfinder/woningfinder/internal/handler/middleware"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/internal/services/notifications"
@@ -56,11 +55,11 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 	// register default routes
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		render.Render(w, r, entity.ErrNotFound)
+		render.Render(w, r, handlerErrors.ErrNotFound)
 	})
 	r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		render.Render(w, r, entity.ErrMethodNotAllowed)
+		render.Render(w, r, handlerErrors.ErrMethodNotAllowed)
 	})
 
 	// register routes

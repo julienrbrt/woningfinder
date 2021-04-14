@@ -1,8 +1,8 @@
 package payment
 
 import (
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/internal/entity"
 	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -10,7 +10,7 @@ import (
 
 // Service permits to handle the management of the payments
 type Service interface {
-	ProcessPayment(email string, plan entity.Plan) error
+	ProcessPayment(email string, plan customer.Plan) error
 }
 
 type service struct {

@@ -5,16 +5,18 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"sync"
 
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/internal/entity"
-	"github.com/woningfinder/woningfinder/internal/matcher"
 	"github.com/woningfinder/woningfinder/internal/services"
 )
 
-func (s *service) MatchOffer(ctx context.Context, offers entity.OfferList) error {
+// MatcherOffer matcher a corporation offer with customer housing preferences
+func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) error {
 	// create housing corporation client
-	client, err := s.clientProvider.GetByName(offers.Corporation)
+	client, err := s.clientProvider.Get(offers.Corporation.Name)
 	if err != nil {
 		return err
 	}
@@ -29,12 +31,16 @@ func (s *service) MatchOffer(ctx context.Context, offers entity.OfferList) error
 		return fmt.Errorf("error while matching offer: %w", err)
 	}
 
-	// match offers
-	for _, cred := range credentials {
-		user := &entity.User{ID: cred.UserID}
+	// match offers for each user having corporation credentials
+	var wg sync.WaitGroup
+	for _, creds := range credentials {
+		user := &customer.User{ID: creds.UserID}
 
+		wg.Add(1)
 		// react concurrently
-		go func(user *entity.User, cred entity.CorporationCredentials) {
+		go func(user *customer.User, creds customer.CorporationCredentials, wg *sync.WaitGroup) {
+			defer wg.Done()
+
 			//enrich user
 			user, err = s.userService.GetUser(user)
 			if err != nil {
@@ -48,17 +54,17 @@ func (s *service) MatchOffer(ctx context.Context, offers entity.OfferList) error
 			}
 
 			// decrypt housing corporation credentials
-			creds, err := s.userService.DecryptCredentials(&cred)
+			newCreds, err := s.userService.DecryptCredentials(&creds)
 			if err != nil {
 				s.logger.Sugar().Errorf("error while decrypting credentials for %s: %w", user.Email, err)
 				return
 			}
 
 			// login to housing corporation
-			if err := client.Login(creds.Login, creds.Password); err != nil {
+			if err := client.Login(newCreds.Login, newCreds.Password); err != nil {
 				s.logger.Sugar().Errorf("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
 
-				if err = s.hasFailedLogin(user, creds); err != nil {
+				if err = s.hasFailedLogin(user, newCreds); err != nil {
 					s.logger.Sugar().Warn(err)
 				}
 
@@ -74,9 +80,9 @@ func (s *service) MatchOffer(ctx context.Context, offers entity.OfferList) error
 					continue
 				}
 
-				if matcher.MatchPreferences(user, offer) && matcher.MatchCriteria(user, offer) {
+				if s.matcher.MatchOffer(*user, offer) {
 					// react to offer
-					if err := client.ReactToOffer(offer); err != nil {
+					if err := client.React(offer); err != nil {
 						s.logger.Sugar().Errorf("failed to react to %s with user %s: %w", offer.Housing.Address, user.Email, err)
 						continue
 					}
@@ -92,15 +98,17 @@ func (s *service) MatchOffer(ctx context.Context, offers entity.OfferList) error
 				// save that we've checked the offer for the user
 				s.storeReaction(uuid)
 			}
-		}(user, cred)
+		}(user, creds, &wg)
 	}
 
+	// wait for all match
+	wg.Wait()
 	return nil
 }
 
 // hasFailedLogin increased the failed login count of a corporation
 // after 3 failure the login credentials of that user are deleted and the user get notified
-func (s *service) hasFailedLogin(user *entity.User, credentials *entity.CorporationCredentials) error {
+func (s *service) hasFailedLogin(user *customer.User, credentials *customer.CorporationCredentials) error {
 	// update failure count
 	credentials.FailureCount += 1
 
@@ -143,6 +151,6 @@ func (s *service) storeReaction(uuid string) {
 	}
 }
 
-func buildReactionUUID(user *entity.User, offer entity.Offer) string {
+func buildReactionUUID(user *customer.User, offer corporation.Offer) string {
 	return base64.StdEncoding.EncodeToString([]byte(user.Email + offer.Housing.Address + offer.SelectionDate.String()))
 }

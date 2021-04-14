@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stripe/stripe-go"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
@@ -77,7 +77,7 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(entity.ServerErrorRenderer(errors.New("error while creating user")))
+	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("error while creating user")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }

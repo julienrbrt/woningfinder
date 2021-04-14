@@ -6,7 +6,8 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
 	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
@@ -37,11 +38,11 @@ func main() {
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, notificationsService, corporationService, clientProvider)
+	matcherService := matcherService.NewService(logger, redisClient, userService, notificationsService, corporationService, matcher.NewMatcher(), clientProvider)
 
 	// subscribe to offers queue inside a new go routine
-	ch := make(chan entity.OfferList)
-	go func(ch chan entity.OfferList) {
+	ch := make(chan corporation.Offers)
+	go func(ch chan corporation.Offers) {
 		if err := matcherService.SubscribeOffers(ch); err != nil {
 			logger.Sugar().Fatal(err)
 		}

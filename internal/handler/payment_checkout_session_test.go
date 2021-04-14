@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stripe/stripe-go"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
@@ -38,7 +38,7 @@ func Test_CreateCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createCheckoutSession("foo@bar.com", entity.PlanBasis, w, r)
+		handler.createCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
 	})
 
 	// server request
@@ -71,7 +71,7 @@ func Test_CreateCheckoutSession(t *testing.T) {
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createCheckoutSession("foo@bar.com", entity.PlanBasis, w, r)
+		handler.createCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
 	})
 
 	// server request

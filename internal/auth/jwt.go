@@ -5,10 +5,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/lestrrat-go/jwx/jwt"
-
 	"github.com/go-chi/jwtauth"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/lestrrat-go/jwx/jwt"
+	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
 const (
@@ -22,7 +21,7 @@ func CreateJWTAuthenticationToken(secret string) *jwtauth.JWTAuth {
 }
 
 // CreateJWTUserToken builds an authentication token valid 6h for a given user
-func CreateJWTUserToken(jwtAuth *jwtauth.JWTAuth, user *entity.User) (jwt.Token, string, error) {
+func CreateJWTUserToken(jwtAuth *jwtauth.JWTAuth, user *customer.User) (jwt.Token, string, error) {
 	claims := map[string]interface{}{userIDKey: user.ID, userEmailKey: user.Email}
 	jwtauth.SetExpiryIn(claims, time.Hour*6)
 	jwtauth.SetIssuedNow(claims)
@@ -35,7 +34,7 @@ func CreateJWTUserToken(jwtAuth *jwtauth.JWTAuth, user *entity.User) (jwt.Token,
 }
 
 // ExtractUserFromJWT extracts an user from its JWT claims
-func ExtractUserFromJWT(claims map[string]interface{}) (*entity.User, error) {
+func ExtractUserFromJWT(claims map[string]interface{}) (*customer.User, error) {
 	userID, err := strconv.ParseUint(fmt.Sprintf("%v", claims[userIDKey]), 10, 64)
 	if err != nil {
 		return nil, fmt.Errorf("error when parsing %v to uint: %w", claims[userIDKey], err)
@@ -46,5 +45,5 @@ func ExtractUserFromJWT(claims map[string]interface{}) (*entity.User, error) {
 		return nil, fmt.Errorf("error extracting %s from claims, got %v", userEmailKey, claims[userIDKey])
 	}
 
-	return &entity.User{ID: uint(userID), Email: userEmail}, nil
+	return &customer.User{ID: uint(userID), Email: userEmail}, nil
 }

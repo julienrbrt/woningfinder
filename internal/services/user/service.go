@@ -2,8 +2,9 @@ package user
 
 import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/internal/entity"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
@@ -11,26 +12,26 @@ import (
 // Service permits to handle the persistence of an user
 type Service interface {
 	// Users
-	CreateUser(u *entity.User) error
-	GetUser(search *entity.User) (*entity.User, error)
-	DeleteUser(u *entity.User) error
-	GetWeeklyUpdateUsers() ([]*entity.User, error)
+	CreateUser(u *customer.User) error
+	GetUser(search *customer.User) (*customer.User, error)
+	DeleteUser(u *customer.User) error
+	GetWeeklyUpdateUsers() ([]*customer.User, error)
 
 	// Payment
-	SetPaid(userID uint, plan entity.Plan) error
+	SetPaid(userID uint, plan customer.Plan) error
 
 	// Housing Preferences
-	CreateHousingPreferences(u *entity.User, preferences entity.HousingPreferences) error
-	GetHousingPreferences(u *entity.User) (entity.HousingPreferences, error)
-	CreateHousingPreferencesMatch(u *entity.User, offer entity.Offer, corporationName string) error
-	GetHousingPreferencesMatchingCorporation(u *entity.User) ([]entity.Corporation, error)
+	CreateHousingPreferences(u *customer.User, preferences customer.HousingPreferences) error
+	GetHousingPreferences(u *customer.User) (customer.HousingPreferences, error)
+	CreateHousingPreferencesMatch(u *customer.User, offer corporation.Offer, corporationName string) error
+	GetHousingPreferencesMatchingCorporation(u *customer.User) ([]corporation.Corporation, error)
 
 	// Corporation Credentials
-	CreateCorporationCredentials(userID uint, credentials entity.CorporationCredentials) error
-	GetCorporationCredentials(userID uint, corporationName string) (*entity.CorporationCredentials, error)
-	GetAllCorporationCredentials(corporationName string) ([]entity.CorporationCredentials, error)
+	CreateCorporationCredentials(userID uint, credentials customer.CorporationCredentials) error
+	GetCorporationCredentials(userID uint, corporationName string) (*customer.CorporationCredentials, error)
+	GetAllCorporationCredentials(corporationName string) ([]customer.CorporationCredentials, error)
 	DeleteCorporationCredentials(userID uint, corporationName string) error
-	DecryptCredentials(credentials *entity.CorporationCredentials) (*entity.CorporationCredentials, error)
+	DecryptCredentials(credentials *customer.CorporationCredentials) (*customer.CorporationCredentials, error)
 }
 
 type service struct {
@@ -38,12 +39,12 @@ type service struct {
 	dbClient           database.DBClient
 	redisClient        database.RedisClient
 	aesSecret          string
-	clientProvider     corporation.ClientProvider
+	clientProvider     connector.ClientProvider
 	corporationService corporationService.Service
 }
 
 // NewService instantiate the user service
-func NewService(logger *logging.Logger, dbClient database.DBClient, redisClient database.RedisClient, aesSecret string, clientProvider corporation.ClientProvider, corporationService corporationService.Service) Service {
+func NewService(logger *logging.Logger, dbClient database.DBClient, redisClient database.RedisClient, aesSecret string, clientProvider connector.ClientProvider, corporationService corporationService.Service) Service {
 	return &service{
 		logger:             logger,
 		dbClient:           dbClient,

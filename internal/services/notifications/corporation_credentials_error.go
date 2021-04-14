@@ -5,11 +5,11 @@ import (
 
 	"github.com/matcornic/hermes/v2"
 	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
 )
 
-func (s *service) SendCorporationCredentialsError(user *entity.User, corporationName string) error {
+func (s *service) SendCorporationCredentialsError(user *customer.User, corporationName string) error {
 	_, jwtToken, err := auth.CreateJWTUserToken(s.jwtAuth, user)
 	if err != nil {
 		return fmt.Errorf("error sending corporation credentials notification: %w", err)
@@ -27,7 +27,7 @@ func (s *service) SendCorporationCredentialsError(user *entity.User, corporation
 	return nil
 }
 
-func corporationCredentialsErrorTpl(user *entity.User, jwtToken, corporationName string) (html, plain string, err error) {
+func corporationCredentialsErrorTpl(user *customer.User, jwtToken, corporationName string) (html, plain string, err error) {
 	email := hermes.Email{
 		Body: hermes.Body{
 			Title: fmt.Sprintf("Hoi %s,", user.Name),

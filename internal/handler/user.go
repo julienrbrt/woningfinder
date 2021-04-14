@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
 
 // GetUser gets all the user information
@@ -16,14 +16,14 @@ func (h *handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	// extract jwt
 	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
-		render.Render(w, r, entity.ErrBadRequest)
+		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
 
 	// get user from jwt claims
 	userFromJTW, err := auth.ExtractUserFromJWT(claims)
 	if err != nil {
-		render.Render(w, r, entity.ErrBadRequest)
+		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
 
@@ -31,7 +31,7 @@ func (h *handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorMsg := fmt.Errorf("failed get user information")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
 

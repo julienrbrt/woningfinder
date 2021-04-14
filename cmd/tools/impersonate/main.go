@@ -8,7 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/pkg/config"
 )
 
@@ -33,7 +33,7 @@ func main() {
 	}
 	userEmail := os.Args[2]
 
-	_, token, _ := auth.CreateJWTUserToken(auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET")), &entity.User{
+	_, token, _ := auth.CreateJWTUserToken(auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET")), &customer.User{
 		ID:    uint(userID),
 		Email: userEmail,
 	})

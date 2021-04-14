@@ -9,13 +9,14 @@ import (
 	"github.com/go-chi/render"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/checkout/session"
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
+	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 type paymentProcessorRequest struct {
-	Email string      `json:"email"`
-	Plan  entity.Plan `json:"plan"`
+	Email string        `json:"email"`
+	Plan  customer.Plan `json:"plan"`
 }
 
 // Bind permits go-chi router to verify the user input and marshal it
@@ -39,7 +40,7 @@ func (*paymentProcessorRequest) Render(w http.ResponseWriter, r *http.Request) e
 func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 	request := &paymentProcessorRequest{}
 	if err := render.Bind(r, request); err != nil {
-		render.Render(w, r, entity.ErrorRenderer(err))
+		render.Render(w, r, handlerErrors.ErrorRenderer(err))
 		return
 	}
 
@@ -51,7 +52,7 @@ type createCheckoutSessionResponse struct {
 	SessionID string `json:"id"`
 }
 
-func (h *handler) createCheckoutSession(email string, plan entity.Plan, w http.ResponseWriter, r *http.Request) {
+func (h *handler) createCheckoutSession(email string, plan customer.Plan, w http.ResponseWriter, r *http.Request) {
 	params := &stripe.CheckoutSessionParams{
 		CustomerEmail: stripe.String(email),
 		SubmitType:    stripe.String("pay"),
@@ -74,7 +75,7 @@ func (h *handler) createCheckoutSession(email string, plan entity.Plan, w http.R
 	if err != nil {
 		errorMsg := fmt.Errorf("error while creating stripe new checkout session")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, entity.ServerErrorRenderer(errorMsg))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
 
@@ -86,20 +87,20 @@ func (h *handler) createCheckoutSession(email string, plan entity.Plan, w http.R
 
 // planToLineItems gets the plan price and converts it to a stripe price
 // note 1€ is 100 for stripe
-func planToLineItems(plan entity.Plan) *stripe.CheckoutSessionLineItemParams {
+func planToLineItems(plan customer.Plan) *stripe.CheckoutSessionLineItemParams {
 	switch plan {
-	case entity.PlanBasis:
+	case customer.PlanBasis:
 		return &stripe.CheckoutSessionLineItemParams{
 			Currency: stripe.String(string(stripe.CurrencyEUR)),
 			Name:     stripe.String("Basis"),
-			Amount:   stripe.Int64(int64(entity.PlanBasis.Price()) * 100),
+			Amount:   stripe.Int64(int64(customer.PlanBasis.Price()) * 100),
 			Quantity: stripe.Int64(1),
 		}
-	case entity.PlanPro:
+	case customer.PlanPro:
 		return &stripe.CheckoutSessionLineItemParams{
 			Currency: stripe.String(string(stripe.CurrencyEUR)),
 			Name:     stripe.String("Pro"),
-			Amount:   stripe.Int64(int64(entity.PlanPro.Price()) * 100),
+			Amount:   stripe.Int64(int64(customer.PlanPro.Price()) * 100),
 			Quantity: stripe.Int64(1),
 		}
 	}

@@ -5,12 +5,11 @@ import (
 	"time"
 
 	"github.com/go-pg/pg/v10/orm"
-
-	"github.com/woningfinder/woningfinder/internal/entity"
+	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
 // TODO eventually use a prepare function to create it in one query only
-func (s *service) CreateUser(u *entity.User) error {
+func (s *service) CreateUser(u *customer.User) error {
 	db := s.dbClient.Conn()
 
 	// verify user
@@ -39,10 +38,10 @@ func (s *service) CreateUser(u *entity.User) error {
 	return nil
 }
 
-func (s *service) GetUser(search *entity.User) (*entity.User, error) {
+func (s *service) GetUser(search *customer.User) (*customer.User, error) {
 	db := s.dbClient.Conn()
 
-	var user entity.User
+	var user customer.User
 	// get user (by id or email)
 	if search.ID > 0 {
 		if err := db.Model(&user).Where("id = ?", search.ID).Select(); err != nil {
@@ -74,17 +73,17 @@ func (s *service) GetUser(search *entity.User) (*entity.User, error) {
 }
 
 // TODO eventually use a prepare function to create it in one query only and improve performance
-func (s *service) GetWeeklyUpdateUsers() ([]*entity.User, error) {
+func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 	db := s.dbClient.Conn()
 
-	userList := []entity.UserPlan{}
+	userList := []customer.UserPlan{}
 	if err := db.Model(&userList).Order("created_at ASC").Select(); err != nil {
 		return nil, fmt.Errorf("error getting paid users list: %w", err)
 	}
 
-	var users []*entity.User
+	var users []*customer.User
 	for _, user := range userList {
-		u := &entity.User{ID: user.UserID}
+		u := &customer.User{ID: user.UserID}
 
 		if err := db.Model(u).Where("id = ?", u.ID).Select(); err != nil {
 			return nil, fmt.Errorf("failed getting user %d: %w", u.ID, err)
@@ -105,7 +104,7 @@ func (s *service) GetWeeklyUpdateUsers() ([]*entity.User, error) {
 	return users, nil
 }
 
-func (s *service) DeleteUser(u *entity.User) error {
+func (s *service) DeleteUser(u *customer.User) error {
 	// TODO to implement
 	// delete all corporations credentials
 	// delete housing preferences
