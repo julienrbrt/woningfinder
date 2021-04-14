@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/customer"
@@ -16,6 +17,9 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, handlerErrors.ErrorRenderer(err))
 		return
 	}
+
+	// lowercase email
+	user.Email = strings.ToLower(user.Email)
 
 	if err := h.userService.CreateUser(user); err != nil {
 		errorMsg := fmt.Errorf("error while creating user")
