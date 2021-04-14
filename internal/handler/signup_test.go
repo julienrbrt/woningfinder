@@ -173,5 +173,7 @@ func Test_SignUp(t *testing.T) {
 	a.Equal(http.StatusOK, rr.Code)
 
 	// verify expected value
-	a.Empty(rr.Body.String())
+	var result createCheckoutSessionResponse
+	a.NoError(json.Unmarshal(rr.Body.Bytes(), &result))
+	a.NotEmpty(result.SessionID)
 }
