@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -120,6 +121,38 @@ func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
 
 	// verify expected value
 	a.Contains(rr.Body.String(), "error plan invalid does not exist")
+}
+
+func Test_PaymentProcessor_ErrUserService(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(errors.New("foo"))
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
+	paymentServiceMock := paymentService.NewServiceMock(nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+
+	data, err := ioutil.ReadFile("testdata/payment-processor-request.json")
+	a.NoError(err)
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/payment", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// init stripe library
+	stripe.Key = stripeKeyTest
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.PaymentProcessor)
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusNotFound, rr.Code)
 }
 
 func Test_PaymentProcessor(t *testing.T) {
