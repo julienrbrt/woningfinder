@@ -48,9 +48,3 @@ func (s *service) GetCorporation(name string) (*corporation.Corporation, error) 
 
 	return &corp, nil
 }
-
-func (s *service) DeleteCorporation(corp corporation.Corporation) error {
-	// TODO to implement
-	// Delete all relationships and delete newly unsupported cities
-	panic("not implemented")
-}

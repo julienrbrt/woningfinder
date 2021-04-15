@@ -11,7 +11,6 @@ type Service interface {
 	// Corporation
 	CreateOrUpdateCorporation(corporation corporation.Corporation) error
 	GetCorporation(name string) (*corporation.Corporation, error)
-	DeleteCorporation(corp corporation.Corporation) error
 
 	// Cities
 	AAACities(cities []corporation.City, corp ...corporation.Corporation) error
