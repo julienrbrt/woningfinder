@@ -45,8 +45,14 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if user exists
-	if _, err := h.userService.GetUser(&customer.User{Email: request.Email}); err != nil {
+	user, err := h.userService.GetUser(&customer.User{Email: request.Email})
+	if err != nil {
 		render.Render(w, r, handlerErrors.ErrNotFound)
+		return
+	}
+
+	if user.HasPaid() {
+		render.Render(w, r, handlerErrors.ErrorRenderer(errors.New("user already paid")))
 		return
 	}
 
