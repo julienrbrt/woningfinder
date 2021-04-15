@@ -44,6 +44,12 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check if user exists
+	if _, err := h.userService.GetUser(&customer.User{Email: request.Email}); err != nil {
+		render.Render(w, r, handlerErrors.ErrNotFound)
+		return
+	}
+
 	// process payment by creating a session id from Stripe
 	h.createCheckoutSession(request.Email, request.Plan, w, r)
 }
