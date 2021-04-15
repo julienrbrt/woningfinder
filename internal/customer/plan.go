@@ -18,9 +18,9 @@ const (
 func (p Plan) Price() int {
 	switch p {
 	case PlanBasis:
-		return 35
+		return 25
 	case PlanPro:
-		return 75
+		return 45
 	default:
 		return 0
 	}
