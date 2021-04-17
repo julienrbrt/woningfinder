@@ -5,7 +5,7 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
-	"github.com/woningfinder/woningfinder/internal/services/user"
+	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/util"
 
@@ -31,7 +31,7 @@ func main() {
 	if len(os.Args) != 2 {
 		logger.Sugar().Fatal("customer-delete must have an user email as (only) argument\n")
 	}
-	email := os.Args[0]
+	email := os.Args[1]
 	if !util.IsEmailValid(email) {
 		logger.Sugar().Fatal("incorrect argument for user to delete, have %s, expect a valid email", email)
 	}
@@ -39,18 +39,18 @@ func main() {
 	dbClient := bootstrap.CreateDBClient(logger)
 	clientProvider := bootstrap.CreateClientProvider(logger, nil)
 	corporationService := corporation.NewService(logger, dbClient)
-	userService := user.NewService(logger, dbClient, nil, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	userService := userService.NewService(logger, dbClient, nil, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
 	// get user
-	u, err := userService.GetUser(&customer.User{Email: email})
+	user, err := userService.GetUser(&customer.User{Email: email})
 	if err != nil {
 		logger.Sugar().Fatal(err)
 	}
 
 	// delete user
-	if err := userService.DeleteUser(u); err != nil {
+	if err := userService.DeleteUser(user); err != nil {
 		logger.Sugar().Fatal(err)
 	}
 
-	logger.Sugar().Infof("customer %s successfully deleted 😢\n", u.Name)
+	logger.Sugar().Infof("customer %s (%s) successfully deleted 😢\n", user.Name, user.Email)
 }
