@@ -1,9 +1,11 @@
 package user
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
+	pg "github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
@@ -104,10 +106,44 @@ func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 	return users, nil
 }
 
+// TODO eventually use a prepare function to create it in one query only and improve performance
 func (s *service) DeleteUser(u *customer.User) error {
-	// TODO to implement
+	db := s.dbClient.Conn()
+
 	// delete all corporations credentials
+	if _, err := db.Model((*customer.CorporationCredentials)(nil)).Where("user_id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing corporation credentials for %s: %w", u.Email, err)
+	}
+
 	// delete housing preferences
+	if _, err := db.Model((*customer.HousingPreferencesCity)(nil)).Where("housing_preferences_id = ?", u.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences cities for %s: %w", u.Email, err)
+	}
+
+	if _, err := db.Model((*customer.HousingPreferencesCityDistrict)(nil)).Where("housing_preferences_id = ?", u.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences cities districts for %s: %w", u.Email, err)
+	}
+
+	if _, err := db.Model((*customer.HousingPreferencesHousingType)(nil)).Where("housing_preferences_id = ?", u.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences housing type for %s: %w", u.Email, err)
+	}
+
+	if _, err := db.Model((*customer.HousingPreferences)(nil)).Where("user_id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences cities for %s: %w", u.Email, err)
+	}
+
+	if _, err := db.Model((*customer.HousingPreferencesMatch)(nil)).Where("user_id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences match for %s: %w", u.Email, err)
+	}
+
 	// delete user
-	panic("not implemented")
+	if _, err := db.Model((*customer.UserPlan)(nil)).Where("user_id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed delete user plan for %s: %w", u.Email, err)
+	}
+
+	if _, err := db.Model((*customer.User)(nil)).Where("id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed delete user for %s: %w", u.Email, err)
+	}
+
+	return nil
 }
