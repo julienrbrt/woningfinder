@@ -7,6 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris/onshuis"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
@@ -26,7 +27,7 @@ var onshuisInfo = corporation.Corporation{
 
 // CreateOnsHuisClient creates a client for OnsHuis
 func CreateOnsHuisClient(logger *logging.Logger, mapboxClient mapbox.Client) connector.Client {
-	client, err := itris.NewClient(logger, mapboxClient, onshuisInfo.APIEndpoint.String())
+	client, err := itris.NewClient(logger, mapboxClient, onshuisInfo.APIEndpoint.String(), onshuis.DetailsParser)
 	if err != nil {
 		logger.Sugar().Fatal(err)
 	}

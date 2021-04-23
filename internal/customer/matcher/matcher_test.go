@@ -37,8 +37,6 @@ var offer = corporation.Offer{
 	ExternalID: "w758752",
 	Housing: corporation.Housing{
 		Type:          corporation.HousingTypeHouse,
-		Latitude:      52.133,
-		Longitude:     6.61433,
 		City:          corporation.City{Name: "Enschede"},
 		CityDistrict:  "deppenbroek",
 		Address:       "Beatrixstraat 1 R 7142BM Enschede",

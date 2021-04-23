@@ -74,7 +74,7 @@ func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corpo
 	}
 
 	// add cities and cities relation
-	if err := s.corporationService.AAACities(notFound, corp); err != nil {
+	if err := s.corporationService.LinkCities(notFound, corp); err != nil {
 		return fmt.Errorf("failing adding cities to corporation: %w", err)
 	}
 

@@ -15,11 +15,3 @@ func Test_Mapbox_Geocoding_CityDistrictFromAdress(t *testing.T) {
 	a.NoError(err)
 	a.Equal("stevenfenne", districtFromAddress)
 }
-
-func Test_Mapbox_Geocoding_CityDistrictFromCoords(t *testing.T) {
-	a := assert.New(t)
-	mapboxClient := bootstrap.CreateMapboxClient()
-	districtFromCoords, err := mapboxClient.CityDistrictFromCoords("52.2130417", "6.9075881")
-	a.NoError(err)
-	a.Equal("hogeland-noord", districtFromCoords)
-}
