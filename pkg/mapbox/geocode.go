@@ -24,11 +24,6 @@ type response struct {
 	} `json:"features"`
 }
 
-// CityDistrictFromCoords obtains the city district name of a given coordinites
-func (c *client) CityDistrictFromCoords(latitude, longitude string) (string, error) {
-	return c.getCityDistrict(fmt.Sprintf("%s,%s", longitude, latitude))
-}
-
 // CityDistrictFromAddress obtains the city district name of a given address
 func (c *client) CityDistrictFromAddress(address string) (string, error) {
 	return c.getCityDistrict(address)

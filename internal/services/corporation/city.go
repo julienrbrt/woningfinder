@@ -7,10 +7,9 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
-// AAACities stands for Add And Associate cities
-// It permits to creates a city and when given associate that city to a corporation
+// LinkCities permits to creates a city and when given associate that city to a corporation
 // Note the corporation will not be check when doing the association, always ensure the corporation exists
-func (s *service) AAACities(cities []corporation.City, corporations ...corporation.Corporation) error {
+func (s *service) LinkCities(cities []corporation.City, corporations ...corporation.Corporation) error {
 	_, err := s.dbClient.Conn().Model(&cities).OnConflict("(name) DO UPDATE").Insert()
 	if err != nil {
 		return fmt.Errorf("error creating cities: %w", err)

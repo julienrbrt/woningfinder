@@ -13,7 +13,7 @@ type Service interface {
 	GetCorporation(name string) (*corporation.Corporation, error)
 
 	// Cities
-	AAACities(cities []corporation.City, corp ...corporation.Corporation) error
+	LinkCities(cities []corporation.City, corp ...corporation.Corporation) error
 	GetCities() ([]corporation.City, error)
 	GetCity(name string) (corporation.City, error)
 }

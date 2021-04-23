@@ -13,14 +13,6 @@ func NewClientMock(err error, output string) Client {
 	}
 }
 
-func (m *mockClient) CityDistrictFromCoords(_, _ string) (string, error) {
-	if m.err != nil {
-		return "", m.err
-	}
-
-	return m.output, nil
-}
-
 func (m *mockClient) CityDistrictFromAddress(_ string) (string, error) {
 	if m.err != nil {
 		return "", m.err

@@ -11,7 +11,6 @@ var APIEndpoint = url.URL{Scheme: "https", Host: "api.mapbox.com", Path: "/geoco
 
 // Client for Mapbox
 type Client interface {
-	CityDistrictFromCoords(latitude, longitude string) (string, error)
 	CityDistrictFromAddress(address string) (string, error)
 }
 

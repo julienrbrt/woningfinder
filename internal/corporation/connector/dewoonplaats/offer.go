@@ -129,8 +129,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		City: corporation.City{
 			Name: offer.City,
 		},
-		Latitude:      offer.Latitude,
-		Longitude:     offer.Longitude,
 		EnergieLabel:  offer.EnergieLabel,
 		NumberRoom:    len(offer.RoomSize),
 		NumberBedroom: offer.NumberBedroom,
