@@ -22,7 +22,7 @@ const (
 func (p Plan) Price() int {
 	switch p {
 	case PlanBasis:
-		return 2
+		return 5
 	case PlanPro:
 		return 35
 	default:
