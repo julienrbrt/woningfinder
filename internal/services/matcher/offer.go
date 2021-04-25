@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 )
 
@@ -50,7 +51,8 @@ func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corpo
 	cities := make(map[string]corporation.City)
 	// get cities from offers
 	for _, offer := range offers {
-		city := offer.Housing.City
+		// merge city names
+		city := city.Merge(offer.Housing.City)
 		cities[city.Name] = city
 	}
 
