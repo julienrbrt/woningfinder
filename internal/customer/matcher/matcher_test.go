@@ -155,22 +155,6 @@ func Test_MatchPreferences_Price(t *testing.T) {
 	a.False(matcher.MatchOffer(user, offer))
 }
 
-func Test_MatchPreferences_HousingAllowance(t *testing.T) {
-	a := assert.New(t)
-	offer := offer
-	user := user
-	matcher := matcher.NewMatcher()
-
-	a.True(matcher.MatchOffer(user, offer))
-	offer.Housing.Price = 1000
-	user.HousingPreferences.MaximumPrice = 1000
-	user.HousingPreferences.HasHousingAllowance = false
-	user.YearlyIncome = 50000
-	a.True(matcher.MatchOffer(user, offer))
-	user.HousingPreferences.HasHousingAllowance = true
-	a.False(matcher.MatchOffer(user, offer))
-}
-
 func Test_MatchPreferences_Criteria(t *testing.T) {
 	a := assert.New(t)
 	offer := offer

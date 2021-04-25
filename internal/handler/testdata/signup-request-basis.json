@@ -1,0 +1,28 @@
+{
+  "name": "Foo Baar",
+  "email": "foobaar@example.com",
+  "birth_year": 2000,
+  "yearly_income": 8000,
+  "family_size": 2,
+  "plan": {
+    "name": "basis"
+  },
+  "housing_preferences": {
+    "type": ["appartement", "house"],
+    "city": [
+      {
+        "name": "enschede",
+        "district": [
+          {
+            "name": "Cetrum"
+          },
+          {
+            "name": "Roombeek"
+          }
+        ]
+      }
+    ],
+    "maximum_price": 0,
+    "number_bedroom": 2
+  }
+}

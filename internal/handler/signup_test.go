@@ -59,7 +59,7 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request.json")
+	data, err := ioutil.ReadFile("testdata/signup-request-pro.json")
 	a.NoError(err)
 
 	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
@@ -140,7 +140,7 @@ func Test_SignUp_InvalidHousingType(t *testing.T) {
 	a.Equal(http.StatusBadRequest, rr.Code)
 }
 
-func Test_SignUp(t *testing.T) {
+func Test_SignUp_Basis(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -151,7 +151,45 @@ func Test_SignUp(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request.json")
+	data, err := ioutil.ReadFile("testdata/signup-request-basis.json")
+	a.NoError(err)
+
+	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// init stripe library
+	// we do that because the signup handler directly talks to stripe
+	stripe.Key = stripeKeyTest
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.SignUp)
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusOK, rr.Code)
+
+	// verify expected value
+	var result createCheckoutSessionResponse
+	a.NoError(json.Unmarshal(rr.Body.Bytes(), &result))
+	a.NotEmpty(result.SessionID)
+}
+
+func Test_SignUp_Pro(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	notificationsServiceMock := notificationsService.NewServiceMock(nil)
+	paymentServiceMock := paymentService.NewServiceMock(nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+
+	// create request
+	data, err := ioutil.ReadFile("testdata/signup-request-pro.json")
 	a.NoError(err)
 
 	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))

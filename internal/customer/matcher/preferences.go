@@ -10,7 +10,7 @@ import (
 // MatchPreferences verifies that an offer match the user preferences
 func (m *matcher) matchPreferences(preferences customer.HousingPreferences, offer corporation.Offer) bool {
 	// match price
-	if offer.Housing.Price > preferences.MaximumPrice {
+	if preferences.MaximumPrice > 0 && offer.Housing.Price > preferences.MaximumPrice {
 		return false
 	}
 
@@ -21,11 +21,6 @@ func (m *matcher) matchPreferences(preferences customer.HousingPreferences, offe
 
 	// match location
 	if !matchLocation(preferences, offer.Housing) {
-		return false
-	}
-
-	// verify housing allowance
-	if preferences.HasHousingAllowance && offer.Housing.Price > maximalehuurgrens {
 		return false
 	}
 
