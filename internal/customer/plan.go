@@ -1,6 +1,7 @@
 package customer
 
 import (
+	"math"
 	"time"
 )
 
@@ -8,6 +9,9 @@ import (
 type Plan string
 
 const (
+	// to be updated every year with the "passend toewijze"
+	MaximumIncomeSocialHouse = 44655
+
 	// PlanBasis is the plan for social houses
 	PlanBasis Plan = "basis"
 	// PlanPro is the free sector houses
@@ -24,6 +28,14 @@ func (p Plan) Price() int {
 	default:
 		return 0
 	}
+}
+
+func (p Plan) MaximumIncome() int {
+	if p == PlanBasis {
+		return MaximumIncomeSocialHouse
+	}
+
+	return math.MaxInt32
 }
 
 // UserPlan stores the user plan and payment details (when paid)
