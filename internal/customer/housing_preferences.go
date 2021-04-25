@@ -10,20 +10,19 @@ import (
 
 // HousingPreferences defines the user preference on a housing
 type HousingPreferences struct {
-	ID                  uint                      `pg:",pk" json:"-"`
-	CreatedAt           time.Time                 `pg:"default:now()" json:"-"`
-	UserID              uint                      `json:"-"`
-	Type                []corporation.HousingType `pg:"-" json:"type"` // linked to HousingPreferencesHousingType
-	MaximumPrice        float64                   `json:"maximum_price"`
-	City                []corporation.City        `pg:"-" json:"city,omitempty"` // linked to HousingPreferencesCity and HousingPreferencesCityDistrict
-	NumberBedroom       int                       `json:"number_bedroom"`
-	HasBalcony          bool                      `json:"has_balcony"`
-	HasGarage           bool                      `json:"has_garage"`
-	HasGarden           bool                      `json:"has_garden"`
-	HasElevator         bool                      `json:"has_elevator"`
-	HasAttic            bool                      `json:"has_attic"`
-	HasHousingAllowance bool                      `json:"has_housing_allowance"`
-	IsAccessible        bool                      `json:"is_accessible"`
+	ID            uint                      `pg:",pk" json:"-"`
+	CreatedAt     time.Time                 `pg:"default:now()" json:"-"`
+	UserID        uint                      `json:"-"`
+	Type          []corporation.HousingType `pg:"-" json:"type"` // linked to HousingPreferencesHousingType
+	MaximumPrice  float64                   `json:"maximum_price"`
+	City          []corporation.City        `pg:"-" json:"city,omitempty"` // linked to HousingPreferencesCity and HousingPreferencesCityDistrict
+	NumberBedroom int                       `json:"number_bedroom"`
+	HasBalcony    bool                      `json:"has_balcony"`
+	HasGarage     bool                      `json:"has_garage"`
+	HasGarden     bool                      `json:"has_garden"`
+	HasElevator   bool                      `json:"has_elevator"`
+	HasAttic      bool                      `json:"has_attic"`
+	IsAccessible  bool                      `json:"is_accessible"`
 }
 
 // HasMinimal ensure that the housing preferences contains the minimal required data
@@ -38,7 +37,8 @@ func (h *HousingPreferences) HasMinimal() error {
 		}
 	}
 
-	if h.MaximumPrice <= 0 {
+	// the maximum price of the basis plan is 0 euro, it should be accepted as their maximum price is calculated from the yearly incomes
+	if h.MaximumPrice < 0 {
 		return errors.New("error housing preferences invalid: maximum price must be greater than 0")
 	}
 
