@@ -16,6 +16,7 @@ There is as well small **tools** that are run for special reasons:
 - _[db-migrator](../cmd/tools/db-migrator)_ permits to initialize the database with default values (housing corporations, cities, housing types, selection methods...) and run the databases migrations. It is run as a job before every deploy.
 - _[customer-delete](../cmd/tools/customer-delete)_ permits to delete customers given their email.
 - _[impersonate](../cmd/tools/impersonate)_ permits to get a JWT token for an user in order to impersonate it.
+- _[housing-finder](../cmd/tools/housing-finder)_ replicates _HousingFinder_ as a command line tool.
 
 ## Landing Page
 

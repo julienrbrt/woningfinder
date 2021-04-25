@@ -34,6 +34,7 @@ var dewoonplaatsInfo = corporation.Corporation{
 		city.Bussum,
 		city.Bredevoort,
 		city.Ulft,
+		city.Hengelo,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
