@@ -8,9 +8,9 @@ import (
 type Plan string
 
 const (
-	// PlanBasis is the normal plan
+	// PlanBasis is the plan for social houses
 	PlanBasis Plan = "basis"
-	// PlanPro is the high-end plan
+	// PlanPro is the free sector houses
 	PlanPro Plan = "pro"
 )
 
@@ -18,9 +18,9 @@ const (
 func (p Plan) Price() int {
 	switch p {
 	case PlanBasis:
-		return 20
+		return 2
 	case PlanPro:
-		return 30
+		return 35
 	default:
 		return 0
 	}
