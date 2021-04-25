@@ -1,1 +1,1 @@
-{"plan":[{"name":"basis","price":20},{"name":"pro","price":30}],"supported_cities":[{"name":"Enschede","district":[{"name":"Roombeek"},{"name":"Centrum"}]},{"name":"Hengelo"}],"supported_housing_type":["appartement","house"]}
+{"plan":[{"name":"basis","price":2},{"name":"pro","price":35}],"supported_cities":[{"name":"Enschede","district":[{"name":"Roombeek"},{"name":"Centrum"}]},{"name":"Hengelo"}],"supported_housing_type":["appartement","house"]}
