@@ -35,9 +35,9 @@ func weeklyUpdateTpl(user *customer.User, housingMatch []customer.HousingPrefere
 			})
 		}
 
-		introText := "We hebben goed nieuws! In de afgelopen week hebben we op een woning voor jou gereageerd:"
+		introText := "In de afgelopen week hebben we op een woning voor jou gereageerd:"
 		if len(housingMatch) > 1 {
-			introText = fmt.Sprintf("We hebben goed nieuws! In de afgelopen week hebben we op %d woningen voor jou gereageerd:", len(housingMatch))
+			introText = fmt.Sprintf("In de afgelopen week hebben we op %d woningen voor jou gereageerd:", len(housingMatch))
 		}
 
 		email = hermes.Email{

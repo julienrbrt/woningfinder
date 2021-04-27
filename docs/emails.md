@@ -52,7 +52,7 @@ _https://woningfinder.nl/mijn-zoekopdracht?jwt=_
 
 Hallo <naam>,
 
-We hebben **goed nieuws**: in de afgelopen week hebben we op <number> woningen gereageerd:
+In de afgelopen week hebben we op <number> woningen gereageerd:
 
 | reactie datum | adres | woningcorporatie |
 | ------------- | ----- | ---------------- |
