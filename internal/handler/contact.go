@@ -53,7 +53,8 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 
 	messageTpl := `
 	Hi,
-	You have a new message from the WoningFinder contact form:
+	
+	There is a new message from the WoningFinder contact form:
 	
 	- Name: {{ .Name }}
 	- Email: {{ .Email }}
