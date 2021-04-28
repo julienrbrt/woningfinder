@@ -26,11 +26,21 @@ func (m *matcher) matchPreferences(preferences customer.HousingPreferences, offe
 
 	// match characteristics
 	if (preferences.NumberBedroom > 0 && preferences.NumberBedroom > offer.Housing.NumberBedroom) ||
-		(preferences.HasBalcony && !offer.Housing.Balcony) ||
-		(preferences.HasGarden && !offer.Housing.Garden) ||
-		(preferences.HasElevator && !offer.Housing.Elevator) ||
 		(preferences.IsAccessible && !offer.Housing.Accessible) ||
-		(preferences.HasGarage && !offer.Housing.Garage) ||
+		(preferences.HasGarage && !offer.Housing.Garage) {
+		return false
+	}
+
+	// appartement specific
+	if offer.Housing.Type == corporation.HousingTypeAppartement &&
+		(preferences.HasBalcony && !offer.Housing.Balcony) ||
+		(preferences.HasElevator && !offer.Housing.Elevator) {
+		return false
+	}
+
+	// house specific
+	if offer.Housing.Type == corporation.HousingTypeHouse &&
+		(preferences.HasGarden && !offer.Housing.Garden) ||
 		(preferences.HasAttic && !offer.Housing.Attic) {
 		return false
 	}
