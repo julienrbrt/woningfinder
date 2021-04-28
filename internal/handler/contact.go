@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	_ "embed"
 	"errors"
 	"fmt"
 	"html/template"
@@ -10,6 +11,9 @@ import (
 	"github.com/go-chi/render"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
+
+//go:embed templates/contact_form.tpl
+var contactFormTpl string
 
 type contactFormRequest struct {
 	Name     string `json:"name"`
@@ -51,21 +55,8 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	messageTpl := `
-	Hi,
-	
-	There is a new message from the WoningFinder contact form:
-	
-	- Name: {{ .Name }}
-	- Email: {{ .Email }}
-	- Message: {{ .Message }}
-	
-	Regards,
-	WoningFinder
-	`
-
 	// create body
-	tpl := template.Must(template.New("contact").Parse(messageTpl))
+	tpl := template.Must(template.New("contact").Parse(contactFormTpl))
 	body := &bytes.Buffer{}
 	if err := tpl.Execute(body, message); err != nil {
 		errorMsg := fmt.Errorf("failed creating message: please try again")
