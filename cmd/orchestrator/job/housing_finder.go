@@ -4,12 +4,10 @@ import (
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
-	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
-	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 // HousingFinder populates the housing-finder cron jobs
-func HousingFinder(logger *logging.Logger, c *cron.Cron, clientProvider connector.ClientProvider, matcherService matcherService.Service) {
+func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvider) {
 	// populate crons
 	for _, corp := range clientProvider.List() {
 		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
@@ -17,7 +15,7 @@ func HousingFinder(logger *logging.Logger, c *cron.Cron, clientProvider connecto
 		// get corporation client
 		client, err := clientProvider.Get(corp.Name)
 		if err != nil {
-			logger.Sugar().Error(err)
+			j.logger.Sugar().Error(err)
 			continue
 		}
 
@@ -25,8 +23,8 @@ func HousingFinder(logger *logging.Logger, c *cron.Cron, clientProvider connecto
 		schedule := scheduler.CorporationScheduler(corp)
 		for _, s := range schedule {
 			c.Schedule(s, cron.FuncJob(func() {
-				if err := matcherService.PublishOffers(client, corp); err != nil {
-					logger.Sugar().Error(err)
+				if err := j.matcherService.PublishOffers(client, corp); err != nil {
+					j.logger.Sugar().Error(err)
 				}
 			}))
 		}
