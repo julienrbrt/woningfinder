@@ -50,13 +50,15 @@ func main() {
 		logger.Sugar().Fatal(err)
 	}
 
-	// instantiate cron
+	// instantiate job and cron
+	job := job.NewJobs(logger, dbClient, redisClient, userService, matcherService, notificationsService)
 	c := cron.New(cron.WithLocation(nl), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
 
 	// populate crons
-	job.CustomerAutoDelete(logger, c, userService, dbClient)
-	job.HousingFinder(logger, c, clientProvider, matcherService)
-	job.SendWeeklyUpdate(logger, c, userService, notificationsService)
+	job.CustomerAutoDelete(c)
+	job.HousingFinder(c, clientProvider)
+	job.SendCustomerPaymentReminder(c)
+	job.SendWeeklyUpdate(c)
 
 	// start cron scheduler
 	c.Run()

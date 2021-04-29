@@ -11,6 +11,7 @@ import (
 type Service interface {
 	SendLogin(user *customer.User) error
 	SendWelcome(user *customer.User) error
+	SendPaymentReminder(user *customer.User) error
 	SendWeeklyUpdate(user *customer.User, housingMatch []customer.HousingPreferencesMatch) error
 	SendCorporationCredentialsError(user *customer.User, corporationName string) error
 	SendBye(user *customer.User) error
