@@ -20,29 +20,19 @@ func CustomerAutoDelete(logger *logging.Logger, c *cron.Cron, userService userSe
 	// populate cron
 	c.AddJob(spec, cron.FuncJob(func() {
 		var users []customer.User
+		usersPlanQuery := dbClient.Conn().Model((*customer.UserPlan)(nil)).ColumnExpr("user_id")
 		err := dbClient.Conn().
 			Model(&users).
-			Join("INNER JOIN user_plans ON user_plans.user_id != id").
+			Where("id NOT IN (?)", usersPlanQuery).
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
 			logger.Sugar().Warnf("failed getting users to delete: %w", err)
 		}
 
 		for _, user := range users {
-			user, err := userService.GetUser(&user)
-			if err != nil {
-				logger.Sugar().Warnf("failed getting user %s for deleting: %w", user.Email, err)
-				continue
-			}
-
-			// skip paying user
-			if user.HasPaid() {
-				continue
-			}
-
 			// delete only user that did not paid since a day ago
 			if user.CreatedAt.Before(time.Now().Add(-48 * time.Hour)) {
-				if err := userService.DeleteUser(user); err != nil {
+				if err := userService.DeleteUser(&user); err != nil {
 					logger.Sugar().Warnf("failed deleting user %s: %w", user.Email, err)
 				}
 			}
