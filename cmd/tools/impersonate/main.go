@@ -38,5 +38,5 @@ func main() {
 		Email: userEmail,
 	})
 
-	fmt.Printf("JWT token for %s: %s\n", userEmail, token)
+	fmt.Printf("Authenticated with %s: https://woningfinder.nl/mijn-zoekopdracht?jwt=%s\n", userEmail, token)
 }
