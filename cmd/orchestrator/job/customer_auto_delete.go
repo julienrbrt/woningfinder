@@ -41,7 +41,7 @@ func CustomerAutoDelete(logger *logging.Logger, c *cron.Cron, userService userSe
 			}
 
 			// delete only user that did not paid since a day ago
-			if user.CreatedAt.Before(time.Now().Add(-24 * time.Hour)) {
+			if user.CreatedAt.Before(time.Now().Add(-48 * time.Hour)) {
 				if err := userService.DeleteUser(user); err != nil {
 					logger.Sugar().Warnf("failed deleting user %s: %w", user.Email, err)
 				}
