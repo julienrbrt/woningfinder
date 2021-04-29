@@ -18,6 +18,8 @@ func (j *Jobs) SendCustomerPaymentReminder(c *cron.Cron) {
 
 	// populate cron
 	c.AddJob(spec, cron.FuncJob(func() {
+		j.logger.Sugar().Info("send-customer-payment-reminder job started")
+
 		var users []customer.User
 		usersPlanQuery := j.dbClient.Conn().Model((*customer.UserPlan)(nil)).ColumnExpr("user_id")
 		err := j.dbClient.Conn().
