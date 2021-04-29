@@ -9,8 +9,8 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 )
 
-// PublishOffers publish the offers of a housing corporation to redis queue
-func (s *service) PublishOffers(client connector.Client, corp corporation.Corporation) error {
+// PushOffers pushes the offers of a housing corporation to redis queue
+func (s *service) PushOffers(client connector.Client, corp corporation.Corporation) error {
 	offers, err := client.GetOffers()
 	if err != nil {
 		return fmt.Errorf("error while fetching offers for %s: %w", corp.Name, err)

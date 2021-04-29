@@ -11,6 +11,8 @@ func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
 
 	// populate cron
 	c.AddJob(spec, cron.FuncJob(func() {
+		j.logger.Sugar().Info("send-weekly-update job started")
+
 		// get all users
 		users, err := j.userService.GetWeeklyUpdateUsers()
 		if err != nil {

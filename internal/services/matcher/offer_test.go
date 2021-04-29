@@ -38,7 +38,7 @@ var corporationInfo = corporation.Corporation{
 	},
 }
 
-func Test_PublishOffers_CorporationClientError(t *testing.T) {
+func Test_PushOffers_CorporationClientError(t *testing.T) {
 	a := assert.New(t)
 
 	err := errors.New("foo")
@@ -46,10 +46,10 @@ func Test_PublishOffers_CorporationClientError(t *testing.T) {
 	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, matcher.NewMatcher(), nil)
 
-	a.Error(matcherService.PublishOffers(connector.NewClientMock([]corporation.Offer{}, err), corporationInfo))
+	a.Error(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{}, err), corporationInfo))
 }
 
-func Test_PublishOffers_RedisClientError(t *testing.T) {
+func Test_PushOffers_RedisClientError(t *testing.T) {
 	a := assert.New(t)
 
 	err := errors.New("foo")
@@ -57,25 +57,25 @@ func Test_PublishOffers_RedisClientError(t *testing.T) {
 	redisMock := database.NewRedisClientMock("", nil, err)
 	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, matcher.NewMatcher(), nil)
 
-	a.Error(matcherService.PublishOffers(connector.NewClientMock([]corporation.Offer{{}}, nil), corporationInfo))
+	a.Error(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{{}}, nil), corporationInfo))
 }
 
-func Test_PublishOffers_Success_NoOffers(t *testing.T) {
+func Test_PushOffers_Success_NoOffers(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, matcher.NewMatcher(), nil)
 
-	a.Nil(matcherService.PublishOffers(connector.NewClientMock([]corporation.Offer{}, nil), corporationInfo))
+	a.Nil(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{}, nil), corporationInfo))
 }
 
-func Test_PublishOffers_Success(t *testing.T) {
+func Test_PushOffers_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcherService.NewService(logger, redisMock, nil, nil, &mockCorporationService{}, matcher.NewMatcher(), nil)
 
-	a.Nil(matcherService.PublishOffers(connector.NewClientMock([]corporation.Offer{{}}, nil), corporationInfo))
+	a.Nil(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{{}}, nil), corporationInfo))
 }
 
 func Test_SubscribeOffers_RedisClientError(t *testing.T) {
