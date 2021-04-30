@@ -94,7 +94,7 @@ func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 		if err := db.Model(u).
 			Where("id = ?", u.ID).
 			Relation("HousingPreferencesMatch", func(q *orm.Query) (*orm.Query, error) {
-				return q.Where("created_at >= now() - interval '1 day'"), nil
+				return q.Where("created_at >= now() - interval '7 day'"), nil
 			}).
 			Select(); err != nil {
 			return nil, fmt.Errorf("failed getting user %s housing preferences match: %w", u.Email, err)
