@@ -9,7 +9,7 @@ import (
 
 // WoningFinderInfo contains the email information about WoningFinder
 var WoningFinderInfo = hermes.Hermes{
-	Theme: new(woningFinderTheme),
+	Theme: new(theme),
 	Product: hermes.Product{
 		Name:        "Team WoningFinder",
 		Link:        "https://woningfinder.nl/",
