@@ -105,7 +105,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	}
 
 	if err := json.Unmarshal(resp.Result, &result); err != nil {
-		return nil, fmt.Errorf("error parsing login result %v: %w", string(resp.Result), err)
+		return nil, fmt.Errorf("error parsing offer result %v: %w", string(resp.Result), err)
 	}
 
 	var offers []corporation.Offer
@@ -129,8 +129,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		City: corporation.City{
 			Name: offer.City,
 		},
-		EnergieLabel:  offer.EnergieLabel,
-		NumberRoom:    len(offer.RoomSize),
+		EnergyLabel:   offer.EnergieLabel,
 		NumberBedroom: offer.NumberBedroom,
 		Size:          c.parseHouseSize(offer.Size),
 		Price:         offer.RentPrice,

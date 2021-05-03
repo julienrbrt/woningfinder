@@ -1,4 +1,4 @@
-package dewoonplaats_test
+package zig_test
 
 import (
 	"testing"
@@ -12,7 +12,7 @@ import (
 
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
-	client := bootstrapCorporation.CreateDeWoonplaatsClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"))
+	client := bootstrapCorporation.CreateRoomspotClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"))
 
 	offers, err := client.GetOffers()
 	a.NoError(err)
@@ -27,12 +27,11 @@ func Test_FetchOffer(t *testing.T) {
 		a.NotEmpty(offer.Housing.Address)
 		a.NotEmpty(offer.Housing.City.Name)
 		a.NotEmpty(offer.Housing.CityDistrict)
-		a.NotEmpty(offer.Housing.EnergyLabel)
+		// a.NotEmpty(offer.Housing.EnergyLabel)
 		a.True(offer.Housing.Price > 0)
-		// a.True(offer.Housing.Size > 0)
-		a.True(offer.Housing.NumberBedroom > 0)
-		a.True(offer.Housing.BuildingYear > 0)
-
+		a.True(offer.Housing.Size >= 0)
+		a.True(offer.Housing.NumberBedroom >= 0)
+		a.True(offer.Housing.BuildingYear >= 0)
 		a.NotEmpty(offer.SelectionMethod)
 		a.NotNil(offer.SelectionDate)
 		a.NotEmpty(offer.URL)

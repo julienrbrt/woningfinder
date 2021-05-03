@@ -1,4 +1,4 @@
-package bootstrap
+package corporation
 
 import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
@@ -10,12 +10,16 @@ import (
 func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) connector.ClientProvider {
 	providers := []connector.Provider{
 		{
-			Corporation: dewoonplaatsInfo,
+			Corporation: DeWoonplaatsInfo,
 			Client:      CreateDeWoonplaatsClient(logger, mapboxClient),
 		},
 		{
-			Corporation: onshuisInfo,
+			Corporation: OnsHuisInfo,
 			Client:      CreateOnsHuisClient(logger, mapboxClient),
+		},
+		{
+			Corporation: RoomspotInfo,
+			Client:      CreateRoomspotClient(logger, mapboxClient),
 		},
 	}
 
