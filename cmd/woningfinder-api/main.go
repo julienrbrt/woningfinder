@@ -6,6 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/handler"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
@@ -33,7 +34,7 @@ func main() {
 	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
 
 	corporationService := corporation.NewService(logger, dbClient)
-	clientProvider := bootstrap.CreateClientProvider(logger, nil) // mapboxClient not required in the api
+	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the api
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	bootstrap.CreateSripeClient(logger) // init stripe library
 	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)

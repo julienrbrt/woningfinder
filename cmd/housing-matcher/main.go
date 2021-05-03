@@ -6,6 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
@@ -34,7 +35,7 @@ func main() {
 	redisClient := bootstrap.CreateRedisClient(logger)
 	emailClient := bootstrap.CreateEmailClient()
 
-	clientProvider := bootstrap.CreateClientProvider(logger, nil) // mapboxClient not required in the matcher
+	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the matcher
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)

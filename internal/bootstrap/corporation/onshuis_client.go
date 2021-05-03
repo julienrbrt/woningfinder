@@ -1,4 +1,4 @@
-package bootstrap
+package corporation
 
 import (
 	"net/url"
@@ -12,7 +12,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
-var onshuisInfo = corporation.Corporation{
+var OnsHuisInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "mijn.onshuis.com", Path: "/apps/com.itris.klantportaal"},
 	Name:        "OnsHuis",
 	URL:         "https://mijn.onshuis.com",
@@ -27,7 +27,7 @@ var onshuisInfo = corporation.Corporation{
 
 // CreateOnsHuisClient creates a client for OnsHuis
 func CreateOnsHuisClient(logger *logging.Logger, mapboxClient mapbox.Client) connector.Client {
-	client, err := itris.NewClient(logger, mapboxClient, onshuisInfo.APIEndpoint.String(), onshuis.DetailsParser)
+	client, err := itris.NewClient(logger, mapboxClient, OnsHuisInfo.APIEndpoint.String(), onshuis.DetailsParser)
 	if err != nil {
 		logger.Sugar().Fatal(err)
 	}

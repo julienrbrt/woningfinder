@@ -10,6 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/cmd/orchestrator/job"
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
@@ -38,7 +39,7 @@ func main() {
 	mapboxClient := bootstrap.CreateMapboxClient()
 	emailClient := bootstrap.CreateEmailClient()
 
-	clientProvider := bootstrap.CreateClientProvider(logger, mapboxClient)
+	clientProvider := bootstrapCorporation.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)

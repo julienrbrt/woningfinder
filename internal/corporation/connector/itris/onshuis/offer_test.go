@@ -32,10 +32,9 @@ func Test_FetchOffer(t *testing.T) {
 		a.NotEmpty(offer.Housing.Address)
 		a.NotEmpty(offer.Housing.City.Name)
 		a.NotEmpty(offer.Housing.CityDistrict)
-		a.NotEmpty(offer.Housing.EnergieLabel)
+		a.NotEmpty(offer.Housing.EnergyLabel)
 		a.True(offer.Housing.Price > 0)
 		a.True(offer.Housing.Size > 0)
-		a.True(offer.Housing.NumberRoom > 0)
 		a.True(offer.Housing.NumberBedroom > 0) // might fail randomly if there is only studios available
 		a.True(offer.Housing.BuildingYear > 0)
 
@@ -43,8 +42,5 @@ func Test_FetchOffer(t *testing.T) {
 		a.NotNil(offer.SelectionDate)
 		a.NotEmpty(offer.URL)
 		a.NotEmpty(offer.ExternalID)
-
-		// test only for one offer
-		break
 	}
 }

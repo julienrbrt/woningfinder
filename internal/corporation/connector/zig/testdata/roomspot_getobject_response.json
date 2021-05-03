@@ -1,0 +1,289 @@
+{
+  "sAngularServiceData": "[{\"url\":\"\\/portal\\/core\\/frontend\\/getportalconfiguration\\/format\\/json\",\"data\":{\"canUpdate\":false,\"enableVat\":false,\"googleMapsApiKey\":\"AIzaSyC4lMCX-upPPFI5PPPa4w_lKq3SLcgPp0E\",\"gebruikGoogleMaps\":false,\"gebruikOsmKadaster\":false,\"toonBekijkOmgeving\":true,\"hidePosition\":false,\"hideReactionData\":false,\"veldenMetIcoonInAdvertentietegel\":[\"oppervlakteWoning\",\"modelcategorie\",\"huurtoeslagMogelijk\",\"isZelfstandig\"],\"urlVerlengen\":\"\\/mijn-roomspot\\/verlengen-inschrijving\",\"urlGebruikersnaamVergeten\":\"\\/mijn-roomspot\\/gebruikersnaam-vergeten\\/\",\"urlWachtwoordVergeten\":\"\\/mijn-roomspot\\/wachtwoord-vergeten\\/\",\"urlInloggen\":\"\\/mijn-roomspot\\/inloggen\",\"hideRegistrationNumber\":false,\"dwellingDetailsQueryKey\":\"dwellingID\",\"clusterDetailsQueryKey\":\"clusterID\",\"verzameladvertentieDetailsQueryKey\":\"verzameladvertentieID\",\"extraInschrijfduurUitschakelenMogelijk\":false,\"tijdelijkInschrijvenZonderBetalen\":false,\"magAanbiedingAccepterenBijUitstaandeInschrijvingbetaling\":true,\"maxAantalReacties\":\"0\",\"toonOokLegeVerzameladvertenties\":false,\"reactieInToewijzingsprocesTeltMeeAlsActief\":false,\"betaalmethodes\":[\"ideal\",\"singleDebitAuthorization\",\"bankWireTransfer\"],\"notificatiesActief\":false,\"gebruikKomtNaarBezichtiging\":false,\"komtNaarBezichtigingAanpasbaarTot\":\"24\",\"grootTeTonenPrijsBijAdvertentie\":\"totaleHuur\",\"slaagkansActief\":\"\",\"slaagkansPeriodeTerugkijken\":\"6\",\"urlAanbodApi\":\"\",\"locale\":\"nl_NL\",\"inkomensdocumentVerplicht\":false}}]",
+  "result": {
+    "infoveldBewoners": "",
+    "infoveldKort": "",
+    "hospiterenVanaf": "",
+    "extraInformatieUrl": "",
+    "huurtoeslagVoorwaarde": {
+      "icon": "",
+      "id": null,
+      "localizedNaam": "",
+      "localizedIconText": null
+    },
+    "sorteergroep": {
+      "code": "",
+      "id": null
+    },
+    "huurtoeslagMogelijk": null,
+    "beschikbaarTot": "",
+    "actionLabelToelichting": "",
+    "huurinkomenstabelGebruiken": false,
+    "voorrangUrgentie": false,
+    "voorrangOverigeUrgenties": false,
+    "voorrangHuishoudgrootteMin": 0,
+    "voorrangHuishoudgrootteMax": 0,
+    "voorrangLeeftijdMin": 0,
+    "voorrangLeeftijdMax": 0,
+    "voorrangGezinnenKinderen": false,
+    "voorrangKernbinding": false,
+    "woningVoorrangVoor": {
+      "localizedName": null
+    },
+    "specifiekeVoorzieningen": [
+      {
+        "description": "Gedeelde badkamer",
+        "inCode": "icn_badkamer_gedeeld2",
+        "dwellingTypeCategory": "woning",
+        "id": "3",
+        "localizedName": "Gedeelde badkamer"
+      },
+      {
+        "description": "Gedeelde keuken",
+        "inCode": "icn_keuken_gedeeld2",
+        "dwellingTypeCategory": "woning",
+        "id": "5",
+        "localizedName": "Gedeelde keuken"
+      },
+      {
+        "description": "Incl. voorschot gas water elektriciteit",
+        "inCode": "br_mijn_betalingen",
+        "dwellingTypeCategory": "woning",
+        "id": "6",
+        "localizedName": "Incl. voorschot gas water elektriciteit"
+      },
+      {
+        "description": "Parkeervoorziening aanwezig",
+        "inCode": "icn_Parkeergelegenheid",
+        "dwellingTypeCategory": "woning",
+        "id": "13",
+        "localizedName": "Parkeervoorziening aanwezig"
+      }
+    ],
+    "reactionData": {
+      "mogelijkePositie": null,
+      "voorlopigePositie": null,
+      "kanReageren": false,
+      "isPassend": true,
+      "redenMagNietReagerenCode": "winkel-reactie-nietmeergepubliceerd",
+      "loggedin": false,
+      "action": "add",
+      "objecttype": "reactie",
+      "label": "Voeg reactie toe",
+      "openExterneLink": false,
+      "isVrijeSectorWoning": false,
+      "url": "?add=5297&dwellingID=5352"
+    },
+    "isVrijeSectorWoning": false,
+    "inschrijvingVereistVoorReageren": true,
+    "corporation": {
+      "name": "Stichting Jongeren Huisvesting Twente",
+      "picture": {
+        "location": "corporation/pictures/logosjhtnieuwehuisstijl.png"
+      },
+      "website": ""
+    },
+    "postalcode": "7512 XW",
+    "street": "Rietmolenstraat",
+    "houseNumber": "50",
+    "houseNumberAddition": "13 k-4",
+    "regio": {
+      "name": null
+    },
+    "municipality": {
+      "name": "Enschede"
+    },
+    "city": {
+      "name": "Enschede"
+    },
+    "quarter": {
+      "name": "Stad Enschede",
+      "extraInformatieUrl": null,
+      "id": "2"
+    },
+    "dwellingType": {
+      "categorie": "woning",
+      "huurprijsDuurActief": false,
+      "localizedName": "Kamer"
+    },
+    "voorrangUrgentieReden": {
+      "localizedName": null
+    },
+    "availableFrom": "",
+    "netRent": 228.11,
+    "calculationRent": 0,
+    "totalRent": 329.01,
+    "flexibelHurenActief": false,
+    "heatingCosts": 89,
+    "additionalCosts": 0,
+    "serviceCosts": 11.9,
+    "sellingPrice": 0,
+    "description": "",
+    "bestemming": {},
+    "areaLivingRoom": 0,
+    "areaSleepingRoom": "",
+    "sleepingRoom": {
+      "amountOfRooms": "0",
+      "id": "4",
+      "localizedName": "Geen aparte slaapkamers"
+    },
+    "energyLabel": {
+      "icon": null,
+      "id": null,
+      "localizedName": ""
+    },
+    "energyIndex": "0.00",
+    "floor": {
+      "localizedName": ""
+    },
+    "garden": false,
+    "gardenSite": {
+      "localizedName": ""
+    },
+    "oppervlakteTuin": {
+      "localizedName": null
+    },
+    "balcony": true,
+    "balconySite": {
+      "localizedName": ""
+    },
+    "heating": {
+      "localizedName": ""
+    },
+    "kitchen": {
+      "localizedName": ""
+    },
+    "attic": {
+      "localizedName": ""
+    },
+    "constructionYear": 0,
+    "minimumIncome": 0,
+    "maximumIncome": 39055,
+    "minimumHouseholdSize": 0,
+    "maximumHouseholdSize": 1,
+    "minimumAge": 17,
+    "maximumAge": 29,
+    "inwonendeKinderenMinimum": 0,
+    "inwonendeKinderenMaximum": 0,
+    "model": {
+      "modelCategorie": {
+        "icon": "icon_toewijzing_hospiteren",
+        "code": "cooptation",
+        "toonOpWebsite": true
+      },
+      "inCode": "Cooptatie",
+      "isVoorExtraAanbod": false,
+      "isHospiteren": false,
+      "advertentieSluitenNaEersteReactie": false,
+      "einddatumTonen": true,
+      "aantalReactiesTonen": true,
+      "slaagkansTonen": false,
+      "id": "6",
+      "localizedName": "Algemeen: Coöptatie"
+    },
+    "rentBuy": "Huur",
+    "publicationDate": "2020-07-29 15:32:00",
+    "closingDate": "2020-09-01 23:59:00",
+    "numberOfReactions": 216,
+    "assignmentID": 5297,
+    "latitude": "52.2157",
+    "longitude": "6.90243",
+    "floorplans": [],
+    "pictures": [
+      {
+        "label": "",
+        "uri": "/portal/uploads/dwelling/pictures/5352-1.jpg",
+        "type": "jpg"
+      }
+    ],
+    "videos": [],
+    "gebruikFotoAlsHeader": true,
+    "remainingTimeUntilClosingDate": "Niet van toepassing",
+    "reactieUrl": "",
+    "temporaryRent": false,
+    "showEnergyCosts": false,
+    "newlyBuild": false,
+    "storageRoom": false,
+    "energyCosts": [],
+    "areaDwelling": 18,
+    "areaPerceel": "0",
+    "volumeDwelling": "0",
+    "actionLabel": {
+      "localizedLabel": null
+    },
+    "actionLabelFrom": "0000-00-00 00:00:00",
+    "actionLabelUntil": "0000-00-00 00:00:00",
+    "actionLabelIfActive": false,
+    "relatieHuurInkomenData": null,
+    "relatieHuurInkomenGroepen": null,
+    "doelgroepen": [
+      {
+        "icon": "icon_doelgroep_jongeren",
+        "code": "regulier"
+      }
+    ],
+    "koopvoorwaarden": {
+      "localizedNaam": null
+    },
+    "koopprijsType": {
+      "localizedNaam": null
+    },
+    "koopkorting": {
+      "localizedNaam": null
+    },
+    "koopproducten": {
+      "url": null,
+      "picture": null,
+      "localizedNaam": null
+    },
+    "isExtraAanbod": false,
+    "makelaars": [],
+    "lengte": "0.00",
+    "breedte": "0.00",
+    "hoogte": "0.00",
+    "rentDuration": {
+      "inCode": "",
+      "id": "3"
+    },
+    "vatInclusive": false,
+    "isGepubliceerdInEenModelMetReageren": true,
+    "woningsoort": {
+      "isZelfstandig": false,
+      "id": "2",
+      "localizedNaam": "Onzelfstandig"
+    },
+    "aantalMedebewoners": 3,
+    "isExternModelType": false,
+    "isZelfstandig": false,
+    "urlKey": "5352-rietmolenstraat-50--13k-4-enschede",
+    "servicecomponentenBinnenServicekosten": [],
+    "servicecomponentenBuitenServicekosten": [],
+    "eenmaligeKosten": 0,
+    "reactieBeleidsregels": [],
+    "sorteringBeleidsregels": [],
+    "complex": {
+      "nummer": null,
+      "naam": null,
+      "url": null,
+      "serviceovereenkomstVerplicht": null,
+      "serviceovereenkomstKosten": null,
+      "id": null
+    },
+    "serviceovereenkomstKosten": "0",
+    "extraInschrijfduurUitgeschakeld": false,
+    "eigenaar": {
+      "name": null,
+      "website": null,
+      "logo": null
+    },
+    "availableFromDate": "2020-10-01",
+    "zonnepanelen": false,
+    "gaslozeWoning": false,
+    "nulOpDeMeterWoning": false,
+    "verzameladvertentieID": 0,
+    "ophalenInkomenViaMijnOverheidBijReageren": false,
+    "id": "5352",
+    "isGepubliceerd": false,
+    "isInGepubliceerdeVerzameladvertentie": false
+  }
+}

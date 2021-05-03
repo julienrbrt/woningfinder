@@ -3,15 +3,15 @@ package main
 import (
 	"os"
 
+	"github.com/joho/godotenv"
+	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
+	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/util"
-
-	"github.com/joho/godotenv"
-	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/pkg/config"
 )
 
 // init is invoked before main()
@@ -37,7 +37,7 @@ func main() {
 	}
 
 	dbClient := bootstrap.CreateDBClient(logger)
-	clientProvider := bootstrap.CreateClientProvider(logger, nil)
+	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil)
 	corporationService := corporation.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, nil, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 

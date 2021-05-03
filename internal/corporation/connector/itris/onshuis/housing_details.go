@@ -13,11 +13,8 @@ func DetailsParser(logger *logging.Logger, offer *corporation.Offer, e *colly.HT
 	// add selection method
 	offer.SelectionMethod = corporation.SelectionRandom // all houses from onshuis are random
 
-	// add number of room and size
+	// add housing size
 	e.ForEach("#oppervlaktes-page div.infor-wrapper", func(_ int, el *colly.HTMLElement) {
-		// add number room
-		offer.Housing.NumberRoom++
-
 		// increase size
 		roomSize, err := strconv.ParseFloat(strings.ReplaceAll(strings.Trim(el.Text, " m2"), ",", "."), 64)
 		if err != nil {
@@ -29,7 +26,7 @@ func DetailsParser(logger *logging.Logger, offer *corporation.Offer, e *colly.HT
 	// add energie label
 	energieLabel := e.ChildText("#Woning-page strong.tag-text")
 	if energieLabel != "" {
-		offer.Housing.EnergieLabel = energieLabel
+		offer.Housing.EnergyLabel = energieLabel
 	}
 
 	// add building year

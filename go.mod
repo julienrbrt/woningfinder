@@ -13,7 +13,6 @@ require (
 	github.com/go-pg/pg/v10 v10.7.5
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/gocolly/colly/v2 v2.1.0
-	github.com/hashicorp/go-retryablehttp v0.6.8
 	github.com/joho/godotenv v1.3.0
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/lestrrat-go/jwx v1.1.1
