@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -15,7 +16,7 @@ import (
 
 const externalIDSeperator = ";"
 
-type offer struct {
+type offerList struct {
 	Infoveldkort          string `json:"infoveldKort"`
 	Huurtoeslagvoorwaarde struct {
 		Icon              string      `json:"icon"`
@@ -433,27 +434,40 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	}
 
 	var result struct {
-		Result []offer `json:"result"`
+		Result []offerList `json:"result"`
 	}
 	if err := json.Unmarshal(resp, &result); err != nil {
 		return nil, fmt.Errorf("error parsing offer result %v: %w", string(resp), err)
 	}
 
 	var offers []corporation.Offer
+	var wg sync.WaitGroup
+
 	for _, offer := range result.Result {
 		houseType := c.parseHousingType(offer)
 		if !supportedHousing(offer) && houseType == corporation.HousingTypeUndefined {
 			continue
 		}
 
-		offerDetails, err := c.getOfferDetails(offer.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error getting offer details: %w", err)
-		}
+		// enrich offer concurrently
+		wg.Add(1)
 
-		offers = append(offers, c.Map(offerDetails, houseType))
+		go func(offer offerList, houseType corporation.HousingType) {
+			defer wg.Done()
+
+			offerDetails, err := c.getOfferDetails(offer.ID)
+			if err != nil {
+				// do not append the house but logs error
+				c.logger.Sugar().Warnf("failed enriching %v: %w", offer, err)
+				return
+			}
+
+			offers = append(offers, c.Map(offerDetails, houseType))
+		}(offer, houseType)
 	}
 
+	// wait for all offers
+	wg.Wait()
 	return offers, nil
 }
 
@@ -519,7 +533,7 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 }
 
 // supportedHousing filters the offer of roomspot to only houses supported by WoningFinder (no shared room for instance)
-func supportedHousing(offer offer) bool {
+func supportedHousing(offer offerList) bool {
 	if offer.Rentbuy != "Huur" {
 		return false
 	}
@@ -531,7 +545,7 @@ func supportedHousing(offer offer) bool {
 	return true
 }
 
-func (c *client) parseHousingType(offer offer) corporation.HousingType {
+func (c *client) parseHousingType(offer offerList) corporation.HousingType {
 	if offer.Dwellingtype.Categorie != "woning" {
 		return corporation.HousingTypeUndefined
 	}
