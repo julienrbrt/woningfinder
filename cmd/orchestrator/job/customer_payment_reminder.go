@@ -27,7 +27,7 @@ func (j *Jobs) SendCustomerPaymentReminder(c *cron.Cron) {
 			Where("id NOT IN (?)", usersPlanQuery).
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
-			j.logger.Sugar().Warnf("failed getting users to send payment reminder: %w", err)
+			j.logger.Sugar().Errorf("failed getting users to send payment reminder: %w", err)
 		}
 
 		for _, user := range users {
@@ -40,7 +40,7 @@ func (j *Jobs) SendCustomerPaymentReminder(c *cron.Cron) {
 				}
 
 				// send reminder
-				if err := j.notificationsService.SendPaymentReminder(&user); err != nil {
+				if err := j.notificationService.SendPaymentReminder(&user); err != nil {
 					j.logger.Sugar().Error("Error sending %s payment reminder: %w", user.Email, err)
 				}
 

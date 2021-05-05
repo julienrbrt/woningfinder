@@ -73,7 +73,7 @@ For that WoningFinder uses Mapbox Geocoding API.
 We use redis in order to check if we already try to match a user with an offer. We create an uuid of the user and the address and only check if it does not exists.
 This permits to do not have to re-check multiple times an offer as offers stay published for multiple days. Once there is a match, the match is added in the `HousingPreferencesMatch` table of the database.
 
-People having registered their credentials for the longest get reaction priority, regardless of their plans (probably should be changed on day).
+People having registered their credentials for the longest get reaction priority.
 
 ### Corporation Credentials
 

@@ -34,7 +34,6 @@ func main() {
 	userService := user.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	matcherService := matcherService.NewService(logger, redisClient, userService, nil, corporationService, matcher.NewMatcher(), clientProvider)
 
-	// populate crons
 	for _, corp := range clientProvider.List() {
 		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 

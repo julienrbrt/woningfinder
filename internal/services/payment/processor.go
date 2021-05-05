@@ -28,5 +28,5 @@ func (s *service) ProcessPayment(email string, plan customer.Plan) error {
 
 // notifyUser sends confirmation email
 func (s *service) notifyUser(user *customer.User) error {
-	return s.notificationsService.SendWelcome(user)
+	return s.notificationService.SendWelcome(user)
 }

@@ -21,7 +21,7 @@ func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
 
 		// send confirmation email to each user
 		for _, user := range users {
-			if err := j.notificationsService.SendWeeklyUpdate(user, user.HousingPreferencesMatch); err != nil {
+			if err := j.notificationService.SendWeeklyUpdate(user, user.HousingPreferencesMatch); err != nil {
 				j.logger.Sugar().Errorf("error while sending weekly update: %w", err)
 			}
 		}

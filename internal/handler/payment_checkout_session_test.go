@@ -13,7 +13,7 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
+	notificationService "github.com/woningfinder/woningfinder/internal/services/notification"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/email"
@@ -28,9 +28,9 @@ func Test_CreateCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationsServiceMock := notificationsService.NewServiceMock(nil)
+	notificationServiceMock := notificationService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)
@@ -58,9 +58,9 @@ func Test_CreateCheckoutSession(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationsServiceMock := notificationsService.NewServiceMock(nil)
+	notificationServiceMock := notificationService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)
@@ -94,9 +94,9 @@ func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationsServiceMock := notificationsService.NewServiceMock(nil)
+	notificationServiceMock := notificationService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-invalid-plan-request.json")
 	a.NoError(err)
@@ -129,9 +129,9 @@ func Test_PaymentProcessor_ErrUserService(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
-	notificationsServiceMock := notificationsService.NewServiceMock(nil)
+	notificationServiceMock := notificationService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-request.json")
 	a.NoError(err)
@@ -161,9 +161,9 @@ func Test_PaymentProcessor(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationsServiceMock := notificationsService.NewServiceMock(nil)
+	notificationServiceMock := notificationService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationsServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-request.json")
 	a.NoError(err)

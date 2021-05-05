@@ -458,7 +458,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offerDetails, err := c.getOfferDetails(offer.ID)
 			if err != nil {
 				// do not append the house but logs error
-				c.logger.Sugar().Warnf("failed enriching %v: %w", offer, err)
+				c.logger.Sugar().Warnf("zig connector: failed enriching %v: %w", offer, err)
 				return
 			}
 
@@ -491,7 +491,7 @@ func (c *client) getOfferDetails(offerID string) (*offerDetails, error) {
 func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) corporation.Offer {
 	numberBedroom, err := strconv.Atoi(offer.Sleepingroom.Amountofrooms)
 	if err != nil {
-		c.logger.Sugar().Debugf("zig connector: failed parsing number bedroom: %w", err)
+		c.logger.Sugar().Infof("zig connector: failed parsing number bedroom: %w", err)
 	}
 
 	house := corporation.Housing{
@@ -516,7 +516,7 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	// get address city district
 	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
 	if err != nil {
-		c.logger.Sugar().Infof("could not get city district of %s: %w", house.Address, err)
+		c.logger.Sugar().Infof("zig connector: could not get city district of %s: %w", house.Address, err)
 	}
 
 	return corporation.Offer{

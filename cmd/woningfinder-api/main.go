@@ -9,7 +9,7 @@ import (
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/handler"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
-	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
+	notificationService "github.com/woningfinder/woningfinder/internal/services/notification"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
@@ -37,9 +37,9 @@ func main() {
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the api
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	bootstrap.CreateSripeClient(logger) // init stripe library
-	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
-	paymentService := paymentService.NewService(logger, redisClient, userService, notificationsService)
-	router := handler.NewHandler(logger, corporationService, userService, notificationsService, paymentService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), jwtAuth, emailClient)
+	notificationService := notificationService.NewService(logger, emailClient, jwtAuth)
+	paymentService := paymentService.NewService(logger, redisClient, userService, notificationService)
+	router := handler.NewHandler(logger, corporationService, userService, notificationService, paymentService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), jwtAuth, emailClient)
 
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
 		logger.Sugar().Fatalf("failed to start server: %w", err)

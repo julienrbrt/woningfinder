@@ -25,7 +25,7 @@ func (j *Jobs) CustomerAutoDelete(c *cron.Cron) {
 			Where("id NOT IN (?)", usersPlanQuery).
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
-			j.logger.Sugar().Warnf("failed getting users to delete: %w", err)
+			j.logger.Sugar().Errorf("failed getting users to delete: %w", err)
 		}
 
 		for _, user := range users {
@@ -38,7 +38,7 @@ func (j *Jobs) CustomerAutoDelete(c *cron.Cron) {
 				}
 
 				if err := j.userService.DeleteUser(user); err != nil {
-					j.logger.Sugar().Warnf("failed deleting user %s: %w", user.Email, err)
+					j.logger.Sugar().Errorf("failed deleting user %s: %w", user.Email, err)
 				}
 			}
 		}

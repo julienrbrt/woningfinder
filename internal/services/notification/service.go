@@ -1,4 +1,4 @@
-package notifications
+package notification
 
 import (
 	"github.com/go-chi/jwtauth"
@@ -7,7 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-// Service permits to handle the management of the notifications
+// Service permits to handle the management of the notification
 type Service interface {
 	SendLogin(user *customer.User) error
 	SendWelcome(user *customer.User) error
