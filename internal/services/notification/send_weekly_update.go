@@ -1,11 +1,11 @@
-package notifications
+package notification
 
 import (
 	"fmt"
 
 	"github.com/matcornic/hermes/v2"
 	"github.com/woningfinder/woningfinder/internal/customer"
-	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
+	"github.com/woningfinder/woningfinder/internal/services/notification/templates"
 )
 
 func (s *service) SendWeeklyUpdate(user *customer.User, housingMatch []customer.HousingPreferencesMatch) error {

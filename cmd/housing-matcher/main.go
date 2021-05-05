@@ -11,7 +11,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
-	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
+	notificationService "github.com/woningfinder/woningfinder/internal/services/notification"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -38,8 +38,8 @@ func main() {
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the matcher
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
-	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, notificationsService, corporationService, matcher.NewMatcher(), clientProvider)
+	notificationService := notificationService.NewService(logger, emailClient, jwtAuth)
+	matcherService := matcherService.NewService(logger, redisClient, userService, notificationService, corporationService, matcher.NewMatcher(), clientProvider)
 
 	// subscribe to offers queue inside a new go routine
 	ch := make(chan corporation.Offers)

@@ -14,7 +14,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
-	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
+	notificationService "github.com/woningfinder/woningfinder/internal/services/notification"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -42,8 +42,8 @@ func main() {
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
-	notificationsService := notificationsService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, notificationsService, corporationService, matcher.NewMatcher(), clientProvider)
+	notificationService := notificationService.NewService(logger, emailClient, jwtAuth)
+	matcherService := matcherService.NewService(logger, redisClient, userService, notificationService, corporationService, matcher.NewMatcher(), clientProvider)
 
 	// set location to the netherlands
 	nl, err := time.LoadLocation("Europe/Amsterdam")
@@ -52,7 +52,7 @@ func main() {
 	}
 
 	// instantiate job and cron
-	job := job.NewJobs(logger, dbClient, redisClient, userService, matcherService, notificationsService)
+	job := job.NewJobs(logger, dbClient, redisClient, userService, matcherService, notificationService)
 	c := cron.New(cron.WithLocation(nl), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
 
 	// populate crons

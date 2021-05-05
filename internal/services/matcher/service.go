@@ -8,7 +8,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	"github.com/woningfinder/woningfinder/internal/database"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	"github.com/woningfinder/woningfinder/internal/services/notifications"
+	"github.com/woningfinder/woningfinder/internal/services/notification"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
@@ -25,24 +25,24 @@ type Service interface {
 }
 
 type service struct {
-	logger               *logging.Logger
-	redisClient          database.RedisClient
-	userService          userService.Service
-	notificationsService notifications.Service
-	corporationService   corporationService.Service
-	matcher              matcher.Matcher
-	clientProvider       connector.ClientProvider
+	logger              *logging.Logger
+	redisClient         database.RedisClient
+	userService         userService.Service
+	notificationService notification.Service
+	corporationService  corporationService.Service
+	matcher             matcher.Matcher
+	clientProvider      connector.ClientProvider
 }
 
 // NewService instantiate the matcher service
-func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, notificationsService notifications.Service, corporationService corporationService.Service, matcher matcher.Matcher, clientProvider connector.ClientProvider) Service {
+func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, notificationService notification.Service, corporationService corporationService.Service, matcher matcher.Matcher, clientProvider connector.ClientProvider) Service {
 	return &service{
-		logger:               logger,
-		redisClient:          redisClient,
-		userService:          userService,
-		notificationsService: notificationsService,
-		corporationService:   corporationService,
-		matcher:              matcher,
-		clientProvider:       clientProvider,
+		logger:              logger,
+		redisClient:         redisClient,
+		userService:         userService,
+		notificationService: notificationService,
+		corporationService:  corporationService,
+		matcher:             matcher,
+		clientProvider:      clientProvider,
 	}
 }

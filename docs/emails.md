@@ -16,7 +16,7 @@ EMAIL_SMTP_PORT=
 
 ## Templates
 
-The templates can be found in the [notifications service](internal/services/notifications) as well as below:
+The templates can be found in the [notification service](internal/services/notification) as well as below:
 
 **Welcome**
 

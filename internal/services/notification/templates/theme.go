@@ -8,10 +8,8 @@ var htmlTpl string
 //go:embed woningfinder-text.tpl
 var textTpl string
 
-// woningFinder defines the email WoningFinder theme
 type theme struct{}
 
-// Name returns name
 func (t *theme) Name() string {
 	return "WoningFinder"
 }

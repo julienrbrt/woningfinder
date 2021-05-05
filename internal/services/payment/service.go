@@ -3,7 +3,7 @@ package payment
 import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/database"
-	notificationsService "github.com/woningfinder/woningfinder/internal/services/notifications"
+	notificationService "github.com/woningfinder/woningfinder/internal/services/notification"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
@@ -14,18 +14,18 @@ type Service interface {
 }
 
 type service struct {
-	logger               *logging.Logger
-	redisClient          database.RedisClient
-	userService          userService.Service
-	notificationsService notificationsService.Service
+	logger              *logging.Logger
+	redisClient         database.RedisClient
+	userService         userService.Service
+	notificationService notificationService.Service
 }
 
 // NewService instantiate the payment service
-func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, notificationsService notificationsService.Service) Service {
+func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, notificationService notificationService.Service) Service {
 	return &service{
-		logger:               logger,
-		redisClient:          redisClient,
-		userService:          userService,
-		notificationsService: notificationsService,
+		logger:              logger,
+		redisClient:         redisClient,
+		userService:         userService,
+		notificationService: notificationService,
 	}
 }

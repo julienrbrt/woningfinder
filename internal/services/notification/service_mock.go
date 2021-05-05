@@ -1,4 +1,4 @@
-package notifications
+package notification
 
 import "github.com/woningfinder/woningfinder/internal/customer"
 
@@ -7,7 +7,7 @@ type serviceMock struct {
 	err error
 }
 
-// NewServiceMock mocks the notifications service
+// NewServiceMock mocks the notification service
 func NewServiceMock(err error) Service {
 	return &serviceMock{err: err}
 }

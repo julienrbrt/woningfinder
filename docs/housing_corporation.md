@@ -19,7 +19,7 @@ WoningFinder is implementing these systems permitting to interact with the housi
 
 - [x] [Itris ERP](https://www.itris.nl/#itris) - Itris Connector
 - [ ] [Embrace Cloud](https://www.embracecloud.nl/woningcorporaties/wat-kan-het-allemaal/)
-- [ ] [Zig](https://zig.nl)
+- [x] [Zig](https://zig.nl)
 - [ ] [WoningNet WRB](https://www.woningnet.nl)
 
 Some housing corporation (or group of housing corporation) have their home-made system, they are independentely supported:

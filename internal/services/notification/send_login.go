@@ -1,4 +1,4 @@
-package notifications
+package notification
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/matcornic/hermes/v2"
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/customer"
-	"github.com/woningfinder/woningfinder/internal/services/notifications/templates"
+	"github.com/woningfinder/woningfinder/internal/services/notification/templates"
 )
 
 func (s *service) SendLogin(user *customer.User) error {

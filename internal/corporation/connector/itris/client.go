@@ -69,7 +69,7 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string, h
 		// set userID cookie
 		r.Headers.Set("Cookie", "RoxenUserID=c8a42e5b8c1142872ef95876df060787")
 
-		logger.Sugar().Debugf("itrs client visiting %s", r.URL.String())
+		logger.Sugar().Debugf("itrs connector: visiting %s", r.URL.String())
 	})
 
 	return &client{
