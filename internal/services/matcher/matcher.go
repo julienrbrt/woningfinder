@@ -18,7 +18,8 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 	// create housing corporation client
 	client, err := s.clientProvider.Get(offers.Corporation.Name)
 	if err != nil {
-		return err
+		return fmt.Errorf("error while getting corporation client %s: %w", offers.Corporation.Name, err)
+
 	}
 
 	// find users corporation credentials for this offers
@@ -40,6 +41,9 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 		// react concurrently
 		go func(user *customer.User, creds customer.CorporationCredentials, wg *sync.WaitGroup) {
 			defer wg.Done()
+
+			// Use one housing corporation client per user
+			client := client
 
 			//enrich user
 			user, err = s.userService.GetUser(user)

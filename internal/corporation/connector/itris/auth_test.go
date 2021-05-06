@@ -16,6 +16,5 @@ func Test_Login(t *testing.T) {
 
 	client, err := itris.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox, "https://mijn.onshuis.com", onshuis.DetailsParser)
 	a.NoError(err)
-
-	a.NoError(client.Login("julien_", "de!"))
+	a.Error(client.Login("unexisting", "unexesting"))
 }
