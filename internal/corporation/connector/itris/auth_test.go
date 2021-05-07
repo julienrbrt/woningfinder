@@ -4,17 +4,19 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris/onshuis"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
-func Test_Login(t *testing.T) {
+func Test_Login_Failed(t *testing.T) {
 	a := assert.New(t)
 	mockMapbox := mapbox.NewClientMock(nil, "district")
 
-	client, err := itris.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox, "https://mijn.onshuis.com", onshuis.DetailsParser)
+	client, err := itris.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox, "https://mijn.onshuis.com")
 	a.NoError(err)
-	a.Error(client.Login("unexisting", "unexesting"))
+
+	err = client.Login("example", "unexesting")
+	a.Error(connector.ErrAuthFailed, err)
 }
