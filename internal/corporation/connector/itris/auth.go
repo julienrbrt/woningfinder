@@ -1,14 +1,25 @@
 package itris
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector"
+)
+
+var (
+	ErrItrisLoginUnknown = errors.New("itris connector: error authentication: unknown error")
+	ErrItrisBlocked      = errors.New("itris connector: error authentication: woningfinder blocked")
 )
 
 func (c *client) Login(username, password string) error {
-	loginURL := c.url + "/inloggen/index.xml"
+	collector := c.collector
+	collector.AllowURLRevisit = false
 
+	loginURL := c.url + "/inloggen/index.html"
 	loginRequest := map[string][]byte{
 		"Password":                               []byte(password),
 		"Username":                               []byte(username),
@@ -21,20 +32,50 @@ func (c *client) Login(username, password string) error {
 		"redirect":                               nil,
 	}
 
-	c.collector.OnHTML("form", func(el *colly.HTMLElement) {
+	// parse login page
+	collector.OnHTML("form", func(el *colly.HTMLElement) {
 		// fill dynamic login form
-		loginRequest["inloggen_csrf_protection"] = []byte(el.ChildAttr("input[name=inloggen_csrf_protection]", "value"))
+		c.itrisCSRFToken = el.ChildAttr("input[name=inloggen_csrf_protection]", "value")
+		loginRequest["inloggen_csrf_protection"] = []byte(c.itrisCSRFToken)
 		loginRequest["post0"] = []byte(el.ChildAttr("input[name=post0]", "value"))
 	})
 
-	c.collector.OnResponse(func(resp *colly.Response) {
-		fmt.Println(string(resp.Body))
+	// behave like a web browseer
+	collector.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"")
+		r.Headers.Set("sec-ch-ua-mobile", "?0")
+		r.Headers.Set("sec-fetch-site", "same-origin")
+		r.Headers.Set("sec-fetch-mode", "navigate")
+		r.Headers.Set("sec-fetch-user", "?1")
+		r.Headers.Set("sec-fetch-dest", "document")
+		r.Headers.Set("upgrade-insecure-requests", "1")
 	})
 
-	// parse login page
-	if err := c.collector.PostMultipart(loginURL, loginRequest); err != nil {
-		return fmt.Errorf("error while login: %w", err)
+	// parse login error
+	var hasErrLogin error
+	collector.OnResponse(func(resp *colly.Response) {
+		if resp.StatusCode != http.StatusFound {
+			hasErrLogin = checkLogin(string(resp.Body))
+		}
+	})
+
+	// visit login page
+	if err := collector.PostMultipart(loginURL, loginRequest); err != nil {
+		return fmt.Errorf("itris connector: error while login: %w", err)
 	}
 
-	return nil
+	return hasErrLogin
+}
+
+func checkLogin(body string) error {
+	errItrisLoginMsg := "Combinatie inlognaam / wachtwoord is niet bekend of onjuist. Controleer de invoer en probeer het opnieuw."
+	errItrisBlockedMsg := "Om veiligheidsredenen is dit veld tijdelijk geblokkeerd, probeer het later nog eens"
+
+	if strings.Contains(body, errItrisLoginMsg) {
+		return connector.ErrAuthFailed
+	} else if strings.Contains(body, errItrisBlockedMsg) {
+		return ErrItrisBlocked
+	}
+
+	return ErrItrisLoginUnknown
 }

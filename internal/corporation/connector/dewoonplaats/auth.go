@@ -37,11 +37,11 @@ func (c *client) Login(username, password string) error {
 
 	var result loginResult
 	if err := json.Unmarshal(resp.Result, &result); err != nil {
-		return fmt.Errorf("error parsing login result %v: %w", resp.Result, err)
+		return fmt.Errorf("de woonplaats: error parsing login result %v: %w", resp.Result, err)
 	}
 
 	if !result.Success {
-		return fmt.Errorf("error authentication %s: %w", result.Code, connector.ErrAuthFailed)
+		return fmt.Errorf("de woonplaats: error authentication %s: %w", result.Code, connector.ErrAuthFailed)
 	}
 
 	return nil

@@ -8,28 +8,27 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/extensions"
-	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
 type client struct {
-	collector            *colly.Collector
-	logger               *logging.Logger
-	mapboxClient         mapbox.Client
-	url                  string
-	housingDetailsParser func(*logging.Logger, *corporation.Offer, *colly.HTMLElement)
+	collector      *colly.Collector
+	logger         *logging.Logger
+	mapboxClient   mapbox.Client
+	url            string
+	itrisCSRFToken string
 }
 
 // Note, if we start to get blocked investigate in proxy switcher
 // https://github.com/gocolly/colly/blob/v2.1.0/_examples/proxy_switcher/proxy_switcher.go
 
 // NewClient allows to connect to itris ERP
-func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string, housingDetailsParser func(*logging.Logger, *corporation.Offer, *colly.HTMLElement)) (connector.Client, error) {
+func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (connector.Client, error) {
 	c := colly.NewCollector()
 
-	// tweak default hhtp client
+	// tweak default http client
 	c.WithTransport(&http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
@@ -43,8 +42,9 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string, h
 		ExpectContinueTimeout: 1 * time.Second,
 	})
 
-	// allow revisiting url between jobs
+	// allow revisiting url between jobs and ignore robot txt
 	c.AllowURLRevisit = true
+	c.IgnoreRobotsTxt = true
 
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
@@ -66,17 +66,13 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string, h
 		// set accept header
 		r.Headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
 
-		// set userID cookie
-		r.Headers.Set("Cookie", "RoxenUserID=c8a42e5b8c1142872ef95876df060787")
-
-		logger.Sugar().Debugf("itrs connector: visiting %s", r.URL.String())
+		logger.Sugar().Infof("itrs connector: visiting %s", r.URL.String())
 	})
 
 	return &client{
-		collector:            c,
-		logger:               logger,
-		mapboxClient:         mapboxClient,
-		url:                  url,
-		housingDetailsParser: housingDetailsParser,
+		collector:    c,
+		logger:       logger,
+		mapboxClient: mapboxClient,
+		url:          url,
 	}, nil
 }

@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/services"
@@ -42,7 +43,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 		go func(user *customer.User, creds customer.CorporationCredentials, wg *sync.WaitGroup) {
 			defer wg.Done()
 
-			// Use one housing corporation client per user
+			// use one housing corporation client per user
 			client := client
 
 			//enrich user
@@ -66,8 +67,12 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 
 			// login to housing corporation
 			if err := client.Login(newCreds.Login, newCreds.Password); err != nil {
-				s.logger.Sugar().Errorf("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
+				if !errors.Is(err, connector.ErrAuthFailed) {
+					s.logger.Sugar().Error("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
+				}
 
+				// user has failed login
+				s.logger.Sugar().Debug("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
 				if err = s.hasFailedLogin(user, newCreds); err != nil {
 					s.logger.Sugar().Warn(err)
 				}

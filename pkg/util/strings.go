@@ -2,6 +2,8 @@ package util
 
 import (
 	"bytes"
+	"crypto/rand"
+	"fmt"
 	"strings"
 	"unicode"
 )
@@ -123,4 +125,11 @@ func isNumeric(s string, isExponent bool) bool {
 		}
 	}
 	return true
+}
+
+func RandomString(length int) (str string) {
+	b := make([]byte, length)
+	rand.Read(b)
+	str = fmt.Sprintf("%x", b)[:length]
+	return
 }

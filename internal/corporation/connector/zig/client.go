@@ -50,7 +50,7 @@ func (c *client) Send(req networking.Request) (json.RawMessage, error) {
 			return nil, fmt.Errorf("error unmarshaling zig response %v: %w", resp, err)
 		}
 
-		return nil, fmt.Errorf("zig error reponse: %v", response.Err)
+		return nil, fmt.Errorf("zig connector: error reponse: %v", response.Err)
 	}
 
 	return rawResponse, nil
