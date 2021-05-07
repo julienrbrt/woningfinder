@@ -19,7 +19,7 @@ func (c *client) Login(username, password string) error {
 	collector := c.collector
 	collector.AllowURLRevisit = false
 
-	loginURL := c.url + "/inloggen/index.html"
+	loginURL := c.url + "/inloggen/index.xml"
 	loginRequest := map[string][]byte{
 		"Password":                               []byte(password),
 		"Username":                               []byte(username),

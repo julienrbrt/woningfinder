@@ -546,7 +546,7 @@ func supportedHousing(offer offerList) bool {
 }
 
 func (c *client) parseHousingType(offer offerList) corporation.HousingType {
-	if offer.Dwellingtype.Categorie != "woning" {
+	if offer.Dwellingtype.Categorie != "woning" || !offer.Iszelfstandig {
 		return corporation.HousingTypeUndefined
 	}
 
