@@ -26,7 +26,11 @@ type client struct {
 
 // NewClient allows to connect to itris ERP
 func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (connector.Client, error) {
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+		// allow revisiting url between jobs and ignore robot txt
+		colly.AllowURLRevisit(),
+		colly.IgnoreRobotsTxt(),
+	)
 
 	// tweak default http client
 	c.WithTransport(&http.Transport{
@@ -41,10 +45,6 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
 	})
-
-	// allow revisiting url between jobs and ignore robot txt
-	c.AllowURLRevisit = true
-	c.IgnoreRobotsTxt = true
 
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
