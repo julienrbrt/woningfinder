@@ -18,9 +18,9 @@ import (
 )
 
 var RoomspotInfo = corporation.Corporation{
-	APIEndpoint: &url.URL{Scheme: "https", Host: "roomspot.nl"},
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.roomspot.nl"},
 	Name:        "Roomspot",
-	URL:         "https://roomspot.nl",
+	URL:         "https://www.roomspot.nl",
 	Cities: []corporation.City{
 		city.Enschede,
 		city.Hengelo,

@@ -15,18 +15,19 @@ WoningFinder is implementing these systems permitting to interact with the housi
 - New cities supported by the housing corporation are added automatically. Some work must be done however to update their cities in the codebase directly too (see Sentry warning).
 - Any other update must made directly in the database and then synchronize with the corporation struct.
 
-## Supported ERP
+## Supported Housing Corporation
+
+Housing Corporations are supported in WoningFinder by _connectors_. Those connector are based in the ERPs that the housing corporations use. This permits to make a connector be compabible with multiples housing corporations. WoningFinder supports for now the following:
 
 - [x] [Itris ERP](https://www.itris.nl/#itris) - Itris Connector
-- [ ] [Embrace Cloud](https://www.embracecloud.nl/woningcorporaties/wat-kan-het-allemaal/)
-- [x] [Zig](https://zig.nl)
+- [x] [Zig](https://zig.nl) - Zig Connector
 - [ ] [WoningNet WRB](https://www.woningnet.nl)
 
-Some housing corporation (or group of housing corporation) have their home-made system, they are independentely supported:
+Some housing corporation (or group of housing corporation) sometimes have their home-made system, the _connectors_ supports then that system and no specific ERPs:
 
 - [De Woonplaats](http://www.dewoonplaats.nl) - JSON API
 - [Woonbureau Almelo](http://www.woonburoalmelo.nl) - JSON API
 - Woonkeus Stedendriehoek - JSON API
 
-The definition of corporation are something done offline, once a corporation is supported and a client is created.
+The definition of corporation is something done offline, once a corporation is supported and a client is created.
 The mapping of the corporation and the client is made in the `client_provider` using the name of the housing corporation.
