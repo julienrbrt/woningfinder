@@ -17,7 +17,7 @@ func (c *client) React(offer corporation.Offer) error {
 
 	// parse react error
 	var hasReacted error
-	c.collector.OnResponse(func(resp *colly.Response) {
+	c.collector.OnScraped(func(resp *colly.Response) {
 		hasReacted = checkReact(string(resp.Body))
 	})
 
