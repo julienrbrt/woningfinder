@@ -68,12 +68,13 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			// login to housing corporation
 			if err := client.Login(newCreds.Login, newCreds.Password); err != nil {
 				if !errors.Is(err, connector.ErrAuthFailed) {
-					s.logger.Sugar().Error("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
+					s.logger.Sugar().Errorf("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
+					return
 				}
 
 				// user has failed login
-				s.logger.Sugar().Debug("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
-				if err = s.hasFailedLogin(user, newCreds); err != nil {
+				s.logger.Sugar().Debugf("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
+				if err := s.hasFailedLogin(user, newCreds); err != nil {
 					s.logger.Sugar().Warn(err)
 				}
 
@@ -119,9 +120,9 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 // after 3 failure the login credentials of that user are deleted and the user get notified
 func (s *service) hasFailedLogin(user *customer.User, credentials *customer.CorporationCredentials) error {
 	// update failure count
-	credentials.FailureCount += 1
+	failureCount := credentials.FailureCount + 1
 
-	if credentials.FailureCount > 3 {
+	if failureCount > 3 {
 		if err := s.userService.DeleteCorporationCredentials(credentials.UserID, credentials.CorporationName); err != nil {
 			return fmt.Errorf("failed to delete %s corporation credentials of user %s: %w", user.Email, credentials.CorporationName, err)
 		}
@@ -132,8 +133,8 @@ func (s *service) hasFailedLogin(user *customer.User, credentials *customer.Corp
 	}
 
 	// update failure count
-	if err := s.userService.CreateCorporationCredentials(credentials.UserID, *credentials); err != nil {
-		return fmt.Errorf("failed to updating %s corporation credentials login failure count of user %s: %w", user.Email, credentials.CorporationName, err)
+	if err := s.userService.UpdateCorporationCredentialsFailureCount(credentials.UserID, credentials.CorporationName, failureCount); err != nil {
+		return fmt.Errorf("failed to updating user %s %s corporation credentials login failure count: %w", user.Email, credentials.CorporationName, err)
 	}
 
 	return nil

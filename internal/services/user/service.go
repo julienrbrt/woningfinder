@@ -32,6 +32,7 @@ type Service interface {
 	GetAllCorporationCredentials(corporationName string) ([]customer.CorporationCredentials, error)
 	DeleteCorporationCredentials(userID uint, corporationName string) error
 	DecryptCredentials(credentials *customer.CorporationCredentials) (*customer.CorporationCredentials, error)
+	UpdateCorporationCredentialsFailureCount(userID uint, corporationName string, failureCount int) error
 }
 
 type service struct {

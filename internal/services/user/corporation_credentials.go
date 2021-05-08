@@ -83,6 +83,23 @@ func (s *service) GetAllCorporationCredentials(corporationName string) ([]custom
 	return credentials, nil
 }
 
+func (s *service) UpdateCorporationCredentialsFailureCount(userID uint, corporationName string, failureCount int) error {
+	credentials := customer.CorporationCredentials{
+		UserID:          userID,
+		CorporationName: corporationName,
+	}
+
+	// update failure count
+	if _, err := s.dbClient.Conn().Model(&credentials).
+		Set("failure_count = ?", failureCount).
+		Where("user_id = ? and corporation_name = ?", credentials.UserID, corporationName).
+		Update(); err != nil {
+		return fmt.Errorf("error whenupdating corporation credentials failure count: %w", err)
+	}
+
+	return nil
+}
+
 func (s *service) DeleteCorporationCredentials(userID uint, corporationName string) error {
 	credentials, err := s.GetCorporationCredentials(userID, corporationName)
 	if err != nil {
