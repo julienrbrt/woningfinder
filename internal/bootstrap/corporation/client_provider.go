@@ -21,6 +21,10 @@ func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) co
 			Corporation: RoomspotInfo,
 			Client:      CreateRoomspotClient(logger, mapboxClient),
 		},
+		{
+			Corporation: DomijnInfo,
+			Client:      CreateDomijnClient(logger, mapboxClient),
+		},
 	}
 
 	return connector.NewClientProvider(providers)

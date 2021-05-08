@@ -1,4 +1,4 @@
-package itris
+package domijn
 
 import (
 	"net"
@@ -14,17 +14,16 @@ import (
 )
 
 type client struct {
-	collector      *colly.Collector
-	logger         *logging.Logger
-	mapboxClient   mapbox.Client
-	url            string
-	itrisCSRFToken string
+	collector    *colly.Collector
+	logger       *logging.Logger
+	mapboxClient mapbox.Client
+	url          string
 }
 
 // Note, if we start to get blocked investigate in proxy switcher
 // https://github.com/gocolly/colly/blob/v2.1.0/_examples/proxy_switcher/proxy_switcher.go
 
-// NewClient allows to connect to itris ERP
+// NewClient allows to connect to domijn
 func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (connector.Client, error) {
 	c := colly.NewCollector(
 		// allow revisiting url between jobs and ignore robot txt
@@ -63,10 +62,7 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {
-		// set accept header
-		r.Headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-
-		logger.Sugar().Infof("itris connector: visiting %s", r.URL.String())
+		logger.Sugar().Infof("domijn connector: visiting %s", r.URL.String())
 	})
 
 	return &client{
