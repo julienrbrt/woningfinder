@@ -291,7 +291,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "De Klomp",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.220110000%2C6.900970000",
@@ -452,7 +454,9 @@
         "showenergie": true,
         "slaapkamers": 3,
         "slaap_bad_bg": false,
-        "soort": ["EENGEZINSWONING"],
+        "soort": [
+          "EENGEZINSWONING"
+        ],
         "stookkosten": "",
         "straat": "Getfertweg",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.213050000%2C6.890900000",
@@ -621,7 +625,9 @@
         "showenergie": true,
         "slaapkamers": 3,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Meteorenstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.228490000%2C6.854480000",
@@ -786,7 +792,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Assinklanden",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.191260000%2C6.901090000",
@@ -957,7 +965,9 @@
         "showenergie": true,
         "slaapkamers": 3,
         "slaap_bad_bg": false,
-        "soort": ["EENGEZINSWONING"],
+        "soort": [
+          "EENGEZINSWONING"
+        ],
         "stookkosten": "",
         "straat": "Pathmossingel",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.211590000%2C6.877920000",
@@ -1132,7 +1142,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["EENGEZINSWONING"],
+        "soort": [
+          "EENGEZINSWONING"
+        ],
         "stookkosten": "",
         "straat": "Ringovenstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.230940000%2C6.905750000",
@@ -1299,7 +1311,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Beatrixstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.133000000%2C6.614330000",
@@ -1466,7 +1480,9 @@
         "showenergie": true,
         "slaapkamers": 1,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Menistenstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.512160000%2C6.105280000",
@@ -1629,7 +1645,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Brinkstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.214170000%2C6.902690000",
@@ -1790,7 +1808,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Brinkstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.210230000%2C6.907520000",
@@ -1957,7 +1977,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Fazantstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.236850000%2C6.890910000",
@@ -2122,7 +2144,9 @@
         "showenergie": true,
         "slaapkamers": 3,
         "slaap_bad_bg": false,
-        "soort": ["EENGEZINSWONING"],
+        "soort": [
+          "EENGEZINSWONING"
+        ],
         "stookkosten": "",
         "straat": "Gladiolenstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.227720000%2C6.913680000",
@@ -2293,7 +2317,9 @@
         "showenergie": false,
         "slaapkamers": 1,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Hortensiastraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.229790000%2C6.921810000",
@@ -2442,7 +2468,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Roomweg",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.231480000%2C6.892770000",
@@ -2607,7 +2635,9 @@
         "showenergie": false,
         "slaapkamers": 0,
         "slaap_bad_bg": false,
-        "soort": ["PARKEREN"],
+        "soort": [
+          "PARKEREN"
+        ],
         "stookkosten": "",
         "straat": "Ruwerstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.214660000%2C6.874240000",
@@ -2743,7 +2773,9 @@
         "showenergie": false,
         "slaapkamers": 0,
         "slaap_bad_bg": false,
-        "soort": ["PARKEREN"],
+        "soort": [
+          "PARKEREN"
+        ],
         "stookkosten": "",
         "straat": "Perikplein",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.213910000%2C6.899210000",
@@ -2879,7 +2911,9 @@
         "showenergie": false,
         "slaapkamers": 0,
         "slaap_bad_bg": false,
-        "soort": ["PARKEREN"],
+        "soort": [
+          "PARKEREN"
+        ],
         "stookkosten": "",
         "straat": "Getfertplein",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.210330000%2C6.890750000",
@@ -3015,7 +3049,9 @@
         "showenergie": false,
         "slaapkamers": 0,
         "slaap_bad_bg": false,
-        "soort": ["PARKEREN"],
+        "soort": [
+          "PARKEREN"
+        ],
         "stookkosten": "",
         "straat": "Jacob van Neckstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.509190000%2C6.110810000",
@@ -3151,7 +3187,9 @@
         "showenergie": false,
         "slaapkamers": 0,
         "slaap_bad_bg": false,
-        "soort": ["PARKEREN"],
+        "soort": [
+          "PARKEREN"
+        ],
         "stookkosten": "",
         "straat": "Burgemeester Vlamstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.969370000%2C6.716350000",
@@ -3287,7 +3325,9 @@
         "showenergie": false,
         "slaapkamers": 0,
         "slaap_bad_bg": false,
-        "soort": ["PARKEREN"],
+        "soort": [
+          "PARKEREN"
+        ],
         "stookkosten": "",
         "straat": "Bloemendaalstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.215580000%2C6.873160000",
@@ -3423,7 +3463,9 @@
         "showenergie": false,
         "slaapkamers": 0,
         "slaap_bad_bg": false,
-        "soort": ["PARKEREN"],
+        "soort": [
+          "PARKEREN"
+        ],
         "stookkosten": "",
         "straat": "I. de Keijzerstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.862570000%2C6.484670000",
@@ -3559,7 +3601,9 @@
         "showenergie": false,
         "slaapkamers": 0,
         "slaap_bad_bg": false,
-        "soort": ["PARKEREN"],
+        "soort": [
+          "PARKEREN"
+        ],
         "stookkosten": "",
         "straat": "Raadhuisplein",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.961350000%2C6.208650000",
@@ -3695,7 +3739,9 @@
         "showenergie": false,
         "slaapkamers": 0,
         "slaap_bad_bg": false,
-        "soort": ["PARKEREN"],
+        "soort": [
+          "PARKEREN"
+        ],
         "stookkosten": "",
         "straat": "Klaaskateplein",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.236500000%2C6.905740000",
@@ -3829,7 +3875,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "150,–",
         "straat": "Schiermonnikooglaan",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.206181000%2C6.888697000",
@@ -3983,7 +4031,9 @@
         "showenergie": true,
         "slaapkamers": 3,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Lonnekerspoorlaan",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.232334000%2C6.895874000",
@@ -4137,7 +4187,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Kortelandstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.219231000%2C6.901594000",
@@ -4287,7 +4339,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "150,–",
         "straat": "Kortelandstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.218825000%2C6.901726000",
@@ -4437,7 +4491,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Kortelandstraat",
         "streetviewlink": "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=52.218789000%2C6.901453000",
@@ -4587,7 +4643,9 @@
         "showenergie": true,
         "slaapkamers": 2,
         "slaap_bad_bg": false,
-        "soort": ["APPARTEMENT"],
+        "soort": [
+          "APPARTEMENT"
+        ],
         "stookkosten": "",
         "straat": "Lonnekerpoorlaan",
         "streetviewlink": "",

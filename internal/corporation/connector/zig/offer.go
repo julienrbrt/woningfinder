@@ -494,6 +494,13 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 		c.logger.Sugar().Infof("zig connector: failed parsing number bedroom: %w", err)
 	}
 
+	// it seems that some appartment from roomspot does not contains rooms while they should (by definition)
+	if strings.EqualFold(offer.Dwellingtype.Localizedname, "Studio") {
+		numberBedroom = 0
+	} else if numberBedroom == 0 {
+		numberBedroom = 1
+	}
+
 	house := corporation.Housing{
 		Type:    houseType,
 		Address: fmt.Sprintf("%s %s-%s %s %s", offer.Street, offer.Housenumber, offer.Housenumberaddition, offer.Postalcode, offer.City.Name),

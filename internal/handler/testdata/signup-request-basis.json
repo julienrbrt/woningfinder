@@ -8,7 +8,10 @@
     "name": "basis"
   },
   "housing_preferences": {
-    "type": ["appartement", "house"],
+    "type": [
+      "appartement",
+      "house"
+    ],
     "city": [
       {
         "name": "enschede",

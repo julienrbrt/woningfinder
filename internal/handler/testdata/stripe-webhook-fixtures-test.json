@@ -14,7 +14,9 @@
         "currency": "usd",
         "description": "(created by Stripe CLI)",
         "payment_method": "pm_card_visa",
-        "payment_method_types": ["card"],
+        "payment_method_types": [
+          "card"
+        ],
         "shipping": {
           "name": "Jenny Rosen",
           "address": {
