@@ -55,8 +55,7 @@ func weeklyUpdateTpl(user *customer.User, housingMatch []customer.HousingPrefere
 					},
 				},
 				Outros: []string{
-					"Voor meer informatie, kun je altijd kijken op de website van de woningcorporaties waar we hebben gereageerd.",
-					"Je huis staat tussen jouw reacties.",
+					"Voor meer informatie, kun je altijd kijken op de website van de woningcorporaties waar we hebben gereageerd. Je huis staat tussen jouw reacties.",
 					"We hopen dat je word gekozen voor een van deze woningen!",
 					"Hulp nodig of vragen? Antwoord deze e-mail, we helpen je graag.",
 				},
