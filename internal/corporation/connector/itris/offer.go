@@ -14,11 +14,17 @@ const detailsHousingChildAttr = "li.link a"
 func (c *client) GetOffers() ([]corporation.Offer, error) {
 	offers := map[string]*corporation.Offer{}
 
+	// create another collector for housing details
+	detailCollector := c.collector.Clone()
+
 	// add offer
 	c.collector.OnHTML("div.aanbodListItems", func(el *colly.HTMLElement) {
 		el.ForEach("div.woningaanbod", func(_ int, e *colly.HTMLElement) {
 			var offer corporation.Offer
 			var err error
+
+			// add selection method
+			offer.SelectionMethod = corporation.SelectionRandom // TODO to fix - all houses from onshuis are random
 
 			// get offer url
 			offer.URL = c.url + e.ChildAttr(detailsHousingChildAttr, "href")
@@ -35,24 +41,24 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offer.Housing.City.Name = strings.Title(strings.ToLower(e.Attr("data-plaats")))
 			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 			if err != nil {
-				c.logger.Sugar().Warnf("itrs connector: could not get city district of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Warnf("itris connector: could not get city district of %s: %w", offer.Housing.Address, err)
 			}
 
 			offer.SelectionDate, err = time.Parse(layoutTime, e.Attr("data-reactiedatum"))
 			if err != nil {
-				c.logger.Sugar().Errorf("itrs connector: error while parsing date of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Errorf("itris connector: error while parsing date of %s: %w", offer.Housing.Address, err)
 				return
 			}
 
 			offer.Housing.Price, err = strconv.ParseFloat(e.Attr("data-prijs"), 16)
 			if err != nil {
-				c.logger.Sugar().Errorf("itrs connector: error while parsing price of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Errorf("itris connector: error while parsing price of %s: %w", offer.Housing.Address, err)
 				return
 			}
 
 			offer.Housing.NumberBedroom, err = strconv.Atoi(e.Attr("data-kamers"))
 			if err != nil {
-				c.logger.Sugar().Errorf("itrs connector: error while parsing number bedroom of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Errorf("itris connector: error while parsing number bedroom of %s: %w", offer.Housing.Address, err)
 				return
 			}
 
@@ -60,26 +66,14 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offers[offer.URL] = &offer
 
 			// visit offer url
-			if err := e.Request.Visit(offer.URL); err != nil {
-				c.logger.Sugar().Errorf("itrs connector: error while checking offer details %s: %w", offer.Housing.Address, err)
+			if err := detailCollector.Visit(offer.URL); err != nil {
+				c.logger.Sugar().Errorf("itris connector: error while checking offer details %s: %w", offer.Housing.Address, err)
 			}
 		})
 	})
 
 	// add housing details (1/2)
-	c.collector.OnHTML("div.info-container", func(e *colly.HTMLElement) {
-		// find offer
-		offerURL := e.Request.URL.String()
-		if _, ok := offers[offerURL]; !ok {
-			// no offer matching, no details
-			return
-		}
-
-		c.getHousingInfo(offers[offerURL], e)
-	})
-
-	// add housing details (2/2)
-	c.collector.OnHTML("#icons-container ul", func(e *colly.HTMLElement) {
+	detailCollector.OnHTML("div.info-container", func(e *colly.HTMLElement) {
 		// find offer
 		offerURL := e.Request.URL.String()
 		if _, ok := offers[offerURL]; !ok {
@@ -88,6 +82,18 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 		}
 
 		c.getHousingDetails(offers[offerURL], e)
+	})
+
+	// add housing details (2/2)
+	detailCollector.OnHTML("#icons-container ul", func(e *colly.HTMLElement) {
+		// find offer
+		offerURL := e.Request.URL.String()
+		if _, ok := offers[offerURL]; !ok {
+			// no offer matching, no details
+			return
+		}
+
+		c.getHousingDetailsFeatures(offers[offerURL], e)
 	})
 
 	// parse offers
@@ -105,10 +111,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	return offerList, nil
 }
 
-func (c *client) getHousingInfo(offer *corporation.Offer, e *colly.HTMLElement) {
-	// add selection method
-	offer.SelectionMethod = corporation.SelectionRandom // TODO to fix - all houses from onshuis are random
-
+func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElement) {
 	// add housing size
 	e.ForEach("#oppervlaktes-page div.infor-wrapper", func(_ int, el *colly.HTMLElement) {
 		// increase size
@@ -148,7 +151,7 @@ func (c *client) getHousingInfo(offer *corporation.Offer, e *colly.HTMLElement) 
 	offer.Housing.Accessible = strings.Contains(dom, "toegankelijk")
 }
 
-func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElement) {
+func (c *client) getHousingDetailsFeatures(offer *corporation.Offer, e *colly.HTMLElement) {
 
 	// add housing details
 	e.ForEach("li", func(_ int, el *colly.HTMLElement) {

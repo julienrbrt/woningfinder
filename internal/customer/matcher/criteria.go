@@ -12,7 +12,7 @@ func (m *matcher) matchCriteria(user customer.User, offer corporation.Offer) boo
 	age := time.Now().Year() - user.BirthYear
 
 	// checks if offer age is set and check boundaries
-	if offer.MinAge > 0 && ((age < offer.MinAge) || (offer.MaxAge != 0 && age > offer.MaxAge)) {
+	if offer.MinAge > 0 && ((age < offer.MinAge) || (offer.MaxAge > 0 && age > offer.MaxAge)) {
 		return false
 	}
 

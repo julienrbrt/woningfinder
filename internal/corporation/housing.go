@@ -16,7 +16,7 @@ type Housing struct {
 	Elevator      bool
 	Balcony       bool
 	Attic         bool
-	Accessible    bool // Assessible defines if the house is accessible for handicapt people
+	Accessible    bool // Accessible defines if the house is accessible for handicapt people
 }
 
 // HousingType defines the type of an HousingType (appartement, house)
