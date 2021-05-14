@@ -82,7 +82,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			}
 
 			for _, offer := range offers.Offer {
-				s.logger.Sugar().Debugf("checking match of %s for %s...", offer.Housing.Address, user.Email)
+				s.logger.Sugar().Debugf("checking match of %s from for %s...", offer.Housing.Address, offers.Corporation.Name, user.Email)
 
 				// check if we already check this offer
 				uuid := buildReactionUUID(user, offer)
@@ -93,16 +93,16 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				if s.matcher.MatchOffer(*user, offer) {
 					// react to offer
 					if err := client.React(offer); err != nil {
-						s.logger.Sugar().Errorf("failed to react to %s with user %s: %w", offer.Housing.Address, user.Email, err)
+						s.logger.Sugar().Errorf("failed to react to %s from %s with user %s: %w", offer.Housing.Address, offers.Corporation.Name, user.Email, err)
 						continue
 					}
 
 					// save match to database
 					if err := s.userService.CreateHousingPreferencesMatch(user, offer, creds.CorporationName); err != nil {
-						s.logger.Sugar().Errorf("failed to add %s match to user %s: %w", offer.Housing.Address, user.Email, err)
+						s.logger.Sugar().Errorf("failed to add %s from %s match to user %s: %w", offer.Housing.Address, offers.Corporation.Name, user.Email, err)
 					}
 
-					s.logger.Sugar().Infof("🎉🎉🎉 WoningFinder has successfully reacted to %s on behalf of %s. 🎉🎉🎉\n", offer.Housing.Address, user.Email)
+					s.logger.Sugar().Infof("🎉🎉🎉 WoningFinder has successfully reacted to %s from %s on behalf of %s. 🎉🎉🎉\n", offer.Housing.Address, offers.Corporation.Name, user.Email)
 				}
 
 				// save that we've checked the offer for the user
