@@ -24,7 +24,7 @@ type client struct {
 // https://github.com/gocolly/colly/blob/v2.1.0/_examples/proxy_switcher/proxy_switcher.go
 
 // NewClient allows to connect to domijn
-func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (connector.Client, error) {
+func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Client, error) {
 	c := colly.NewCollector(
 		// allow revisiting url between jobs and ignore robot txt
 		colly.AllowURLRevisit(),
@@ -62,6 +62,9 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {
+		// set content type header
+		r.Headers.Set("Content-Type", "application/x-www-form-urlencoded")
+
 		logger.Sugar().Infof("domijn connector: visiting %s", r.URL.String())
 	})
 
@@ -69,6 +72,6 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (
 		collector:    c,
 		logger:       logger,
 		mapboxClient: mapboxClient,
-		url:          url,
+		url:          Info.APIEndpoint.String(),
 	}, nil
 }

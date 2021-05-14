@@ -4,7 +4,7 @@ import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	corporationBootstrap "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector/domijn"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -24,7 +24,7 @@ func init() {
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {
 		// add roomspot (shjt and de veste) corporations
-		if err := corporationService.CreateOrUpdateCorporation(corporationBootstrap.DomijnInfo); err != nil {
+		if err := corporationService.CreateOrUpdateCorporation(domijn.Info); err != nil {
 			return err
 		}
 

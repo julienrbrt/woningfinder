@@ -10,8 +10,7 @@ import (
 )
 
 var (
-	ErrItrisLoginUnknown = errors.New("itris connector: error authentication: unknown error")
-	ErrItrisBlocked      = errors.New("itris connector: error authentication: woningfinder blocked")
+	ErrItrisBlocked = errors.New("itris connector: error authentication: woningfinder blocked")
 )
 
 func (c *client) Login(username, password string) error {
@@ -43,7 +42,7 @@ func (c *client) Login(username, password string) error {
 
 	// parse login page
 	c.collector.OnHTML("form", func(el *colly.HTMLElement) {
-		// fill dynamic login form
+		// fill login form
 		c.itrisCSRFToken = el.ChildAttr("input[name=inloggen_csrf_protection]", "value")
 		loginRequest["inloggen_csrf_protection"] = []byte(c.itrisCSRFToken)
 		loginRequest["post0"] = []byte(el.ChildAttr("input[name=post0]", "value"))
@@ -80,7 +79,7 @@ func checkLogin(body string) error {
 	}
 
 	if !strings.Contains(body, "Uitloggen") {
-		return ErrItrisLoginUnknown
+		return connector.ErrAuthUnknown
 	}
 
 	return nil

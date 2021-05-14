@@ -11,7 +11,7 @@ import (
 )
 
 var clientList = []string{
-	"https://mijn.onshuis.com",
+	itris.OnsHuisInfo.APIEndpoint.String(),
 	// "https://mijn.mijande.nl",
 	// "https://mijn.woongoedzvl.nl",
 }
