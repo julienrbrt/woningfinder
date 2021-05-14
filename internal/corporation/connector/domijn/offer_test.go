@@ -14,7 +14,7 @@ func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
 	mockMapbox := mapbox.NewClientMock(nil, "district")
 
-	client, err := domijn.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox, "https://www.domijn.nl")
+	client, err := domijn.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox)
 	a.NoError(err)
 
 	offers, err := client.GetOffers()

@@ -11,7 +11,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
-type loginResult struct {
+type loginResponse struct {
 	Messages []interface{} `json:"messages"`
 	Success  bool          `json:"success"`
 	Formhash string        `json:"formHash"`
@@ -29,13 +29,13 @@ func (c *client) Login(username, password string) error {
 		return err
 	}
 
-	var result loginResult
-	if err := json.Unmarshal(resp, &result); err != nil {
+	var response loginResponse
+	if err := json.Unmarshal(resp, &response); err != nil {
 		return fmt.Errorf("error parsing login result %v: %w", string(resp), err)
 	}
 
-	if !result.Success || len(result.Messages) > 0 {
-		return fmt.Errorf("error authentication %s: %w", result.Messages, connector.ErrAuthFailed)
+	if !response.Success || len(response.Messages) > 0 {
+		return fmt.Errorf("error authentication %s: %w", response.Messages, connector.ErrAuthFailed)
 	}
 
 	return nil
