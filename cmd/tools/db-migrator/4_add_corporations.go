@@ -23,7 +23,6 @@ func init() {
 	corporationService := corporation.NewService(logger, dbClient)
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {
-		// add roomspot (shjt and de veste) corporations
 		if err := corporationService.CreateOrUpdateCorporation(domijn.Info); err != nil {
 			return err
 		}
