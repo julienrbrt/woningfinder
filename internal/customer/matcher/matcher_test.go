@@ -109,16 +109,10 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	user.HousingPreferences.City = []corporation.City{
 		{
 			Name: "Enschede",
-			District: []corporation.CityDistrict{
-				{
-					Name: "roombeek",
-				},
-				{
-					Name: "city (oude markt)",
-				},
-				{
-					Name: "ribbelt - stokhorst",
-				},
+			District: []string{
+				"roombeek",
+				"city (oude markt)",
+				"ribbelt - stokhorst",
 			},
 		},
 	}

@@ -10,8 +10,8 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
-var clientList = []string{
-	itris.OnsHuisInfo.APIEndpoint.String(),
+var clientList = []corporation.Corporation{
+	itris.OnsHuisInfo,
 	// "https://mijn.mijande.nl",
 	// "https://mijn.woongoedzvl.nl",
 }

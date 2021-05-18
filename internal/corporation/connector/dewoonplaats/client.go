@@ -53,11 +53,11 @@ func (c *client) Send(req networking.Request) (*response, error) {
 		return nil, err
 	}
 
-	var r response
-	err = resp.ReadJSONBody(&r)
+	var response response
+	err = resp.ReadJSONBody(&response)
 	if err != nil {
 		return nil, err
 	}
 
-	return &r, r.Error()
+	return &response, response.Error()
 }

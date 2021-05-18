@@ -6,13 +6,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector/zig"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
-	client := bootstrapCorporation.CreateRoomspotClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"))
+	client := bootstrapCorporation.CreateZigClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"), zig.RoomspotInfo)
 
 	offers, err := client.GetOffers()
 	a.NoError(err)

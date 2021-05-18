@@ -8,6 +8,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/extensions"
+	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
@@ -25,7 +26,7 @@ type client struct {
 // https://github.com/gocolly/colly/blob/v2.1.0/_examples/proxy_switcher/proxy_switcher.go
 
 // NewClient allows to connect to itris ERP
-func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (connector.Client, error) {
+func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, corporation corporation.Corporation) (connector.Client, error) {
 	c := colly.NewCollector(
 		// allow revisiting url between jobs and ignore robot txt
 		colly.AllowURLRevisit(),
@@ -73,6 +74,6 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, url string) (
 		collector:    c,
 		logger:       logger,
 		mapboxClient: mapboxClient,
-		url:          url,
+		url:          corporation.APIEndpoint.String(),
 	}, nil
 }
