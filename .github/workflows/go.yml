@@ -1,9 +1,11 @@
 on: [push]
-name: Go
+name: Test & Build
 jobs:
   build:
     name: Test & Build
     runs-on: ubuntu-latest
+    env:
+      MAPBOX_API_KEY: ${{ secrets.MAPBOX_API_KEY }}
     strategy:
       matrix:
         go: [ '1.16' ]
@@ -22,8 +24,6 @@ jobs:
         go get -v -t -d ./...
 
     - name: Test
-      env: # environment variables used in tests
-        MAPBOX_API_KEY: ${{ secrets.MAPBOX_API_KEY }} # set mapbox api key
       run: go test ./...
 
     - name: Build
