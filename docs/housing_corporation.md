@@ -21,7 +21,7 @@ Housing Corporations are supported in WoningFinder by _connectors_. Those connec
 
 - [x] [Itris ERP](https://www.itris.nl/#itris) - Itris Connector
 - [x] [Zig](https://zig.nl) - Zig Connector
-- [ ] [WoningNet WRB](https://www.woningnet.nl)
+- [x] [WoningNet WRB](https://www.woningnet.nl)
 
 Some housing corporation (or group of housing corporation) sometimes have their home-made system, the _connectors_ supports then that system and no specific ERPs:
 
