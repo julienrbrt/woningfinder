@@ -1,16 +1,18 @@
 on:
   schedule:
     - cron: '0 0 * * *'
-name: Verify Housing Corporation Support
+name: Verify connector
 jobs:
   build:
     name: Test
     runs-on: ubuntu-latest
+    env:
+      MAPBOX_API_KEY: ${{ secrets.MAPBOX_API_KEY }}
     strategy:
       matrix:
         go: [ '1.16' ]
     steps:
-
+    
     - name: Set up Go ${{ matrix.go }}
       uses: actions/setup-go@v2
       with:
@@ -23,7 +25,11 @@ jobs:
       run: |
         go get -v -t -d ./...
 
-    - name: Test
-      env: # environment variables used in tests
-        MAPBOX_API_KEY: ${{ secrets.MAPBOX_API_KEY }} # set mapbox api key
-      run: go test ./internal/corporation/...
+    - name: Verify De Woonplaats
+      run: go test ./internal/corporation/connector/dewoonplaats/...
+
+    - name: Verify Domijn
+      run: go test ./internal/corporation/connector/domijn/...
+
+    - name: Verify Itris
+      run: go test ./internal/corporation/connector/itris/...
