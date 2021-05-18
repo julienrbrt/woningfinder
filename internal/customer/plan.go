@@ -24,7 +24,7 @@ func (p Plan) Price() int {
 	case PlanBasis:
 		return 10
 	case PlanPro:
-		return 35
+		return 25
 	default:
 		return 0
 	}
