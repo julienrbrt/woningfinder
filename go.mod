@@ -3,6 +3,7 @@ module github.com/woningfinder/woningfinder
 go 1.16
 
 require (
+	github.com/PuerkitoBio/goquery v1.6.1
 	github.com/TheZeroSlave/zapsentry v1.6.0
 	github.com/getsentry/sentry-go v0.10.0 // indirect
 	github.com/go-chi/chi v1.5.2

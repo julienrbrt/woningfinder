@@ -33,3 +33,6 @@ jobs:
 
     - name: Verify Itris
       run: go test ./internal/corporation/connector/itris/...
+
+    - name: Verify WoningNet
+      run: go test ./internal/corporation/connector/woningnet/...

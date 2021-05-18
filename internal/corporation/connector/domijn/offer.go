@@ -105,8 +105,8 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	offer.ExternalID = e.ChildAttr("form[name=reactionform]", "action")
 
 	// parse price
-	priceRaw := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("span.price"), ",", "."), "€", ""))
-	offer.Housing.Price, err = strconv.ParseFloat(priceRaw, 16)
+	priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("span.price"), ",", "."), "€", ""))
+	offer.Housing.Price, err = strconv.ParseFloat(priceStr, 16)
 	if err != nil {
 		c.logger.Sugar().Errorf("domijn connector: error while parsing price of %s: %w", offer.Housing.Address, err)
 		return

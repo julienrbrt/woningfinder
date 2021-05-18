@@ -5,6 +5,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/dewoonplaats"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/domijn"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector/woningnet"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/zig"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
@@ -28,6 +29,10 @@ func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) co
 		{
 			Corporation: domijn.Info,
 			Client:      CreateDomijnClient(logger, mapboxClient),
+		},
+		{
+			Corporation: woningnet.HengeloBorneInfo,
+			Client:      CreateWoningNetClient(logger, mapboxClient, woningnet.HengeloBorneInfo),
 		},
 	}
 
