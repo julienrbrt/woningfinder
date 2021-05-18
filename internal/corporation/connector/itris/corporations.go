@@ -10,7 +10,7 @@ import (
 var OnsHuisInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "mijn.onshuis.com"},
 	Name:        "OnsHuis",
-	URL:         "https://onshuis.com",
+	URL:         "https://www.onshuis.com",
 	Cities: []corporation.City{
 		city.Enschede,
 		city.Hengelo,

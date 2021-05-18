@@ -11,7 +11,6 @@ func init() {
 	// models
 	models := []interface{}{
 		(*corporation.City)(nil),
-		(*corporation.CityDistrict)(nil),
 		(*customer.User)(nil),
 		(*customer.UserPlan)(nil),
 		(*corporation.Corporation)(nil),

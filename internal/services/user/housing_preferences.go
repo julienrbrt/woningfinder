@@ -52,7 +52,7 @@ func (s *service) CreateHousingPreferences(u *customer.User, housingPreferences 
 
 		// add cities district
 		for _, district := range city.District {
-			if _, err := db.Model(&customer.HousingPreferencesCityDistrict{HousingPreferencesID: housingPreferences.ID, CityName: city.Name, Name: district.Name}).
+			if _, err := db.Model(&customer.HousingPreferencesCityDistrict{HousingPreferencesID: housingPreferences.ID, CityName: city.Name, Name: district}).
 				Where("housing_preferences_id = ? and city_name = ? and name = ?", housingPreferences.ID, city.Name, district).
 				SelectOrInsert(); err != nil {
 				return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
@@ -97,10 +97,10 @@ func (s *service) GetHousingPreferences(user *customer.User) (customer.HousingPr
 	}
 
 	for _, city := range cities {
-		var districts []corporation.CityDistrict
+		var districts []string
 		for _, district := range cityDistricts {
 			if district.CityName == city.CityName {
-				districts = append(districts, corporation.CityDistrict{CityName: district.CityName, Name: district.Name})
+				districts = append(districts, district.Name)
 			}
 		}
 

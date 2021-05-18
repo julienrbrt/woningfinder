@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	corporationcity "github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 // LinkCities permits to creates a city and when given associate that city to a corporation
@@ -18,15 +19,6 @@ func (s *service) LinkCities(cities []corporation.City, corporations ...corporat
 	// add cities relation
 	for _, city := range cities {
 		city.Name = strings.Title(city.Name)
-		// add cities district to city
-		for _, district := range city.District {
-			if _, err := s.dbClient.Conn().Model(&corporation.CityDistrict{CityName: city.Name, Name: district.Name}).
-				Where("city_name = ? and name = ?", city.Name, district.Name).
-				SelectOrInsert(); err != nil {
-				return fmt.Errorf("failing adding district to city: %w", err)
-			}
-		}
-
 		// associate city to corporations
 		for _, corp := range corporations {
 			if _, err := s.dbClient.Conn().Model(&corporation.CorporationCity{CorporationName: corp.Name, CityName: city.Name}).
@@ -46,12 +38,12 @@ func (s *service) GetCity(name string) (corporation.City, error) {
 		return corporation.City{}, fmt.Errorf("failing getting city %s: %w", name, err)
 	}
 
-	// enrich city with district
-	var districts []corporation.CityDistrict
-	if err := s.dbClient.Conn().Model(&districts).Where("city_name = ?", city.Name).Select(); err != nil {
-		return corporation.City{}, fmt.Errorf("failing getting city district: %w", err)
+	// enrich city with suggested city districts
+	var err error
+	city.District, err = corporationcity.SuggestedCityDistrictFromName(city.Name)
+	if err != nil {
+		return corporation.City{}, fmt.Errorf("failing getting city %s districts: %w", name, err)
 	}
-	city.District = districts
 
 	return city, nil
 }
@@ -63,11 +55,11 @@ func (s *service) GetCities() ([]corporation.City, error) {
 		return nil, fmt.Errorf("failing getting cities: %w", err)
 	}
 
-	// enrich cities with district
+	// enrich city with suggested city districts
 	for i, city := range cities {
-		var districts []corporation.CityDistrict
-		if err := s.dbClient.Conn().Model(&districts).Where("city_name = ?", city.Name).Select(); err != nil {
-			return nil, fmt.Errorf("failing getting city district: %w", err)
+		districts, err := corporationcity.SuggestedCityDistrictFromName(city.Name)
+		if err != nil {
+			return nil, fmt.Errorf("failing getting city %s districts: %w", city.Name, err)
 		}
 
 		cities[i].District = districts

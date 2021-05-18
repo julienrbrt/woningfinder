@@ -21,3 +21,14 @@ func TestCity_Merge(t *testing.T) {
 	mergedCity = city.Merge(expected)
 	a.Equal(mergedCity, expected)
 }
+
+func TestCity_SuggestedCityDistrictFromName(t *testing.T) {
+	a := assert.New(t)
+
+	districts, err := city.SuggestedCityDistrictFromName(city.Enschede.Name)
+	a.NoError(err)
+	a.Equal(districts, city.Enschede.District)
+
+	_, err = city.SuggestedCityDistrictFromName("unexisting")
+	a.Error(err)
+}

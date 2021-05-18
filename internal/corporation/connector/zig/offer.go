@@ -529,7 +529,7 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	return corporation.Offer{
 		ExternalID:      c.getExternalID(offer),
 		Housing:         house,
-		URL:             fmt.Sprintf("https://www.roomspot.nl/aanbod/te-huur/details/%s", offer.Urlkey),
+		URL:             fmt.Sprintf("%s/aanbod/te-huur/details/%s", c.corporation.URL, offer.Urlkey),
 		SelectionMethod: c.parseSelectionMethod(offer),
 		SelectionDate:   c.parseSelectionDate(offer.Closingdate),
 		MinFamilySize:   offer.Minimumhouseholdsize,

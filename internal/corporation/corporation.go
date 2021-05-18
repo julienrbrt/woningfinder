@@ -44,13 +44,7 @@ func (c *Corporation) HasMinimal() error {
 
 // City defines a city where a housing corporation operates or when an house offer lies
 type City struct {
-	CreatedAt time.Time      `pg:"default:now()" json:"-"`
-	Name      string         `pg:",pk" json:"name"`
-	District  []CityDistrict `pg:"rel:has-many,join_fk:city_name" json:"district,omitempty"`
-}
-
-type CityDistrict struct {
 	CreatedAt time.Time `pg:"default:now()" json:"-"`
-	CityName  string    `pg:",pk" json:"-"`
 	Name      string    `pg:",pk" json:"name"`
+	District  []string  `pg:"-" json:"district,omitempty"`
 }

@@ -19,11 +19,11 @@ func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) co
 		},
 		{
 			Corporation: itris.OnsHuisInfo,
-			Client:      CreateOnsHuisClient(logger, mapboxClient),
+			Client:      CreateItrisClient(logger, mapboxClient, itris.OnsHuisInfo),
 		},
 		{
 			Corporation: zig.RoomspotInfo,
-			Client:      CreateRoomspotClient(logger, mapboxClient),
+			Client:      CreateZigClient(logger, mapboxClient, zig.RoomspotInfo),
 		},
 		{
 			Corporation: domijn.Info,

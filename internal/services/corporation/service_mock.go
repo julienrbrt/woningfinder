@@ -14,10 +14,7 @@ func NewServiceMock(err error) Service {
 
 // ExpectedMockGetCities is returned when mocking GetCities from corporationService
 var ExpectedMockGetCities = []corporation.City{
-	{Name: "Enschede", District: []corporation.CityDistrict{
-		{CityName: "Enschede", Name: "Roombeek"},
-		{CityName: "Enschede", Name: "Centrum"},
-	}},
+	{Name: "Enschede", District: []string{"Roombeek", "Centrum"}},
 	{Name: "Hengelo"},
 }
 

@@ -16,12 +16,8 @@
       {
         "name": "enschede",
         "district": [
-          {
-            "name": "Cetrum"
-          },
-          {
-            "name": "Roombeek"
-          }
+          "Centrum",
+          "Roombeek"
         ]
       }
     ],
