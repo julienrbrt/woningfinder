@@ -495,7 +495,7 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	}
 
 	// it seems that some appartment from roomspot does not contains rooms while they should (by definition)
-	if strings.EqualFold(offer.Dwellingtype.Localizedname, "Studio") {
+	if strings.Contains(offer.Dwellingtype.Localizedname, "studio") {
 		numberBedroom = 0
 	} else if numberBedroom == 0 {
 		numberBedroom = 1
