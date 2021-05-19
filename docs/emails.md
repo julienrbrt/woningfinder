@@ -128,7 +128,7 @@ Team WoningFinder
 
 Hallo <naam>,
 
-Alstublieft jouw link om in te loggen. De link is 6 uur geldig.
+Alstublieft jouw link om in te loggen. De link is 2 uur geldig.
 Heb je dit niet gevraagd? Je kun deze e-mail weigeren, jouw account blijft veilig.
 
 <Mijn zoekopdracht>

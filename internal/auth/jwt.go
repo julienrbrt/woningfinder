@@ -13,6 +13,7 @@ import (
 const (
 	userIDKey    = "user_id"
 	userEmailKey = "user_email"
+	loginTime    = 2
 )
 
 // CreateJWTAuthenticationToken builds a jwt authentication token
@@ -20,10 +21,10 @@ func CreateJWTAuthenticationToken(secret string) *jwtauth.JWTAuth {
 	return jwtauth.New("HS256", []byte(secret), nil)
 }
 
-// CreateJWTUserToken builds an authentication token valid 6h for a given user
+// CreateJWTUserToken builds an authentication token valid 2h for a given user
 func CreateJWTUserToken(jwtAuth *jwtauth.JWTAuth, user *customer.User) (jwt.Token, string, error) {
 	claims := map[string]interface{}{userIDKey: user.ID, userEmailKey: user.Email}
-	jwtauth.SetExpiryIn(claims, time.Hour*6)
+	jwtauth.SetExpiryIn(claims, time.Hour*loginTime)
 	jwtauth.SetIssuedNow(claims)
 	token, tokenString, err := jwtAuth.Encode(claims)
 	if err != nil {
