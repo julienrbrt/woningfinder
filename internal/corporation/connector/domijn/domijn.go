@@ -16,6 +16,7 @@ var Info = corporation.Corporation{
 		city.Haaksbergen,
 		city.Losser,
 		city.Overdinkel,
+		city.DeLutte,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
