@@ -24,6 +24,9 @@ func NewRedisClient(logger *logging.Logger, host, port, password string) (RedisC
 		return nil, fmt.Errorf("error connecting to redis with host: %s", host)
 	}
 
+	// retry query 3 times (instead of not)
+	options.MaxRetries = 3
+
 	rdb := redis.NewClient(options)
 
 	_, err = rdb.Ping().Result()
