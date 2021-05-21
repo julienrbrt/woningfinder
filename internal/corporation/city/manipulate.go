@@ -1,10 +1,10 @@
 package city
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 var cityDistrictTable = map[string]corporation.City{
@@ -20,6 +20,7 @@ var cityDistrictTable = map[string]corporation.City{
 	Hengelo.Name:     Hengelo,
 	Losser.Name:      Losser,
 	Overdinkel.Name:  Overdinkel,
+	DeLutte.Name:     DeLutte,
 	Groenlo.Name:     Groenlo,
 	Ulft.Name:        Ulft,
 	Winterswijk.Name: Winterswijk,
@@ -36,10 +37,11 @@ func Merge(city corporation.City) corporation.City {
 	return city
 }
 
-func SuggestedCityDistrictFromName(cityName string) ([]string, error) {
+func SuggestedCityDistrictFromName(logger *logging.Logger, cityName string) ([]string, error) {
 	city, ok := cityDistrictTable[cityName]
 	if !ok {
-		return nil, fmt.Errorf("failed to get city district of %s", cityName)
+		logger.Sugar().Errorf("failed to get city district of %s", cityName)
+		return nil, nil
 	}
 
 	return city.District, nil

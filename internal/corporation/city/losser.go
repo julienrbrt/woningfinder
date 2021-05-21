@@ -14,3 +14,7 @@ var Losser = corporation.City{
 var Overdinkel = corporation.City{
 	Name: "Overdinkel",
 }
+
+var DeLutte = corporation.City{
+	Name: "De Lutte",
+}
