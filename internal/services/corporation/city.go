@@ -40,7 +40,7 @@ func (s *service) GetCity(name string) (corporation.City, error) {
 
 	// enrich city with suggested city districts
 	var err error
-	city.District, err = corporationcity.SuggestedCityDistrictFromName(city.Name)
+	city.District, err = corporationcity.SuggestedCityDistrictFromName(s.logger, city.Name)
 	if err != nil {
 		return corporation.City{}, fmt.Errorf("failing getting city %s districts: %w", name, err)
 	}
@@ -57,7 +57,7 @@ func (s *service) GetCities() ([]corporation.City, error) {
 
 	// enrich city with suggested city districts
 	for i, city := range cities {
-		districts, err := corporationcity.SuggestedCityDistrictFromName(city.Name)
+		districts, err := corporationcity.SuggestedCityDistrictFromName(s.logger, city.Name)
 		if err != nil {
 			return nil, fmt.Errorf("failing getting city %s districts: %w", city.Name, err)
 		}
