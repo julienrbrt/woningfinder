@@ -37,12 +37,19 @@ func Merge(city corporation.City) corporation.City {
 	return city
 }
 
-func SuggestedCityDistrictFromName(logger *logging.Logger, cityName string) ([]string, error) {
+// HasSuggestedCityDistrict permit to see if a city has an city districts
+// This method is used for checking if we support a city distritcs before making the request to Mapbox (see in the connector logic).
+func HasSuggestedCityDistrict(cityName string) bool {
+	_, ok := cityDistrictTable[cityName]
+	return ok
+}
+
+func SuggestedCityDistrictFromName(logger *logging.Logger, cityName string) []string {
 	city, ok := cityDistrictTable[cityName]
 	if !ok {
 		logger.Sugar().Errorf("failed to get city district of %s", cityName)
-		return nil, nil
+		return nil
 	}
 
-	return city.District, nil
+	return city.District
 }

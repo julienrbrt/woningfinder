@@ -12,6 +12,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
@@ -213,14 +214,14 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 	var err error
 	var minFamilySize, maxFamilySize, minAge, maxAge int
 	var offerURL = c.corporation.URL + offer.AdvertentieURL
-	var city = strings.Split(offer.CityAndDistrict, " - ")
+	var cityName = strings.Split(offer.CityAndDistrict, " - ")
 
 	// fill in already known housing characteristics
 	house := corporation.Housing{
 		Type:    houseType,
-		Address: fmt.Sprintf("%s %s", offer.Address, city[0]),
+		Address: fmt.Sprintf("%s %s", offer.Address, cityName[0]),
 		City: corporation.City{
-			Name: city[0],
+			Name: cityName[0],
 		},
 		Accessible: offer.ToegankelijkheidslabelCSSClass != "ToegankelijkheidslabelZON",
 	}
@@ -236,10 +237,12 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 	}
 
 	// get address city district
-	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
-	if err != nil {
-		house.CityDistrict = city[len(city)-1]
-		c.logger.Sugar().Warnf("woningnet connector: could not get city district of %s: %w", house.Address, err)
+	if city.HasSuggestedCityDistrict(house.City.Name) {
+		house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
+		if err != nil {
+			house.CityDistrict = cityName[len(cityName)-1]
+			c.logger.Sugar().Warnf("woningnet connector: could not get city district of %s: %w", house.Address, err)
+		}
 	}
 
 	// TODO

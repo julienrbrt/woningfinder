@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
@@ -521,9 +522,11 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	}
 
 	// get address city district
-	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
-	if err != nil {
-		c.logger.Sugar().Infof("zig connector: could not get city district of %s: %w", house.Address, err)
+	if city.HasSuggestedCityDistrict(house.City.Name) {
+		house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
+		if err != nil {
+			c.logger.Sugar().Infof("zig connector: could not get city district of %s: %w", house.Address, err)
+		}
 	}
 
 	return corporation.Offer{

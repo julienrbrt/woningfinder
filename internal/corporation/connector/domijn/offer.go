@@ -8,6 +8,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 func (c *client) GetOffers() ([]corporation.Offer, error) {
@@ -52,9 +53,12 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			// get location
 			offer.Housing.City.Name = strings.TrimSpace(e.ChildText("div.info > p"))
 			offer.Housing.Address = fmt.Sprintf("%s, %s", e.ChildText("div.info > h1"), offer.Housing.City.Name)
-			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
-			if err != nil {
-				c.logger.Sugar().Warnf("domijn connector: could not get city district of %s: %w", offer.Housing.Address, err)
+
+			if city.HasSuggestedCityDistrict(offer.Housing.City.Name) {
+				offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
+				if err != nil {
+					c.logger.Sugar().Warnf("domijn connector: could not get city district of %s: %w", offer.Housing.Address, err)
+				}
 			}
 
 			// create new offer
