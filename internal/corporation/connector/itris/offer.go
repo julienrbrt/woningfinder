@@ -7,6 +7,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 const detailsHousingChildAttr = "li.link a"
@@ -39,9 +40,12 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			// get location
 			offer.Housing.Address = strings.Title(strings.ToLower(e.ChildAttr(detailsHousingChildAttr, "data-select-address")))
 			offer.Housing.City.Name = strings.Title(strings.ToLower(e.Attr("data-plaats")))
-			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
-			if err != nil {
-				c.logger.Sugar().Warnf("itris connector: could not get city district of %s: %w", offer.Housing.Address, err)
+
+			if city.HasSuggestedCityDistrict(offer.Housing.City.Name) {
+				offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
+				if err != nil {
+					c.logger.Sugar().Warnf("itris connector: could not get city district of %s: %w", offer.Housing.Address, err)
+				}
 			}
 
 			offer.SelectionDate, err = time.Parse(layoutTime, e.Attr("data-reactiedatum"))

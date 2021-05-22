@@ -26,11 +26,9 @@ func TestCity_Merge(t *testing.T) {
 func TestCity_SuggestedCityDistrictFromName(t *testing.T) {
 	a := assert.New(t)
 
-	districts, err := city.SuggestedCityDistrictFromName(logging.NewZapLoggerWithoutSentry(), city.Enschede.Name)
-	a.NoError(err)
+	districts := city.SuggestedCityDistrictFromName(logging.NewZapLoggerWithoutSentry(), city.Enschede.Name)
 	a.Equal(districts, city.Enschede.District)
 
-	districts, err = city.SuggestedCityDistrictFromName(logging.NewZapLoggerWithoutSentry(), "unexisting")
-	a.NoError(err)
+	districts = city.SuggestedCityDistrictFromName(logging.NewZapLoggerWithoutSentry(), "unexisting")
 	a.Len(districts, 0)
 }
