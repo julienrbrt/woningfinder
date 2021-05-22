@@ -30,7 +30,7 @@ var Enschede = corporation.City{
 		"Ruwenbos",
 		"Tubantia-Toekomst",
 		"Twekkelerveld",
-		"Roessingh",
+		"Walhof-Roessingh",
 		"Bolhaar",
 		"Roombeek-Roomveldje",
 		"Mekkelholt",
