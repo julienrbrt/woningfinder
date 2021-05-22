@@ -258,12 +258,9 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		house.EnergyLabel = c.getContentValue("Energielabel", table)
 
 		// building year
-		buildingYearRaw := c.getContentValue("Bouwjaar", table)
-		if buildingYearRaw != "" {
-			house.BuildingYear, err = strconv.Atoi(buildingYearRaw)
-			if err != nil {
-				c.logger.Sugar().Warnf("woningnet connector: error parsing building year of %s: %w", house.Address, err)
-			}
+		house.BuildingYear, err = strconv.Atoi(c.getContentValue("Bouwjaar", table))
+		if err != nil {
+			c.logger.Sugar().Warnf("woningnet connector: error parsing building year of %s: %w", house.Address, err)
 		}
 
 		// number bedroom
@@ -277,7 +274,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 
 		// outside
 		outside := c.getContentValue("Buitenruimte", table)
-		house.Balcony = strings.Contains(outside, "balkon")
+		house.Balcony = strings.Contains(outside, "balkon") || strings.Contains(outside, "terras")
 		house.Garden = strings.Contains(outside, "tuin")
 		house.Garage = strings.Contains(outside, "garage") || strings.Contains(outside, "parkeer")
 
