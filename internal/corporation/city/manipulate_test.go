@@ -32,3 +32,16 @@ func TestCity_SuggestedCityDistrictFromName(t *testing.T) {
 	districts = city.SuggestedCityDistrictFromName(logging.NewZapLoggerWithoutSentry(), "unexisting")
 	a.Len(districts, 0)
 }
+
+func TestCity_HasSuggestedCityDistrict(t *testing.T) {
+	a := assert.New(t)
+
+	ok := city.HasSuggestedCityDistrict(city.Enschede.Name)
+	a.True(ok)
+
+	ok = city.HasSuggestedCityDistrict(city.DeLutte.Name)
+	a.False(ok)
+
+	ok = city.HasSuggestedCityDistrict("unexisting")
+	a.False(ok)
+}

@@ -28,7 +28,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			}
 
 			if err := paginationCollector.Visit(c.url + paginatedURL); err != nil {
-				c.logger.Sugar().Errorf("domijn connector: error while checking pagination %s: %w", c.url+paginatedURL, err)
+				c.logger.Sugar().Warnf("domijn connector: error while checking pagination %s: %w", c.url+paginatedURL, err)
 			}
 		})
 	})
@@ -57,7 +57,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			if city.HasSuggestedCityDistrict(offer.Housing.City.Name) {
 				offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 				if err != nil {
-					c.logger.Sugar().Warnf("domijn connector: could not get city district of %s: %w", offer.Housing.Address, err)
+					c.logger.Sugar().Infof("domijn connector: could not get city district of %s: %w", offer.Housing.Address, err)
 				}
 			}
 
@@ -66,7 +66,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			// visit offer url
 			if err := detailCollector.Visit(offer.URL); err != nil {
-				c.logger.Sugar().Errorf("domijn connector: error while checking offer details %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Warnf("domijn connector: error while checking offer details %s: %w", offer.Housing.Address, err)
 			}
 		})
 	}
@@ -112,7 +112,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("span.price"), ",", "."), "€", ""))
 	offer.Housing.Price, err = strconv.ParseFloat(priceStr, 16)
 	if err != nil {
-		c.logger.Sugar().Errorf("domijn connector: error while parsing price of %s: %w", offer.Housing.Address, err)
+		c.logger.Sugar().Infof("domijn connector: error while parsing price of %s: %w", offer.Housing.Address, err)
 		return
 	}
 
@@ -122,7 +122,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 		if i == 2 {
 			offer.SelectionDate, err = time.Parse(layoutTime, strings.TrimSpace(el.Text))
 			if err != nil {
-				c.logger.Sugar().Errorf("domijn connector: error while parsing date of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Infof("domijn connector: error while parsing date of %s: %w", offer.Housing.Address, err)
 				return
 			}
 		}

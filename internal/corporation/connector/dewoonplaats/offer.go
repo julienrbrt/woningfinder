@@ -150,7 +150,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
 		if err != nil {
 			house.CityDistrict = offer.District
-			c.logger.Sugar().Warnf("de woonplaats connector: could not get city district of %s: %w", house.Address, err)
+			c.logger.Sugar().Infof("de woonplaats connector: could not get city district of %s: %w", house.Address, err)
 		}
 	}
 

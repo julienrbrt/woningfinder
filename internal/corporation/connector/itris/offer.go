@@ -44,25 +44,25 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			if city.HasSuggestedCityDistrict(offer.Housing.City.Name) {
 				offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 				if err != nil {
-					c.logger.Sugar().Warnf("itris connector: could not get city district of %s: %w", offer.Housing.Address, err)
+					c.logger.Sugar().Infof("itris connector: could not get city district of %s: %w", offer.Housing.Address, err)
 				}
 			}
 
 			offer.SelectionDate, err = time.Parse(layoutTime, e.Attr("data-reactiedatum"))
 			if err != nil {
-				c.logger.Sugar().Errorf("itris connector: error while parsing date of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Warnf("itris connector: error while parsing date of %s: %w", offer.Housing.Address, err)
 				return
 			}
 
 			offer.Housing.Price, err = strconv.ParseFloat(e.Attr("data-prijs"), 16)
 			if err != nil {
-				c.logger.Sugar().Errorf("itris connector: error while parsing price of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Warnf("itris connector: error while parsing price of %s: %w", offer.Housing.Address, err)
 				return
 			}
 
 			offer.Housing.NumberBedroom, err = strconv.Atoi(e.Attr("data-kamers"))
 			if err != nil {
-				c.logger.Sugar().Errorf("itris connector: error while parsing number bedroom of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Warnf("itris connector: error while parsing number bedroom of %s: %w", offer.Housing.Address, err)
 				return
 			}
 
@@ -71,7 +71,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			// visit offer url
 			if err := detailCollector.Visit(offer.URL); err != nil {
-				c.logger.Sugar().Errorf("itris connector: error while checking offer details %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Warnf("itris connector: error while checking offer details %s: %w", offer.Housing.Address, err)
 			}
 		})
 	})
