@@ -241,7 +241,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
 		if err != nil {
 			house.CityDistrict = cityName[len(cityName)-1]
-			c.logger.Sugar().Warnf("woningnet connector: could not get city district of %s: %w", house.Address, err)
+			c.logger.Sugar().Infof("woningnet connector: could not get city district of %s: %w", house.Address, err)
 		}
 	}
 
@@ -260,13 +260,13 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		// building year
 		house.BuildingYear, err = strconv.Atoi(c.getContentValue("Bouwjaar", table))
 		if err != nil {
-			c.logger.Sugar().Warnf("woningnet connector: error parsing building year of %s: %w", house.Address, err)
+			c.logger.Sugar().Infof("woningnet connector: error parsing building year of %s: %w", house.Address, err)
 		}
 
 		// number bedroom
 		house.NumberBedroom, err = c.parseBedroom(c.getContentValue("Aantal kamers (incl. woonkamer)", table))
 		if err != nil {
-			c.logger.Sugar().Warnf("woningnet connector: error parsing number bedroom of %s: %w", house.Address, err)
+			c.logger.Sugar().Infof("woningnet connector: error parsing number bedroom of %s: %w", house.Address, err)
 		}
 
 		// attic

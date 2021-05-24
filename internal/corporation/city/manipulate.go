@@ -40,8 +40,9 @@ func Merge(city corporation.City) corporation.City {
 // HasSuggestedCityDistrict permit to see if a city has an city districts
 // This method is used for checking if we support a city distritcs before making the request to Mapbox (see in the connector logic).
 func HasSuggestedCityDistrict(cityName string) bool {
-	_, ok := cityDistrictTable[cityName]
-	return ok
+	city, ok := cityDistrictTable[cityName]
+
+	return ok && len(city.District) > 0
 }
 
 func SuggestedCityDistrictFromName(logger *logging.Logger, cityName string) []string {
