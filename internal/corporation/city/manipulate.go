@@ -7,7 +7,8 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-var cityDistrictTable = map[string]corporation.City{
+// CityTable defines the city name and it's corresponding struct
+var CityTable = map[string]corporation.City{
 	Aalten.Name:      Aalten,
 	Dinxperlo.Name:   Dinxperlo,
 	Bredevoort.Name:  Bredevoort,
@@ -40,13 +41,13 @@ func Merge(city corporation.City) corporation.City {
 // HasSuggestedCityDistrict permit to see if a city has an city districts
 // This method is used for checking if we support a city distritcs before making the request to Mapbox (see in the connector logic).
 func HasSuggestedCityDistrict(cityName string) bool {
-	city, ok := cityDistrictTable[cityName]
+	city, ok := CityTable[cityName]
 
 	return ok && len(city.District) > 0
 }
 
 func SuggestedCityDistrictFromName(logger *logging.Logger, cityName string) []string {
-	city, ok := cityDistrictTable[cityName]
+	city, ok := CityTable[cityName]
 	if !ok {
 		logger.Sugar().Errorf("failed to get city district of %s", cityName)
 		return nil

@@ -60,3 +60,7 @@ func (s *serviceMock) CreateCorporationCredentials(_ uint, _ customer.Corporatio
 func (s *serviceMock) GetCorporationCredentials(userID uint, corporationName string) (*customer.CorporationCredentials, error) {
 	return &customer.CorporationCredentials{}, s.err
 }
+
+func (s *serviceMock) CreateWaitingList(w *customer.WaitingList) error {
+	return s.err
+}

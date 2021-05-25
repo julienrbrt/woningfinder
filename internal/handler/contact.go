@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-chi/render"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
+	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 //go:embed templates/contact_form.tpl
@@ -25,7 +26,11 @@ type contactFormRequest struct {
 // Bind permits go-chi router to verify the user input and marshal it
 func (c *contactFormRequest) Bind(r *http.Request) error {
 	if c.Email == "" || c.Name == "" || c.Message == "" || c.AntiSpam == 0 {
-		return errors.New("message fields cannot be empty")
+		return errors.New("fields cannot be empty")
+	}
+
+	if !util.IsEmailValid(c.Email) {
+		return fmt.Errorf("email invalid")
 	}
 
 	// verify anti spam
@@ -37,7 +42,7 @@ func (c *contactFormRequest) Bind(r *http.Request) error {
 	}
 
 	if c.AntiSpam != sum {
-		return errors.New("message cannot be sent")
+		return errors.New("contact form cannot be processed")
 	}
 
 	return nil

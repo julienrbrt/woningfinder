@@ -20,6 +20,9 @@ type Service interface {
 	// Payment
 	SetPaid(userID uint, plan customer.Plan) error
 
+	// Waiting List
+	CreateWaitingList(w *customer.WaitingList) error
+
 	// Housing Preferences
 	CreateHousingPreferences(u *customer.User, preferences customer.HousingPreferences) error
 	GetHousingPreferences(u *customer.User) (customer.HousingPreferences, error)

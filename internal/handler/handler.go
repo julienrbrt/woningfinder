@@ -68,6 +68,7 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 	r.Group(func(r chi.Router) {
 		r.Get("/offering", handler.GetOffering)
 		r.Post("/contact", handler.ContactForm)
+		r.Post("/waitinglist", handler.WaitingListForm)
 		r.Post("/login", handler.Login)
 		r.Post("/signup", handler.SignUp)
 		r.Post("/payment", handler.PaymentProcessor)
