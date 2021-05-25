@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -20,7 +19,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-func Test_ContactForm_ErrEmptyRequest(t *testing.T) {
+func Test_WaitingListForm_ErrEmptyRequest(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -31,12 +30,12 @@ func Test_ContactForm_ErrEmptyRequest(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/contact", nil)
+	req, err := http.NewRequest(http.MethodPost, "/waitinglist", nil)
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.ContactForm)
+	h := http.HandlerFunc(handler.WaitingListForm)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -48,7 +47,7 @@ func Test_ContactForm_ErrEmptyRequest(t *testing.T) {
 	a.Contains(rr.Body.String(), "Bad request")
 }
 
-func Test_ContactForm_Spam(t *testing.T) {
+func Test_WaitingListForm_Spam(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -59,16 +58,16 @@ func Test_ContactForm_Spam(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/contact-request-spam.json")
+	data, err := ioutil.ReadFile("testdata/waitinglist-request-spam.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/contact", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/waitinglist", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.ContactForm)
+	h := http.HandlerFunc(handler.WaitingListForm)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -80,7 +79,7 @@ func Test_ContactForm_Spam(t *testing.T) {
 	a.Contains(rr.Body.String(), "Bad request")
 }
 
-func Test_ContactForm_MalformedEmail(t *testing.T) {
+func Test_WaitingListForm_MalformedEmail(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -91,16 +90,16 @@ func Test_ContactForm_MalformedEmail(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/contact-request-bad-email.json")
+	data, err := ioutil.ReadFile("testdata/waitinglist-request-bad-email.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/contact", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/waitinglist", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.ContactForm)
+	h := http.HandlerFunc(handler.WaitingListForm)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -112,26 +111,26 @@ func Test_ContactForm_MalformedEmail(t *testing.T) {
 	a.Contains(rr.Body.String(), "Bad request")
 }
 
-func Test_ContactForm_ErrEmailClient(t *testing.T) {
+func Test_WaitingListForm_ErrUSerService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(errors.New("err"))
 	notificationServiceMock := notificationService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{Err: errors.New("foo")}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/contact-request.json")
+	data, err := ioutil.ReadFile("testdata/waitinglist-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/contact", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/waitinglist", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.ContactForm)
+	h := http.HandlerFunc(handler.WaitingListForm)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -140,12 +139,12 @@ func Test_ContactForm_ErrEmailClient(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(fmt.Errorf("failed sending message: please try again")))
+	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("error while adding john.snow@woningfinder.nl to the waiting list")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
 
-func Test_ContactForm_Success(t *testing.T) {
+func Test_WaitingListForm_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -156,16 +155,16 @@ func Test_ContactForm_Success(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/contact-request.json")
+	data, err := ioutil.ReadFile("testdata/waitinglist-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/contact", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/waitinglist", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.ContactForm)
+	h := http.HandlerFunc(handler.WaitingListForm)
 
 	// server request
 	h.ServeHTTP(rr, req)
