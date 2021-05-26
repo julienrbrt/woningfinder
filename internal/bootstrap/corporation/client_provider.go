@@ -16,23 +16,25 @@ func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) co
 	providers := []connector.Provider{
 		{
 			Corporation: dewoonplaats.Info,
-			Client:      CreateDeWoonplaatsClient(logger, mapboxClient),
+			ClientFunc:  func() connector.Client { return CreateDeWoonplaatsClient(logger, mapboxClient) },
 		},
 		{
 			Corporation: itris.OnsHuisInfo,
-			Client:      CreateItrisClient(logger, mapboxClient, itris.OnsHuisInfo),
+			ClientFunc:  func() connector.Client { return CreateItrisClient(logger, mapboxClient, itris.OnsHuisInfo) },
 		},
 		{
 			Corporation: zig.RoomspotInfo,
-			Client:      CreateZigClient(logger, mapboxClient, zig.RoomspotInfo),
+			ClientFunc:  func() connector.Client { return CreateZigClient(logger, mapboxClient, zig.RoomspotInfo) },
 		},
 		{
 			Corporation: domijn.Info,
-			Client:      CreateDomijnClient(logger, mapboxClient),
+			ClientFunc:  func() connector.Client { return CreateDomijnClient(logger, mapboxClient) },
 		},
 		{
 			Corporation: woningnet.HengeloBorneInfo,
-			Client:      CreateWoningNetClient(logger, mapboxClient, woningnet.HengeloBorneInfo),
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.HengeloBorneInfo)
+			},
 		},
 	}
 

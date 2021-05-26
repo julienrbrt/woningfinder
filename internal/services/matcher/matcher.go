@@ -44,7 +44,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			defer wg.Done()
 
 			// use one housing corporation client per user
-			client := client
+			client := client()
 
 			//enrich user
 			user, err = s.userService.GetUser(user)
