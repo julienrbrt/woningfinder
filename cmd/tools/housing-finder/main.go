@@ -44,7 +44,7 @@ func main() {
 			continue
 		}
 
-		if err := matcherService.PushOffers(client, corp); err != nil {
+		if err := matcherService.PushOffers(client(), corp); err != nil {
 			logger.Sugar().Error(err)
 		}
 	}

@@ -134,7 +134,7 @@ func (s *service) validateCredentials(credentials customer.CorporationCredential
 	if err != nil {
 		return err
 	}
-	if err := client.Login(credentials.Login, credentials.Password); err != nil {
+	if err := client().Login(credentials.Login, credentials.Password); err != nil {
 		return fmt.Errorf("error when authenticating to %s with given credentials: %w", credentials.CorporationName, err)
 	}
 
