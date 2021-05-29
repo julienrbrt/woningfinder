@@ -40,7 +40,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 
 		wg.Add(1)
 		// react concurrently
-		go func(user *customer.User, creds customer.CorporationCredentials, wg *sync.WaitGroup) {
+		go func(wg *sync.WaitGroup, user *customer.User, creds customer.CorporationCredentials) {
 			defer wg.Done()
 
 			// use one housing corporation client per user
@@ -108,7 +108,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				// save that we've checked the offer for the user
 				s.storeReaction(uuid)
 			}
-		}(user, creds, &wg)
+		}(&wg, user, creds)
 	}
 
 	// wait for all match
