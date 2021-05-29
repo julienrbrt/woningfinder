@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	minutes = []int{0, 1, 2, 3}
-	seconds = []int{0, 15, 30, 45}
+	minutes = []int{0, 1, 2, 3, 4, 5}
+	seconds = []int{0, 25, 45}
 )
 
 // CorporationScheduler creates schedules (when to fetch their offer) given a selection time for a housing corporation
