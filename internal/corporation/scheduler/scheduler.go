@@ -45,8 +45,8 @@ func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
 		}
 	}
 
-	// always check at midnight
-	sched, _ := parser.Parse("@midnight")
+	// always check at 00:05
+	sched, _ := parser.Parse("0 5 0 * * *")
 	schedules = append(schedules, sched)
 
 	return schedules

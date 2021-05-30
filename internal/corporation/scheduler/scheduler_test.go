@@ -23,7 +23,7 @@ func Test_CorporationScheduler_NoSelectionTime(t *testing.T) {
 	a.Equal(schedules[0].Next(now).Hour(), 17)
 	a.Equal(schedules[0].Next(now).Minute(), 0)
 	a.Equal(schedules[1].Next(now).Hour(), 0)
-	a.Equal(schedules[1].Next(now).Minute(), 0)
+	a.Equal(schedules[1].Next(now).Minute(), 5)
 }
 
 func Test_CorporationScheduler_WithSelectionTime(t *testing.T) {
@@ -41,7 +41,7 @@ func Test_CorporationScheduler_WithSelectionTime(t *testing.T) {
 	a.Equal(schedules[0].Next(now).Hour(), 12)
 	a.Equal(schedules[0].Next(now).Minute(), 55)
 	a.Equal(schedules[1].Next(now).Hour(), 0)
-	a.Equal(schedules[1].Next(now).Minute(), 0)
+	a.Equal(schedules[1].Next(now).Minute(), 5)
 }
 
 func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
@@ -67,5 +67,5 @@ func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 	a.Equal(schedules[3].Next(now).Minute(), 0)
 	a.Equal(schedules[3].Next(now).Second(), 15)
 	a.Equal(schedules[len(schedules)-1].Next(now).Hour(), 0)
-	a.Equal(schedules[len(schedules)-1].Next(now).Minute(), 0)
+	a.Equal(schedules[len(schedules)-1].Next(now).Minute(), 5)
 }
