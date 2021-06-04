@@ -25,6 +25,7 @@ var Info = corporation.Corporation{
 		city.Bredevoort,
 		city.Ulft,
 		city.Hengelo,
+		city.Almelo,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
