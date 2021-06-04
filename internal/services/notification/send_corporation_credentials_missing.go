@@ -9,35 +9,35 @@ import (
 	"github.com/woningfinder/woningfinder/internal/services/notification/templates"
 )
 
-func (s *service) SendCorporationCredentialsError(user *customer.User, corporationName string) error {
+func (s *service) SendCorporationCredentialsMissing(user *customer.User) error {
 	_, jwtToken, err := auth.CreateJWTUserToken(s.jwtAuth, user)
 	if err != nil {
-		return fmt.Errorf("error sending corporation credentials error notification: %w", err)
+		return fmt.Errorf("error sending corporation credentials missing notification: %w", err)
 	}
 
-	html, plain, err := corporationCredentialsErrorTpl(user, jwtToken, corporationName)
+	html, plain, err := corporationCredentialsMissingTpl(user, jwtToken)
 	if err != nil {
-		return fmt.Errorf("error sending corporation credentials error notification: %w", err)
+		return fmt.Errorf("error sending corporation credentials missing notification: %w", err)
 	}
 
-	if err := s.emailClient.Send("Er is iets misgegaan met je inloggegevens", html, plain, user.Email); err != nil {
+	if err := s.emailClient.Send("Wekelijkse update", html, plain, user.Email); err != nil {
 		return fmt.Errorf("error sending corporation credentials notification: %w", err)
 	}
 
 	return nil
 }
 
-func corporationCredentialsErrorTpl(user *customer.User, jwtToken, corporationName string) (html, plain string, err error) {
+func corporationCredentialsMissingTpl(user *customer.User, jwtToken string) (html, plain string, err error) {
 	email := hermes.Email{
 		Body: hermes.Body{
-			Title: fmt.Sprintf("Hoi %s,", user.Name),
+			Title: fmt.Sprintf("Hi %s,", user.Name),
 			Intros: []string{
-				fmt.Sprintf("We hebben geprobeerd om in te loggen bij %s, maar het lijkt erop dat je inloggegevens niet meer kloppen (je hebt waarschijnlijk je wachtwoord veranderd).", corporationName),
-				"Ze zijn nu dus verwijderd van ons systeem.",
+				"Normaal gesproken zou je een wekelijkse update krijgen, maar je bent nog niet ingelogd op woningcorporaties websites in je WoningFinder account.",
+				"Als je dat niet doet kunnen we helaas niet voor jou reageren.",
 			},
 			Actions: []hermes.Action{
 				{
-					Instructions: fmt.Sprintf("Als je nog steeds wilt dat we reageren op het %s aanbod log dan in om je inloggegevens voor deze woningcorporatie opnieuw in te stellen.", corporationName),
+					Instructions: "Je kunt dat eenvoudig doen via je WoningFinder zoekopdracht.",
 					Button: hermes.Button{
 						Color: "#E46948",
 						Text:  "Mijn zoekopdracht",

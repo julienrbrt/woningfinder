@@ -13,6 +13,7 @@ type Service interface {
 	SendWelcome(user *customer.User) error
 	SendPaymentReminder(user *customer.User) error
 	SendWeeklyUpdate(user *customer.User, housingMatch []customer.HousingPreferencesMatch) error
+	SendCorporationCredentialsMissing(user *customer.User) error
 	SendCorporationCredentialsError(user *customer.User, corporationName string) error
 	SendBye(user *customer.User) error
 }

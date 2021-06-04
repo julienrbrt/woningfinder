@@ -73,7 +73,7 @@ Team WoningFinder
 
 ## Wekelijkse update
 
-Hoi <naam>,
+Hi <naam>,
 
 We hebben elke dag gekeken, maar hebben deze week niets voor jou kunnen vinden.
 Maak je geen zorgen, we blijven zoeken!
@@ -85,12 +85,32 @@ Groetjes,
 Team WoningFinder
 ```
 
-**Corporation Credentials**
+---
+
+**Corporation Credentials Missing**
+
+```
+## Wekelijkse update
+
+Hi <naam>!,
+
+Normaal gesproken zou je een wekelijkse update krijgen, maar je bent nog niet ingelogd op woningcorporaties websites in je WoningFinder account.
+Als je dat niet doet kunnen we helaas niet voor jou reageren.
+
+Je kunt dat eenvoudig doen in je WoningFinder zoekopdracht.
+
+<Mijn zoekopdracht>
+
+Groetjes,
+Team WoningFinder
+```
+
+**Corporation Credentials Error**
 
 ```
 ## Er is iets misgegaan met je inloggegevens
 
-Hoi <naam>!
+Hi <naam>!
 
 We hebben geprobeerd om in te loggen in <woningcorporatie>, maar het lijkt erop dat je inloggegevens niet meer kloppen (je hebt waarschijnlijk je wachtwoord veranderd).
 Ze zijn nu dus verwijderd van ons systeem.

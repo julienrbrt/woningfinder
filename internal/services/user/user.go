@@ -91,6 +91,7 @@ func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 			return nil, fmt.Errorf("failed getting user %d: %w", u.ID, err)
 		}
 
+		// enrich housing preferences match
 		if err := db.Model(u).
 			Where("id = ?", u.ID).
 			Relation("HousingPreferencesMatch", func(q *orm.Query) (*orm.Query, error) {
@@ -98,6 +99,11 @@ func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 			}).
 			Select(); err != nil {
 			return nil, fmt.Errorf("failed getting user %s housing preferences match: %w", u.Email, err)
+		}
+
+		// enrich corporation credentials
+		if err := db.Model(&u.CorporationCredentials).Where("user_id = ?", u.ID).Select(); err != nil {
+			return nil, fmt.Errorf("error when getting corporation credentials for userID %d: %w", u.ID, err)
 		}
 
 		users = append(users, u)

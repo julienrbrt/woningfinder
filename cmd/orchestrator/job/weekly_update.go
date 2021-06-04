@@ -21,6 +21,15 @@ func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
 
 		// send confirmation email to each user
 		for _, user := range users {
+
+			// user has no corporation credentials so we cannot react for them
+			if len(user.CorporationCredentials) == 0 {
+				if err := j.notificationService.SendCorporationCredentialsMissing(user); err != nil {
+					j.logger.Sugar().Errorf("error while sending weekly update (credentials missing): %w", err)
+				}
+				continue
+			}
+
 			if err := j.notificationService.SendWeeklyUpdate(user, user.HousingPreferencesMatch); err != nil {
 				j.logger.Sugar().Errorf("error while sending weekly update: %w", err)
 			}
