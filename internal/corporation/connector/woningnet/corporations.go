@@ -5,7 +5,6 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 )
 
 var HengeloBorneInfo = corporation.Corporation{
@@ -21,5 +20,4 @@ var HengeloBorneInfo = corporation.Corporation{
 		corporation.SelectionRandom,
 		corporation.SelectionRegistrationDate,
 	},
-	SelectionTime: scheduler.CreateSelectionTime(17, 0, 0),
 }

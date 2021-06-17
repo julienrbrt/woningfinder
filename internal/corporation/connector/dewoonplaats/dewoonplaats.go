@@ -5,7 +5,6 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 )
 
 var Info = corporation.Corporation{
@@ -31,5 +30,4 @@ var Info = corporation.Corporation{
 		corporation.SelectionRandom,
 		corporation.SelectionFirstComeFirstServed,
 	},
-	SelectionTime: scheduler.CreateSelectionTime(18, 0, 0),
 }
