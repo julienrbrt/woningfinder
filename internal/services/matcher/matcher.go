@@ -169,7 +169,7 @@ func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Of
 
 	for _, offer := range offers.Offer {
 		uuid := buildReactionUUID(user, offer)
-		if !s.hasReacted(uuid) {
+		if s.hasReacted(uuid) {
 			continue
 		}
 
