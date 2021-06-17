@@ -2,59 +2,41 @@ package scheduler
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
 var (
-	minutes = []int{0, 1, 2, 3, 4, 5}
-	seconds = []int{0, 25, 45}
+	parser = cron.NewParser(cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor)
 )
 
 // CorporationScheduler creates schedules (when to fetch their offer) given a selection time for a housing corporation
 func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
 	var schedules []cron.Schedule
 
-	parser := cron.NewParser(cron.Second | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor)
-	defaultSched := buildSchedule(parser, 17, 0, 0)
+	// add schedule at selection time (always check at 18:15 and 00:15)
+	schedules = append(schedules, buildSchedule(parser, 18, 15))
+	schedules = append(schedules, buildSchedule(parser, 0, 15))
 
-	// add schedule at selection time
-	if corporation.SelectionTime == (time.Time{}) {
-		schedules = append(schedules, defaultSched)
-	} else {
-		sched := buildSchedule(parser, corporation.SelectionTime.Hour(), corporation.SelectionTime.Minute(), corporation.SelectionTime.Second())
-		schedules = append(schedules, sched)
-	}
-
-	// checks before the selection time and after the selection time
-	// only checks multiple time if the selection time is defined
-	if hasFirstComeFirstServed(corporation) && corporation.SelectionTime != (time.Time{}) {
-		for _, minute := range minutes {
-			for _, second := range seconds {
-				// skip the first one as already set above
-				if minute == 0 && second == 0 {
-					continue
-				}
-
-				newTime := corporation.SelectionTime.Add(time.Duration(minute) * time.Minute).Add(time.Duration(second) * time.Second)
-				sched := buildSchedule(parser, newTime.Hour(), newTime.Minute(), newTime.Second())
-				schedules = append(schedules, sched)
-			}
+	// for corporation that has first come first served, check every 30 minutes
+	if hasFirstComeFirstServed(corporation) {
+		schedule, err := parser.Parse("*/30 9-21 * * *")
+		if err != nil {
+			// should never happens
+			panic(err)
 		}
-	}
 
-	// always check at 00:05
-	sched, _ := parser.Parse("0 5 0 * * *")
-	schedules = append(schedules, sched)
+		schedules = append(schedules, schedule)
+	}
 
 	return schedules
 }
 
-func buildSchedule(parser cron.Parser, hour, minute, second int) cron.Schedule {
-	schedule, err := parser.Parse(fmt.Sprintf("%d %d %d * * *", second, minute, hour))
+func buildSchedule(parser cron.Parser, hour, minute int) cron.Schedule {
+	schedule, err := parser.Parse(fmt.Sprintf("%d %d * * *", minute, hour))
 	if err != nil {
+		// should never happens
 		panic(err)
 	}
 

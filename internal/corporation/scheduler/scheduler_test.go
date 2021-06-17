@@ -9,27 +9,9 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 )
 
-func Test_CorporationScheduler_NoSelectionTime(t *testing.T) {
+func Test_CorporationScheduler_Random(t *testing.T) {
 	a := assert.New(t)
 	corporation := corporation.Corporation{
-		SelectionMethod: []corporation.SelectionMethod{
-			corporation.SelectionFirstComeFirstServed,
-		},
-	}
-
-	now := time.Now()
-	schedules := scheduler.CorporationScheduler(corporation)
-	a.Len(schedules, 2)
-	a.Equal(schedules[0].Next(now).Hour(), 17)
-	a.Equal(schedules[0].Next(now).Minute(), 0)
-	a.Equal(schedules[1].Next(now).Hour(), 0)
-	a.Equal(schedules[1].Next(now).Minute(), 5)
-}
-
-func Test_CorporationScheduler_WithSelectionTime(t *testing.T) {
-	a := assert.New(t)
-	corporation := corporation.Corporation{
-		SelectionTime: scheduler.CreateSelectionTime(12, 55, 0),
 		SelectionMethod: []corporation.SelectionMethod{
 			corporation.SelectionRandom,
 		},
@@ -38,17 +20,16 @@ func Test_CorporationScheduler_WithSelectionTime(t *testing.T) {
 	now := time.Now()
 	schedules := scheduler.CorporationScheduler(corporation)
 	a.Len(schedules, 2)
-	a.Equal(schedules[0].Next(now).Hour(), 12)
-	a.Equal(schedules[0].Next(now).Minute(), 55)
+	a.Equal(schedules[0].Next(now).Hour(), 17)
+	a.Equal(schedules[0].Next(now).Minute(), 15)
 	a.Equal(schedules[1].Next(now).Hour(), 0)
-	a.Equal(schedules[1].Next(now).Minute(), 5)
+	a.Equal(schedules[1].Next(now).Minute(), 15)
 }
 
 func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 	a := assert.New(t)
 
 	corporation := corporation.Corporation{
-		SelectionTime: scheduler.CreateSelectionTime(17, 59, 15),
 		SelectionMethod: []corporation.SelectionMethod{
 			corporation.SelectionFirstComeFirstServed,
 		},
@@ -56,16 +37,9 @@ func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 
 	now := time.Now()
 	schedules := scheduler.CorporationScheduler(corporation)
-	a.Len(schedules, 19)
+	a.Len(schedules, 3)
 	a.Equal(schedules[0].Next(now).Hour(), 17)
-	a.Equal(schedules[0].Next(now).Minute(), 59)
-	a.Equal(schedules[0].Next(now).Second(), 15)
-	a.Equal(schedules[1].Next(now).Hour(), 17)
-	a.Equal(schedules[1].Next(now).Minute(), 59)
-	a.Equal(schedules[1].Next(now).Second(), 40)
-	a.Equal(schedules[3].Next(now).Hour(), 18)
-	a.Equal(schedules[3].Next(now).Minute(), 0)
-	a.Equal(schedules[3].Next(now).Second(), 15)
-	a.Equal(schedules[len(schedules)-1].Next(now).Hour(), 0)
-	a.Equal(schedules[len(schedules)-1].Next(now).Minute(), 5)
+	a.Equal(schedules[0].Next(now).Minute(), 15)
+	a.Equal(schedules[1].Next(now).Hour(), 0)
+	a.Equal(schedules[1].Next(now).Minute(), 15)
 }
