@@ -46,15 +46,23 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			// use one housing corporation client per user
 			client := client()
 
-			//enrich user
+			// enrich user
 			user, err = s.userService.GetUser(user)
 			if err != nil {
 				s.logger.Sugar().Errorf("error while getting user %s: %w", user.Email, err)
 				return
 			}
 
-			// skip non paid user
+			// skip non customer (user that didn't pay)
 			if !user.HasPaid() {
+				return
+			}
+
+			// check if we already checked all offers
+			// this is done before login in order to do not spam the housing corporation
+			uncheckedOffers, ok := s.hasNonReactedOffers(user, offers)
+			if !ok {
+				s.logger.Sugar().Infof("no new offers from %s for %s...", offers.Corporation.Name, user.Email)
 				return
 			}
 
@@ -81,14 +89,8 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				return
 			}
 
-			for _, offer := range offers.Offer {
-				s.logger.Sugar().Debugf("checking match of %s from for %s...", offer.Housing.Address, offers.Corporation.Name, user.Email)
-
-				// check if we already check this offer
-				uuid := buildReactionUUID(user, offer)
-				if s.hasReacted(uuid) {
-					continue
-				}
+			for uuid, offer := range uncheckedOffers {
+				s.logger.Sugar().Infof("checking match of %s from %s for %s...", offer.Housing.Address, offers.Corporation.Name, user.Email)
 
 				if s.matcher.MatchOffer(*user, offer) {
 					// react to offer
@@ -159,6 +161,22 @@ func (s *service) storeReaction(uuid string) {
 	if err := s.redisClient.Set(uuid, true); err != nil {
 		s.logger.Sugar().Errorf("error when saving reaction to redis: %w", err)
 	}
+}
+
+// hasNonReactedOffers returns the offers that has not been already reacted to
+func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Offers) (map[string]corporation.Offer, bool) {
+	uncheckedOffers := make(map[string]corporation.Offer)
+
+	for _, offer := range offers.Offer {
+		uuid := buildReactionUUID(user, offer)
+		if !s.hasReacted(uuid) {
+			continue
+		}
+
+		uncheckedOffers[uuid] = offer
+	}
+
+	return uncheckedOffers, len(uncheckedOffers) > 0
 }
 
 func buildReactionUUID(user *customer.User, offer corporation.Offer) string {
