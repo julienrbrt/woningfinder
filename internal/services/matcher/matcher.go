@@ -62,7 +62,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			// this is done before login in order to do not spam the housing corporation
 			uncheckedOffers, ok := s.hasNonReactedOffers(user, offers)
 			if !ok {
-				s.logger.Sugar().Infof("no new offers from %s for %s...", offers.Corporation.Name, user.Email)
+				s.logger.Sugar().Debugf("no new offers from %s for %s...", offers.Corporation.Name, user.Email)
 				return
 			}
 
@@ -90,7 +90,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			}
 
 			for uuid, offer := range uncheckedOffers {
-				s.logger.Sugar().Infof("checking match of %s from %s for %s...", offer.Housing.Address, offers.Corporation.Name, user.Email)
+				s.logger.Sugar().Debugf("checking match of %s from %s for %s...", offer.Housing.Address, offers.Corporation.Name, user.Email)
 
 				if s.matcher.MatchOffer(*user, offer) {
 					// react to offer
