@@ -1,9 +1,10 @@
 package database
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/go-redis/redis"
+	redis "github.com/go-redis/redis/v8"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
@@ -29,7 +30,7 @@ func NewRedisClient(logger *logging.Logger, host, port, password string) (RedisC
 
 	rdb := redis.NewClient(options)
 
-	_, err = rdb.Ping().Result()
+	_, err = rdb.Ping(context.Background()).Result()
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to redis with host: %s", host)
 	}
