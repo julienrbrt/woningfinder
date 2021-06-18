@@ -1,6 +1,9 @@
 package database
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+)
 
 // Queue is abstracting the logic of a FIFO queue
 type Queue interface {
@@ -9,7 +12,7 @@ type Queue interface {
 }
 
 func (r *redisClient) Push(listName string, data []byte) error {
-	result := r.rdb.RPush(listName, data)
+	result := r.rdb.RPush(context.Background(), listName, data)
 	if result.Err() != nil {
 		return fmt.Errorf("error adding %v to list %s: %w", string(data), listName, result.Err())
 	}
@@ -18,7 +21,7 @@ func (r *redisClient) Push(listName string, data []byte) error {
 }
 
 func (r *redisClient) BPop(listName string) ([]string, error) {
-	result := r.rdb.BLPop(0, listName) // timeout of zero to block indefinitely
+	result := r.rdb.BLPop(context.Background(), 0, listName) // timeout of zero to block indefinitely
 	if result.Err() != nil {
 		return nil, fmt.Errorf("error getting value from list %s: %w", listName, result.Err())
 	}

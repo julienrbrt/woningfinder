@@ -1,10 +1,11 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
-	"github.com/go-redis/redis"
+	redis "github.com/go-redis/redis/v8"
 )
 
 // KeyStore defines how the redis is used (as a keystore)
@@ -17,7 +18,7 @@ type KeyStore interface {
 var ErrRedisKeyNotFound = errors.New("key not found")
 
 func (r *redisClient) Get(key string) (string, error) {
-	value, err := r.rdb.Get(key).Result()
+	value, err := r.rdb.Get(context.Background(), key).Result()
 	if err != nil {
 		if err != redis.Nil {
 			return "", fmt.Errorf("error when getting key %s from redis: %w", key, err)
@@ -30,5 +31,5 @@ func (r *redisClient) Get(key string) (string, error) {
 }
 
 func (r *redisClient) Set(key string, value interface{}) error {
-	return r.rdb.Set(key, value, 0).Err()
+	return r.rdb.Set(context.Background(), key, value, 0).Err()
 }
