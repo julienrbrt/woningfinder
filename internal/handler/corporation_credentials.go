@@ -104,9 +104,3 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 
 	// returns 200 by default
 }
-
-// DeleteCorporationCredentials permits to delete a corporation credentials
-func (h *handler) DeleteCorporationCredentials(w http.ResponseWriter, r *http.Request) {
-	// TODO implement DeleteCorporationCredentials
-	panic("not implemented")
-}

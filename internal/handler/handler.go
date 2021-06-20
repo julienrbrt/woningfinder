@@ -86,7 +86,6 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 			r.Get("/", handler.GetUser)
 			r.Get("/corporation-credentials", handler.GetCorporationCredentials)
 			r.Post("/corporation-credentials", handler.UpdateCorporationCredentials)
-			r.Delete("/corporation-credentials", handler.DeleteCorporationCredentials)
 		})
 	})
 
