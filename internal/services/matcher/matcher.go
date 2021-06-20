@@ -126,7 +126,7 @@ func (s *service) hasFailedLogin(user *customer.User, credentials *customer.Corp
 
 	if failureCount > 3 {
 		if err := s.userService.DeleteCorporationCredentials(credentials.UserID, credentials.CorporationName); err != nil {
-			return fmt.Errorf("failed to delete %s corporation credentials of user %s: %w", user.Email, credentials.CorporationName, err)
+			return fmt.Errorf("failed to delete %s corporation credentials of user %s: %w", credentials.CorporationName, user.Email, err)
 		}
 
 		if err := s.notificationService.SendCorporationCredentialsError(user, credentials.CorporationName); err != nil {
