@@ -107,7 +107,7 @@ func (s *service) DeleteCorporationCredentials(userID uint, corporationName stri
 	}
 
 	// delete permanently
-	if _, err := s.dbClient.Conn().Model(credentials).Where("user_id = ? and corporation_name = ?", credentials.UserID, credentials.CorporationName).Delete(); err != nil {
+	if _, err := s.dbClient.Conn().Model((*customer.CorporationCredentials)(nil)).Where("user_id = ? and corporation_name = ?", credentials.UserID, credentials.CorporationName).Delete(); err != nil {
 		return fmt.Errorf("error when getting corporation credentials for userID %d: %w", userID, err)
 	}
 
