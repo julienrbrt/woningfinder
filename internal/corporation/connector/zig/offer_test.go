@@ -34,7 +34,6 @@ func Test_FetchOffer(t *testing.T) {
 		a.True(offer.Housing.NumberBedroom >= 0)
 		a.True(offer.Housing.BuildingYear >= 0)
 		a.NotEmpty(offer.SelectionMethod)
-		a.NotNil(offer.SelectionDate)
 		a.NotEmpty(offer.URL)
 		a.NotEmpty(offer.ExternalID)
 	}

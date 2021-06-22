@@ -180,5 +180,5 @@ func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Of
 }
 
 func buildReactionUUID(user *customer.User, offer corporation.Offer) string {
-	return base64.StdEncoding.EncodeToString([]byte(user.Email + offer.Housing.Address + offer.SelectionDate.String()))
+	return base64.StdEncoding.EncodeToString([]byte(user.Email + offer.Housing.Address))
 }

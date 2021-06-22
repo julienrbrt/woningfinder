@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -115,18 +114,6 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 		c.logger.Sugar().Infof("domijn connector: error while parsing price of %s: %w", offer.Housing.Address, err)
 		return
 	}
-
-	// parse selection date
-	e.ForEach("div.card dd", func(i int, el *colly.HTMLElement) {
-		// the date is at the 3rd position in the table
-		if i == 2 {
-			offer.SelectionDate, err = time.Parse(layoutTime, strings.TrimSpace(el.Text))
-			if err != nil {
-				c.logger.Sugar().Infof("domijn connector: error while parsing date of %s: %w", offer.Housing.Address, err)
-				return
-			}
-		}
-	})
 
 	// parse housing characteristics
 	e.ForEach("div.properties span > span", func(_ int, el *colly.HTMLElement) {
