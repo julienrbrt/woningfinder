@@ -3,7 +3,6 @@ package itris
 import (
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -46,12 +45,6 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 				if err != nil {
 					c.logger.Sugar().Infof("itris connector: could not get city district of %s: %w", offer.Housing.Address, err)
 				}
-			}
-
-			offer.SelectionDate, err = time.Parse(layoutTime, e.Attr("data-reactiedatum"))
-			if err != nil {
-				c.logger.Sugar().Warnf("itris connector: error while parsing date of %s: %w", offer.Housing.Address, err)
-				return
 			}
 
 			offer.Housing.Price, err = strconv.ParseFloat(e.Attr("data-prijs"), 16)

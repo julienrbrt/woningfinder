@@ -1,9 +1,5 @@
 package corporation
 
-import (
-	"time"
-)
-
 // Offers defines a list of offer belonging to a housing corporation
 type Offers struct {
 	Corporation Corporation
@@ -14,7 +10,6 @@ type Offers struct {
 type Offer struct {
 	Housing                      Housing
 	SelectionMethod              SelectionMethod
-	SelectionDate                time.Time
 	URL                          string
 	ExternalID                   string // identifier of the house at the housing coporation in order to react
 	MinFamilySize, MaxFamilySize int

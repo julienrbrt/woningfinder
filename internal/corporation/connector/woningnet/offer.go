@@ -291,7 +291,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		Housing:         house,
 		URL:             offerURL,
 		SelectionMethod: selectionMethod,
-		SelectionDate:   offer.SelectionDate,
 		MinFamilySize:   minFamilySize,
 		MaxFamilySize:   maxFamilySize,
 		MinAge:          minAge,

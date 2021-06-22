@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
@@ -159,7 +158,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		Housing:         house,
 		URL:             fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", offer.ID),
 		SelectionMethod: c.parseSelectionMethod(offer.IsSelectionRandom),
-		SelectionDate:   c.parseSelectionDate(offer.SelectionDate),
 		MinFamilySize:   offer.Criteria.MinGezinsgrootte,
 		MaxFamilySize:   offer.Criteria.MaxGezinsgrootte,
 		MinAge:          offer.Criteria.MinLeeftijd,
@@ -185,22 +183,9 @@ func (c *client) parseHousingType(houseType []string) corporation.HousingType {
 }
 
 func (c *client) parseHouseSize(houseSize string) float64 {
-	size, _ := strconv.ParseFloat(strings.ReplaceAll(houseSize, ",", "."), 16)
+	size, _ := strconv.ParseFloat(strings.ReplaceAll(houseSize, ",", "."), 32)
 
 	return size
-}
-
-func (c *client) parseSelectionDate(str string) time.Time {
-	if len(str) == 0 {
-		return time.Time{}
-	}
-
-	date, err := time.Parse(time.RFC3339, str)
-	if err != nil {
-		return time.Time{}
-	}
-
-	return date
 }
 
 func (c *client) parseSelectionMethod(random bool) corporation.SelectionMethod {

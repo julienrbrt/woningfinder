@@ -534,7 +534,6 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 		Housing:         house,
 		URL:             fmt.Sprintf("%s/aanbod/te-huur/details/%s", c.corporation.URL, offer.Urlkey),
 		SelectionMethod: c.parseSelectionMethod(offer),
-		SelectionDate:   c.parseSelectionDate(offer.Closingdate),
 		MinFamilySize:   offer.Minimumhouseholdsize,
 		MaxFamilySize:   offer.Maximumhouseholdsize,
 		MinAge:          offer.Minimumage,
