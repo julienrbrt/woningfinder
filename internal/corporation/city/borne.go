@@ -15,3 +15,7 @@ var Borne = corporation.City{
 		"Stroom-Esch",
 	},
 }
+
+var Hertme = corporation.City{
+	Name: "Hertme",
+}
