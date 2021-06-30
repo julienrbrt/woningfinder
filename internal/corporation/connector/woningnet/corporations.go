@@ -14,6 +14,7 @@ var HengeloBorneInfo = corporation.Corporation{
 	Cities: []corporation.City{
 		city.Hengelo,
 		city.Borne,
+		city.Hertme,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
