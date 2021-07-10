@@ -34,8 +34,10 @@ var CityTable = map[string]corporation.City{
 // Merge cities that are supposed to be the same but that housing corporation name differently
 func Merge(city corporation.City) corporation.City {
 	switch {
-	case strings.Contains(city.Name, "Hengelo"):
+	case strings.Contains(city.Name, Hengelo.Name):
 		return Hengelo
+	case strings.Contains(city.Name, Winterswijk.Name):
+		return Winterswijk
 	}
 
 	return city
