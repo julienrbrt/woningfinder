@@ -13,8 +13,8 @@ import (
 
 // SendCustomerPaymentReminder reminds a unpaid customer to complete it's housing preferences (aka payment)
 func (j *Jobs) SendCustomerPaymentReminder(c *cron.Cron) {
-	// customer auto deletes are performed twice a day at 12:00 and 21:00
-	spec := "0 0 12,21 * * *"
+	// customer auto deletes are performed twice a day at 08:00, 12:00, 16:00, 20:00
+	spec := "0 0 8,12,16,20 * * *"
 
 	// populate cron
 	c.AddJob(spec, cron.FuncJob(func() {
@@ -31,8 +31,8 @@ func (j *Jobs) SendCustomerPaymentReminder(c *cron.Cron) {
 		}
 
 		for _, user := range users {
-			// check only user than did not paid since 8 hours
-			if user.CreatedAt.Before(time.Now().Add(-8 * time.Hour)) {
+			// check only user than did not paid since 4 hours
+			if user.CreatedAt.Before(time.Now().Add(-4 * time.Hour)) {
 				// check if reminder already sent
 				uuid := buildPaymentReminderUUID(&user)
 				if j.hasPaymentReminder(uuid) {
