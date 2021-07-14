@@ -8,7 +8,7 @@ WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _
 - _[HousingMatcher](../cmd/housing-matcher)_, is triggered by _HousingFinder_ via a queue (redis list). It will match the new offers to the customer search option and react to it.
 - _[Orchestrator](../cmd/orchestrator)_, permits to orchestrate the different jobs that needs to be often ran by WoningFinder.
   - _CustomerAutoDelete_ deletes the customers that did not paid within 48 hours. Runs everyday at 00:00.
-  - _CustomerPaymentReminder_ reminds a customers that did not paid within 8 hours. Runs everyday at 12:00 and 21:00.
+  - _CustomerPaymentReminder_ reminds a customers that did not paid within 4 hours. Runs everydat at 08:00, 12:00, 16:00 and 20:00.
   - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue (triggering _HousingMatcher_).
   - _WeeklyUpdate_ generates and send the customer weekly updates. Runs every Friday at 16:00.
 
