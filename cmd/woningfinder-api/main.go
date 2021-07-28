@@ -9,6 +9,7 @@ import (
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/handler"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
+	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
