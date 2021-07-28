@@ -1,7 +1,7 @@
 package email
 
 type Client interface {
-	Send(subject, html, plain, to string) error
+	Send(subject, html, to string) error
 }
 
 type client struct {

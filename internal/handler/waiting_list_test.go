@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	notificationService "github.com/woningfinder/woningfinder/internal/services/notification"
+	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/email"
@@ -25,9 +25,9 @@ func Test_WaitingListForm_ErrEmptyRequest(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationServiceMock := notificationService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/waitinglist", nil)
@@ -53,9 +53,9 @@ func Test_WaitingListForm_Spam(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationServiceMock := notificationService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/waitinglist-request-spam.json")
@@ -85,9 +85,9 @@ func Test_WaitingListForm_MalformedEmail(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationServiceMock := notificationService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/waitinglist-request-bad-email.json")
@@ -116,9 +116,9 @@ func Test_WaitingListForm_ErrUSerService(t *testing.T) {
 	logger := logging.NewZapLoggerWithoutSentry()
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("err"))
-	notificationServiceMock := notificationService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/waitinglist-request.json")
@@ -150,9 +150,9 @@ func Test_WaitingListForm_Success(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationServiceMock := notificationService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/waitinglist-request.json")

@@ -12,7 +12,7 @@ import (
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	customMiddleware "github.com/woningfinder/woningfinder/internal/handler/middleware"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
-	"github.com/woningfinder/woningfinder/internal/services/notification"
+	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	"github.com/woningfinder/woningfinder/internal/services/payment"
 	"github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/email"
@@ -23,19 +23,19 @@ type handler struct {
 	logger                   *logging.Logger
 	corporationService       corporation.Service
 	userService              user.Service
-	notificationService      notification.Service
+	emailService             emailService.Service
 	paymentService           payment.Service
 	paymentWebhookSigningKey string
 	emailClient              email.Client
 }
 
 // NewHandler creates a WoningFinder API router
-func NewHandler(logger *logging.Logger, corporationService corporation.Service, userService user.Service, notificationService notification.Service, paymentService payment.Service, paymentWebhookSigningKey string, jwtAuth *jwtauth.JWTAuth, emailClient email.Client) http.Handler {
+func NewHandler(logger *logging.Logger, corporationService corporation.Service, userService user.Service, emailService emailService.Service, paymentService payment.Service, paymentWebhookSigningKey string, jwtAuth *jwtauth.JWTAuth, emailClient email.Client) http.Handler {
 	handler := &handler{
 		logger:                   logger,
 		corporationService:       corporationService,
 		userService:              userService,
-		notificationService:      notificationService,
+		emailService:             emailService,
 		paymentService:           paymentService,
 		paymentWebhookSigningKey: paymentWebhookSigningKey,
 		emailClient:              emailClient,

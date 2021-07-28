@@ -8,14 +8,14 @@ import (
 	"github.com/jordan-wright/email"
 )
 
-func (c *client) Send(subject, html, plain, to string) error {
+func (c *client) Send(subject, body, to string) error {
 	e := &email.Email{
 		To:      []string{to},
 		Bcc:     []string{c.from},
 		From:    fmt.Sprintf("%s <%s>", c.name, c.from),
 		Subject: subject,
-		Text:    []byte(plain),
-		HTML:    []byte(html),
+		Text:    []byte(body),
+		HTML:    []byte(body),
 		Headers: textproto.MIMEHeader{},
 	}
 
