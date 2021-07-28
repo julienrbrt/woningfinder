@@ -40,7 +40,7 @@ func (j *Jobs) SendCustomerPaymentReminder(c *cron.Cron) {
 				}
 
 				// send reminder
-				if err := j.notificationService.SendPaymentReminder(&user); err != nil {
+				if err := j.emailService.SendPaymentReminder(&user); err != nil {
 					j.logger.Sugar().Error("Error sending %s payment reminder: %w", user.Email, err)
 				}
 

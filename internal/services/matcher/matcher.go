@@ -129,7 +129,7 @@ func (s *service) hasFailedLogin(user *customer.User, credentials *customer.Corp
 			return fmt.Errorf("failed to delete %s corporation credentials of user %s: %w", credentials.CorporationName, user.Email, err)
 		}
 
-		if err := s.notificationService.SendCorporationCredentialsError(user, credentials.CorporationName); err != nil {
+		if err := s.emailService.SendCorporationCredentialsError(user, credentials.CorporationName); err != nil {
 			return fmt.Errorf("failed notifying user %s about %s corporation credentials deletion: %w", user.Email, credentials.CorporationName, err)
 		}
 	}

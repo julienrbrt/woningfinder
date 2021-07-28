@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	notificationService "github.com/woningfinder/woningfinder/internal/services/notification"
+	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/email"
@@ -25,9 +25,9 @@ func Test_Login_ErrBadRequest(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationServiceMock := notificationService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/login", nil)
@@ -53,9 +53,9 @@ func Test_Login_ErrUserService(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
-	notificationServiceMock := notificationService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// request data
 	data, err := ioutil.ReadFile("testdata/login-request.json")
@@ -82,15 +82,15 @@ func Test_Login_ErrUserService(t *testing.T) {
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
 
-func Test_Login_ErrNotificationService(t *testing.T) {
+func Test_Login_ErremailService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationServiceMock := notificationService.NewServiceMock(errors.New("foo"))
+	emailServiceMock := emailService.NewServiceMock(errors.New("foo"))
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// request data
 	data, err := ioutil.ReadFile("testdata/login-request.json")
@@ -123,9 +123,9 @@ func Test_Login(t *testing.T) {
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
-	notificationServiceMock := notificationService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
 	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, notificationServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// request data
 	data, err := ioutil.ReadFile("testdata/login-request.json")

@@ -43,8 +43,8 @@ func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// send login notification
-	if err := h.notificationService.SendLogin(user); err != nil {
+	// send login email
+	if err := h.emailService.SendLogin(user); err != nil {
 		errorMsg := fmt.Errorf("error while sending login email")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))

@@ -1,13 +1,18 @@
-package notification
+package email
 
 import (
+	"embed"
+
 	"github.com/go-chi/jwtauth"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/pkg/email"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-// Service permits to handle the management of the notification
+//go:embed templates/*
+var emailTemplates embed.FS
+
+// Service permits to handle the management of the email
 type Service interface {
 	SendLogin(user *customer.User) error
 	SendWelcome(user *customer.User) error
@@ -24,7 +29,7 @@ type service struct {
 	jwtAuth     *jwtauth.JWTAuth
 }
 
-// NewService instantiate the notification service
+// NewService instantiate the email service
 func NewService(logger *logging.Logger, emailClient email.Client, jwtAuth *jwtauth.JWTAuth) Service {
 	return &service{
 		logger:      logger,

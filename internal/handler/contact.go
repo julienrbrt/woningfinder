@@ -71,7 +71,7 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// send mail
-	if err := h.emailClient.Send("WoningFinder Contact Submission", "", body.String(), "contact@woningfinder.nl"); err != nil {
+	if err := h.emailClient.Send("WoningFinder Contact Submission", body.String(), "contact@woningfinder.nl"); err != nil {
 		errorMsg := fmt.Errorf("failed sending message: please try again")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
