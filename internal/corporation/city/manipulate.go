@@ -29,6 +29,7 @@ var CityTable = map[string]corporation.City{
 	Almelo.Name:      Almelo,
 	Hertme.Name:      Hertme,
 	Apeldoorn.Name:   Apeldoorn,
+	Heerenberg.Name:  Heerenberg,
 }
 
 // Merge cities that are supposed to be the same but that housing corporation name differently
