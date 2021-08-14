@@ -27,9 +27,7 @@ func (s *service) SendWeeklyUpdate(user *customer.User, housingMatch []customer.
 			Match:       housingMatch,
 		}
 
-		tpl := template.Must(template.New("weekly-update.html").
-			Funcs(template.FuncMap{"mod": func(i, j int) bool { return i%j == 0 }}).
-			ParseFS(emailTemplates, "templates/weekly-update.html"))
+		tpl := template.Must(template.ParseFS(emailTemplates, "templates/weekly-update.html"))
 		if err := tpl.Execute(body, data); err != nil {
 			return fmt.Errorf("error sending weekly update email: %w", err)
 		}
