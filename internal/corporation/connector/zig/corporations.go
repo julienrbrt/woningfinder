@@ -11,7 +11,7 @@ var RoomspotInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.roomspot.nl"},
 	Name:        "Roomspot",
 	URL:         "https://www.roomspot.nl",
-	Cities: []corporation.City{
+	Cities: []city.City{
 		city.Enschede,
 		city.Hengelo,
 	},

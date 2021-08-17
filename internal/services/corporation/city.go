@@ -5,12 +5,12 @@ import (
 	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	corporationcity "github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 // LinkCities permits to creates a city and when given associate that city to a corporation
 // Note the corporation will not be check when doing the association, always ensure the corporation exists
-func (s *service) LinkCities(cities []corporation.City, corporations ...corporation.Corporation) error {
+func (s *service) LinkCities(cities []city.City, corporations ...corporation.Corporation) error {
 	_, err := s.dbClient.Conn().Model(&cities).OnConflict("(name) DO UPDATE").Insert()
 	if err != nil {
 		return fmt.Errorf("error creating cities: %w", err)
@@ -32,28 +32,28 @@ func (s *service) LinkCities(cities []corporation.City, corporations ...corporat
 	return nil
 }
 
-func (s *service) GetCity(name string) (corporation.City, error) {
-	var city corporation.City
-	if err := s.dbClient.Conn().Model(&city).Where("name = ?", name).Select(); err != nil {
-		return corporation.City{}, fmt.Errorf("failing getting city %s: %w", name, err)
+func (s *service) GetCity(name string) (city.City, error) {
+	var c city.City
+	if err := s.dbClient.Conn().Model(&c).Where("name = ?", name).Select(); err != nil {
+		return city.City{}, fmt.Errorf("failing getting city %s: %w", name, err)
 	}
 
 	// enrich city with suggested city districts
-	city.District = corporationcity.SuggestedCityDistrictFromName(s.logger, city.Name)
+	c.District = city.SuggestedCityDistrictFromName(s.logger, c.Name)
 
-	return city, nil
+	return c, nil
 }
 
-func (s *service) GetCities() ([]corporation.City, error) {
-	var cities []corporation.City
+func (s *service) GetCities() ([]city.City, error) {
+	var cities []city.City
 
 	if err := s.dbClient.Conn().Model(&cities).Select(); err != nil {
 		return nil, fmt.Errorf("failing getting cities: %w", err)
 	}
 
 	// enrich city with suggested city districts
-	for i, city := range cities {
-		cities[i].District = corporationcity.SuggestedCityDistrictFromName(s.logger, city.Name)
+	for i, c := range cities {
+		cities[i].District = city.SuggestedCityDistrictFromName(s.logger, c.Name)
 	}
 
 	return cities, nil

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 // TODO eventually use a prepare function to create it in one query only
@@ -42,8 +43,8 @@ func (s *service) GetCorporation(name string) (*corporation.Corporation, error) 
 		return nil, fmt.Errorf("failed getting corporation %s cities: %w", name, err)
 	}
 
-	for _, city := range cities {
-		corp.Cities = append(corp.Cities, corporation.City{Name: city.CityName})
+	for _, c := range cities {
+		corp.Cities = append(corp.Cities, city.City{Name: c.CityName})
 	}
 
 	return &corp, nil

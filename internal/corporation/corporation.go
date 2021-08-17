@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/url"
 	"time"
+
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 // Corporation defines a housing corporations basic data
@@ -14,7 +16,7 @@ type Corporation struct {
 	DeletedAt       time.Time `pg:",soft_delete" json:"-"`
 	Name            string    `pg:",pk"`
 	URL             string
-	Cities          []City            `pg:"-"` // linked to CorporationCity
+	Cities          []city.City       `pg:"-"` // linked to CorporationCity
 	SelectionMethod []SelectionMethod `pg:"-"`
 	SelectionTime   time.Time         `pg:"-" json:"-"`
 }
@@ -40,11 +42,4 @@ func (c *Corporation) HasMinimal() error {
 	}
 
 	return nil
-}
-
-// City defines a city where a housing corporation operates or when an house offer lies
-type City struct {
-	CreatedAt time.Time `pg:"default:now()" json:"-"`
-	Name      string    `pg:",pk" json:"name"`
-	District  []string  `pg:"-" json:"district,omitempty"`
 }

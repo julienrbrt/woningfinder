@@ -220,7 +220,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 	house := corporation.Housing{
 		Type:    houseType,
 		Address: fmt.Sprintf("%s %s", offer.Address, cityName[0]),
-		City: corporation.City{
+		City: city.City{
 			Name: cityName[0],
 		},
 		Accessible: offer.ToegankelijkheidslabelCSSClass != "ToegankelijkheidslabelZON",

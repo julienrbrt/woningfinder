@@ -1,26 +1,24 @@
 package city
 
-import "github.com/woningfinder/woningfinder/internal/corporation"
-
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Zwolle
-var Zwolle = corporation.City{
+var Zwolle = City{
 	Name: "Zwolle",
-	District: []string{
-		"Binnenstad",
-		"Diezerpoort",
-		"Wipstrik",
-		"Assendorp",
-		"Kamperpoort-Veerallee",
-		"Poort van Zwolle",
-		"Westenholte",
-		"Stadshagen",
-		"Holtenbroek",
-		"Aalanden",
-		"Vechtlanden",
-		"Berkum",
-		"Marsweteringlanden",
-		"Schelle",
-		"Ittersum",
-		"Soestweteringlanden",
+	District: map[string][]string{
+		"Binnenstad":            nil,
+		"Diezerpoort":           nil,
+		"Wipstrik":              nil,
+		"Assendorp":             nil,
+		"Kamperpoort-Veerallee": nil,
+		"Poort van Zwolle":      nil,
+		"Westenholte":           nil,
+		"Stadshagen":            nil,
+		"Holtenbroek":           nil,
+		"Aalanden":              nil,
+		"Vechtlanden":           nil,
+		"Berkum":                nil,
+		"Marsweteringlanden":    nil,
+		"Schelle":               nil,
+		"Ittersum":              nil,
+		"Soestweteringlanden":   nil,
 	},
 }

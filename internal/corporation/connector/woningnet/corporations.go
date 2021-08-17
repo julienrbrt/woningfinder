@@ -11,7 +11,7 @@ var HengeloBorneInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnethengeloborne.nl", Path: "/webapi"},
 	Name:        "WoningNet Hengelo-Borne",
 	URL:         "https://www.woningnethengeloborne.nl",
-	Cities: []corporation.City{
+	Cities: []city.City{
 		city.Hengelo,
 		city.Borne,
 		city.Hertme,

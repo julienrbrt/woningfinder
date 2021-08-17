@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
@@ -38,7 +39,7 @@ func (s *serviceMock) GetUser(search *customer.User) (*customer.User, error) {
 			MaximumPrice:  950,
 			NumberBedroom: 1,
 			HasElevator:   true,
-			City: []corporation.City{
+			City: []city.City{
 				{Name: "Enschede"},
 			},
 		},

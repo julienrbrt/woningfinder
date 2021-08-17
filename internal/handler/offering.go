@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
@@ -20,9 +21,9 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type response struct {
-		Plan                 []plan             `json:"plan"`
-		SupportedCities      []corporation.City `json:"supported_cities"`
-		SupportedHousingType []string           `json:"supported_housing_type"`
+		Plan                 []plan      `json:"plan"`
+		SupportedCities      []city.City `json:"supported_cities"`
+		SupportedHousingType []string    `json:"supported_housing_type"`
 	}
 
 	var offering response

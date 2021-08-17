@@ -126,7 +126,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 	house := corporation.Housing{
 		Type:    houseType,
 		Address: fmt.Sprintf("%s %s %s", offer.Address, offer.Postcode, offer.City),
-		City: corporation.City{
+		City: city.City{
 			Name: offer.City,
 		},
 		EnergyLabel:   offer.EnergieLabel,

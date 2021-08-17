@@ -1,21 +1,19 @@
 package city
 
-import "github.com/woningfinder/woningfinder/internal/corporation"
-
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Borne
-var Borne = corporation.City{
+var Borne = City{
 	Name: "Borne",
-	District: []string{
-		"Bornsche Maten",
-		"Centrum",
-		"'t Wensink",
-		"Dikkerslaan-Molenkampsweg",
-		"Lettersveld",
-		"Tichelkamp",
-		"Stroom-Esch",
+	District: map[string][]string{
+		"Bornsche Maten":            nil,
+		"Centrum":                   nil,
+		"'t Wensink":                nil,
+		"Dikkerslaan-Molenkampsweg": nil,
+		"Lettersveld":               nil,
+		"Tichelkamp":                nil,
+		"Stroom-Esch":               nil,
 	},
 }
 
-var Hertme = corporation.City{
+var Hertme = City{
 	Name: "Hertme",
 }
