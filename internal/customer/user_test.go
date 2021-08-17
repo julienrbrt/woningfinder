@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
@@ -28,7 +29,7 @@ func getUser() customer.User {
 			MaximumPrice:  950,
 			NumberBedroom: 1,
 			HasElevator:   true,
-			City: []corporation.City{
+			City: []city.City{
 				{Name: "Enschede"},
 			},
 		},

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 // HousingPreferences defines the user preference on a housing
@@ -15,7 +16,7 @@ type HousingPreferences struct {
 	UserID        uint                      `json:"-"`
 	Type          []corporation.HousingType `pg:"-" json:"type"` // linked to HousingPreferencesHousingType
 	MaximumPrice  float64                   `json:"maximum_price"`
-	City          []corporation.City        `pg:"-" json:"city,omitempty"` // linked to HousingPreferencesCity and HousingPreferencesCityDistrict
+	City          []city.City               `pg:"-" json:"city,omitempty"` // linked to HousingPreferencesCity and HousingPreferencesCityDistrict
 	NumberBedroom int                       `json:"number_bedroom"`
 	HasBalcony    bool                      `json:"has_balcony"`
 	HasGarage     bool                      `json:"has_garage"`

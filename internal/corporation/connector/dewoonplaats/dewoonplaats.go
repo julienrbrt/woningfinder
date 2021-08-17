@@ -12,7 +12,7 @@ var Info = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: "/wh_services"},
 	Name:        "De Woonplaats",
 	URL:         "https://www.dewoonplaats.nl",
-	Cities: []corporation.City{
+	Cities: []city.City{
 		city.Enschede,
 		city.Zwolle,
 		city.Dinxperlo,

@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 )
@@ -27,7 +28,7 @@ var user = customer.User{
 		MaximumPrice:  950,
 		NumberBedroom: 1,
 		HasElevator:   true,
-		City: []corporation.City{
+		City: []city.City{
 			{Name: "Enschede"},
 		},
 	},
@@ -37,7 +38,7 @@ var offer = corporation.Offer{
 	ExternalID: "w758752",
 	Housing: corporation.Housing{
 		Type:          corporation.HousingTypeHouse,
-		City:          corporation.City{Name: "Enschede"},
+		City:          city.City{Name: "Enschede"},
 		CityDistrict:  "deppenbroek",
 		Address:       "Beatrixstraat 1 R 7142BM Enschede",
 		EnergyLabel:   "A",
@@ -102,17 +103,17 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	a.True(matcher.MatchOffer(user, offer))
 
 	// change city preferences
-	user.HousingPreferences.City = []corporation.City{{Name: "Neede"}}
+	user.HousingPreferences.City = []city.City{{Name: "Hengelo"}}
 	a.False(matcher.MatchOffer(user, offer))
 
 	// add district preferences
-	user.HousingPreferences.City = []corporation.City{
+	user.HousingPreferences.City = []city.City{
 		{
 			Name: "Enschede",
-			District: []string{
-				"roombeek",
-				"city (oude markt)",
-				"ribbelt - stokhorst",
+			District: map[string][]string{
+				"Roombeek":   nil,
+				"Glanerbrug": nil,
+				"Stokhorst":  nil,
 			},
 		},
 	}
@@ -120,8 +121,17 @@ func Test_MatchPreferences_Location(t *testing.T) {
 
 	// add housing city district
 	offer := offer
-	offer.Housing.CityDistrict = "city"
+	offer.Housing.CityDistrict = "roombeek-roomveldje"
 	a.True(matcher.MatchOffer(user, offer))
+
+	offer.Housing.CityDistrict = "glanerveld" // this wijk is inside glanerbrug
+	a.True(matcher.MatchOffer(user, offer))
+
+	offer.Housing.CityDistrict = "stroinkslanden"
+	a.False(matcher.MatchOffer(user, offer))
+
+	offer.Housing.CityDistrict = ""
+	a.False(matcher.MatchOffer(user, offer))
 }
 
 func Test_MatchPreferences_HousingType(t *testing.T) {

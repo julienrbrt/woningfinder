@@ -1,19 +1,17 @@
 package city
 
-import "github.com/woningfinder/woningfinder/internal/corporation"
-
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Almelo
-var Almelo = corporation.City{
+var Almelo = City{
 	Name: "Almelo",
-	District: []string{
-		"Binnenstad",
-		"De Riet",
-		"Noorderkwartier",
-		"Sluitersveld",
-		"Aalderinkshoek",
-		"Nieuwstraat-Kwartier",
-		"Ossenkoppelerhoek",
-		"Hofkamp",
-		"Schelfhorst",
+	District: map[string][]string{
+		"Binnenstad":           nil,
+		"De Riet":              nil,
+		"Noorderkwartier":      nil,
+		"Sluitersveld":         nil,
+		"Aalderinkshoek":       nil,
+		"Nieuwstraat-Kwartier": nil,
+		"Ossenkoppelerhoek":    nil,
+		"Hofkamp":              nil,
+		"Schelfhorst":          nil,
 	},
 }

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
@@ -51,7 +52,7 @@ func (s *service) CreateHousingPreferences(u *customer.User, housingPreferences 
 		}
 
 		// add cities district
-		for _, district := range city.District {
+		for district := range city.District {
 			if _, err := db.Model(&customer.HousingPreferencesCityDistrict{HousingPreferencesID: housingPreferences.ID, CityName: city.Name, Name: district}).
 				Where("housing_preferences_id = ? and city_name = ? and name = ?", housingPreferences.ID, city.Name, district).
 				SelectOrInsert(); err != nil {
@@ -96,15 +97,17 @@ func (s *service) GetHousingPreferences(user *customer.User) (customer.HousingPr
 		return housingPreferences, fmt.Errorf("failed getting user %s housing preferences cities: %w", user.Email, err)
 	}
 
-	for _, city := range cities {
-		var districts []string
+	for _, c := range cities {
+		districts := map[string][]string{}
 		for _, district := range cityDistricts {
-			if district.CityName == city.CityName {
-				districts = append(districts, district.Name)
+			if district.CityName == c.CityName {
+				// this permits to use same districts map[string][]string that is used for suggestion of districts for the user too
+				// we however set the districts only as a key, so only the key is used in the preferences matcher
+				districts[district.Name] = nil
 			}
 		}
 
-		housingPreferences.City = append(housingPreferences.City, corporation.City{Name: city.CityName, District: districts})
+		housingPreferences.City = append(housingPreferences.City, city.City{Name: c.CityName, District: districts})
 
 	}
 

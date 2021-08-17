@@ -11,7 +11,7 @@ var OnsHuisInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "mijn.onshuis.com"},
 	Name:        "OnsHuis",
 	URL:         "https://www.onshuis.com",
-	Cities: []corporation.City{
+	Cities: []city.City{
 		city.Enschede,
 		city.Hengelo,
 	},

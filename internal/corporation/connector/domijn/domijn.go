@@ -11,7 +11,7 @@ var Info = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.domijn.nl"},
 	Name:        "Domijn",
 	URL:         "https://www.domijn.nl",
-	Cities: []corporation.City{
+	Cities: []city.City{
 		city.Enschede,
 		city.Haaksbergen,
 		city.Losser,

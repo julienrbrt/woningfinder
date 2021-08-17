@@ -1,5 +1,15 @@
 # Development Best Practices
 
+## Issue names
+
+**feature and bug**
+
+- `Implement [Issue Name] (closes #issue)`
+
+**bug on sentry**
+
+- `Implement [Issue Name] (fixes #sentry-name and closes #issue)`
+
 ## Stories should have at most 1 day of development work
 
 Often when working on stories it may be forgotten that writing tests and documentation can take at least as long as writing the code itself. Therefore, we have a rule of thumb that stories should have at most 1 day of development work. In addition to that it will probably take 1-2 days to write tests and update the documentation, resulting in a total of 2-3 days from status Open to In Review.

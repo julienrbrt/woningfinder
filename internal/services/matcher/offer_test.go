@@ -21,7 +21,7 @@ type mockCorporationService struct {
 	corporationService.Service
 }
 
-func (m *mockCorporationService) LinkCities(cities []corporation.City, corporation ...corporation.Corporation) error {
+func (m *mockCorporationService) LinkCities(cities []city.City, corporation ...corporation.Corporation) error {
 	return nil
 }
 
@@ -29,7 +29,7 @@ var corporationInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "example.com"},
 	Name:        "OnsHuis",
 	URL:         "https://example.com",
-	Cities: []corporation.City{
+	Cities: []city.City{
 		city.Enschede,
 		city.Hengelo,
 	},

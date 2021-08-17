@@ -1,19 +1,17 @@
 package city
 
-import "github.com/woningfinder/woningfinder/internal/corporation"
-
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Hengelo
-var Hengelo = corporation.City{
+var Hengelo = City{
 	Name: "Hengelo OV",
-	District: []string{
-		"Binnenstad",
-		"Hengelose Es",
-		"Noord",
-		"Hasseler Es",
-		"Groot Driene",
-		"Berflo Es",
-		"Wilderinkshoek",
-		"Woolde",
-		"Slangenbeek",
+	District: map[string][]string{
+		"Binnenstad":     nil,
+		"Hengelose Es":   nil,
+		"Noord":          nil,
+		"Hasseler Es":    nil,
+		"Groot Driene":   nil,
+		"Berflo Es":      nil,
+		"Wilderinkshoek": nil,
+		"Woolde":         nil,
+		"Slangenbeek":    nil,
 	},
 }

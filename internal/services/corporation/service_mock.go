@@ -1,27 +1,29 @@
 package corporation
 
-import "github.com/woningfinder/woningfinder/internal/corporation"
+import "github.com/woningfinder/woningfinder/internal/corporation/city"
 
 type serviceMock struct {
 	Service
-	err error
+
+	expectedMockGetCities []city.City
+	err                   error
 }
 
 // NewServiceMock mocks the corporation service
 func NewServiceMock(err error) Service {
-	return &serviceMock{err: err}
+	return &serviceMock{
+		err: err,
+		expectedMockGetCities: []city.City{
+			{Name: "Enschede", District: map[string][]string{"Centrum": nil, "Noord": {"Roombeek"}}},
+			{Name: "Hengelo"},
+		},
+	}
 }
 
-// ExpectedMockGetCities is returned when mocking GetCities from corporationService
-var ExpectedMockGetCities = []corporation.City{
-	{Name: "Enschede", District: []string{"Roombeek", "Centrum"}},
-	{Name: "Hengelo"},
-}
-
-func (s *serviceMock) GetCities() ([]corporation.City, error) {
+func (s *serviceMock) GetCities() ([]city.City, error) {
 	if s.err != nil {
 		return nil, s.err
 	}
 
-	return ExpectedMockGetCities, nil
+	return s.expectedMockGetCities, nil
 }

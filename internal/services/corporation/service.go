@@ -2,6 +2,7 @@ package corporation
 
 import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
@@ -13,9 +14,9 @@ type Service interface {
 	GetCorporation(name string) (*corporation.Corporation, error)
 
 	// Cities
-	LinkCities(cities []corporation.City, corp ...corporation.Corporation) error
-	GetCities() ([]corporation.City, error)
-	GetCity(name string) (corporation.City, error)
+	LinkCities(cities []city.City, corp ...corporation.Corporation) error
+	GetCities() ([]city.City, error)
+	GetCity(name string) (city.City, error)
 }
 
 type service struct {

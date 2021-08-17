@@ -48,11 +48,11 @@ func (s *service) PushOffers(client connector.Client, corp corporation.Corporati
 
 // gets and verify if all cities from the offers are present the supported cities by the corporation
 func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corporation.Corporation) error {
-	cities := make(map[string]corporation.City)
+	cities := make(map[string]city.City)
 	// get cities from offers
 	for _, offer := range offers {
 		// merge city names
-		city := city.Merge(offer.Housing.City)
+		city := offer.Housing.City.Merge()
 		cities[city.Name] = city
 	}
 
@@ -70,7 +70,7 @@ func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corpo
 	}
 
 	// transform map to array
-	var notFound []corporation.City
+	var notFound []city.City
 	for _, city := range cities {
 		notFound = append(notFound, city)
 	}
