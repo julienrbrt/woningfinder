@@ -41,7 +41,7 @@ func main() {
 
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporationService.NewService(logger, dbClient)
-	userService := userService.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
 	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, matcher.NewMatcher(), clientProvider)
 

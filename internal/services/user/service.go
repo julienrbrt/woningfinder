@@ -17,9 +17,6 @@ type Service interface {
 	DeleteUser(u *customer.User) error
 	GetWeeklyUpdateUsers() ([]*customer.User, error)
 
-	// Payment
-	SetPaid(userID uint, plan customer.Plan) error
-
 	// Waiting List
 	CreateWaitingList(w *customer.WaitingList) error
 
@@ -41,18 +38,16 @@ type Service interface {
 type service struct {
 	logger             *logging.Logger
 	dbClient           database.DBClient
-	redisClient        database.RedisClient
 	aesSecret          string
 	clientProvider     connector.ClientProvider
 	corporationService corporationService.Service
 }
 
 // NewService instantiate the user service
-func NewService(logger *logging.Logger, dbClient database.DBClient, redisClient database.RedisClient, aesSecret string, clientProvider connector.ClientProvider, corporationService corporationService.Service) Service {
+func NewService(logger *logging.Logger, dbClient database.DBClient, aesSecret string, clientProvider connector.ClientProvider, corporationService corporationService.Service) Service {
 	return &service{
 		logger:             logger,
 		dbClient:           dbClient,
-		redisClient:        redisClient,
 		aesSecret:          aesSecret,
 		clientProvider:     clientProvider,
 		corporationService: corporationService,

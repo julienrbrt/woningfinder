@@ -10,21 +10,22 @@ import (
 
 // Service permits to handle the management of the payments
 type Service interface {
+	ProcessFreeTrial(email string, plan customer.Plan) error
 	ProcessPayment(email string, plan customer.Plan) error
 }
 
 type service struct {
 	logger       *logging.Logger
-	redisClient  database.RedisClient
+	dbClient     database.DBClient
 	userService  userService.Service
 	emailService emailService.Service
 }
 
 // NewService instantiate the payment service
-func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, emailService emailService.Service) Service {
+func NewService(logger *logging.Logger, dbClient database.DBClient, userService userService.Service, emailService emailService.Service) Service {
 	return &service{
 		logger:       logger,
-		redisClient:  redisClient,
+		dbClient:     dbClient,
 		userService:  userService,
 		emailService: emailService,
 	}

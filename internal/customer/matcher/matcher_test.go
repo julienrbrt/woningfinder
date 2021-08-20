@@ -17,7 +17,7 @@ var user = customer.User{
 	YearlyIncome: 30000,
 	FamilySize:   3,
 	Plan: customer.UserPlan{
-		Name: customer.PlanBasis,
+		PlanName: customer.PlanBasis.Name,
 	},
 	HousingPreferences: customer.HousingPreferences{
 

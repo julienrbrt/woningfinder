@@ -70,9 +70,10 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 		r.Post("/contact", handler.ContactForm)
 		r.Post("/waitinglist", handler.WaitingListForm)
 		r.Post("/login", handler.Login)
-		r.Post("/signup", handler.SignUp)
+		r.Post("/register", handler.Register)
 		r.Post("/payment", handler.PaymentProcessor)
-		r.Post("/stripe-webhook", handler.PaymentValidator)
+		r.Post("/stripe-webhook", handler.StripeWebhook)
+		r.Post("/crypto-webhook", handler.CryptoWebhook)
 	})
 
 	// protected routes
@@ -83,7 +84,7 @@ func NewHandler(logger *logging.Logger, corporationService corporation.Service, 
 		r.Use(customMiddleware.CreateJWTValidatorMiddleware)
 
 		r.Route("/me", func(r chi.Router) {
-			r.Get("/", handler.GetUser)
+			r.Get("/", handler.UserInfo)
 			r.Get("/corporation-credentials", handler.GetCorporationCredentials)
 			r.Post("/corporation-credentials", handler.UpdateCorporationCredentials)
 		})

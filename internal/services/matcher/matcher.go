@@ -53,8 +53,8 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				return
 			}
 
-			// skip non customer (user that didn't pay)
-			if !user.HasPaid() {
+			// skip user with invalid plan (not paid and free trial-expired)
+			if !user.Plan.IsValid() {
 				return
 			}
 

@@ -14,16 +14,10 @@ import (
 
 // GetOffering gets the offering of WoningFinder (plans, cities and housing type)
 func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
-	type plan struct {
-		Name                  string `json:"name"`
-		Price                 int    `json:"price"`
-		MaximumCustomerIncome int    `json:"maximum_income,omitempty"`
-	}
-
 	type response struct {
-		Plan                 []plan      `json:"plan"`
-		SupportedCities      []city.City `json:"supported_cities"`
-		SupportedHousingType []string    `json:"supported_housing_type"`
+		Plan                 []customer.Plan `json:"plan"`
+		SupportedCities      []city.City     `json:"supported_cities"`
+		SupportedHousingType []string        `json:"supported_housing_type"`
 	}
 
 	var offering response
@@ -42,15 +36,7 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	offering.SupportedHousingType = append(offering.SupportedHousingType, []string{string(corporation.HousingTypeAppartement), string(corporation.HousingTypeHouse)}...)
 
 	// add supported plans
-	offering.Plan = append(offering.Plan, plan{
-		Name:                  string(customer.PlanBasis),
-		Price:                 customer.PlanBasis.Price(),
-		MaximumCustomerIncome: customer.PlanBasis.MaximumIncome(),
-	})
-	offering.Plan = append(offering.Plan, plan{
-		Name:  string(customer.PlanPro),
-		Price: customer.PlanPro.Price(),
-	})
+	offering.Plan = append(offering.Plan, []customer.Plan{customer.PlanBasis, customer.PlanPro}...)
 
 	// return response
 	json.NewEncoder(w).Encode(offering)

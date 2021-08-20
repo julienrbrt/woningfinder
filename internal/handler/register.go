@@ -10,8 +10,8 @@ import (
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
 
-// SignUp contains the handler for registering on WoningFinder
-func (h *handler) SignUp(w http.ResponseWriter, r *http.Request) {
+// Register contains the handler for registering on WoningFinder
+func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 	user := &customer.User{}
 	if err := render.Bind(r, user); err != nil {
 		render.Render(w, r, handlerErrors.ErrorRenderer(err))
@@ -28,6 +28,11 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// process payment by creating a session id from Stripe
-	h.createCheckoutSession(user.Email, user.Plan.Name, w, r)
+	// send account activation email
+	if err := h.emailService.SendActivateAccount(user); err != nil {
+		errorMsg := fmt.Errorf("error while sending activation email")
+		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+	}
+
 }

@@ -11,7 +11,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stripe/stripe-go"
-	"github.com/woningfinder/woningfinder/internal/customer"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
@@ -19,74 +18,6 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/email"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
-
-var stripeKeyTest = "sk_test_51HkWn4HWufZqidI12yfUuTsZxIdKfSlblDYcAYPda4hzMnGrDcDCLannohEiYI0TUXT1rPdx186CyhKvo67H96Ty00vP5NDSrZ"
-
-func Test_CreateCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
-	a := assert.New(t)
-	logger := logging.NewZapLoggerWithoutSentry()
-
-	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(nil)
-	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
-
-	// create request
-	req, err := http.NewRequest(http.MethodPost, "", nil)
-	a.NoError(err)
-
-	// record response
-	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
-	})
-
-	// server request
-	h.ServeHTTP(rr, req)
-
-	// verify status code
-	a.Equal(http.StatusInternalServerError, rr.Code)
-
-	// verify expected value
-	a.Contains(rr.Body.String(), "error while creating stripe new checkout session")
-}
-
-func Test_CreateCheckoutSession(t *testing.T) {
-	a := assert.New(t)
-	logger := logging.NewZapLoggerWithoutSentry()
-
-	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(nil)
-	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
-
-	// create request
-	req, err := http.NewRequest(http.MethodPost, "", nil)
-	a.NoError(err)
-
-	// init stripe library
-	stripe.Key = stripeKeyTest
-
-	// record response
-	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
-	})
-
-	// server request
-	h.ServeHTTP(rr, req)
-
-	// verify status code
-	a.Equal(http.StatusOK, rr.Code)
-
-	// verify expected value
-	var response createCheckoutSessionResponse
-	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
-
-	a.NotEmpty(response.SessionID)
-}
 
 func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
 	a := assert.New(t)
@@ -98,16 +29,13 @@ func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
 	paymentServiceMock := paymentService.NewServiceMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
-	data, err := ioutil.ReadFile("testdata/payment-processor-invalid-plan-request.json")
+	data, err := ioutil.ReadFile("testdata/payment-processor-invalid-payment-method-request.json")
 	a.NoError(err)
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/payment", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
-
-	// init stripe library
-	stripe.Key = stripeKeyTest
 
 	// record response
 	rr := httptest.NewRecorder()
@@ -120,7 +48,7 @@ func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
 	a.Equal(http.StatusBadRequest, rr.Code)
 
 	// verify expected value
-	a.Contains(rr.Body.String(), "error plan invalid does not exist")
+	a.Contains(rr.Body.String(), "invalid payment method: invalid")
 }
 
 func Test_PaymentProcessor_ErrUserService(t *testing.T) {
@@ -141,9 +69,6 @@ func Test_PaymentProcessor_ErrUserService(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
-	// init stripe library
-	stripe.Key = stripeKeyTest
-
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(handler.PaymentProcessor)
@@ -155,7 +80,7 @@ func Test_PaymentProcessor_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusNotFound, rr.Code)
 }
 
-func Test_PaymentProcessor(t *testing.T) {
+func Test_PaymentProcessor_Stripe(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -191,4 +116,8 @@ func Test_PaymentProcessor(t *testing.T) {
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 
 	a.NotEmpty(response.SessionID)
+}
+
+func Test_PaymentProcessor_Crypto(t *testing.T) {
+	// TODO #73
 }

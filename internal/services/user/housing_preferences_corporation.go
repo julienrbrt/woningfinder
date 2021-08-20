@@ -9,8 +9,6 @@ import (
 )
 
 func (s *service) GetHousingPreferencesMatchingCorporation(u *customer.User) ([]corporation.Corporation, error) {
-	db := s.dbClient.Conn()
-
 	housingPreferences, err := s.GetHousingPreferences(u)
 	if err != nil {
 		return nil, fmt.Errorf("error when getting matching corporations: %w", err)
@@ -18,7 +16,7 @@ func (s *service) GetHousingPreferencesMatchingCorporation(u *customer.User) ([]
 
 	// get corporation relevant to user housing preferences
 	var corporationsMatch []corporation.CorporationCity
-	if err := db.Model(&corporationsMatch).Where("city_name IN (?)", pg.In(cityList(housingPreferences))).DistinctOn("corporation_name").Select(); err != nil {
+	if err := s.dbClient.Conn().Model(&corporationsMatch).Where("city_name IN (?)", pg.In(cityList(housingPreferences))).DistinctOn("corporation_name").Select(); err != nil {
 		return nil, fmt.Errorf("error when getting matching corporations: %w", err)
 	}
 

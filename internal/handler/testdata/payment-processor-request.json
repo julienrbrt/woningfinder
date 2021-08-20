@@ -1,4 +1,4 @@
 {
   "email": "foo@baar.com",
-  "plan": "basis"
+  "method": "stripe"
 }

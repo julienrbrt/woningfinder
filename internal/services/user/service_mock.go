@@ -29,7 +29,7 @@ func (s *serviceMock) GetUser(search *customer.User) (*customer.User, error) {
 		YearlyIncome: 30000,
 		FamilySize:   3,
 		Plan: customer.UserPlan{
-			Name: customer.PlanBasis,
+			PlanName: customer.PlanBasis.Name,
 		},
 		HousingPreferences: customer.HousingPreferences{
 			Type: []corporation.HousingType{

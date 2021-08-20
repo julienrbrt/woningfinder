@@ -20,7 +20,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-func Test_SignUp_ErrEmptyRequest(t *testing.T) {
+func Test_Register_ErrEmptyRequest(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -31,12 +31,12 @@ func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/signup", nil)
+	req, err := http.NewRequest(http.MethodPost, "/register", nil)
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -48,7 +48,7 @@ func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 	a.Contains(rr.Body.String(), "Bad request")
 }
 
-func Test_SignUp_ErrUserService(t *testing.T) {
+func Test_Register_ErrUserService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -59,16 +59,16 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request-pro.json")
+	data, err := ioutil.ReadFile("testdata/register-request-pro.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -82,7 +82,7 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
 
-func Test_SignUp_InvalidPlan(t *testing.T) {
+func Test_Register_InvalidPlan(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -93,16 +93,16 @@ func Test_SignUp_InvalidPlan(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-invalid-plan-request.json")
+	data, err := ioutil.ReadFile("testdata/register-invalid-plan-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -111,7 +111,7 @@ func Test_SignUp_InvalidPlan(t *testing.T) {
 	a.Equal(http.StatusBadRequest, rr.Code)
 }
 
-func Test_SignUp_InvalidHousingType(t *testing.T) {
+func Test_Register_InvalidHousingType(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -122,16 +122,16 @@ func Test_SignUp_InvalidHousingType(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-invalid-housing-type-request.json")
+	data, err := ioutil.ReadFile("testdata/register-invalid-housing-type-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -140,7 +140,7 @@ func Test_SignUp_InvalidHousingType(t *testing.T) {
 	a.Equal(http.StatusBadRequest, rr.Code)
 }
 
-func Test_SignUp_Basis(t *testing.T) {
+func Test_Register_Basis(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -151,20 +151,20 @@ func Test_SignUp_Basis(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request-basis.json")
+	data, err := ioutil.ReadFile("testdata/register-request-basis.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// init stripe library
-	// we do that because the signup handler directly talks to stripe
+	// we do that because the register handler directly talks to stripe
 	stripe.Key = stripeKeyTest
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -178,7 +178,7 @@ func Test_SignUp_Basis(t *testing.T) {
 	a.NotEmpty(result.SessionID)
 }
 
-func Test_SignUp_Pro(t *testing.T) {
+func Test_Register_Pro(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -189,20 +189,20 @@ func Test_SignUp_Pro(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request-pro.json")
+	data, err := ioutil.ReadFile("testdata/register-request-pro.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// init stripe library
-	// we do that because the signup handler directly talks to stripe
+	// we do that because the register handler directly talks to stripe
 	stripe.Key = stripeKeyTest
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)

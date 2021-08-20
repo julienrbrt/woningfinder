@@ -21,6 +21,7 @@ func (s *service) CreateUser(u *customer.User) error {
 
 	// a user cannot have paid when being created so reset by security
 	u.Plan.CreatedAt = (time.Time{})
+	u.Plan.PurchasedAt = (time.Time{})
 
 	// create user - if exist throw error
 	if _, err := db.Model(u).Insert(); err != nil {
