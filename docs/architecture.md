@@ -7,10 +7,10 @@ WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _
 - _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for woningfinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
 - _[HousingMatcher](../cmd/housing-matcher)_, is triggered by _HousingFinder_ via a queue (redis list). It will match the new offers to the customer search option and react to it.
 - _[Orchestrator](../cmd/orchestrator)_, permits to orchestrate the different jobs that needs to be often ran by WoningFinder.
-  - _CustomerAutoDelete_ deletes the customers that did not paid within 48 hours. Runs everyday at 00:00.
-  - _CustomerPaymentReminder_ reminds a customers that did not paid within 4 hours. Runs everydat at 08:00, 12:00, 16:00 and 20:00.
+  - _CustomerUnconfirmedCleanup_ sends a reminder to unconfirmed email user and deletes the customers that did not confirm their email within 48 hours. Runs everyday at 08:00, 16:00.
+  - _CustomerEndFreeTrialReminder_ reminds a free trial customer to pay the plan. Runs everyday at 08:00, 14:00 and 20:00.
   - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue (triggering _HousingMatcher_).
-  - _WeeklyUpdate_ generates and send the customer weekly updates. Runs every Friday at 16:00.
+  - _WeeklyUpdate_ generates and send the customer weekly updates. Runs every Friday at 20:00.
 
 There is as well small **tools** that are run for special reasons:
 
@@ -36,7 +36,7 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 | /stripe-webhook             | POST       | Endpoint where Stripe sends its webhook events (used for validating user payment)         |
 | /crypto-webhook             | POST       | Endpoint where Crypto.com Pay sends its webhook events (used for validating user payment) |
 | /login                      | POST       | Sends a link to the user in order to log him. The link is valid 6h                        |
-| /me                         | GET        | Get all the user information and activates account the first time requested               |
+| /me                         | GET        | Get all the user information and confirm user account the first time requested            |
 | /me/corporation-credentials | GET + POST | Manages the user the different housing credentials for the supported corporation.         |
 | /contact                    | POST       | Handles the contact form to send an email to _contact@woningfinder.nl_                    |
 | /waitinglist                | POST       | Handles the city waiting list                                                             |

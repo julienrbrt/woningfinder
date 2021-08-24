@@ -15,6 +15,8 @@ type Service interface {
 	CreateUser(u *customer.User) error
 	GetUser(search *customer.User) (*customer.User, error)
 	DeleteUser(u *customer.User) error
+	ConfirmUser(email string, plan customer.Plan) (*customer.User, error)
+	ConfirmPayment(email string, plan customer.Plan) (*customer.User, error)
 	GetWeeklyUpdateUsers() ([]*customer.User, error)
 
 	// Waiting List

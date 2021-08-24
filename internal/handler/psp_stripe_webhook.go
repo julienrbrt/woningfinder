@@ -55,18 +55,24 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// populate payment - note 1€ is 100 for stripe
-		plan := customer.PlanFromPrice(paymentIntent.Amount / 100)
-		if plan == (customer.Plan{}) {
-			h.logger.Sugar().Warnf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)
+		plan, err := customer.PlanFromPrice(paymentIntent.Amount / 100)
+		if err != nil {
+			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)
 			return
 		}
 
 		// set payment as proceed
-		if err := h.paymentService.ProcessPayment(paymentIntent.ReceiptEmail, plan); err != nil {
+		user, err := h.userService.ConfirmUser(paymentIntent.ReceiptEmail, plan)
+		if err != nil {
 			errorMsg := fmt.Errorf("error while processing payment")
 			h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
 			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 			return
+		}
+
+		// send payment confirmation email
+		if err := h.emailService.SendThankYou(user); err != nil {
+			h.logger.Sugar().Warn(err)
 		}
 
 		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s paid %d€ 🎉🎉🎉", paymentIntent.ReceiptEmail, paymentIntent.Amount/100)

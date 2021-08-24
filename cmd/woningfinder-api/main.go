@@ -10,7 +10,6 @@ import (
 	"github.com/woningfinder/woningfinder/internal/handler"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
-	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -37,8 +36,7 @@ func main() {
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the api
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	paymentService := paymentService.NewService(logger, dbClient, userService, emailService)
-	router := handler.NewHandler(logger, corporationService, userService, emailService, paymentService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), jwtAuth, emailClient)
+	router := handler.NewHandler(logger, corporationService, userService, emailService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), jwtAuth, emailClient)
 
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
 		logger.Sugar().Fatalf("failed to start server: %w", err)

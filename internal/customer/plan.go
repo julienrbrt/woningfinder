@@ -1,16 +1,16 @@
 package customer
 
 import (
+	"fmt"
 	"math"
 	"time"
 )
 
 const (
+	// Free trial of 14 days
+	FreeTrialDuration = 14 * 24 * time.Hour
 	// TODO update every year with the "passend toewijze"
 	MaximumIncomeSocialHouse = 44655
-
-	// Free trial of 14 days
-	freeTrialDuration = 14 * 24 * time.Hour
 )
 
 // Plan defines the different plans
@@ -34,26 +34,26 @@ var PlanPro = Plan{
 	MaximumIncome: math.MaxInt32,
 }
 
-func PlanFromName(name string) Plan {
+func PlanFromName(name string) (Plan, error) {
 	switch name {
 	case "basis":
-		return PlanBasis
+		return PlanBasis, nil
 	case "pro":
-		return PlanPro
-	default:
-		return Plan{}
+		return PlanPro, nil
 	}
+
+	return Plan{}, fmt.Errorf("cannot find plan from name: %s invalid", name)
 }
 
-func PlanFromPrice(price int64) Plan {
+func PlanFromPrice(price int64) (Plan, error) {
 	switch price {
 	case int64(PlanBasis.Price):
-		return PlanBasis
+		return PlanBasis, nil
 	case int64(PlanPro.Price):
-		return PlanPro
-	default:
-		return Plan{}
+		return PlanPro, nil
 	}
+
+	return Plan{}, fmt.Errorf("cannot find plan from price: %d", price)
 }
 
 // UserPlan stores the user plan and payment details (when paid)
@@ -66,5 +66,9 @@ type UserPlan struct {
 
 // IsValid checks if a user has a paid plan or is within its free trial
 func (u *UserPlan) IsValid() bool {
-	return u.PurchasedAt != (time.Time{}) || time.Until(u.CreatedAt.Add(freeTrialDuration)) > 0
+	return u.PurchasedAt != (time.Time{}) || time.Until(u.CreatedAt.Add(FreeTrialDuration)) > 0
+}
+
+func (u *UserPlan) IsPaid() bool {
+	return u.PurchasedAt != (time.Time{})
 }

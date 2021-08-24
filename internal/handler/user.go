@@ -38,7 +38,8 @@ func (h *handler) UserInfo(w http.ResponseWriter, r *http.Request) {
 
 	// activate account if first time login
 	if !user.Plan.IsValid() {
-		if err := h.paymentService.ProcessFreeTrial(user.Email, customer.PlanFromName(user.Plan.PlanName)); err != nil {
+		plan, _ := customer.PlanFromName(user.Plan.PlanName)
+		if _, err := h.userService.ConfirmUser(user.Email, plan); err != nil {
 			errorMsg := fmt.Errorf("error while starting free trial (validating user)")
 			h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
 			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))

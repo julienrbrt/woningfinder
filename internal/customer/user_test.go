@@ -50,14 +50,17 @@ func Test_User_HasMinimal_InvalidPlan(t *testing.T) {
 	a.Error(testUser.HasMinimal())
 }
 
-func Test_User_IsValid(t *testing.T) {
+func Test_User_Plan(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	a.False(testUser.Plan.IsValid())
 	testUser.Plan = customer.UserPlan{CreatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), PlanName: customer.PlanBasis.Name}
 	a.False(testUser.Plan.IsValid())
+	a.False(testUser.Plan.IsPaid())
 	testUser.Plan = customer.UserPlan{CreatedAt: time.Now(), PlanName: customer.PlanBasis.Name}
 	a.True(testUser.Plan.IsValid())
+	a.False(testUser.Plan.IsPaid())
 	testUser.Plan = customer.UserPlan{CreatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), PlanName: customer.PlanBasis.Name, PurchasedAt: time.Now()}
 	a.True(testUser.Plan.IsValid())
+	a.True(testUser.Plan.IsPaid())
 }

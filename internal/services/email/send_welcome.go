@@ -9,14 +9,14 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
-func (s *service) SendActivateAccount(user *customer.User) error {
+func (s *service) SendEmailConfirmationReminder(user *customer.User) error {
 	_, jwtToken, err := auth.CreateJWTUserToken(s.jwtAuth, user)
 	if err != nil {
 		return fmt.Errorf("error sending activation email: %w", err)
 	}
 
 	body := &bytes.Buffer{}
-	tpl := template.Must(template.ParseFS(emailTemplates, "templates/XXX.html"))
+	tpl := template.Must(template.ParseFS(emailTemplates, "templates/email-confirmation-reminder.html"))
 	if err := tpl.Execute(body, fmt.Sprintf("https://woningfinder.nl/mijn-zoekopdracht?jwt=%s", jwtToken)); err != nil {
 		return fmt.Errorf("error sending activation email: %w", err)
 	}
@@ -48,18 +48,14 @@ func (s *service) SendWelcome(user *customer.User) error {
 }
 
 func (s *service) SendThankYou(user *customer.User) error {
-	_, jwtToken, err := auth.CreateJWTUserToken(s.jwtAuth, user)
-	if err != nil {
-		return fmt.Errorf("error sending thank you email: %w", err)
-	}
-
 	body := &bytes.Buffer{}
 	tpl := template.Must(template.ParseFS(emailTemplates, "templates/thank-you.html"))
-	if err := tpl.Execute(body, fmt.Sprintf("https://woningfinder.nl/mijn-zoekopdracht?jwt=%s", jwtToken)); err != nil {
+
+	if err := tpl.Execute(body, user.Name); err != nil {
 		return fmt.Errorf("error sending thank you email: %w", err)
 	}
 
-	if err := s.emailClient.Send("Welkom bij WoningFinder!", body.String(), user.Email); err != nil {
+	if err := s.emailClient.Send("Je WoningFinder zoekopdracht is nu onpeberkt geldig!", body.String(), user.Email); err != nil {
 		return fmt.Errorf("error sending thank you email: %w", err)
 	}
 

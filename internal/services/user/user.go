@@ -75,6 +75,44 @@ func (s *service) GetUser(search *customer.User) (*customer.User, error) {
 	return &user, nil
 }
 
+// ConfirmUser validate user account and start free trial
+func (s *service) ConfirmUser(email string, plan customer.Plan) (*customer.User, error) {
+	// get user
+	user, err := s.GetUser(&customer.User{Email: email})
+	if err != nil {
+		return nil, fmt.Errorf("error while processing payment data: cannot get user: %w", err)
+	}
+
+	// set that has started its free trial
+	if _, err := s.dbClient.Conn().
+		Model(&customer.UserPlan{UserID: user.ID, PlanName: plan.Name}).
+		OnConflict("(user_id) DO UPDATE").
+		Insert(); err != nil {
+		return nil, fmt.Errorf("error when adding user plan: %w", err)
+	}
+
+	return user, nil
+}
+
+// ConfirmPayment set that the user has paid
+func (s *service) ConfirmPayment(email string, plan customer.Plan) (*customer.User, error) {
+	// get user
+	user, err := s.GetUser(&customer.User{Email: email})
+	if err != nil {
+		return nil, fmt.Errorf("error while processing payment data: cannot get user: %w", err)
+	}
+
+	// set that user has paid
+	if _, err := s.dbClient.Conn().
+		Model(&customer.UserPlan{UserID: user.ID, PlanName: plan.Name, PurchasedAt: time.Now()}).
+		OnConflict("(user_id) DO UPDATE").
+		Insert(); err != nil {
+		return nil, fmt.Errorf("error when adding user plan: %w", err)
+	}
+
+	return user, nil
+}
+
 // TODO eventually use a prepare function to create it in one query only and improve performance
 func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 	db := s.dbClient.Conn()

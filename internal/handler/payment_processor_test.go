@@ -13,7 +13,6 @@ import (
 	"github.com/stripe/stripe-go"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
-	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/email"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -26,8 +25,7 @@ func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-invalid-payment-method-request.json")
 	a.NoError(err)
@@ -58,8 +56,7 @@ func Test_PaymentProcessor_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-request.json")
 	a.NoError(err)
@@ -87,8 +84,7 @@ func Test_PaymentProcessor_Stripe(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-request.json")
 	a.NoError(err)
@@ -113,8 +109,8 @@ func Test_PaymentProcessor_Stripe(t *testing.T) {
 
 	// verify expected value
 	var response createCheckoutSessionResponse
-	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 
+	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 	a.NotEmpty(response.SessionID)
 }
 

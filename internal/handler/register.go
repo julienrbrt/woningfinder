@@ -28,11 +28,10 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// send account activation email
-	if err := h.emailService.SendActivateAccount(user); err != nil {
+	// send welcome email
+	if err := h.emailService.SendWelcome(user); err != nil {
 		errorMsg := fmt.Errorf("error while sending activation email")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 	}
-
 }

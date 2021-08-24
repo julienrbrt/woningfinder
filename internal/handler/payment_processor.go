@@ -55,15 +55,17 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if user.Plan.IsValid() {
+	if user.Plan.IsPaid() {
 		render.Render(w, r, handlerErrors.ErrorRenderer(errors.New("user already paid")))
 		return
 	}
 
+	plan, _ := customer.PlanFromName(user.Plan.PlanName)
+
 	switch request.Method {
 	case PaymentMethodStripe:
 		// process payment by creating a Stripe session ID
-		h.createCheckoutSession(request.Email, customer.PlanFromName(user.Plan.PlanName), w, r)
+		h.createCheckoutSession(request.Email, plan, w, r)
 	case PaymentMethodCrypto:
 		// TODO in #73
 	}

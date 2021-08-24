@@ -44,9 +44,9 @@ func (u *User) HasMinimal() error {
 		return fmt.Errorf("user yearly income invalid")
 	}
 
-	plan := PlanFromName(u.Plan.PlanName)
-	if plan.Name == "" {
-		return fmt.Errorf("error plan %s does not exist", plan.Name)
+	plan, err := PlanFromName(u.Plan.PlanName)
+	if err != nil {
+		return err
 	}
 
 	if u.YearlyIncome > plan.MaximumIncome {

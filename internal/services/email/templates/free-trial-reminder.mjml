@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Jouw WoningFinder login link</mj-title>
+    <mj-title>Je WoningFinder zoekopdracht</mj-title>
     <mj-font name="Inter" href="https://fonts.googleapis.com/css?family=Inter:400,700"></mj-font>
     <mj-attributes>
       <mj-all font-family="Inter, Helvetica, Arial, sans-serif" padding="0px"></mj-all>
@@ -15,7 +15,7 @@
       <mj-column width="570px">
         <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
-        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Jouw login link
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Je WoningFinder zoekopdracht
         </mj-text>
         <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
         </mj-text>
@@ -25,15 +25,13 @@
     <mj-section background-color="#FFFFFF">
       <mj-column width="360px">
         <mj-text align="left" padding="0 20px 30px 20px">
-          Hallo {{ .Name }},
+          Hallo {{ . }},
           <br /><br />
 
-          Alstublieft jouw link om in te loggen. De link is
-          <strong>2 uur geldig</strong>.
+         We hebben gezien dat je een zoekopdracht hebt ingesteld maar nog niet hebt voltooid.
 
           <br /><br />
-          Heb je dit niet gevraagd? Je kun deze e-mail weigeren, jouw account
-          blijft veilig.
+          Je kunt dat gemakkelijk hier doen:
         </mj-text>
       </mj-column>
       <mj-column width="200px">
@@ -43,7 +41,7 @@
 
     <mj-section padding="0 20px" background-color="#FFFFFF">
       <mj-column>
-        <mj-button href="{{ .URL }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Inloggen</mj-button>
+        <mj-button href="https://woningfinder.nl/start/voltooien" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Zoekopdracht voltooien</mj-button>
       </mj-column>
     </mj-section>
 
