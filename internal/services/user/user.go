@@ -80,7 +80,7 @@ func (s *service) ConfirmUser(email string, plan customer.Plan) (*customer.User,
 	// get user
 	user, err := s.GetUser(&customer.User{Email: email})
 	if err != nil {
-		return nil, fmt.Errorf("error while processing payment data: cannot get user: %w", err)
+		return nil, fmt.Errorf("error while confirming user: cannot get user: %w", err)
 	}
 
 	// set that has started its free trial
@@ -99,7 +99,7 @@ func (s *service) ConfirmPayment(email string, plan customer.Plan) (*customer.Us
 	// get user
 	user, err := s.GetUser(&customer.User{Email: email})
 	if err != nil {
-		return nil, fmt.Errorf("error while processing payment data: cannot get user: %w", err)
+		return nil, fmt.Errorf("error while confirming payment: cannot get user: %w", err)
 	}
 
 	// set that user has paid

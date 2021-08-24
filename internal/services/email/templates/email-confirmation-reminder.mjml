@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Jouw WoningFinder login link</mj-title>
+    <mj-title>Je hebt iets vergeten...</mj-title>
     <mj-font name="Inter" href="https://fonts.googleapis.com/css?family=Inter:400,700"></mj-font>
     <mj-attributes>
       <mj-all font-family="Inter, Helvetica, Arial, sans-serif" padding="0px"></mj-all>
@@ -27,6 +27,12 @@
         <mj-text align="left" padding="0 20px 30px 20px">
           Hallo {{ .Name }},
           <br /><br />
+
+          // Please confirm your account to start your 14 days trial
+          // link
+          // Thank you
+
+          // Did you created your account by mistake? No worries, your informations will be deleted within 48 hours.
 
           Alstublieft jouw link om in te loggen. De link is
           <strong>2 uur geldig</strong>.

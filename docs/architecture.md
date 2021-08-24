@@ -1,6 +1,6 @@
 # Architecture
 
-This document defines the archtitecture of WoningFinder. Its data schema can be found [here](db_schema.png).
+This document defines the archtitecture of WoningFinder.
 
 WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _HousingMatcher_ and a landing page.
 

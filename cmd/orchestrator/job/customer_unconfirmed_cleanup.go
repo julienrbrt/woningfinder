@@ -26,6 +26,7 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 		j.logger.Sugar().Info("customer-unconfirmed-cleanup job started")
 
 		var users []customer.User
+		// delete unconfirmed account
 		usersPlanQuery := j.dbClient.Conn().Model((*customer.UserPlan)(nil)).ColumnExpr("user_id")
 		err := j.dbClient.Conn().
 			Model(&users).
@@ -36,25 +37,25 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 		}
 
 		for _, user := range users {
-			// check only user than did not paid since 4 hours
+			// send reminder to users that didn't confirm their email
 			switch {
-			case user.CreatedAt.Before(time.Now().Add(-unconfirmedReminderTime)):
+			case time.Until(user.CreatedAt.Add(unconfirmedReminderTime)) <= 0:
 				// check if reminder already sent
-				uuid := buildPaymentReminderUUID(&user)
+				uuid := buildCustomerUnconfirmedEmailReminderUUID(&user)
 				if j.isAlreadySent(uuid) {
 					continue
 				}
 
 				// send reminder
 				if err := j.emailService.SendEmailConfirmationReminder(&user); err != nil {
-					j.logger.Sugar().Error("Error sending %s payment reminder: %w", user.Email, err)
+					j.logger.Sugar().Error("error sending %s email confirmation reminder: %w", user.Email, err)
 				}
 
 				// set reminder as sent
 				j.markAsSent(uuid)
 
-				// delete only user that did not paid since 48h
-			case user.CreatedAt.Before(time.Now().Add(-maxUnconfirmedTime)):
+			// delete only user that did not paid since 48h
+			case time.Until(user.CreatedAt.Add(maxUnconfirmedTime)) <= 0:
 				user, err := j.userService.GetUser(&user)
 				if err != nil {
 					j.logger.Sugar().Errorf("failed getting user %s for deleting: %w", user.Email, err)
@@ -69,6 +70,6 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 	}))
 }
 
-func buildPaymentReminderUUID(user *customer.User) string {
-	return base64.StdEncoding.EncodeToString([]byte(user.Email + "reminder email sent"))
+func buildCustomerUnconfirmedEmailReminderUUID(user *customer.User) string {
+	return base64.StdEncoding.EncodeToString([]byte(user.Email + "customer confirmation email reminder sent"))
 }
