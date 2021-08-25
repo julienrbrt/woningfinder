@@ -8,14 +8,21 @@ Note that when were this `range` or `if` condition in the mjml, it has to be re-
 
 ## Lists
 
-- Welcome (no houses, houses, no credentials available)
-- Email Confirmation Reminder
-- Free Trial Ended Reminder
-- Weekly Update
+### Action needed
+
+- Welcome (activate account via connecting)
 - Login
+- Invalid credentials warning
+- No credentials available
+- Free trial ended reminder
+- Email confirmation reminder
+
+## Information
+
+- Weekly update
+- Weekly update empty
 - Payment confirmation
-- Invalid credential warning
-- Good bye email
+- Goodbye email
 
 ## Configuration
 

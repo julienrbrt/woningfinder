@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Hoera je hebt een huis gevonden!</mj-title>
+    <mj-title>Je blijft nu automatisch reageren tot je een huis vindt!</mj-title>
     <mj-font name="Inter" href="https://fonts.googleapis.com/css?family=Inter:400,700"></mj-font>
     <mj-attributes>
       <mj-all font-family="Inter, Helvetica, Arial, sans-serif" padding="0px"></mj-all>
@@ -15,7 +15,7 @@
       <mj-column width="570px">
         <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
-        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Hoera je hebt een huis gevonden!
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Je blijft nu automatisch reageren tot je een huis vindt!
         </mj-text>
         <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
         </mj-text>
@@ -26,16 +26,8 @@
       <mj-column width="360px">
         <mj-text align="left" padding="0 20px 30px 20px">
           Hallo {{ . }},
-          <br /><br />
-
-          We hebben gezien dat je een huis hebt gevonden. <strong>Van harte gefeliciteerd!</strong>
-
-          <br /><br />
-          Omdat je ons niet meer nodig hebt, zijn al je gegevens van ons systeem verwijderd.
-
-          <br /><br />
-
-          Bedankt voor je vertrouwen in ons en geniet van jouw nieuwe woning.
+  
+          Bedankt voor je vertrouwen in ons we hopen dat je een snel vind.
         </mj-text>
 
         <mj-text align="left" padding="0 20px 0 20px">

@@ -12,11 +12,11 @@ import (
 
 const (
 	unconfirmedReminderTime = 4 * time.Hour
-	maxUnconfirmedTime      = 48 * time.Hour
+	maxUnconfirmedTime      = 72 * time.Hour
 )
 
 // CustomerUnconfirmedCleanup reminds a unconfirmed customers to confirm their emails
-// and deletes the customers that have an unconfirmed email for more than 48h
+// and deletes the customers that have an unconfirmed email for more than unconfirmedReminderTime
 func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 	// checks perfomed at 08:00, 16:00
 	spec := "0 0 8,16 * * *"
