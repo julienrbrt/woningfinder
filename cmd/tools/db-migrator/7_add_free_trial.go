@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/go-pg/migrations/v8"
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/pkg/config"
@@ -15,7 +17,8 @@ func init() {
 	}
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {
-
-		return nil
+		fmt.Println("adding purchased_at column...")
+		_, err := db.Exec(`ALTER TABLE user_plans ADD purchased_at timestamptz`)
+		return err
 	})
 }

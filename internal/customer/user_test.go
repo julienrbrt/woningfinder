@@ -18,7 +18,7 @@ func getUser() customer.User {
 		YearlyIncome: 30000,
 		FamilySize:   3,
 		Plan: customer.UserPlan{
-			PlanName: "basis",
+			PlanName: customer.PlanBasis.Name,
 		},
 		HousingPreferences: customer.HousingPreferences{
 
