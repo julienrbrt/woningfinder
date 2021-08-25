@@ -13,8 +13,16 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
-//go:embed templates/contact_form.tpl
-var contactFormTpl string
+const contactForm = `Hi,
+
+There is a new message for you from the WoningFinder contact form:
+	
+- Name: {{ .Name }}
+- Email: {{ .Email }}
+- Message: {{ .Message }}
+	
+Regards,
+Team WoningFinder`
 
 type contactFormRequest struct {
 	Name     string `json:"name"`
@@ -61,7 +69,7 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// create body
-	tpl := template.Must(template.New("contact").Parse(contactFormTpl))
+	tpl := template.Must(template.New("contact").Parse(contactForm))
 	body := &bytes.Buffer{}
 	if err := tpl.Execute(body, message); err != nil {
 		errorMsg := fmt.Errorf("failed creating message: please try again")

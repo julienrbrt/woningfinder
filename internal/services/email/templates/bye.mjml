@@ -39,7 +39,7 @@
         </mj-text>
 
         <mj-text align="left" padding="0 20px 0 20px">
-          Groetes,
+          Groetjes,
           <br />
           Team WoningFinder
         </mj-text>
@@ -59,7 +59,7 @@
       <mj-column>
         <mj-text align="center" color="#9B9B9B" font-size="11px">
           © 2021 WoningFinder <br />
-          <a href="https://woningfinder.nl" style="color: #9b9b9b; text-decoration: none">https://woningfinder.nl</a></mj-text>
+          <a href="https://woningfinder.nl" style="color: #9b9b9b; text-decoration: none">woningfinder.nl</a></mj-text>
       </mj-column>
     </mj-section>
   </mj-body>

@@ -12,6 +12,38 @@ func NewServiceMock(err error) Service {
 	return &serviceMock{err: err}
 }
 
+func (s *serviceMock) SendWelcome(_ *customer.User) error {
+	return s.err
+}
+
+func (s *serviceMock) SendEmailConfirmationReminder(_ *customer.User) error {
+	return s.err
+}
+
+func (s *serviceMock) SendThankYou(_ *customer.User) error {
+	return s.err
+}
+
+func (s *serviceMock) SendFreeTrialReminder(_ *customer.User) error {
+	return s.err
+}
+
 func (s *serviceMock) SendLogin(_ *customer.User) error {
+	return s.err
+}
+
+func (s *serviceMock) SendWeeklyUpdate(_ *customer.User, _ []customer.HousingPreferencesMatch) error {
+	return s.err
+}
+
+func (s *serviceMock) SendCorporationCredentialsMissing(_ *customer.User) error {
+	return s.err
+}
+
+func (s *serviceMock) SendCorporationCredentialsError(_ *customer.User, _ string) error {
+	return s.err
+}
+
+func (s *serviceMock) SendBye(_ *customer.User) error {
 	return s.err
 }

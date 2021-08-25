@@ -39,7 +39,7 @@ func main() {
 	dbClient := bootstrap.CreateDBClient(logger)
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil)
 	corporationService := corporation.NewService(logger, dbClient)
-	userService := userService.NewService(logger, dbClient, nil, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
 	// get user
 	user, err := userService.GetUser(&customer.User{Email: email})

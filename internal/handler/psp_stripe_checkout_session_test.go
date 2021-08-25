@@ -2,16 +2,13 @@ package handler
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
+	"github.com/stripe/stripe-go"
+	"github.com/woningfinder/woningfinder/internal/customer"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
@@ -19,7 +16,9 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-func Test_GetOffering(t *testing.T) {
+var stripeKeyTest = "sk_test_51HkWn4HWufZqidI12yfUuTsZxIdKfSlblDYcAYPda4hzMnGrDcDCLannohEiYI0TUXT1rPdx186CyhKvo67H96Ty00vP5NDSrZ"
+
+func Test_CreateCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -28,45 +27,15 @@ func Test_GetOffering(t *testing.T) {
 	emailServiceMock := emailService.NewServiceMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
-	// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
-	// pass 'nil' as the third parameter.
-	req, err := http.NewRequest(http.MethodGet, "/offering", nil)
-	a.NoError(err)
-
-	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
-	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.GetOffering)
-
-	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
-	// directly and pass in our Request and ResponseRecorder.
-	h.ServeHTTP(rr, req)
-
-	// verify status code
-	a.Equal(rr.Code, http.StatusOK)
-
-	// verify expected value
-	data, err := ioutil.ReadFile("testdata/offering-response.json")
-	a.NoError(err)
-
-	a.Equal(string(data), rr.Body.String())
-}
-
-func Test_GetOffering_ErrCorporationService(t *testing.T) {
-	a := assert.New(t)
-	logger := logging.NewZapLoggerWithoutSentry()
-
-	corporationServiceMock := corporationService.NewServiceMock(errors.New("foo"))
-	userServiceMock := userService.NewServiceMock(nil)
-	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
-
 	// create request
-	req, err := http.NewRequest(http.MethodGet, "/offering", nil)
+	req, err := http.NewRequest(http.MethodPost, "", nil)
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.GetOffering)
+	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler.createCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
+	})
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -75,7 +44,40 @@ func Test_GetOffering_ErrCorporationService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(fmt.Errorf("error while getting offering")))
+	a.Contains(rr.Body.String(), "error while creating stripe new checkout session")
+}
+
+func Test_CreateCheckoutSession(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "", nil)
 	a.NoError(err)
-	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
+
+	// init stripe library
+	stripe.Key = stripeKeyTest
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler.createCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
+	})
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusOK, rr.Code)
+
+	// verify expected value
+	var response createCheckoutSessionResponse
+	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
+
+	a.NotEmpty(response.SessionID)
 }

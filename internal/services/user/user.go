@@ -3,12 +3,15 @@ package user
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	pg "github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
+
+var ErrUserAlreadyExist = errors.New("user already exist")
 
 // TODO eventually use a prepare function to create it in one query only
 func (s *service) CreateUser(u *customer.User) error {
@@ -20,11 +23,26 @@ func (s *service) CreateUser(u *customer.User) error {
 	}
 
 	// a user cannot have paid when being created so reset by security
-	u.Plan.CreatedAt = (time.Time{})
+	u.Plan.FreeTrialStartedAt = (time.Time{})
+	u.Plan.PurchasedAt = (time.Time{})
 
 	// create user - if exist throw error
 	if _, err := db.Model(u).Insert(); err != nil {
+		if strings.Contains(err.Error(), "duplicate key value violates unique constraint \"users_email_key\"") {
+			return ErrUserAlreadyExist
+		}
+
 		return fmt.Errorf("failing creating user: %w", err)
+	}
+
+	// create user plan
+	if _, err := s.dbClient.Conn().Model(&customer.UserPlan{UserID: u.ID, Name: u.Plan.Name}).Insert(); err != nil {
+		// rollback
+		if _, err2 := db.Model(u).Where("email ILIKE ?", u.Email).Delete(); err2 != nil {
+			s.logger.Sugar().Errorf("error %w and error when rolling back user creation: %w", err, err2)
+		}
+
+		return fmt.Errorf("error when creating user plan: %w", err)
 	}
 
 	// create user housing preferences
@@ -72,6 +90,46 @@ func (s *service) GetUser(search *customer.User) (*customer.User, error) {
 
 	// enriching with corporation credentials is skipped because not useful
 	return &user, nil
+}
+
+// ConfirmUser validate user account and start free trial
+func (s *service) ConfirmUser(email string) (*customer.User, error) {
+	// get user
+	user, err := s.GetUser(&customer.User{Email: email})
+	if err != nil {
+		return nil, fmt.Errorf("error while confirming user: cannot get user: %w", err)
+	}
+
+	// set that has started its free trial
+	if _, err := s.dbClient.Conn().
+		Model((*customer.UserPlan)(nil)).
+		Set("free_trial_started_at = now()").
+		Where("user_id = ?", user.ID).
+		Update(); err != nil {
+		return nil, fmt.Errorf("error when updating user plan: %w", err)
+	}
+
+	return user, nil
+}
+
+// ConfirmPayment set that the user has paid
+func (s *service) ConfirmPayment(email string) (*customer.User, error) {
+	// get user
+	user, err := s.GetUser(&customer.User{Email: email})
+	if err != nil {
+		return nil, fmt.Errorf("error while confirming payment: cannot get user: %w", err)
+	}
+
+	// set that user has paid
+	if _, err := s.dbClient.Conn().
+		Model((*customer.UserPlan)(nil)).
+		Set("purchased_at = now()").
+		Where("user_id = ?", user.ID).
+		Update(); err != nil {
+		return nil, fmt.Errorf("error when updating user plan: %w", err)
+	}
+
+	return user, nil
 }
 
 // TODO eventually use a prepare function to create it in one query only and improve performance
