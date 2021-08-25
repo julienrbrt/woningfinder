@@ -28,10 +28,10 @@
           Hallo {{ . }},
           <br /><br />
 
-         We hebben gezien dat je een zoekopdracht hebt ingesteld maar nog niet hebt voltooid.
+          Jouw gratis 14 dagen lopen af. Tegen €{{ .PlanPrice }} kun je automatisch blijven reageren tot je een huis vindt. Er is geen sprake van maandelijkse kosten 👌
 
           <br /><br />
-          Je kunt dat gemakkelijk hier doen:
+          Blijf automatish reageren via de aanstaande link.
         </mj-text>
       </mj-column>
       <mj-column width="200px">
@@ -41,7 +41,7 @@
 
     <mj-section padding="0 20px" background-color="#FFFFFF">
       <mj-column>
-        <mj-button href="https://woningfinder.nl/start/voltooien" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Zoekopdracht voltooien</mj-button>
+        <mj-button href="https://woningfinder.nl/start/voltooien" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Blijf automatisch reageren</mj-button>
       </mj-column>
     </mj-section>
 

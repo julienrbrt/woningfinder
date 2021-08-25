@@ -54,13 +54,22 @@ func Test_User_Plan(t *testing.T) {
 	a := assert.New(t)
 	testUser := getUser()
 	a.False(testUser.Plan.IsValid())
+	a.False(testUser.Plan.IsFreeTrialValid())
+	a.False(testUser.Plan.IsPaid())
+	testUser.Plan = customer.UserPlan{}
+	a.False(testUser.Plan.IsValid())
+	a.False(testUser.Plan.IsFreeTrialValid())
+	a.False(testUser.Plan.IsPaid())
 	testUser.Plan = customer.UserPlan{CreatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), PlanName: customer.PlanBasis.Name}
 	a.False(testUser.Plan.IsValid())
 	a.False(testUser.Plan.IsPaid())
+	a.False(testUser.Plan.IsFreeTrialValid())
 	testUser.Plan = customer.UserPlan{CreatedAt: time.Now(), PlanName: customer.PlanBasis.Name}
 	a.True(testUser.Plan.IsValid())
 	a.False(testUser.Plan.IsPaid())
+	a.True(testUser.Plan.IsFreeTrialValid())
 	testUser.Plan = customer.UserPlan{CreatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), PlanName: customer.PlanBasis.Name, PurchasedAt: time.Now()}
 	a.True(testUser.Plan.IsValid())
 	a.True(testUser.Plan.IsPaid())
+	a.False(testUser.Plan.IsFreeTrialValid())
 }

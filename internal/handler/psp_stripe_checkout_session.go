@@ -31,8 +31,8 @@ func (h *handler) createCheckoutSession(email string, plan customer.Plan, w http
 		},
 		Locale:     stripe.String("nl"),
 		Mode:       stripe.String(string(stripe.CheckoutSessionModePayment)),
-		SuccessURL: stripe.String("https://woningfinder.nl/login?thanks=42"),
-		CancelURL:  stripe.String("https://woningfinder.nl/start/voltooien?cancelled=42"),
+		SuccessURL: stripe.String("https://woningfinder.nl/login?thanks=true"),
+		CancelURL:  stripe.String("https://woningfinder.nl/start/voltooien?cancelled=true"),
 	}
 
 	session, err := session.New(params)

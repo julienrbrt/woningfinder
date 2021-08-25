@@ -66,9 +66,13 @@ type UserPlan struct {
 
 // IsValid checks if a user has a paid plan or is within its free trial
 func (u *UserPlan) IsValid() bool {
-	return u.PurchasedAt != (time.Time{}) || time.Until(u.CreatedAt.Add(FreeTrialDuration)) > 0
+	return u.IsPaid() || u.IsFreeTrialValid()
 }
 
 func (u *UserPlan) IsPaid() bool {
 	return u.PurchasedAt != (time.Time{})
+}
+
+func (u *UserPlan) IsFreeTrialValid() bool {
+	return time.Until(u.CreatedAt.Add(FreeTrialDuration)) > 0
 }

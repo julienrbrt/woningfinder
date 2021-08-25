@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
@@ -36,14 +37,24 @@ func (h *handler) UserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// activate account if first time login
 	if !user.Plan.IsValid() {
 		plan, _ := customer.PlanFromName(user.Plan.PlanName)
-		if _, err := h.userService.ConfirmUser(user.Email, plan); err != nil {
-			errorMsg := fmt.Errorf("error while starting free trial (validating user)")
-			h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
-			return
+
+		if user.Plan.CreatedAt == (time.Time{}) { // user is invalid and not userPlan means not activated user
+			if _, err := h.userService.ConfirmUser(user.Email, plan); err != nil {
+				errorMsg := fmt.Errorf("error while starting free trial (validating user)")
+				h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+				render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+				return
+			}
+
+		} else { // user is invalid with free trial started mean free trial expired user
+			if err := h.emailService.SendFreeTrialReminder(user); err != nil {
+				errorMsg := fmt.Errorf("error while sending free trial reminder")
+				h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+				render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+				return
+			}
 		}
 	}
 

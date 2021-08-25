@@ -15,7 +15,7 @@
       <mj-column width="570px">
         <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
-        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Jouw login link
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Je hebt iets vergeten...
         </mj-text>
         <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
         </mj-text>
@@ -28,18 +28,13 @@
           Hallo {{ .Name }},
           <br /><br />
 
-          // Please confirm your account to start your 14 days trial
-          // link
-          // Thank you
-
-          // Did you created your account by mistake? No worries, your informations will be deleted within 72 hours.
-
-          Alstublieft jouw link om in te loggen. De link is
-          <strong>2 uur geldig</strong>.
+          Je hebt nog niet je email bevestigd, je reageert dus nog niet automatisch op woningen 😢
 
           <br /><br />
-          Heb je dit niet gevraagd? Je kun deze e-mail weigeren, jouw account
-          blijft veilig.
+          <strong>Bevestig je email nu om je gratis proefperiode te beginnen via de aanstaande link.</strong>
+
+          <br /><br />
+          Heb je geen account gemaakt? Geen zorgen, al je gegevens worden verwijderen binnen 72 uur.
         </mj-text>
       </mj-column>
       <mj-column width="200px">
@@ -49,7 +44,7 @@
 
     <mj-section padding="0 20px" background-color="#FFFFFF">
       <mj-column>
-        <mj-button href="{{ .URL }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Inloggen</mj-button>
+        <mj-button href="{{ .URL }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Mijn zoekopdracht</mj-button>
       </mj-column>
     </mj-section>
 

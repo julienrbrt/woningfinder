@@ -15,7 +15,7 @@
       <mj-column width="570px">
         <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
-        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Je zoekopdracht is ingesteld!
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Welkom bij WoningFinder
         </mj-text>
         <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
         </mj-text>
@@ -25,6 +25,9 @@
     <mj-section background-color="#FFFFFF">
       <mj-column width="360px">
         <mj-text align="left" padding="0 20px 30px 20px">
+          Je zoekopdracht is ingesteld!
+          <br /><br />
+
           Om automatisch voor jou te kunnen reageren,
           <strong>hoef je alleen maar in te loggen binnen 72 uur bij de woningcorporaties waar je
             wilt reageren</strong>. <br />

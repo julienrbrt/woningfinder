@@ -28,7 +28,7 @@
           Hallo {{ .Name }},
           <br /><br />
 
-          Alstublieft jouw link om in te loggen. De link is
+          Alsjeblieft jouw link om in te loggen. De link is
           <strong>2 uur geldig</strong>.
 
           <br /><br />
