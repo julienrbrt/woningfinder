@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Bedankt</mj-title>
+    <mj-title>Bedankt!</mj-title>
     <mj-font name="Inter" href="https://fonts.googleapis.com/css?family=Inter:400,700"></mj-font>
     <mj-attributes>
       <mj-all font-family="Inter, Helvetica, Arial, sans-serif" padding="0px"></mj-all>
@@ -15,7 +15,7 @@
       <mj-column width="570px">
         <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
-        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Bedankt
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Bedankt!
         </mj-text>
         <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
         </mj-text>

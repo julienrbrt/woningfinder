@@ -41,7 +41,7 @@
 
     <mj-section padding="0 20px" background-color="#FFFFFF">
       <mj-column>
-        <mj-button href="https://woningfinder.nl/start/voltooien" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Blijf automatisch reageren</mj-button>
+        <mj-button href="{{ .URL }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Blijf automatisch reageren</mj-button>
       </mj-column>
     </mj-section>
 

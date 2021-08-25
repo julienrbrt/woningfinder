@@ -16,7 +16,7 @@ func (s *service) SendThankYou(user *customer.User) error {
 		return fmt.Errorf("error sending thank you email: %w", err)
 	}
 
-	if err := s.emailClient.Send("Je WoningFinder zoekopdracht is nu onpeberkt geldig!", body.String(), user.Email); err != nil {
+	if err := s.emailClient.Send("Bedankt!", body.String(), user.Email); err != nil {
 		return fmt.Errorf("error sending thank you email: %w", err)
 	}
 

@@ -23,13 +23,13 @@ func (h *handler) UserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get user from jwt claims
-	userFromJTW, err := auth.ExtractUserFromJWT(claims)
+	userFromJWT, err := auth.ExtractUserFromJWT(claims)
 	if err != nil {
 		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
 
-	user, err := h.userService.GetUser(userFromJTW)
+	user, err := h.userService.GetUser(userFromJWT)
 	if err != nil {
 		errorMsg := fmt.Errorf("failed get user information")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
