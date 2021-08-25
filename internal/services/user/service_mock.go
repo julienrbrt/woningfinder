@@ -1,6 +1,8 @@
 package user
 
 import (
+	"time"
+
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
@@ -16,8 +18,16 @@ func NewServiceMock(err error) Service {
 	return &serviceMock{err: err}
 }
 
-func (s *serviceMock) CreateUser(u *customer.User) error {
+func (s *serviceMock) CreateUser(_ *customer.User) error {
 	return s.err
+}
+
+func (s *serviceMock) ConfirmUser(email string) (*customer.User, error) {
+	return s.GetUser(&customer.User{Email: email})
+}
+
+func (s *serviceMock) ConfirmPayment(email string) (*customer.User, error) {
+	return s.GetUser(&customer.User{Email: email})
 }
 
 func (s *serviceMock) GetUser(search *customer.User) (*customer.User, error) {
@@ -29,7 +39,8 @@ func (s *serviceMock) GetUser(search *customer.User) (*customer.User, error) {
 		YearlyIncome: 30000,
 		FamilySize:   3,
 		Plan: customer.UserPlan{
-			Name: customer.PlanBasis,
+			CreatedAt: time.Date(2021, 12, 31, 1, 1, 0, 0, time.UTC),
+			Name:      customer.PlanBasis.Name,
 		},
 		HousingPreferences: customer.HousingPreferences{
 			Type: []corporation.HousingType{

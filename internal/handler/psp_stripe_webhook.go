@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -16,8 +15,8 @@ import (
 
 const stripeHeader = "Stripe-Signature"
 
-// PaymentValidator is called via the Stripe webhook and confirm that a user has paid
-func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
+// StripeWebhook is called via the Stripe webhook and confirm that a user has paid
+func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 	// get request
 	const MaxBodyBytes = int64(65536)
 	r.Body = http.MaxBytesReader(w, r.Body, MaxBodyBytes)
@@ -55,36 +54,29 @@ func (h *handler) PaymentValidator(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// populate payment
-		plan, err := priceToPlan(paymentIntent.Amount)
+		// populate payment - note 1€ is 100 for stripe
+		_, err = customer.PlanFromPrice(paymentIntent.Amount / 100)
 		if err != nil {
-			h.logger.Sugar().Warnf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)
+			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)
 			return
 		}
 
 		// set payment as proceed
-		if err := h.paymentService.ProcessPayment(paymentIntent.ReceiptEmail, plan); err != nil {
+		user, err := h.userService.ConfirmPayment(paymentIntent.ReceiptEmail)
+		if err != nil {
 			errorMsg := fmt.Errorf("error while processing payment")
 			h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
 			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 			return
 		}
 
+		// send payment confirmation email
+		if err := h.emailService.SendThankYou(user); err != nil {
+			h.logger.Sugar().Warn(err)
+		}
+
 		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s paid %d€ 🎉🎉🎉", paymentIntent.ReceiptEmail, paymentIntent.Amount/100)
 	}
 
 	// returns 200 by default
-}
-
-// priceToPlan gets the stripe price and converts it to a plan
-// note 1€ is 100 for stripe
-func priceToPlan(amount int64) (customer.Plan, error) {
-	switch amount {
-	case int64(customer.PlanBasis.Price()) * 100:
-		return customer.PlanBasis, nil
-	case int64(customer.PlanPro.Price()) * 100:
-		return customer.PlanPro, nil
-	}
-
-	return "", errors.New("error plan does not exists")
 }

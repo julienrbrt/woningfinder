@@ -31,7 +31,7 @@ func main() {
 
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporation.NewService(logger, dbClient)
-	userService := user.NewService(logger, dbClient, redisClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	userService := user.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	matcherService := matcherService.NewService(logger, redisClient, userService, nil, corporationService, matcher.NewMatcher(), clientProvider)
 
 	for _, corp := range clientProvider.List() {

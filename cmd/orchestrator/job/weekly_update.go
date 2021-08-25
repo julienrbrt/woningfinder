@@ -6,8 +6,8 @@ import (
 
 // SendWeeklyUpdate populates the weekly updates cron jobs (once a week)
 func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
-	// emails update are send every fridays at 16:00
-	spec := "0 0 16 * * 5"
+	// emails update are send every friday at 20:00
+	spec := "0 0 20 * * 5"
 
 	// populate cron
 	c.AddJob(spec, cron.FuncJob(func() {

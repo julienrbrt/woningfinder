@@ -28,7 +28,7 @@
           Hi {{ . }},
           <br /><br />
 
-          We hebben elke dag gekeken, maar hebben we deze week niets voor jou kunnen vinden dat matcht met jouw zoekopdracht 😢.
+          We hebben elke dag gekeken, maar we hebben deze week niets voor jou kunnen vinden dat met jouw zoekopdracht matcht 😢.
           <br /><br />
 
           <strong>Maak je geen zorgen, we blijven zoeken!</strong>
@@ -44,7 +44,7 @@
 
     <mj-section padding="20px" background-color="#FFFFFF">
       <mj-column width="100%">
-        <mj-image src="https://static.woningfinder.nl/email/symbol-2.png" alt="" width="213px" align="right" border="none"></mj-image>
+        <mj-image src="https://static.woningfinder.nl/email/symbol-1.png" alt="" width="213px" align="right" border="none"></mj-image>
       </mj-column>
     </mj-section>
 
@@ -55,7 +55,7 @@
         </mj-text>
         <mj-image src="https://static.woningfinder.nl/email/icon-2.png" alt="" padding="30px 0 10px 0" width="50px" align="center" border="none"></mj-image>
         <mj-text align="left" padding="0 20px 0 20px">
-          Groetes,
+          Groetjes,
           <br />
           Team WoningFinder
         </mj-text>
@@ -72,7 +72,7 @@
       <mj-column>
         <mj-text align="center" color="#9B9B9B" font-size="11px">
           © 2021 WoningFinder <br />
-          <a href="https://woningfinder.nl" style="color: #9b9b9b; text-decoration: none">https://woningfinder.nl</a></mj-text>
+          <a href="https://woningfinder.nl" style="color: #9b9b9b; text-decoration: none">woningfinder.nl</a></mj-text>
       </mj-column>
     </mj-section>
   </mj-body>

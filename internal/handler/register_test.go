@@ -10,33 +10,30 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stripe/stripe-go"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
-	paymentService "github.com/woningfinder/woningfinder/internal/services/payment"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/email"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
-func Test_SignUp_ErrEmptyRequest(t *testing.T) {
+func Test_Register_ErrEmptyRequest(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/signup", nil)
+	req, err := http.NewRequest(http.MethodPost, "/register", nil)
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -48,27 +45,26 @@ func Test_SignUp_ErrEmptyRequest(t *testing.T) {
 	a.Contains(rr.Body.String(), "Bad request")
 }
 
-func Test_SignUp_ErrUserService(t *testing.T) {
+func Test_Register_ErrUserService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request-pro.json")
+	data, err := ioutil.ReadFile("testdata/register-request-pro.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -82,27 +78,26 @@ func Test_SignUp_ErrUserService(t *testing.T) {
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
 
-func Test_SignUp_InvalidPlan(t *testing.T) {
+func Test_Register_InvalidPlan(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-invalid-plan-request.json")
+	data, err := ioutil.ReadFile("testdata/register-invalid-plan-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -111,27 +106,54 @@ func Test_SignUp_InvalidPlan(t *testing.T) {
 	a.Equal(http.StatusBadRequest, rr.Code)
 }
 
-func Test_SignUp_InvalidHousingType(t *testing.T) {
+func Test_Register_ErrEmailService(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(errors.New("foo"))
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+
+	// create request
+	data, err := ioutil.ReadFile("testdata/register-request-pro.json")
+	a.NoError(err)
+
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.Register)
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusOK, rr.Code)
+}
+
+func Test_Register_InvalidHousingType(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-invalid-housing-type-request.json")
+	data, err := ioutil.ReadFile("testdata/register-invalid-housing-type-request.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -140,78 +162,60 @@ func Test_SignUp_InvalidHousingType(t *testing.T) {
 	a.Equal(http.StatusBadRequest, rr.Code)
 }
 
-func Test_SignUp_Basis(t *testing.T) {
+func Test_Register_Basis(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request-basis.json")
+	data, err := ioutil.ReadFile("testdata/register-request-basis.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
-	// init stripe library
-	// we do that because the signup handler directly talks to stripe
-	stripe.Key = stripeKeyTest
-
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
 
 	// verify status code
 	a.Equal(http.StatusOK, rr.Code)
-
-	// verify expected value
-	var result createCheckoutSessionResponse
-	a.NoError(json.Unmarshal(rr.Body.Bytes(), &result))
-	a.NotEmpty(result.SessionID)
+	a.Empty(rr.Body.String())
 }
 
-func Test_SignUp_Pro(t *testing.T) {
+func Test_Register_Pro(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	paymentServiceMock := paymentService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, paymentServiceMock, "", &email.ClientMock{}}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/signup-request-pro.json")
+	data, err := ioutil.ReadFile("testdata/register-request-pro.json")
 	a.NoError(err)
 
-	req, err := http.NewRequest(http.MethodPost, "/signup", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
-	// init stripe library
-	// we do that because the signup handler directly talks to stripe
-	stripe.Key = stripeKeyTest
-
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.SignUp)
+	h := http.HandlerFunc(handler.Register)
 
 	// server request
 	h.ServeHTTP(rr, req)
 
 	// verify status code
 	a.Equal(http.StatusOK, rr.Code)
-
-	// verify expected value
-	var result createCheckoutSessionResponse
-	a.NoError(json.Unmarshal(rr.Body.Bytes(), &result))
-	a.NotEmpty(result.SessionID)
+	a.Empty(rr.Body.String())
 }

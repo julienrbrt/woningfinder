@@ -15,7 +15,7 @@
       <mj-column width="570px">
         <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
-        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Je zoekopdracht is ingesteld!
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Welkom bij WoningFinder
         </mj-text>
         <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
         </mj-text>
@@ -25,8 +25,11 @@
     <mj-section background-color="#FFFFFF">
       <mj-column width="360px">
         <mj-text align="left" padding="0 20px 30px 20px">
+          Je zoekopdracht is ingesteld!
+          <br /><br />
+
           Om automatisch voor jou te kunnen reageren,
-          <strong>hoef je alleen maar in te loggen bij de woningcorporaties waar je
+          <strong>hoef je alleen maar in te loggen binnen 72 uur bij de woningcorporaties waar je
             wilt reageren</strong>. <br />
           <br />
           We hebben voor jou alleen de woningcorporaties geselecteerd die met
@@ -39,21 +42,15 @@
       </mj-column>
     </mj-section>
 
-    <mj-section padding="20px" background-color="#FFFFFF">
-      <mj-column width="100%">
-        <mj-image src="https://static.woningfinder.nl/email/symbol-1.png" alt="" width="292px" align="left" border="none"></mj-image>
-      </mj-column>
-    </mj-section>
-
     <mj-section padding="0 20px" background-color="#FFFFFF">
       <mj-column>
-        <mj-button href="{{ . }}" background-color="#E46948" color="white" padding="20px 20px 10px 20px" border-radius="20px">Mijn zoekopdracht</mj-button>
+        <mj-button href="{{ . }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Mijn zoekopdracht</mj-button>
       </mj-column>
     </mj-section>
 
     <mj-section padding="20px" background-color="#FFFFFF">
       <mj-column width="100%">
-        <mj-image src="https://static.woningfinder.nl/email/symbol-2.png" alt="" width="213px" align="right" border="none"></mj-image>
+        <mj-image src="https://static.woningfinder.nl/email/symbol-1.png" alt="" width="213px" align="right" border="none"></mj-image>
       </mj-column>
     </mj-section>
 
@@ -69,7 +66,7 @@
         </mj-text>
         <mj-image src="https://static.woningfinder.nl/email/icon-2.png" alt="" padding="30px 0 10px 0" width="50px" align="center" border="none"></mj-image>
         <mj-text align="left" padding="0 20px 0 20px">
-          Groetes,
+          Groetjes,
           <br />
           Team WoningFinder
         </mj-text>
@@ -86,7 +83,7 @@
       <mj-column>
         <mj-text align="center" color="#9B9B9B" font-size="11px">
           © 2021 WoningFinder <br />
-          <a href="https://woningfinder.nl" style="color: #9b9b9b; text-decoration: none">https://woningfinder.nl</a></mj-text>
+          <a href="https://woningfinder.nl" style="color: #9b9b9b; text-decoration: none">woningfinder.nl</a></mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
