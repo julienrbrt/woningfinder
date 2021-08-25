@@ -31,7 +31,7 @@
           Jouw gratis 14 dagen lopen af. Tegen €{{ .PlanPrice }} kun je automatisch blijven reageren tot je een huis vindt. Er is geen sprake van maandelijkse kosten 👌
 
           <br /><br />
-          Blijf automatish reageren via de aanstaande link.
+          Blijf automatish reageren via de onderstaande link.
         </mj-text>
       </mj-column>
       <mj-column width="200px">
@@ -58,7 +58,7 @@
         </mj-text>
         <mj-image src="https://static.woningfinder.nl/email/icon-2.png" alt="" padding="30px 0 10px 0" width="50px" align="center" border="none"></mj-image>
         <mj-text align="left" padding="0 20px 0 20px">
-          Groetes,
+          Groetjes,
           <br />
           Team WoningFinder
         </mj-text>

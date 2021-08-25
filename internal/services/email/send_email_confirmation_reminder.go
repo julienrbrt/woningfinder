@@ -28,7 +28,7 @@ func (s *service) SendEmailConfirmationReminder(user *customer.User) error {
 		return fmt.Errorf("error sending confirmation email: %w", err)
 	}
 
-	if err := s.emailClient.Send("Je hebt iets vergeten...", body.String(), user.Email); err != nil {
+	if err := s.emailClient.Send("Je bent iets vergeten...", body.String(), user.Email); err != nil {
 		return fmt.Errorf("error sending confirmation email: %w", err)
 	}
 

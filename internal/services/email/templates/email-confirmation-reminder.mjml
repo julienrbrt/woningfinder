@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Je hebt iets vergeten...</mj-title>
+    <mj-title>Je bent iets vergeten...</mj-title>
     <mj-font name="Inter" href="https://fonts.googleapis.com/css?family=Inter:400,700"></mj-font>
     <mj-attributes>
       <mj-all font-family="Inter, Helvetica, Arial, sans-serif" padding="0px"></mj-all>
@@ -15,7 +15,7 @@
       <mj-column width="570px">
         <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
-        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Je hebt iets vergeten...
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Je bent iets vergeten...
         </mj-text>
         <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
         </mj-text>
@@ -28,10 +28,10 @@
           Hallo {{ .Name }},
           <br /><br />
 
-          Je hebt nog niet je email bevestigd, je reageert dus nog niet automatisch op woningen 😢
+          Je hebt je e-mail nog niet bevestigd, je reageert dus nog niet automatisch op woningen 😢
 
           <br /><br />
-          <strong>Bevestig je email nu om je gratis proefperiode te beginnen via de aanstaande link.</strong>
+          <strong>Bevestig je email nu om je gratis proefperiode te beginnen via de onderstaande link.</strong>
 
           <br /><br />
           Heb je geen account gemaakt? Geen zorgen, al je gegevens worden verwijderen binnen 72 uur.
@@ -61,7 +61,7 @@
         </mj-text>
         <mj-image src="https://static.woningfinder.nl/email/icon-2.png" alt="" padding="30px 0 10px 0" width="50px" align="center" border="none"></mj-image>
         <mj-text align="left" padding="0 20px 0 20px">
-          Groetes,
+          Groetjes,
           <br />
           Team WoningFinder
         </mj-text>
