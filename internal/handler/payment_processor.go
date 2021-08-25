@@ -60,7 +60,7 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	plan, _ := customer.PlanFromName(user.Plan.PlanName)
+	plan, _ := customer.PlanFromName(user.Plan.Name)
 
 	switch request.Method {
 	case PaymentMethodStripe:

@@ -19,6 +19,15 @@ func init() {
 	migrations.MustRegisterTx(func(db migrations.DB) error {
 		fmt.Println("adding purchased_at column...")
 		_, err := db.Exec(`ALTER TABLE user_plans ADD purchased_at timestamptz`)
-		return err
+		if err != nil {
+			return err
+		}
+
+		_, err = db.Exec(`ALTER TABLE user_plans ADD free_trial_started_at timestamptz`)
+		if err != nil {
+			return err
+		}
+
+		return nil
 	})
 }

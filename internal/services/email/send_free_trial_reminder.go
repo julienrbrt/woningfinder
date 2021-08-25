@@ -9,7 +9,7 @@ import (
 )
 
 func (s *service) SendFreeTrialReminder(user *customer.User) error {
-	plan, err := customer.PlanFromName(user.Plan.PlanName)
+	plan, err := customer.PlanFromName(user.Plan.Name)
 	if err != nil {
 		return fmt.Errorf("error sending end free trial reminder email: %w", err)
 	}

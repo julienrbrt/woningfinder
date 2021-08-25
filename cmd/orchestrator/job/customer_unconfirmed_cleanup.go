@@ -27,7 +27,11 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 
 		var users []customer.User
 		// delete unconfirmed account
-		usersPlanQuery := j.dbClient.Conn().Model((*customer.UserPlan)(nil)).ColumnExpr("user_id")
+		usersPlanQuery := j.dbClient.Conn().
+			Model((*customer.UserPlan)(nil)).
+			Where("free_trial_started_at IS NULL").
+			ColumnExpr("user_id")
+
 		err := j.dbClient.Conn().
 			Model(&users).
 			Where("id NOT IN (?)", usersPlanQuery).

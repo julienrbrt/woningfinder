@@ -25,7 +25,7 @@
     <mj-section background-color="#FFFFFF">
       <mj-column width="360px">
         <mj-text align="left" padding="0 20px 30px 20px">
-          Hallo {{ . }},
+          Hallo {{ .Name }},
           <br /><br />
 
           Jouw gratis 14 dagen lopen af. Tegen €{{ .PlanPrice }} kun je automatisch blijven reageren tot je een huis vindt. Er is geen sprake van maandelijkse kosten 👌

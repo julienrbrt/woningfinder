@@ -44,7 +44,7 @@ func (u *User) HasMinimal() error {
 		return fmt.Errorf("user yearly income invalid")
 	}
 
-	plan, err := PlanFromName(u.Plan.PlanName)
+	plan, err := PlanFromName(u.Plan.Name)
 	if err != nil {
 		return err
 	}

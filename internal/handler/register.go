@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -8,6 +9,7 @@ import (
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
+	userService "github.com/woningfinder/woningfinder/internal/services/user"
 )
 
 // Register contains the handler for registering on WoningFinder
@@ -23,15 +25,20 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 
 	if err := h.userService.CreateUser(user); err != nil {
 		errorMsg := fmt.Errorf("error while creating user")
-		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+
+		if errors.Is(err, userService.ErrUserAlreadyExist) {
+			render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("%s: %s", errorMsg, err.Error())))
+			return
+		}
+
+		h.logger.Sugar().Warnf("%s: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
 
 	// send welcome email
 	if err := h.emailService.SendWelcome(user); err != nil {
-		errorMsg := fmt.Errorf("error while sending activation email")
-		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		// just logging error
+		h.logger.Sugar().Warnf("error while sending activation email: %w", err)
 	}
 }

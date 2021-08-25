@@ -58,15 +58,16 @@ func PlanFromPrice(price int64) (Plan, error) {
 
 // UserPlan stores the user plan and payment details (when paid)
 type UserPlan struct {
-	UserID      uint      `pg:",pk" json:"-"`
-	CreatedAt   time.Time `pg:"default:now()" json:"created_at"`
-	PurchasedAt time.Time `json:"purchased_at"`
-	PlanName    string    `json:"name"`
+	UserID             uint      `pg:",pk" json:"-"`
+	CreatedAt          time.Time `pg:"default:now()" json:"created_at"`
+	FreeTrialStartedAt time.Time `json:"free_trial_started_at"`
+	PurchasedAt        time.Time `json:"purchased_at"`
+	Name               string    `json:"name"`
 }
 
-// IsValid checks if a user has a paid plan or is within its free trial
+// IsValid checks if an activated user has a paid plan or is within its free trial
 func (u *UserPlan) IsValid() bool {
-	return u.IsPaid() || u.IsFreeTrialValid()
+	return u.IsActivated() && (u.IsPaid() || u.IsFreeTrialValid())
 }
 
 func (u *UserPlan) IsPaid() bool {
@@ -74,5 +75,9 @@ func (u *UserPlan) IsPaid() bool {
 }
 
 func (u *UserPlan) IsFreeTrialValid() bool {
-	return time.Until(u.CreatedAt.Add(FreeTrialDuration)) > 0
+	return time.Until(u.FreeTrialStartedAt.Add(FreeTrialDuration)) > 0
+}
+
+func (u *UserPlan) IsActivated() bool {
+	return u.FreeTrialStartedAt != (time.Time{})
 }

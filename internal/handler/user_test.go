@@ -74,10 +74,6 @@ func Test_UserInfo_ErrUserService(t *testing.T) {
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
 
-func Test_UserInfo_ConfirmRegister(t *testing.T) {
-	// TODO
-}
-
 func Test_UserInfo(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()

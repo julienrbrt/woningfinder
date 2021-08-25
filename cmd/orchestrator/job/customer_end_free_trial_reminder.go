@@ -25,7 +25,7 @@ func (j *Jobs) SendCustomerEndFreeTrialReminder(c *cron.Cron) {
 		// get all users without paid account
 		freeTrialPlans := j.dbClient.Conn().
 			Model((*customer.UserPlan)(nil)).
-			Where("purchased_at IS NULL").
+			Where("free_trial_started_at IS NOT NULL AND purchased_at IS NULL").
 			ColumnExpr("user_id").
 			Select()
 
