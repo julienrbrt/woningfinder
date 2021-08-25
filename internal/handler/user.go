@@ -60,6 +60,8 @@ func (h *handler) UserInfo(w http.ResponseWriter, r *http.Request) {
 		*customer.User
 		ValidPlan bool `json:"valid_plan"`
 	}{
-		user, user.Plan.IsValid(),
+		user,
+		 // consider a plan valid if user not activated for not displaying the invalid plan alert at first login of an user 
+		!user.Plan.IsActivated() || user.Plan.IsValid(),
 	})
 }

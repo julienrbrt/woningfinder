@@ -39,8 +39,9 @@ func (s *serviceMock) GetUser(search *customer.User) (*customer.User, error) {
 		YearlyIncome: 30000,
 		FamilySize:   3,
 		Plan: customer.UserPlan{
-			CreatedAt: time.Date(2021, 12, 31, 1, 1, 0, 0, time.UTC),
-			Name:      customer.PlanBasis.Name,
+			CreatedAt:          time.Date(2021, 12, 31, 1, 1, 0, 0, time.UTC),
+			Name:               customer.PlanBasis.Name,
+			FreeTrialStartedAt: time.Date(2099, 12, 31, 15, 1, 0, 0, time.UTC),
 		},
 		HousingPreferences: customer.HousingPreferences{
 			Type: []corporation.HousingType{

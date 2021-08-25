@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/render"
 	"github.com/stripe/stripe-go"
@@ -56,14 +57,14 @@ func planToLineItems(plan customer.Plan) *stripe.CheckoutSessionLineItemParams {
 	case customer.PlanBasis:
 		return &stripe.CheckoutSessionLineItemParams{
 			Currency: stripe.String(string(stripe.CurrencyEUR)),
-			Name:     stripe.String(customer.PlanBasis.Name),
+			Name:     stripe.String(strings.Title(customer.PlanBasis.Name)),
 			Amount:   stripe.Int64(int64(customer.PlanBasis.Price) * 100),
 			Quantity: stripe.Int64(1),
 		}
 	case customer.PlanPro:
 		return &stripe.CheckoutSessionLineItemParams{
 			Currency: stripe.String(string(stripe.CurrencyEUR)),
-			Name:     stripe.String(customer.PlanPro.Name),
+			Name:     stripe.String(strings.Title(customer.PlanPro.Name)),
 			Amount:   stripe.Int64(int64(customer.PlanPro.Price) * 100),
 			Quantity: stripe.Int64(1),
 		}
