@@ -34,7 +34,7 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 
 		err := j.dbClient.Conn().
 			Model(&users).
-			Where("id NOT IN (?)", usersPlanQuery).
+			Where("id IN (?)", usersPlanQuery).
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
 			j.logger.Sugar().Errorf("failed getting users get unconfirmed users: %w", err)
