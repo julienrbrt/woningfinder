@@ -37,6 +37,9 @@ func Test_CreateCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
 		handler.createCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
 	})
 
+	// init stripe library without a key
+	stripe.Key = ""
+
 	// server request
 	h.ServeHTTP(rr, req)
 
