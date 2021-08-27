@@ -13,11 +13,7 @@ import (
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
 
-type createCheckoutSessionResponse struct {
-	SessionID string `json:"id"`
-}
-
-func (h *handler) createCheckoutSession(email string, plan customer.Plan, w http.ResponseWriter, r *http.Request) {
+func (h *handler) createStripeCheckoutSession(email string, plan customer.Plan, w http.ResponseWriter, r *http.Request) {
 	params := &stripe.CheckoutSessionParams{
 		CustomerEmail: stripe.String(email),
 		SubmitType:    stripe.String("pay"),
@@ -32,8 +28,8 @@ func (h *handler) createCheckoutSession(email string, plan customer.Plan, w http
 		},
 		Locale:     stripe.String("nl"),
 		Mode:       stripe.String(string(stripe.CheckoutSessionModePayment)),
-		SuccessURL: stripe.String("https://woningfinder.nl/login?thanks=true"),
-		CancelURL:  stripe.String("https://woningfinder.nl/start/voltooien?cancelled=true"),
+		SuccessURL: stripe.String(successURL),
+		CancelURL:  stripe.String(cancelURL),
 	}
 
 	session, err := session.New(params)
@@ -45,8 +41,8 @@ func (h *handler) createCheckoutSession(email string, plan customer.Plan, w http
 	}
 
 	// return response
-	json.NewEncoder(w).Encode(createCheckoutSessionResponse{
-		SessionID: session.ID,
+	json.NewEncoder(w).Encode(paymentProcessorResponse{
+		StripeSessionID: session.ID,
 	})
 }
 

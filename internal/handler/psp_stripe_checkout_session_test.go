@@ -18,7 +18,7 @@ import (
 
 var stripeKeyTest = "sk_test_51HkWn4HWufZqidI12yfUuTsZxIdKfSlblDYcAYPda4hzMnGrDcDCLannohEiYI0TUXT1rPdx186CyhKvo67H96Ty00vP5NDSrZ"
 
-func Test_CreateCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
+func Test_CreateStripeCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -34,7 +34,7 @@ func Test_CreateCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
+		handler.createStripeCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
 	})
 
 	// init stripe library without a key
@@ -50,7 +50,7 @@ func Test_CreateCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
 	a.Contains(rr.Body.String(), "error while creating stripe new checkout session")
 }
 
-func Test_CreateCheckoutSession(t *testing.T) {
+func Test_CreateStripeCheckoutSession(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -69,7 +69,7 @@ func Test_CreateCheckoutSession(t *testing.T) {
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
+		handler.createStripeCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
 	})
 
 	// server request
@@ -79,8 +79,8 @@ func Test_CreateCheckoutSession(t *testing.T) {
 	a.Equal(http.StatusOK, rr.Code)
 
 	// verify expected value
-	var response createCheckoutSessionResponse
+	var response paymentProcessorResponse
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 
-	a.NotEmpty(response.SessionID)
+	a.NotEmpty(response.StripeSessionID)
 }

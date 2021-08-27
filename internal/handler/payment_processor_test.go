@@ -58,7 +58,7 @@ func Test_PaymentProcessor_ErrUserService(t *testing.T) {
 	emailServiceMock := emailService.NewServiceMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
-	data, err := ioutil.ReadFile("testdata/payment-processor-request.json")
+	data, err := ioutil.ReadFile("testdata/payment-processor-stripe-request.json")
 	a.NoError(err)
 
 	// create request
@@ -86,7 +86,7 @@ func Test_PaymentProcessor_Stripe(t *testing.T) {
 	emailServiceMock := emailService.NewServiceMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
 
-	data, err := ioutil.ReadFile("testdata/payment-processor-request.json")
+	data, err := ioutil.ReadFile("testdata/payment-processor-stripe-request.json")
 	a.NoError(err)
 
 	// create request
@@ -108,12 +108,44 @@ func Test_PaymentProcessor_Stripe(t *testing.T) {
 	a.Equal(http.StatusOK, rr.Code)
 
 	// verify expected value
-	var response createCheckoutSessionResponse
+	var response paymentProcessorResponse
 
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
-	a.NotEmpty(response.SessionID)
+	a.NotEmpty(response.StripeSessionID)
+	a.Empty(response.CryptoPaymentURL)
 }
 
 func Test_PaymentProcessor_Crypto(t *testing.T) {
-	// TODO #73
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+
+	data, err := ioutil.ReadFile("testdata/payment-processor-crypto-request.json")
+	a.NoError(err)
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/payment", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.PaymentProcessor)
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusOK, rr.Code)
+
+	// verify expected value
+	var response paymentProcessorResponse
+
+	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
+	a.NotEmpty(response.CryptoPaymentURL)
+	a.Empty(response.StripeSessionID)
 }
