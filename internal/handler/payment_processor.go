@@ -64,7 +64,7 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user.Plan.IsPaid() {
-		render.Render(w, r, handlerErrors.ErrorRenderer(errors.New("user already paid")))
+		render.Render(w, r, handlerErrors.ErrorRenderer(errors.New("user has already already paid")))
 		return
 	}
 

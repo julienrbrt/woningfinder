@@ -17,7 +17,7 @@ import (
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/email"
+	"github.com/woningfinder/woningfinder/pkg/cryptocom"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
@@ -28,7 +28,8 @@ func Test_GetCorporationCredentials_ErrUnauthorized(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
@@ -55,7 +56,8 @@ func Test_GetCorporationCredentials_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
@@ -84,7 +86,8 @@ func Test_GetCorporationCredentials(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
@@ -114,7 +117,8 @@ func Test_UpdateCorporationCredentials_ErrUnauthorized(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
@@ -141,7 +145,8 @@ func Test_UpdateCorporationCredentials_ErrEmptyRequest(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me/corporation-credentials", nil)
@@ -168,7 +173,8 @@ func Test_UpdateCorporationCredentials_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/corporation-credentials-request.json")
@@ -201,7 +207,8 @@ func Test_UpdateCorporationCredentials(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/corporation-credentials-request.json")

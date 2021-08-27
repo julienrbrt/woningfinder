@@ -28,15 +28,16 @@ func init() {
 func main() {
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 	dbClient := bootstrap.CreateDBClient(logger)
-	emailClient := bootstrap.CreateEmailClient()
 	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
+	emailClient := bootstrap.CreateEmailClient()
+	cryptoClient := bootstrap.CreateCryptoComClient()
 	bootstrap.CreateSripeClient(logger) // init stripe library
 
 	corporationService := corporation.NewService(logger, dbClient)
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the api
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	router := handler.NewHandler(logger, corporationService, userService, emailService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), jwtAuth, emailClient)
+	router := handler.NewHandler(logger, jwtAuth, corporationService, userService, emailService, config.MustGetString("STRIPE_WEBHOOK_SIGNING_KEY"), cryptoClient)
 
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
 		logger.Sugar().Fatalf("failed to start server: %w", err)

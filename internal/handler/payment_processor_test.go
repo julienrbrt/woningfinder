@@ -14,7 +14,7 @@ import (
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/email"
+	"github.com/woningfinder/woningfinder/pkg/cryptocom"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
@@ -25,7 +25,8 @@ func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-invalid-payment-method-request.json")
 	a.NoError(err)
@@ -56,7 +57,8 @@ func Test_PaymentProcessor_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-stripe-request.json")
 	a.NoError(err)
@@ -84,7 +86,8 @@ func Test_PaymentProcessor_Stripe(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-stripe-request.json")
 	a.NoError(err)
@@ -122,7 +125,8 @@ func Test_PaymentProcessor_Crypto(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", &email.ClientMock{}}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{PaymentURL: "https://example.com"}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
 
 	data, err := ioutil.ReadFile("testdata/payment-processor-crypto-request.json")
 	a.NoError(err)
@@ -146,6 +150,6 @@ func Test_PaymentProcessor_Crypto(t *testing.T) {
 	var response paymentProcessorResponse
 
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
-	a.NotEmpty(response.CryptoPaymentURL)
+	a.Equal(response.CryptoPaymentURL, "https://example.com")
 	a.Empty(response.StripeSessionID)
 }

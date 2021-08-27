@@ -23,6 +23,8 @@ type Service interface {
 	SendCorporationCredentialsMissing(user *customer.User) error
 	SendCorporationCredentialsError(user *customer.User, corporationName string) error
 	SendBye(user *customer.User) error
+
+	ContactFormSubmission(content string) error
 }
 
 type service struct {

@@ -39,7 +39,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 
 	// verify stripe authenticity
 	signatureHeader := r.Header.Get(stripeHeader)
-	event, err = webhook.ConstructEvent(payload, signatureHeader, h.paymentWebhookSigningKey)
+	event, err = webhook.ConstructEvent(payload, signatureHeader, h.stripeWebhookSigningKey)
 	if err != nil {
 		render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
 		return

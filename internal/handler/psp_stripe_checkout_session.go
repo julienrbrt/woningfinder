@@ -46,8 +46,7 @@ func (h *handler) createStripeCheckoutSession(email string, plan customer.Plan, 
 	})
 }
 
-// planToLineItems gets the plan price and converts it to a stripe price
-// note 1€ is 100 for stripe
+// planToLineItems gets the plan price and converts it to cents
 func planToLineItems(plan customer.Plan) *stripe.CheckoutSessionLineItemParams {
 	switch plan {
 	case customer.PlanBasis:

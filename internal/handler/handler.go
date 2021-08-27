@@ -14,28 +14,28 @@ import (
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	"github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/email"
+	"github.com/woningfinder/woningfinder/pkg/cryptocom"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 type handler struct {
-	logger                   *logging.Logger
-	corporationService       corporation.Service
-	userService              user.Service
-	emailService             emailService.Service
-	paymentWebhookSigningKey string
-	emailClient              email.Client
+	logger                  *logging.Logger
+	corporationService      corporation.Service
+	userService             user.Service
+	emailService            emailService.Service
+	stripeWebhookSigningKey string
+	cryptoClient            cryptocom.Client
 }
 
 // NewHandler creates a WoningFinder API router
-func NewHandler(logger *logging.Logger, corporationService corporation.Service, userService user.Service, emailService emailService.Service, paymentWebhookSigningKey string, jwtAuth *jwtauth.JWTAuth, emailClient email.Client) http.Handler {
+func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationService corporation.Service, userService user.Service, emailService emailService.Service, stripeWebhookSigningKey string, cryptoClient cryptocom.Client) http.Handler {
 	handler := &handler{
-		logger:                   logger,
-		corporationService:       corporationService,
-		userService:              userService,
-		emailService:             emailService,
-		paymentWebhookSigningKey: paymentWebhookSigningKey,
-		emailClient:              emailClient,
+		logger:                  logger,
+		corporationService:      corporationService,
+		userService:             userService,
+		emailService:            emailService,
+		stripeWebhookSigningKey: stripeWebhookSigningKey,
+		cryptoClient:            cryptoClient,
 	}
 
 	// router configuration

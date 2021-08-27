@@ -47,3 +47,7 @@ func (s *serviceMock) SendCorporationCredentialsError(_ *customer.User, _ string
 func (s *serviceMock) SendBye(_ *customer.User) error {
 	return s.err
 }
+
+func (s *serviceMock) ContactFormSubmission(content string) error {
+	return s.err
+}
