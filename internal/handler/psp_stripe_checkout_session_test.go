@@ -18,7 +18,7 @@ import (
 
 var stripeKeyTest = "sk_test_51HkWn4HWufZqidI12yfUuTsZxIdKfSlblDYcAYPda4hzMnGrDcDCLannohEiYI0TUXT1rPdx186CyhKvo67H96Ty00vP5NDSrZ"
 
-func Test_CreateStripeCheckoutSession_ErrStripeAPIKeyMissing(t *testing.T) {
+func Test_CreateStripeCheckoutSession_ErrAPIKeyMissing(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
