@@ -79,13 +79,6 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:7lD/Fzd9pKs6wH0lOg/fWeuajnsATIpP:GJHUFMZL24tYyV56wAlaShoDNH0h1XfQ4l28uA9mnWJQAn9OqfJUuvuFdoSbS1VZDl53BdkH]
-  - key: CRYPTOCOM_PUBLISHABLE_KEY
-    scope: RUN_AND_BUILD_TIME
-    value: pk_live_j7RSsS3zVBGaBcefjTJrJxCK
-  - key: CRYPTOCOM_API_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:uN2to3aedgps3vp+rjfAe0MdnNau205b:ftxjzmQAFjG1r9uEJg6JCAE5zDnKhdGP4bm6qNqfPzxorMhnTSC4Bxt7M/81m9Jc]
 jobs:
   - environment_slug: go
     github:

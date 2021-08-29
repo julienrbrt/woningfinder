@@ -24,7 +24,7 @@ type Service interface {
 	SendCorporationCredentialsError(user *customer.User, corporationName string) error
 	SendBye(user *customer.User) error
 
-	ContactFormSubmission(content string) error
+	ContactFormSubmission(name, email, message string) error
 }
 
 type service struct {

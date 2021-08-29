@@ -48,6 +48,6 @@ func (s *serviceMock) SendBye(_ *customer.User) error {
 	return s.err
 }
 
-func (s *serviceMock) ContactFormSubmission(content string) error {
+func (s *serviceMock) ContactFormSubmission(name, email, message string) error {
 	return s.err
 }

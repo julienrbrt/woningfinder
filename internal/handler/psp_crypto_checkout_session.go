@@ -17,6 +17,9 @@ func (h *handler) createCryptoCheckoutSession(email string, plan customer.Plan, 
 		Currency:  "EUR",
 		ReturnURL: successURL,
 		CancelURL: cancelURL,
+		Metadata: cryptocom.CustomerData{
+			Email: email,
+		},
 	}
 
 	switch plan {

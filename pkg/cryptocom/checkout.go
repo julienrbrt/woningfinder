@@ -9,27 +9,30 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
+type CustomerData struct {
+	CustomerName string `json:"customer_name"`
+	Email        string `json:"email"`
+}
+
 type CryptoCheckoutSession struct {
-	ID             string `json:"id"`
-	Amount         int    `json:"amount"`
-	AmountRefunded int    `json:"amount_refunded"`
-	Created        int    `json:"created"`
-	CryptoCurrency string `json:"crypto_currency"`
-	CryptoAmount   string `json:"crypto_amount"`
-	Currency       string `json:"currency"`
-	CustomerID     string `json:"customer_id"`
-	PaymentURL     string `json:"payment_url"`
-	ReturnURL      string `json:"return_url"`
-	CancelURL      string `json:"cancel_url"`
-	Description    string `json:"description"`
-	LiveMode       bool   `json:"live_mode"`
-	Metadata       struct {
-		CustomerName string `json:"customer_name"`
-	} `json:"metadata"`
-	OrderID   string `json:"order_id"`
-	Recipient string `json:"recipient"`
-	Refunded  bool   `json:"refunded"`
-	Status    string `json:"status"`
+	ID             string       `json:"id"`
+	Amount         int          `json:"amount"`
+	AmountRefunded int          `json:"amount_refunded"`
+	Created        int          `json:"created"`
+	CryptoCurrency string       `json:"crypto_currency"`
+	CryptoAmount   string       `json:"crypto_amount"`
+	Currency       string       `json:"currency"`
+	CustomerID     string       `json:"customer_id"`
+	PaymentURL     string       `json:"payment_url"`
+	ReturnURL      string       `json:"return_url"`
+	CancelURL      string       `json:"cancel_url"`
+	Description    string       `json:"description"`
+	LiveMode       bool         `json:"live_mode"`
+	Metadata       CustomerData `json:"metadata"`
+	OrderID        string       `json:"order_id"`
+	Recipient      string       `json:"recipient"`
+	Refunded       bool         `json:"refunded"`
+	Status         string       `json:"status"`
 }
 
 func (c *client) CreatePayment(session CryptoCheckoutSession) (*CryptoCheckoutSession, error) {
