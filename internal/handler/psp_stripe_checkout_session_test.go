@@ -7,16 +7,14 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stripe/stripe-go"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/cryptocom"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
-
-var stripeKeyTest = "sk_test_51HkWn4HWufZqidI12yfUuTsZxIdKfSlblDYcAYPda4hzMnGrDcDCLannohEiYI0TUXT1rPdx186CyhKvo67H96Ty00vP5NDSrZ"
 
 func Test_CreateStripeCheckoutSession_ErrAPIKeyMissing(t *testing.T) {
 	a := assert.New(t)
@@ -26,7 +24,7 @@ func Test_CreateStripeCheckoutSession_ErrAPIKeyMissing(t *testing.T) {
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)
@@ -37,9 +35,6 @@ func Test_CreateStripeCheckoutSession_ErrAPIKeyMissing(t *testing.T) {
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		handler.createStripeCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
 	})
-
-	// init stripe library without a key
-	stripe.Key = ""
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -59,14 +54,11 @@ func Test_CreateStripeCheckoutSession(t *testing.T) {
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true), cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)
 	a.NoError(err)
-
-	// init stripe library
-	stripe.Key = stripeKeyTest
 
 	// record response
 	rr := httptest.NewRecorder()

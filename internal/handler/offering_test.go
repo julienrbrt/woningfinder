@@ -17,6 +17,7 @@ import (
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/cryptocom"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
 func Test_GetOffering(t *testing.T) {
@@ -27,7 +28,7 @@ func Test_GetOffering(t *testing.T) {
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
 	// pass 'nil' as the third parameter.
@@ -60,7 +61,7 @@ func Test_GetOffering_ErrCorporationService(t *testing.T) {
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodGet, "/offering", nil)

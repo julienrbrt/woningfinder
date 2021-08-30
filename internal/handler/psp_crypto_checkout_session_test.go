@@ -14,6 +14,7 @@ import (
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/cryptocom"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
 func Test_CreateCryptoCheckoutSession_Error(t *testing.T) {
@@ -24,7 +25,7 @@ func Test_CreateCryptoCheckoutSession_Error(t *testing.T) {
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, errors.New("foo"))
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)
@@ -56,7 +57,7 @@ func Test_CreateCryptoCheckoutSession(t *testing.T) {
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{
 		PaymentURL: "https://example.org/foo",
 	}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, "", cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)

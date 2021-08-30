@@ -1,3 +1,8 @@
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_LIVE
+  - rule: DEPLOYMENT_LIVE
+  - rule: DOMAIN_FAILED
 domains:
   - domain: woningfinder.nl
     type: PRIMARY
@@ -79,8 +84,21 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:7lD/Fzd9pKs6wH0lOg/fWeuajnsATIpP:GJHUFMZL24tYyV56wAlaShoDNH0h1XfQ4l28uA9mnWJQAn9OqfJUuvuFdoSbS1VZDl53BdkH]
+  - key: CRYPTOCOM_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:uN2to3aedgps3vp+rjfAe0MdnNau205b:ftxjzmQAFjG1r9uEJg6JCAE5zDnKhdGP4bm6qNqfPzxorMhnTSC4Bxt7M/81m9Jc]
+  - key: CRYPTOCOM_WEBHOOK_SIGNING_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:OSzL9jrfFYjFY59/5GNow+8mVJsnggvb:l58LDMf8CcZXM9EhfwbNoOClK+NFc/NUxSPgQXHezEpawkDGTBRyi0koPvFH2lUUq4K2AI+Iz2HTH1y5]
 jobs:
-  - environment_slug: go
+  - alerts:
+      - operator: GREATER_THAN
+        rule: CPU_UTILIZATION
+        value: 75
+        window: TEN_MINUTES
+    environment_slug: go
     github:
       branch: main
       deploy_on_push: true
@@ -93,7 +111,12 @@ jobs:
 name: woningfinder
 region: ams
 services:
-  - environment_slug: go
+  - alerts:
+      - operator: GREATER_THAN
+        rule: CPU_UTILIZATION
+        value: 75
+        window: TEN_MINUTES
+    environment_slug: go
     github:
       branch: main
       deploy_on_push: true
@@ -117,7 +140,12 @@ static_sites:
     routes:
       - path: /
 workers:
-  - environment_slug: go
+  - alerts:
+      - operator: GREATER_THAN
+        rule: CPU_UTILIZATION
+        value: 75
+        window: TEN_MINUTES
+    environment_slug: go
     github:
       branch: main
       deploy_on_push: true
@@ -126,7 +154,12 @@ workers:
     instance_size_slug: basic-xs
     name: woningfinder-housing-matcher
     run_command: bin/housing-matcher
-  - environment_slug: go
+  - alerts:
+      - operator: GREATER_THAN
+        rule: CPU_UTILIZATION
+        value: 75
+        window: TEN_MINUTES
+    environment_slug: go
     github:
       branch: main
       deploy_on_push: true

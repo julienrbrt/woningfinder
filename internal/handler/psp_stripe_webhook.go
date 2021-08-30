@@ -39,7 +39,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 
 	// verify stripe authenticity
 	signatureHeader := r.Header.Get(stripeHeader)
-	event, err = webhook.ConstructEvent(payload, signatureHeader, h.stripeWebhookSigningKey)
+	event, err = webhook.ConstructEvent(payload, signatureHeader, h.stripeClient.WebhookSigningKey())
 	if err != nil {
 		render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
 		return
@@ -54,7 +54,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// populate payment - note 1€ is 100 for stripe
+		// populate payment - 1€ is 100 cents
 		_, err = customer.PlanFromPrice(paymentIntent.Amount / 100)
 		if err != nil {
 			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)

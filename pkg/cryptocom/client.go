@@ -16,11 +16,15 @@ type Client interface {
 
 type client struct {
 	networkingClient networking.Client
+	apiKey           string
+	webookSigningKey string
 }
 
 // NewClient creates a client for Crypto.com
-func NewClient(c networking.Client) Client {
+func NewClient(c networking.Client, apiKey, webookSigningKey string) Client {
 	return &client{
 		networkingClient: c,
+		apiKey:           apiKey,
+		webookSigningKey: webookSigningKey,
 	}
 }

@@ -15,6 +15,7 @@ import (
 // CreateCryptoComClient creates a Crypto.com Pay client
 func CreateCryptoComClient() cryptocom.Client {
 	apiKey := config.MustGetString("CRYPTOCOM_API_KEY")
+	webookSigningKey := config.MustGetString("CRYPTOCOM_WEBHOOK_SIGNING_KEY")
 
 	client := &http.Client{
 		Timeout: retry.DefaultTimeout,
@@ -29,5 +30,7 @@ func CreateCryptoComClient() cryptocom.Client {
 		middleware.CreateTimeoutMiddleware(retry.DefaultTimeout),
 	}
 
-	return cryptocom.NewClient(networking.NewClient(client, defaultMiddleWare...))
+	httpClient := networking.NewClient(client, defaultMiddleWare...)
+
+	return cryptocom.NewClient(httpClient, apiKey, webookSigningKey)
 }

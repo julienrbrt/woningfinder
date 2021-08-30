@@ -16,26 +16,27 @@ import (
 	"github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/cryptocom"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
 type handler struct {
-	logger                  *logging.Logger
-	corporationService      corporation.Service
-	userService             user.Service
-	emailService            emailService.Service
-	stripeWebhookSigningKey string
-	cryptoClient            cryptocom.Client
+	logger             *logging.Logger
+	corporationService corporation.Service
+	userService        user.Service
+	emailService       emailService.Service
+	stripeClient       stripe.Client
+	cryptoClient       cryptocom.Client
 }
 
 // NewHandler creates a WoningFinder API router
-func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationService corporation.Service, userService user.Service, emailService emailService.Service, stripeWebhookSigningKey string, cryptoClient cryptocom.Client) http.Handler {
+func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationService corporation.Service, userService user.Service, emailService emailService.Service, stripeClient stripe.Client, cryptoClient cryptocom.Client) http.Handler {
 	handler := &handler{
-		logger:                  logger,
-		corporationService:      corporationService,
-		userService:             userService,
-		emailService:            emailService,
-		stripeWebhookSigningKey: stripeWebhookSigningKey,
-		cryptoClient:            cryptoClient,
+		logger:             logger,
+		corporationService: corporationService,
+		userService:        userService,
+		emailService:       emailService,
+		stripeClient:       stripeClient,
+		cryptoClient:       cryptoClient,
 	}
 
 	// router configuration
