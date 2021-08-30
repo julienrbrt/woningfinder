@@ -8,6 +8,7 @@ type mockClient struct{}
 
 // NewClientMock creates a mock client for Stripe
 func NewClientMock(initLibrary bool) Client {
+	stripe.Key = ""
 	if initLibrary {
 		stripe.Key = stripeKeyTest
 	}

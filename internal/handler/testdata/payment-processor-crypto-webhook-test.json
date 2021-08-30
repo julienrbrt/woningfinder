@@ -21,7 +21,7 @@
             "live_mode": true,
             "metadata": {
                 "customer_name": "Test",
-                "customer_email": "pay@crypto.com"
+                "email": "pay@crypto.com"
             },
             "order_id": "Order ID",
             "recipient": "Test",
