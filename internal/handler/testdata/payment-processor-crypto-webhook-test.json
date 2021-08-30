@@ -1,0 +1,32 @@
+{
+    "id": "920a4e24-169e-4205-85bd-348c1b834231",
+    "object_type": "event",
+    "type": "payment.captured",
+    "created": 1492774570,
+    "data": {
+        "object": {
+            "id": "246dce08-019c-4bcb-871d-e8733295e027",
+            "amount": 1000,
+            "amount_refunded": 0,
+            "created": 1492774570,
+            "crypto_currency": "CRO",
+            "crypto_amount": "107.5",
+            "currency": "EUR",
+            "customer_id": null,
+            "data_url": "https://pay.crypto.com/sdk/payments/246dce08-019c-4bcb-871d-e8733295e027",
+            "payment_url": "https://js.crypto.com/sdk/payments/checkout/set_wallet?publishableKey=XXX&id=246dce08-019c-4bcb-871d-e8733295e027&sdkMeta=YYY",
+            "return_url": null,
+            "cancel_url": null,
+            "description": "Test payment",
+            "live_mode": true,
+            "metadata": {
+                "customer_name": "Test",
+                "email": "pay@crypto.com"
+            },
+            "order_id": "Order ID",
+            "recipient": "Test",
+            "refunded": false,
+            "status": "pending"
+        }
+    }
+}

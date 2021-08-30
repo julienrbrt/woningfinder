@@ -7,10 +7,11 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/stripe/stripe-go"
+	stripeGo "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/webhook"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
+	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
 const stripeHeader = "Stripe-Signature"
@@ -31,7 +32,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// parse event
-	event := stripe.Event{}
+	event := stripeGo.Event{}
 	if err := json.Unmarshal(payload, &event); err != nil {
 		render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("failed to parse webhook body json: %w", err)))
 		return
@@ -39,22 +40,22 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 
 	// verify stripe authenticity
 	signatureHeader := r.Header.Get(stripeHeader)
-	event, err = webhook.ConstructEvent(payload, signatureHeader, h.paymentWebhookSigningKey)
+	event, err = webhook.ConstructEvent(payload, signatureHeader, h.stripeClient.WebhookSigningKey())
 	if err != nil {
 		render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
 		return
 	}
 
 	// check if customer successfully paid
-	if event.Type == "payment_intent.succeeded" {
-		var paymentIntent stripe.PaymentIntent
+	if event.Type == stripe.PaymentIntentSucceeded {
+		var paymentIntent stripeGo.PaymentIntent
 		err := json.Unmarshal(event.Data.Raw, &paymentIntent)
 		if err != nil {
 			render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
 			return
 		}
 
-		// populate payment - note 1€ is 100 for stripe
+		// populate payment - 1€ is 100 cents
 		_, err = customer.PlanFromPrice(paymentIntent.Amount / 100)
 		if err != nil {
 			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)
