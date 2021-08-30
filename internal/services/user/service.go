@@ -23,10 +23,12 @@ type Service interface {
 	CreateWaitingList(w *customer.WaitingList) error
 
 	// Housing Preferences
-	CreateHousingPreferences(u *customer.User, preferences customer.HousingPreferences) error
-	GetHousingPreferences(u *customer.User) (customer.HousingPreferences, error)
-	CreateHousingPreferencesMatch(u *customer.User, offer corporation.Offer, corporationName string) error
-	GetHousingPreferencesMatchingCorporation(u *customer.User) ([]corporation.Corporation, error)
+	CreateHousingPreferences(user *customer.User, preferences customer.HousingPreferences) error
+	GetHousingPreferences(user *customer.User) (customer.HousingPreferences, error)
+	UpdateHousingPreferences(user *customer.User, housingPreferences customer.HousingPreferences) error
+	DeleteHousingPreferences(user *customer.User) error
+	GetHousingPreferencesMatchingCorporation(user *customer.User) ([]corporation.Corporation, error)
+	CreateHousingPreferencesMatch(user *customer.User, offer corporation.Offer, corporationName string) error
 
 	// Corporation Credentials
 	CreateCorporationCredentials(userID uint, credentials customer.CorporationCredentials) error

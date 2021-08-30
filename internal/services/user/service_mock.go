@@ -58,6 +58,14 @@ func (s *serviceMock) GetUser(search *customer.User) (*customer.User, error) {
 	}, s.err
 }
 
+func (s *serviceMock) UpdateHousingPreferences(user *customer.User, housingPreferences customer.HousingPreferences) error {
+	return s.err
+}
+
+func (s *serviceMock) DeleteHousingPreferences(user *customer.User) error {
+	return s.err
+}
+
 func (s *serviceMock) GetHousingPreferencesMatchingCorporation(_ *customer.User) ([]corporation.Corporation, error) {
 	if s.err != nil {
 		return nil, s.err

@@ -1,16 +1,18 @@
 package user
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
+	pg "github.com/go-pg/pg/v10"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
 // TODO eventually use a prepare function to create it in one query only
-func (s *service) CreateHousingPreferences(u *customer.User, housingPreferences customer.HousingPreferences) error {
+func (s *service) CreateHousingPreferences(user *customer.User, housingPreferences customer.HousingPreferences) error {
 	db := s.dbClient.Conn()
 
 	// verify housing preferences
@@ -28,10 +30,10 @@ func (s *service) CreateHousingPreferences(u *customer.User, housingPreferences 
 	}
 
 	// assign id
-	housingPreferences.UserID = u.ID
+	housingPreferences.UserID = user.ID
 	// create housing preferences
 	if _, err := db.Model(&housingPreferences).Insert(); err != nil {
-		return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
+		return fmt.Errorf("failing adding housing preferences for user %s: %w", user.Email, err)
 	}
 
 	// add housing type relations
@@ -39,7 +41,7 @@ func (s *service) CreateHousingPreferences(u *customer.User, housingPreferences 
 		if _, err := db.Model(&customer.HousingPreferencesHousingType{HousingPreferencesID: housingPreferences.ID, HousingType: string(housingType)}).
 			Where("housing_preferences_id = ? and housing_type = ?", housingPreferences.ID, string(housingType)).
 			SelectOrInsert(); err != nil {
-			return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
+			return fmt.Errorf("failing adding housing preferences for user %s: %w", user.Email, err)
 		}
 	}
 
@@ -48,7 +50,7 @@ func (s *service) CreateHousingPreferences(u *customer.User, housingPreferences 
 		if _, err := db.Model(&customer.HousingPreferencesCity{HousingPreferencesID: housingPreferences.ID, CityName: city.Name}).
 			Where("housing_preferences_id = ? and city_name = ?", housingPreferences.ID, city.Name).
 			SelectOrInsert(); err != nil {
-			return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
+			return fmt.Errorf("failing adding housing preferences for user %s: %w", user.Email, err)
 		}
 
 		// add cities district
@@ -56,7 +58,7 @@ func (s *service) CreateHousingPreferences(u *customer.User, housingPreferences 
 			if _, err := db.Model(&customer.HousingPreferencesCityDistrict{HousingPreferencesID: housingPreferences.ID, CityName: city.Name, Name: district}).
 				Where("housing_preferences_id = ? and city_name = ? and name = ?", housingPreferences.ID, city.Name, district).
 				SelectOrInsert(); err != nil {
-				return fmt.Errorf("failing adding housing preferences for user %s: %w", u.Email, err)
+				return fmt.Errorf("failing adding housing preferences for user %s: %w", user.Email, err)
 			}
 		}
 	}
@@ -112,6 +114,51 @@ func (s *service) GetHousingPreferences(user *customer.User) (customer.HousingPr
 	}
 
 	return housingPreferences, nil
+}
+
+// TODO build changelog of the housing preferences and only add the right queries
+func (s *service) UpdateHousingPreferences(user *customer.User, housingPreferences customer.HousingPreferences) error {
+	if err := housingPreferences.HasMinimal(); err != nil {
+		return err
+	}
+
+	// delete old housing preferences
+	if err := s.DeleteHousingPreferences(user); err != nil {
+		return err
+	}
+
+	// create new housing preferences
+	if err := s.CreateHousingPreferences(user, housingPreferences); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *service) DeleteHousingPreferences(user *customer.User) error {
+	db := s.dbClient.Conn()
+
+	if _, err := db.Model((*customer.HousingPreferencesCity)(nil)).Where("housing_preferences_id = ?", user.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences cities for %s: %w", user.Email, err)
+	}
+
+	if _, err := db.Model((*customer.HousingPreferencesCityDistrict)(nil)).Where("housing_preferences_id = ?", user.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences cities districts for %s: %w", user.Email, err)
+	}
+
+	if _, err := db.Model((*customer.HousingPreferencesHousingType)(nil)).Where("housing_preferences_id = ?", user.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences housing type for %s: %w", user.Email, err)
+	}
+
+	if _, err := db.Model((*customer.HousingPreferences)(nil)).Where("user_id = ?", user.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences cities for %s: %w", user.Email, err)
+	}
+
+	if _, err := db.Model((*customer.HousingPreferencesMatch)(nil)).Where("user_id = ?", user.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences match for %s: %w", user.Email, err)
+	}
+
+	return nil
 }
 
 func (s *service) CreateHousingPreferencesMatch(user *customer.User, offer corporation.Offer, corporationName string) error {

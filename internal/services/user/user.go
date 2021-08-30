@@ -14,20 +14,20 @@ import (
 var ErrUserAlreadyExist = errors.New("user already exist")
 
 // TODO eventually use a prepare function to create it in one query only
-func (s *service) CreateUser(u *customer.User) error {
+func (s *service) CreateUser(user *customer.User) error {
 	db := s.dbClient.Conn()
 
 	// verify user
-	if err := u.HasMinimal(); err != nil {
-		return fmt.Errorf("error user %s invalid: %w", u.Email, err)
+	if err := user.HasMinimal(); err != nil {
+		return fmt.Errorf("error user %s invalid: %w", user.Email, err)
 	}
 
 	// a user cannot have paid when being created so reset by security
-	u.Plan.FreeTrialStartedAt = (time.Time{})
-	u.Plan.PurchasedAt = (time.Time{})
+	user.Plan.FreeTrialStartedAt = (time.Time{})
+	user.Plan.PurchasedAt = (time.Time{})
 
 	// create user - if exist throw error
-	if _, err := db.Model(u).Insert(); err != nil {
+	if _, err := db.Model(user).Insert(); err != nil {
 		if strings.Contains(err.Error(), "duplicate key value violates unique constraint \"users_email_key\"") {
 			return ErrUserAlreadyExist
 		}
@@ -36,9 +36,9 @@ func (s *service) CreateUser(u *customer.User) error {
 	}
 
 	// create user plan
-	if _, err := s.dbClient.Conn().Model(&customer.UserPlan{UserID: u.ID, Name: u.Plan.Name}).Insert(); err != nil {
+	if _, err := s.dbClient.Conn().Model(&customer.UserPlan{UserID: user.ID, Name: user.Plan.Name}).Insert(); err != nil {
 		// rollback
-		if _, err2 := db.Model(u).Where("email ILIKE ?", u.Email).Delete(); err2 != nil {
+		if _, err2 := db.Model(user).Where("email ILIKE ?", user.Email).Delete(); err2 != nil {
 			s.logger.Sugar().Errorf("error %w and error when rolling back user creation: %w", err, err2)
 		}
 
@@ -46,13 +46,13 @@ func (s *service) CreateUser(u *customer.User) error {
 	}
 
 	// create user housing preferences
-	if err := s.CreateHousingPreferences(u, u.HousingPreferences); err != nil {
+	if err := s.CreateHousingPreferences(user, user.HousingPreferences); err != nil {
 		// rollback
-		if _, err2 := db.Model(u).Where("email ILIKE ?", u.Email).Delete(); err2 != nil {
+		if _, err2 := db.Model(user).Where("email ILIKE ?", user.Email).Delete(); err2 != nil {
 			s.logger.Sugar().Errorf("error %w and error when rolling back user creation: %w", err, err2)
 		}
 
-		return fmt.Errorf("error when creating user %s: %w", u.Email, err)
+		return fmt.Errorf("error when creating user %s: %w", user.Email, err)
 	}
 
 	return nil
@@ -171,42 +171,42 @@ func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 }
 
 // TODO eventually use a prepare function to create it in one query only and improve performance
-func (s *service) DeleteUser(u *customer.User) error {
+func (s *service) DeleteUser(user *customer.User) error {
 	db := s.dbClient.Conn()
 
 	// delete all corporations credentials
-	if _, err := db.Model((*customer.CorporationCredentials)(nil)).Where("user_id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
-		return fmt.Errorf("failed deleting housing corporation credentials for %s: %w", u.Email, err)
+	if _, err := db.Model((*customer.CorporationCredentials)(nil)).Where("user_id = ?", user.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing corporation credentials for %s: %w", user.Email, err)
 	}
 
 	// delete housing preferences
-	if _, err := db.Model((*customer.HousingPreferencesCity)(nil)).Where("housing_preferences_id = ?", u.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
-		return fmt.Errorf("failed deleting housing preferences cities for %s: %w", u.Email, err)
+	if _, err := db.Model((*customer.HousingPreferencesCity)(nil)).Where("housing_preferences_id = ?", user.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences cities for %s: %w", user.Email, err)
 	}
 
-	if _, err := db.Model((*customer.HousingPreferencesCityDistrict)(nil)).Where("housing_preferences_id = ?", u.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
-		return fmt.Errorf("failed deleting housing preferences cities districts for %s: %w", u.Email, err)
+	if _, err := db.Model((*customer.HousingPreferencesCityDistrict)(nil)).Where("housing_preferences_id = ?", user.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences cities districts for %s: %w", user.Email, err)
 	}
 
-	if _, err := db.Model((*customer.HousingPreferencesHousingType)(nil)).Where("housing_preferences_id = ?", u.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
-		return fmt.Errorf("failed deleting housing preferences housing type for %s: %w", u.Email, err)
+	if _, err := db.Model((*customer.HousingPreferencesHousingType)(nil)).Where("housing_preferences_id = ?", user.HousingPreferences.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences housing type for %s: %w", user.Email, err)
 	}
 
-	if _, err := db.Model((*customer.HousingPreferences)(nil)).Where("user_id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
-		return fmt.Errorf("failed deleting housing preferences cities for %s: %w", u.Email, err)
+	if _, err := db.Model((*customer.HousingPreferences)(nil)).Where("user_id = ?", user.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences cities for %s: %w", user.Email, err)
 	}
 
-	if _, err := db.Model((*customer.HousingPreferencesMatch)(nil)).Where("user_id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
-		return fmt.Errorf("failed deleting housing preferences match for %s: %w", u.Email, err)
+	if _, err := db.Model((*customer.HousingPreferencesMatch)(nil)).Where("user_id = ?", user.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed deleting housing preferences match for %s: %w", user.Email, err)
 	}
 
 	// delete user
-	if _, err := db.Model((*customer.UserPlan)(nil)).Where("user_id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
-		return fmt.Errorf("failed delete user plan for %s: %w", u.Email, err)
+	if _, err := db.Model((*customer.UserPlan)(nil)).Where("user_id = ?", user.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed delete user plan for %s: %w", user.Email, err)
 	}
 
-	if _, err := db.Model((*customer.User)(nil)).Where("id = ?", u.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
-		return fmt.Errorf("failed delete user for %s: %w", u.Email, err)
+	if _, err := db.Model((*customer.User)(nil)).Where("id = ?", user.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
+		return fmt.Errorf("failed delete user for %s: %w", user.Email, err)
 	}
 
 	return nil

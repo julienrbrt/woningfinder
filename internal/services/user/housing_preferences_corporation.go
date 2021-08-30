@@ -8,8 +8,8 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
-func (s *service) GetHousingPreferencesMatchingCorporation(u *customer.User) ([]corporation.Corporation, error) {
-	housingPreferences, err := s.GetHousingPreferences(u)
+func (s *service) GetHousingPreferencesMatchingCorporation(user *customer.User) ([]corporation.Corporation, error) {
+	housingPreferences, err := s.GetHousingPreferences(user)
 	if err != nil {
 		return nil, fmt.Errorf("error when getting matching corporations: %w", err)
 	}

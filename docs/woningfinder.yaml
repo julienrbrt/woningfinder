@@ -87,11 +87,11 @@ envs:
   - key: CRYPTOCOM_API_KEY
     scope: RUN_AND_BUILD_TIME
     type: SECRET
-    value: EV[1:uN2to3aedgps3vp+rjfAe0MdnNau205b:ftxjzmQAFjG1r9uEJg6JCAE5zDnKhdGP4bm6qNqfPzxorMhnTSC4Bxt7M/81m9Jc]
+    value: EV[1:dUNg7FV87DkROif7dBgcwH55NgAcZ3BF:Kk5t8cWkSvb9Q7rs3bEW3GpdIbqPsEqaFh2F5xuh7iowVkZh+58q6W6aQjnpOAbH]
   - key: CRYPTOCOM_WEBHOOK_SIGNING_KEY
     scope: RUN_AND_BUILD_TIME
     type: SECRET
-    value: EV[1:OSzL9jrfFYjFY59/5GNow+8mVJsnggvb:l58LDMf8CcZXM9EhfwbNoOClK+NFc/NUxSPgQXHezEpawkDGTBRyi0koPvFH2lUUq4K2AI+Iz2HTH1y5]
+    value: EV[1:1yMZIQy+N77ggGD5Jc8aJswelmQnfzLC:azAlZ+KZde1dG17CiIp4oimc/7UGGgFwaYoz8/TX+EmuFo+T0DX18a8B++ir71YXNb/N3XpRKDFGHdF2]
 jobs:
   - alerts:
       - operator: GREATER_THAN
