@@ -1,137 +1,170 @@
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_LIVE
+  - rule: DEPLOYMENT_LIVE
+  - rule: DOMAIN_FAILED
 domains:
-- domain: woningfinder.nl
-  type: PRIMARY
-  zone: woningfinder.nl
-- domain: www.woningfinder.nl
-  type: ALIAS
-  zone: woningfinder.nl
+  - domain: woningfinder.nl
+    type: PRIMARY
+    zone: woningfinder.nl
+  - domain: www.woningfinder.nl
+    type: ALIAS
+    zone: woningfinder.nl
 envs:
-- key: APP_NAME
-  scope: RUN_AND_BUILD_TIME
-  value: WoningFinder
-- key: APP_PORT
-  scope: RUN_AND_BUILD_TIME
-  value: "8080"
-- key: APP_DEBUG
-  scope: RUN_AND_BUILD_TIME
-  value: "false"
-- key: JWT_SECRET
-  scope: RUN_AND_BUILD_TIME
-  value: ioreh98r34fujceirjgeoijgjeujhgoi732yevjn209pr2kwjknewl02
-- key: AES_SECRET
-  scope: RUN_AND_BUILD_TIME
-  value: 3b01eb9846cc2136be82c0b9d736a5f8cb5ed19bcd733815013b428f9cc90c5e
-- key: PSQL_HOST
-  scope: RUN_AND_BUILD_TIME
-  value: db-postgresql-ams3-super-quick-snail-do-user-8168724-0.b.db.ondigitalocean.com
-- key: PSQL_PORT
-  scope: RUN_AND_BUILD_TIME
-  value: "25060"
-- key: PSQL_NAME
-  scope: RUN_AND_BUILD_TIME
-  value: woningfinder
-- key: PSQL_USERNAME
-  scope: RUN_AND_BUILD_TIME
-  type: SECRET
-  value: EV[1:RM2dEJyBrwFObe0rJkxqo9BdHSwtynFW:iKhZhhvnkb9fVgKiYKge3xIwFL2i7Yc=]
-- key: PSQL_PASSWORD
-  scope: RUN_AND_BUILD_TIME
-  type: SECRET
-  value: EV[1:qbcJCave5JmWYsjyQ/sjX/AL4WCA5yI+:yM1joxFILvybJm+gZ5CWJI/Y3MuSWUzF9+vm1ZRBT3c=]
-- key: REDIS_HOST
-  scope: RUN_AND_BUILD_TIME
-  value: db-redis-ams3-dynamic-giraffe-do-user-8168724-0.b.db.ondigitalocean.com
-- key: REDIS_PORT
-  scope: RUN_AND_BUILD_TIME
-  value: "25061"
-- key: REDIS_PASSWORD
-  scope: RUN_AND_BUILD_TIME
-  type: SECRET
-  value: EV[1:8fHdlIItxhJJnY0wQaNXrs/thOTeYZwr:6z56ZeAO4R+Rrwp8hLes/TnnUowcYXksJUTNXy9obqA=]
-- key: SENTRY_DSN
-  scope: RUN_AND_BUILD_TIME
-  value: https://5e1d3d3280b8462bb170b8cb04227c6a@o496598.ingest.sentry.io/5571559
-- key: MAPBOX_API_KEY
-  scope: RUN_AND_BUILD_TIME
-  type: SECRET
-  value: EV[1:5UOPhoYyocEPlDtXzKaRQGiSd8Hhs8Io:84zgfM9uH+yB/rWQpqgG6K5/4zgwkJBN8OGtqM7XYUblZCce/I+jPluN9t4a6MBoeLip7HjA6l3977pC5IKOH17PLBQFz41vuTdJLqbbca5tOQRLjRrh9WmcVsqMuAXue/DlVIBqmwMcAqynaQ==]
-- key: EMAIL_ADDRESS
-  scope: RUN_AND_BUILD_TIME
-  value: contact@woningfinder.nl
-- key: EMAIL_PASSWORD
-  scope: RUN_AND_BUILD_TIME
-  type: SECRET
-  value: EV[1:arWBP+2uUHy9VdFhwf+xuooH9jaFN6wf:uQZ4IwAYk9p6CQ3bJUGAIleCsmDrWN/KmvLuNVV8HW59W/X9+UskwrNUw0tlH/A=]
-- key: EMAIL_SMTP_ADDRESS
-  scope: RUN_AND_BUILD_TIME
-  value: mail.gandi.net
-- key: EMAIL_SMTP_PORT
-  scope: RUN_AND_BUILD_TIME
-  value: "587"
-- key: STRIPE_PUBLISHABLE_KEY
-  scope: RUN_AND_BUILD_TIME
-  value: pk_live_51HkWn4HWufZqidI1Z4GzL62vF8bmW3mCxRQxyLU45Mk04jaSoSXer3AV8LsNnivKp0LZmy9Jr4s7o65z1qoSjHzz00ZCs4FbMu
-- key: STRIPE_API_KEY
-  scope: RUN_AND_BUILD_TIME
-  type: SECRET
-  value: EV[1:cY3QW//DBV3sshG8w24CvNh3k5XMRmMx:S35/u7MD+lvv38++vLL3wA9zZ1X0N2+8OD3uxqMU+C7VnzypfXQb3S7tjkD3uQ+Mr0jzwZrOcs5bYH46zDmB4aql5heRM+CIVplOmf74tkIEUtWvQzuYAIHiTp6XNJhtgP2fpKgu1VV+nt3LzKvJocMaF3lTQAZbuqld]
-- key: STRIPE_WEBHOOK_SIGNING_KEY
-  scope: RUN_AND_BUILD_TIME
-  type: SECRET
-  value: EV[1:7lD/Fzd9pKs6wH0lOg/fWeuajnsATIpP:GJHUFMZL24tYyV56wAlaShoDNH0h1XfQ4l28uA9mnWJQAn9OqfJUuvuFdoSbS1VZDl53BdkH]
+  - key: APP_NAME
+    scope: RUN_AND_BUILD_TIME
+    value: WoningFinder
+  - key: APP_PORT
+    scope: RUN_AND_BUILD_TIME
+    value: "8080"
+  - key: APP_DEBUG
+    scope: RUN_AND_BUILD_TIME
+    value: "false"
+  - key: JWT_SECRET
+    scope: RUN_AND_BUILD_TIME
+    value: ioreh98r34fujceirjgeoijgjeujhgoi732yevjn209pr2kwjknewl02
+  - key: AES_SECRET
+    scope: RUN_AND_BUILD_TIME
+    value: 3b01eb9846cc2136be82c0b9d736a5f8cb5ed19bcd733815013b428f9cc90c5e
+  - key: PSQL_HOST
+    scope: RUN_AND_BUILD_TIME
+    value: db-postgresql-ams3-super-quick-snail-do-user-8168724-0.b.db.ondigitalocean.com
+  - key: PSQL_PORT
+    scope: RUN_AND_BUILD_TIME
+    value: "25060"
+  - key: PSQL_NAME
+    scope: RUN_AND_BUILD_TIME
+    value: woningfinder
+  - key: PSQL_USERNAME
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:RM2dEJyBrwFObe0rJkxqo9BdHSwtynFW:iKhZhhvnkb9fVgKiYKge3xIwFL2i7Yc=]
+  - key: PSQL_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:qbcJCave5JmWYsjyQ/sjX/AL4WCA5yI+:yM1joxFILvybJm+gZ5CWJI/Y3MuSWUzF9+vm1ZRBT3c=]
+  - key: REDIS_HOST
+    scope: RUN_AND_BUILD_TIME
+    value: db-redis-ams3-dynamic-giraffe-do-user-8168724-0.b.db.ondigitalocean.com
+  - key: REDIS_PORT
+    scope: RUN_AND_BUILD_TIME
+    value: "25061"
+  - key: REDIS_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:8fHdlIItxhJJnY0wQaNXrs/thOTeYZwr:6z56ZeAO4R+Rrwp8hLes/TnnUowcYXksJUTNXy9obqA=]
+  - key: SENTRY_DSN
+    scope: RUN_AND_BUILD_TIME
+    value: https://5e1d3d3280b8462bb170b8cb04227c6a@o496598.ingest.sentry.io/5571559
+  - key: MAPBOX_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:5UOPhoYyocEPlDtXzKaRQGiSd8Hhs8Io:84zgfM9uH+yB/rWQpqgG6K5/4zgwkJBN8OGtqM7XYUblZCce/I+jPluN9t4a6MBoeLip7HjA6l3977pC5IKOH17PLBQFz41vuTdJLqbbca5tOQRLjRrh9WmcVsqMuAXue/DlVIBqmwMcAqynaQ==]
+  - key: EMAIL_ADDRESS
+    scope: RUN_AND_BUILD_TIME
+    value: contact@woningfinder.nl
+  - key: EMAIL_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:arWBP+2uUHy9VdFhwf+xuooH9jaFN6wf:uQZ4IwAYk9p6CQ3bJUGAIleCsmDrWN/KmvLuNVV8HW59W/X9+UskwrNUw0tlH/A=]
+  - key: EMAIL_SMTP_ADDRESS
+    scope: RUN_AND_BUILD_TIME
+    value: mail.gandi.net
+  - key: EMAIL_SMTP_PORT
+    scope: RUN_AND_BUILD_TIME
+    value: "587"
+  - key: STRIPE_PUBLISHABLE_KEY
+    scope: RUN_AND_BUILD_TIME
+    value: pk_live_51HkWn4HWufZqidI1Z4GzL62vF8bmW3mCxRQxyLU45Mk04jaSoSXer3AV8LsNnivKp0LZmy9Jr4s7o65z1qoSjHzz00ZCs4FbMu
+  - key: STRIPE_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:cY3QW//DBV3sshG8w24CvNh3k5XMRmMx:S35/u7MD+lvv38++vLL3wA9zZ1X0N2+8OD3uxqMU+C7VnzypfXQb3S7tjkD3uQ+Mr0jzwZrOcs5bYH46zDmB4aql5heRM+CIVplOmf74tkIEUtWvQzuYAIHiTp6XNJhtgP2fpKgu1VV+nt3LzKvJocMaF3lTQAZbuqld]
+  - key: STRIPE_WEBHOOK_SIGNING_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:7lD/Fzd9pKs6wH0lOg/fWeuajnsATIpP:GJHUFMZL24tYyV56wAlaShoDNH0h1XfQ4l28uA9mnWJQAn9OqfJUuvuFdoSbS1VZDl53BdkH]
+  - key: CRYPTOCOM_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:uN2to3aedgps3vp+rjfAe0MdnNau205b:ftxjzmQAFjG1r9uEJg6JCAE5zDnKhdGP4bm6qNqfPzxorMhnTSC4Bxt7M/81m9Jc]
+  - key: CRYPTOCOM_WEBHOOK_SIGNING_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:OSzL9jrfFYjFY59/5GNow+8mVJsnggvb:l58LDMf8CcZXM9EhfwbNoOClK+NFc/NUxSPgQXHezEpawkDGTBRyi0koPvFH2lUUq4K2AI+Iz2HTH1y5]
 jobs:
-- environment_slug: go
-  github:
-    branch: main
-    deploy_on_push: true
-    repo: WoningFinder/woningfinder
-  instance_count: 1
-  instance_size_slug: professional-xs
-  kind: PRE_DEPLOY
-  name: woningfinder-db-migration
-  run_command: bin/db-migrator
+  - alerts:
+      - operator: GREATER_THAN
+        rule: CPU_UTILIZATION
+        value: 75
+        window: TEN_MINUTES
+    environment_slug: go
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: WoningFinder/woningfinder
+    instance_count: 1
+    instance_size_slug: basic-xs
+    kind: PRE_DEPLOY
+    name: woningfinder-db-migration
+    run_command: bin/db-migrator
 name: woningfinder
 region: ams
 services:
-- environment_slug: go
-  github:
-    branch: main
-    deploy_on_push: true
-    repo: WoningFinder/woningfinder
-  http_port: 8080
-  instance_count: 1
-  instance_size_slug: professional-xs
-  name: woningfinder
-  routes:
-  - path: /api
-  run_command: ./bin/woningfinder-api
+  - alerts:
+      - operator: GREATER_THAN
+        rule: CPU_UTILIZATION
+        value: 75
+        window: TEN_MINUTES
+    environment_slug: go
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: WoningFinder/woningfinder
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xs
+    name: woningfinder
+    routes:
+      - path: /api
+    run_command: ./bin/woningfinder-api
 static_sites:
-- build_command: npm run generate
-  environment_slug: node-js
-  github:
-    branch: main
-    deploy_on_push: true
-    repo: WoningFinder/woningfinder.nl
-  name: woningfinder-nl
-  output_dir: dist
-  routes:
-  - path: /
+  - build_command: npm run generate
+    environment_slug: node-js
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: WoningFinder/woningfinder.nl
+    name: woningfinder-nl
+    output_dir: dist
+    routes:
+      - path: /
 workers:
-- environment_slug: go
-  github:
-    branch: main
-    deploy_on_push: true
-    repo: WoningFinder/woningfinder
-  instance_count: 1
-  instance_size_slug: professional-xs
-  name: woningfinder-housing-matcher
-  run_command: bin/housing-matcher
-- environment_slug: go
-  github:
-    branch: main
-    deploy_on_push: true
-    repo: WoningFinder/woningfinder
-  instance_count: 1
-  instance_size_slug: professional-xs
-  name: woningfinder-orchestrator
-  run_command: bin/orchestrator
+  - alerts:
+      - operator: GREATER_THAN
+        rule: CPU_UTILIZATION
+        value: 75
+        window: TEN_MINUTES
+    environment_slug: go
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: WoningFinder/woningfinder
+    instance_count: 1
+    instance_size_slug: basic-xs
+    name: woningfinder-housing-matcher
+    run_command: bin/housing-matcher
+  - alerts:
+      - operator: GREATER_THAN
+        rule: CPU_UTILIZATION
+        value: 75
+        window: TEN_MINUTES
+    environment_slug: go
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: WoningFinder/woningfinder
+    instance_count: 1
+    instance_size_slug: basic-xs
+    name: woningfinder-orchestrator
+    run_command: bin/orchestrator

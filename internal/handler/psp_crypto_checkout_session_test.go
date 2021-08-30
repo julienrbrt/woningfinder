@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -16,14 +17,14 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
-func Test_CreateStripeCheckoutSession_ErrAPIKeyMissing(t *testing.T) {
+func Test_CreateCryptoCheckoutSession_Error(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, errors.New("foo"))
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// create request
@@ -33,7 +34,7 @@ func Test_CreateStripeCheckoutSession_ErrAPIKeyMissing(t *testing.T) {
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createStripeCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
+		handler.createCryptoCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
 	})
 
 	// server request
@@ -43,18 +44,20 @@ func Test_CreateStripeCheckoutSession_ErrAPIKeyMissing(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	a.Contains(rr.Body.String(), "error while creating stripe new checkout session")
+	a.Contains(rr.Body.String(), "error while creating crypto.com new checkout session")
 }
 
-func Test_CreateStripeCheckoutSession(t *testing.T) {
+func Test_CreateCryptoCheckoutSession(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true), cryptoMock}
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{
+		PaymentURL: "https://example.org/foo",
+	}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)
@@ -63,7 +66,7 @@ func Test_CreateStripeCheckoutSession(t *testing.T) {
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createStripeCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
+		handler.createCryptoCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
 	})
 
 	// server request
@@ -76,5 +79,5 @@ func Test_CreateStripeCheckoutSession(t *testing.T) {
 	var response paymentProcessorResponse
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 
-	a.NotEmpty(response.StripeSessionID)
+	a.NotEmpty(response.CryptoPaymentURL)
 }

@@ -76,7 +76,7 @@ The information returned by Stripe must be the user email address and the paymen
 Our webhook then update the plan information of the concerned user.
 
 More [documentation on Stripe webhook](https://stripe.com/docs/webhooks/test).
-More [documentation on Crypto.com webhook](https://pay-docs.crypto.com).
+More [documentation on Crypto.com webhook](https://pay-docs.crypto.com/#integration-guides-checkout-page-redirection).
 
 ## Housing-Finder
 

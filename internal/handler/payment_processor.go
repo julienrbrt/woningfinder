@@ -16,11 +16,19 @@ type PaymentMethod string
 const (
 	PaymentMethodCrypto = "crypto"
 	PaymentMethodStripe = "stripe"
+
+	successURL = "https://woningfinder.nl/login?thanks=true"
+	cancelURL  = "https://woningfinder.nl/start/voltooien?cancelled=true"
 )
 
 type paymentProcessorRequest struct {
 	Email  string        `json:"email"`
 	Method PaymentMethod `json:"method"`
+}
+
+type paymentProcessorResponse struct {
+	StripeSessionID  string `json:"stripe_session_id"`
+	CryptoPaymentURL string `json:"crypto_payment_url"`
 }
 
 // Bind permits go-chi router to verify the user input and marshal it
@@ -56,7 +64,7 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user.Plan.IsPaid() {
-		render.Render(w, r, handlerErrors.ErrorRenderer(errors.New("user already paid")))
+		render.Render(w, r, handlerErrors.ErrorRenderer(errors.New("user has already already paid")))
 		return
 	}
 
@@ -65,8 +73,9 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 	switch request.Method {
 	case PaymentMethodStripe:
 		// process payment by creating a Stripe session ID
-		h.createCheckoutSession(request.Email, plan, w, r)
+		h.createStripeCheckoutSession(request.Email, plan, w, r)
 	case PaymentMethodCrypto:
-		// TODO in #73
+		// process payment by creating a Crypto.com payment ID
+		h.createCryptoCheckoutSession(request.Email, plan, w, r)
 	}
 }

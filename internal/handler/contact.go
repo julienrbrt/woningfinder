@@ -1,28 +1,15 @@
 package handler
 
 import (
-	"bytes"
 	_ "embed"
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/go-chi/render"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/util"
 )
-
-const contactForm = `Hi,
-
-There is a new message for you from the WoningFinder contact form:
-	
-- Name: {{ .Name }}
-- Email: {{ .Email }}
-- Message: {{ .Message }}
-	
-Regards,
-Team WoningFinder`
 
 type contactFormRequest struct {
 	Name     string `json:"name"`
@@ -68,18 +55,8 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// create body
-	tpl := template.Must(template.New("contact").Parse(contactForm))
-	body := &bytes.Buffer{}
-	if err := tpl.Execute(body, message); err != nil {
-		errorMsg := fmt.Errorf("failed creating message: please try again")
-		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
-		return
-	}
-
-	// send mail
-	if err := h.emailClient.Send("WoningFinder Contact Submission", body.String(), "contact@woningfinder.nl"); err != nil {
+	// send contact message to woningfinder
+	if err := h.emailService.ContactFormSubmission(message.Name, message.Email, message.Message); err != nil {
 		errorMsg := fmt.Errorf("failed sending message: please try again")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
