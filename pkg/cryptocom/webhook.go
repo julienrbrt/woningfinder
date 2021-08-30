@@ -44,5 +44,5 @@ func (c *client) VerifyEvent(signatureHeader, eventRaw string) bool {
 	h := hmac.New(sha256.New, []byte(c.webookSigningKey))
 	h.Write([]byte(fmt.Sprintf("%s.%s", parts[timestampKey], eventRaw)))
 
-	return hex.EncodeToString(h.Sum(nil)) == signatureHeader
+	return hex.EncodeToString(h.Sum(nil)) == parts[signatureKey]
 }
