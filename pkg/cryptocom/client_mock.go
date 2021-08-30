@@ -16,3 +16,7 @@ func NewClientMock(output CryptoCheckoutSession, err error) Client {
 func (m *mockClient) CreatePayment(session CryptoCheckoutSession) (*CryptoCheckoutSession, error) {
 	return &m.output, m.err
 }
+
+func (m *mockClient) VerifyEvent(signatureHeader, eventRaw string) bool {
+	return true
+}

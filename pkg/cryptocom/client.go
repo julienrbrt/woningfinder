@@ -12,6 +12,7 @@ var APIEndpoint = url.URL{Scheme: "https", Host: "pay.crypto.com", Path: "/api/p
 // Client for Crypto.com Pay
 type Client interface {
 	CreatePayment(session CryptoCheckoutSession) (*CryptoCheckoutSession, error)
+	VerifyEvent(signatureHeader, eventRaw string) bool
 }
 
 type client struct {
