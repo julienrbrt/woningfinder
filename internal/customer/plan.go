@@ -23,7 +23,7 @@ type Plan struct {
 // PlanBasis is the plan for social houses
 var PlanBasis = Plan{
 	Name:          "basis",
-	Price:         10,
+	Price:         12,
 	MaximumIncome: MaximumIncomeSocialHouse,
 }
 
