@@ -9,7 +9,7 @@
       "method": "post",
       "params": {
         "receipt_email": "julien@rbrt.fr",
-        "amount": 3500,
+        "amount": 2500,
         "confirm": "true",
         "currency": "usd",
         "description": "(created by Stripe CLI)",
