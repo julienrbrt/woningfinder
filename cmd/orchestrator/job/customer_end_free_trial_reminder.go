@@ -22,28 +22,18 @@ func (j *Jobs) SendCustomerEndFreeTrialReminder(c *cron.Cron) {
 	c.AddJob(spec, cron.FuncJob(func() {
 		j.logger.Sugar().Info("send-customer-end-free-trial-reminder job started")
 
+		var users []*customer.User
 		// get all users without paid account
-		freeTrialPlans := j.dbClient.Conn().
-			Model((*customer.UserPlan)(nil)).
-			Where("free_trial_started_at IS NOT NULL AND purchased_at IS NULL").
-			ColumnExpr("user_id")
-
-		var users []customer.User
 		err := j.dbClient.Conn().
 			Model(&users).
-			Where("id IN (?)", freeTrialPlans).
+			Join("INNER JOIN user_plans up ON id = up.user_id").
+			Where("free_trial_started_at IS NOT NULL AND purchased_at IS NULL").
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
 			j.logger.Sugar().Errorf("failed getting users to check free trial: %w", err)
 		}
 
-		for _, u := range users {
-			user, err := j.userService.GetUser(&u)
-			if err != nil {
-				j.logger.Sugar().Errorf("failed getting user %s to check free trial: %w", user.Email, err)
-				continue
-			}
-
+		for _, user := range users {
 			// skip paid users and users with valid free trial
 			if user.Plan.IsValid() {
 				continue
@@ -73,7 +63,7 @@ func (j *Jobs) SendCustomerEndFreeTrialReminder(c *cron.Cron) {
 
 func (j *Jobs) deleteExpiredFreeTrialUsers(user *customer.User) error {
 	if time.Until(user.Plan.CreatedAt.Add(maxFreeTrialExpiredTime)) <= 0 {
-		if err := j.userService.DeleteUser(user); err != nil {
+		if err := j.userService.DeleteUser(user.Email); err != nil {
 			return fmt.Errorf("failed deleting user %s: %w", user.Email, err)
 		}
 	}

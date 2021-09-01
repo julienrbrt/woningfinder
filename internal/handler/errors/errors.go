@@ -26,7 +26,7 @@ func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func ErrorRenderer(err error) *ErrorResponse {
+func BadRequestErrorRenderer(err error) *ErrorResponse {
 	return &ErrorResponse{
 		Err:        err,
 		StatusCode: http.StatusBadRequest,

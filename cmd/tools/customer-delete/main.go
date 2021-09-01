@@ -6,7 +6,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
-	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
@@ -29,7 +28,7 @@ func main() {
 
 	// read email to delete from arguments
 	if len(os.Args) != 2 {
-		logger.Sugar().Fatal("customer-delete must have an user email as (only) argument\n")
+		logger.Sugar().Fatal("user-delete must have an user email as (only) argument\n")
 	}
 	email := os.Args[1]
 	if !util.IsEmailValid(email) {
@@ -41,16 +40,10 @@ func main() {
 	corporationService := corporation.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 
-	// get user
-	user, err := userService.GetUser(&customer.User{Email: email})
-	if err != nil {
-		logger.Sugar().Fatal(err)
-	}
-
 	// delete user
-	if err := userService.DeleteUser(user); err != nil {
+	if err := userService.DeleteUser(email); err != nil {
 		logger.Sugar().Fatal(err)
 	}
 
-	logger.Sugar().Infof("customer %s (%s) successfully deleted 😢\n", user.Name, user.Email)
+	logger.Sugar().Infof("user %s successfully deleted 😢\n", email)
 }

@@ -52,19 +52,19 @@ func (*paymentProcessorRequest) Render(w http.ResponseWriter, r *http.Request) e
 func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 	request := &paymentProcessorRequest{}
 	if err := render.Bind(r, request); err != nil {
-		render.Render(w, r, handlerErrors.ErrorRenderer(err))
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(err))
 		return
 	}
 
 	// check if user exists
-	user, err := h.userService.GetUser(&customer.User{Email: request.Email})
+	user, err := h.userService.GetUser(request.Email)
 	if err != nil {
 		render.Render(w, r, handlerErrors.ErrNotFound)
 		return
 	}
 
 	if user.Plan.IsPaid() {
-		render.Render(w, r, handlerErrors.ErrorRenderer(errors.New("user has already already paid")))
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(errors.New("user has already already paid")))
 		return
 	}
 

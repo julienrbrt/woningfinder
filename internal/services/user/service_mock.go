@@ -22,19 +22,19 @@ func (s *serviceMock) CreateUser(_ *customer.User) error {
 	return s.err
 }
 
-func (s *serviceMock) ConfirmUser(email string) (*customer.User, error) {
-	return s.GetUser(&customer.User{Email: email})
+func (s *serviceMock) ConfirmUser(email string) error {
+	return s.err
 }
 
 func (s *serviceMock) ConfirmPayment(email string) (*customer.User, error) {
-	return s.GetUser(&customer.User{Email: email})
+	return s.GetUser(email)
 }
 
-func (s *serviceMock) GetUser(search *customer.User) (*customer.User, error) {
+func (s *serviceMock) GetUser(email string) (*customer.User, error) {
 	return &customer.User{
-		ID:           search.ID,
+		ID:           42,
 		Name:         "Test",
-		Email:        "test@example.org",
+		Email:        email,
 		BirthYear:    1990,
 		YearlyIncome: 30000,
 		FamilySize:   3,
@@ -58,15 +58,15 @@ func (s *serviceMock) GetUser(search *customer.User) (*customer.User, error) {
 	}, s.err
 }
 
-func (s *serviceMock) UpdateHousingPreferences(user *customer.User, housingPreferences customer.HousingPreferences) error {
+func (s *serviceMock) UpdateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error {
 	return s.err
 }
 
-func (s *serviceMock) DeleteHousingPreferences(user *customer.User) error {
+func (s *serviceMock) DeleteHousingPreferences(userID uint) error {
 	return s.err
 }
 
-func (s *serviceMock) GetHousingPreferencesMatchingCorporation(_ *customer.User) ([]corporation.Corporation, error) {
+func (s *serviceMock) GetHousingPreferencesMatchingCorporation(userID uint) ([]corporation.Corporation, error) {
 	if s.err != nil {
 		return nil, s.err
 	}
@@ -74,7 +74,7 @@ func (s *serviceMock) GetHousingPreferencesMatchingCorporation(_ *customer.User)
 	return []corporation.Corporation{{Name: "De Woonplaats", URL: "https://dewoonplaats.nl"}}, nil
 }
 
-func (s *serviceMock) CreateCorporationCredentials(_ uint, _ customer.CorporationCredentials) error {
+func (s *serviceMock) CreateCorporationCredentials(userID uint, creds customer.CorporationCredentials) error {
 	return s.err
 }
 

@@ -12,31 +12,32 @@ import (
 // Service permits to handle the persistence of an user
 type Service interface {
 	// Users
-	CreateUser(u *customer.User) error
-	GetUser(search *customer.User) (*customer.User, error)
-	DeleteUser(u *customer.User) error
-	ConfirmUser(email string) (*customer.User, error)
+	CreateUser(user *customer.User) error
+	GetUser(email string) (*customer.User, error)
+	DeleteUser(email string) error
+	ConfirmUser(email string) error
 	ConfirmPayment(email string) (*customer.User, error)
-	GetWeeklyUpdateUsers() ([]*customer.User, error)
 
-	// Waiting List
-	CreateWaitingList(w *customer.WaitingList) error
+	GetUsersWithGivenCorporationCredentials(corporationName string) ([]customer.User, error)
+	GetUsersWithHousingPreferencesMatch() ([]customer.User, error)
 
 	// Housing Preferences
-	CreateHousingPreferences(user *customer.User, preferences customer.HousingPreferences) error
-	GetHousingPreferences(user *customer.User) (customer.HousingPreferences, error)
-	UpdateHousingPreferences(user *customer.User, housingPreferences customer.HousingPreferences) error
-	DeleteHousingPreferences(user *customer.User) error
-	GetHousingPreferencesMatchingCorporation(user *customer.User) ([]corporation.Corporation, error)
-	CreateHousingPreferencesMatch(user *customer.User, offer corporation.Offer, corporationName string) error
+	CreateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error
+	GetHousingPreferences(userID uint) (customer.HousingPreferences, error)
+	UpdateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error
+	DeleteHousingPreferences(userID uint) error
+	GetHousingPreferencesMatchingCorporation(userID uint) ([]corporation.Corporation, error)
+	CreateHousingPreferencesMatch(userID uint, offer corporation.Offer, corporationName string) error
 
 	// Corporation Credentials
 	CreateCorporationCredentials(userID uint, credentials customer.CorporationCredentials) error
 	GetCorporationCredentials(userID uint, corporationName string) (*customer.CorporationCredentials, error)
-	GetAllCorporationCredentials(corporationName string) ([]customer.CorporationCredentials, error)
 	DeleteCorporationCredentials(userID uint, corporationName string) error
-	DecryptCredentials(credentials *customer.CorporationCredentials) (*customer.CorporationCredentials, error)
 	UpdateCorporationCredentialsFailureCount(userID uint, corporationName string, failureCount int) error
+	DecryptCredentials(credentials *customer.CorporationCredentials) (*customer.CorporationCredentials, error)
+
+	// Waiting list
+	CreateWaitingList(w *customer.WaitingList) error
 }
 
 type service struct {

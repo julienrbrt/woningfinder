@@ -25,16 +25,12 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 	c.AddJob(spec, cron.FuncJob(func() {
 		j.logger.Sugar().Info("customer-unconfirmed-cleanup job started")
 
-		var users []customer.User
+		var users []*customer.User
 		// delete unconfirmed account
-		usersPlanQuery := j.dbClient.Conn().
-			Model((*customer.UserPlan)(nil)).
-			Where("free_trial_started_at IS NULL").
-			ColumnExpr("user_id")
-
 		err := j.dbClient.Conn().
 			Model(&users).
-			Where("id IN (?)", usersPlanQuery).
+			Join("INNER JOIN user_plans up ON id = up.user_id").
+			Where("free_trial_started_at IS NULL").
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
 			j.logger.Sugar().Errorf("failed getting users get unconfirmed users: %w", err)
@@ -45,13 +41,13 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 			switch {
 			case time.Until(user.CreatedAt.Add(unconfirmedReminderTime)) <= 0:
 				// check if reminder already sent
-				uuid := buildCustomerUnconfirmedEmailReminderUUID(&user)
+				uuid := buildCustomerUnconfirmedEmailReminderUUID(user)
 				if j.isAlreadySent(uuid) {
 					continue
 				}
 
 				// send reminder
-				if err := j.emailService.SendEmailConfirmationReminder(&user); err != nil {
+				if err := j.emailService.SendEmailConfirmationReminder(user); err != nil {
 					j.logger.Sugar().Error("error sending %s email confirmation reminder: %w", user.Email, err)
 				}
 
@@ -60,13 +56,7 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 
 			// delete only user that did not paid since 48h
 			case time.Until(user.CreatedAt.Add(maxUnconfirmedTime)) <= 0:
-				user, err := j.userService.GetUser(&user)
-				if err != nil {
-					j.logger.Sugar().Errorf("failed getting user %s for deleting: %w", user.Email, err)
-
-				}
-
-				if err := j.userService.DeleteUser(user); err != nil {
+				if err := j.userService.DeleteUser(user.Email); err != nil {
 					j.logger.Sugar().Errorf("failed deleting user %s: %w", user.Email, err)
 				}
 			}
