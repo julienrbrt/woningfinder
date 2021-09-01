@@ -26,8 +26,9 @@ func (j *Jobs) SendCustomerEndFreeTrialReminder(c *cron.Cron) {
 		// get all users without paid account
 		err := j.dbClient.Conn().
 			Model(&users).
+			Relation("Plan").
 			Join("INNER JOIN user_plans up ON id = up.user_id").
-			Where("free_trial_started_at IS NOT NULL AND purchased_at IS NULL").
+			Where("up.free_trial_started_at IS NOT NULL AND up.purchased_at IS NULL").
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
 			j.logger.Sugar().Errorf("failed getting users to check free trial: %w", err)
