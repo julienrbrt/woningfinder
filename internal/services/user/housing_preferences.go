@@ -32,7 +32,7 @@ func (s *service) CreateHousingPreferences(userID uint, preferences *customer.Ho
 	// assign id
 	preferences.UserID = userID
 	// create housing preferences
-	if _, err := db.Model(&preferences).Insert(); err != nil {
+	if _, err := db.Model(preferences).Insert(); err != nil {
 		return fmt.Errorf("failing adding housing preferences for userID %d: %w", userID, err)
 	}
 
