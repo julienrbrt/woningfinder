@@ -18,15 +18,15 @@ type Service interface {
 	ConfirmUser(email string) error
 	ConfirmPayment(email string) (*customer.User, error)
 
-	GetUsersWithGivenCorporationCredentials(corporationName string) ([]customer.User, error)
-	GetUsersWithHousingPreferencesMatch() ([]customer.User, error)
+	GetUsersWithGivenCorporationCredentials(corporationName string) ([]*customer.User, error)
+	GetUsersWithHousingPreferencesMatch() ([]*customer.User, error)
 
 	// Housing Preferences
 	CreateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error
 	GetHousingPreferences(userID uint) (customer.HousingPreferences, error)
 	UpdateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error
 	DeleteHousingPreferences(userID uint) error
-	GetHousingPreferencesMatchingCorporation(userID uint) ([]corporation.Corporation, error)
+	GetHousingPreferencesMatchingCorporation(userID uint) ([]*corporation.Corporation, error)
 	CreateHousingPreferencesMatch(userID uint, offer corporation.Offer, corporationName string) error
 
 	// Corporation Credentials

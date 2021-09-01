@@ -121,8 +121,8 @@ func (s *service) ConfirmPayment(email string) (*customer.User, error) {
 }
 
 // GetUsersWithGivenCorporationCredentials gets all the users with a given corporation credentials
-func (s *service) GetUsersWithGivenCorporationCredentials(corporationName string) ([]customer.User, error) {
-	var users []customer.User
+func (s *service) GetUsersWithGivenCorporationCredentials(corporationName string) ([]*customer.User, error) {
+	var users []*customer.User
 	if err := s.dbClient.Conn().
 		Model(&users).
 		Relation("Plan").
@@ -138,8 +138,8 @@ func (s *service) GetUsersWithGivenCorporationCredentials(corporationName string
 }
 
 // GetUsersWithHousingPreferencesMatch gets all reactions of paid user for the last week
-func (s *service) GetUsersWithHousingPreferencesMatch() ([]customer.User, error) {
-	var users []customer.User
+func (s *service) GetUsersWithHousingPreferencesMatch() ([]*customer.User, error) {
+	var users []*customer.User
 	if err := s.dbClient.Conn().
 		Model(&users).
 		Relation("Plan").

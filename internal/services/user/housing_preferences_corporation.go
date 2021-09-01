@@ -7,7 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
-func (s *service) GetHousingPreferencesMatchingCorporation(userID uint) ([]corporation.Corporation, error) {
+func (s *service) GetHousingPreferencesMatchingCorporation(userID uint) ([]*corporation.Corporation, error) {
 	matchingCities := s.dbClient.Conn().
 		Model((*customer.HousingPreferencesCity)(nil)).
 		Where("user_id = ?", userID).
@@ -23,7 +23,7 @@ func (s *service) GetHousingPreferencesMatchingCorporation(userID uint) ([]corpo
 		return nil, fmt.Errorf("error when getting matching corporations: %w", err)
 	}
 
-	var corporations []corporation.Corporation
+	var corporations []*corporation.Corporation
 	for _, c := range corporationsMatch {
 		// enriching corporation
 		corporation, err := s.corporationService.GetCorporation(c.CorporationName)
@@ -32,7 +32,7 @@ func (s *service) GetHousingPreferencesMatchingCorporation(userID uint) ([]corpo
 
 		}
 
-		corporations = append(corporations, *corporation)
+		corporations = append(corporations, corporation)
 	}
 
 	return corporations, nil

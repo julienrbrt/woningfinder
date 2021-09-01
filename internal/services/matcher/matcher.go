@@ -101,7 +101,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				// save that we've checked the offer for the user
 				s.storeReaction(uuid)
 			}
-		}(&wg, &user)
+		}(&wg, user)
 	}
 
 	// wait for all match

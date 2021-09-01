@@ -5,7 +5,7 @@ import "github.com/woningfinder/woningfinder/internal/corporation/city"
 type serviceMock struct {
 	Service
 
-	expectedMockGetCities []city.City
+	expectedMockGetCities []*city.City
 	err                   error
 }
 
@@ -13,14 +13,14 @@ type serviceMock struct {
 func NewServiceMock(err error) Service {
 	return &serviceMock{
 		err: err,
-		expectedMockGetCities: []city.City{
+		expectedMockGetCities: []*city.City{
 			{Name: "Enschede", District: map[string][]string{"Centrum": nil, "Noord": {"Roombeek"}}},
 			{Name: "Hengelo"},
 		},
 	}
 }
 
-func (s *serviceMock) GetCities() ([]city.City, error) {
+func (s *serviceMock) GetCities() ([]*city.City, error) {
 	if s.err != nil {
 		return nil, s.err
 	}

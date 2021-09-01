@@ -66,12 +66,12 @@ func (s *serviceMock) DeleteHousingPreferences(userID uint) error {
 	return s.err
 }
 
-func (s *serviceMock) GetHousingPreferencesMatchingCorporation(userID uint) ([]corporation.Corporation, error) {
+func (s *serviceMock) GetHousingPreferencesMatchingCorporation(userID uint) ([]*corporation.Corporation, error) {
 	if s.err != nil {
 		return nil, s.err
 	}
 
-	return []corporation.Corporation{{Name: "De Woonplaats", URL: "https://dewoonplaats.nl"}}, nil
+	return []*corporation.Corporation{{Name: "De Woonplaats", URL: "https://dewoonplaats.nl"}}, nil
 }
 
 func (s *serviceMock) CreateCorporationCredentials(userID uint, creds customer.CorporationCredentials) error {
