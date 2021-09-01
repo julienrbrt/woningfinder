@@ -51,7 +51,7 @@ func (*waitinglistFormRequest) Render(w http.ResponseWriter, r *http.Request) er
 func (h *handler) WaitingListForm(w http.ResponseWriter, r *http.Request) {
 	waitingListRequest := &waitinglistFormRequest{}
 	if err := render.Bind(r, waitingListRequest); err != nil {
-		render.Render(w, r, handlerErrors.ErrorRenderer(err))
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(err))
 		return
 	}
 

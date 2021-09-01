@@ -31,14 +31,14 @@ func (h *handler) CryptoWebhook(w http.ResponseWriter, r *http.Request) {
 	// parse event
 	event := cryptocom.WebhookEvent{}
 	if err := json.Unmarshal(payload, &event); err != nil {
-		render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("failed to parse webhook body json: %w", err)))
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("failed to parse webhook body json: %w", err)))
 		return
 	}
 
 	// verify stripe authenticity
 	signatureHeader := r.Header.Get(cryptoHeader)
 	if signatureHeader == "" || !h.cryptoClient.VerifyEvent(signatureHeader, string(payload)) {
-		render.Render(w, r, handlerErrors.ErrorRenderer(errors.New("⚠️ Webhook signature verification failed")))
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(errors.New("⚠️ Webhook signature verification failed")))
 		return
 	}
 

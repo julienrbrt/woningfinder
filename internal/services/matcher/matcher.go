@@ -11,7 +11,6 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/internal/services"
 )
 
 // MatcherOffer matcher a corporation offer with customer housing preferences
@@ -24,34 +23,21 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 	}
 
 	// find users corporation credentials for this offers
-	credentials, err := s.userService.GetAllCorporationCredentials(offers.Corporation.Name)
+	users, err := s.userService.GetUsersWithGivenCorporationCredentials(offers.Corporation.Name)
 	if err != nil {
-		// no users found, exit silently
-		if errors.Is(err, services.ErrNoMatchFound) {
-			return nil
-		}
 		return fmt.Errorf("error while matching offer: %w", err)
 	}
 
 	// match offers for each user having corporation credentials
 	var wg sync.WaitGroup
-	for _, creds := range credentials {
-		user := &customer.User{ID: creds.UserID}
-
+	for _, user := range users {
 		wg.Add(1)
 		// react concurrently
-		go func(wg *sync.WaitGroup, user *customer.User, creds customer.CorporationCredentials) {
+		go func(wg *sync.WaitGroup, user *customer.User) {
 			defer wg.Done()
 
 			// use one housing corporation client per user
 			client := client()
-
-			// enrich user
-			user, err = s.userService.GetUser(user)
-			if err != nil {
-				s.logger.Sugar().Errorf("error while getting user %s: %w", user.Email, err)
-				return
-			}
 
 			// skip user with invalid plan (not paid and free trial-expired)
 			if !user.Plan.IsValid() {
@@ -67,7 +53,12 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			}
 
 			// decrypt housing corporation credentials
-			newCreds, err := s.userService.DecryptCredentials(&creds)
+			if len(user.CorporationCredentials) != 1 {
+				s.logger.Sugar().Errorf("user corporation credentials should be of len 1: got len %d", len(user.CorporationCredentials))
+				return
+			}
+
+			newCreds, err := s.userService.DecryptCredentials(&user.CorporationCredentials[0])
 			if err != nil {
 				s.logger.Sugar().Errorf("error while decrypting credentials for %s: %w", user.Email, err)
 				return
@@ -100,7 +91,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 					}
 
 					// save match to database
-					if err := s.userService.CreateHousingPreferencesMatch(user, offer, creds.CorporationName); err != nil {
+					if err := s.userService.CreateHousingPreferencesMatch(user.ID, offer, user.CorporationCredentials[0].CorporationName); err != nil {
 						s.logger.Sugar().Errorf("failed to add %s from %s match to user %s: %w", offer.Housing.Address, offers.Corporation.Name, user.Email, err)
 					}
 
@@ -110,7 +101,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				// save that we've checked the offer for the user
 				s.storeReaction(uuid)
 			}
-		}(&wg, user, creds)
+		}(&wg, user)
 	}
 
 	// wait for all match

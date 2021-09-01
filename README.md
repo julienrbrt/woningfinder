@@ -16,6 +16,7 @@
     - [Environment Variables](#environment-variables)
     - [Local execution](#local-execution)
   - [More information](#more-information)
+
 ## Architecture
 
 This document defines the archtitecture of WoningFinder.
@@ -54,7 +55,7 @@ Following is a list of endpoint supported by WoningFinder-API. The API works exc
 | /stripe-webhook             | POST       | Endpoint where Stripe sends its webhook events (used for validating user payment)         |
 | /crypto-webhook             | POST       | Endpoint where Crypto.com Pay sends its webhook events (used for validating user payment) |
 | /login                      | POST       | Sends a link to the user in order to log him. The link is valid 6h                        |
-| /me                         | GET        | Get all the user information and confirm user account the first time requested            |
+| /me                         | GET + POST | Get and update all the user information. Confirms user account the first time requested.  |
 | /me/corporation-credentials | GET + POST | Manages the user the different housing credentials for the supported corporation.         |
 | /contact                    | POST       | Handles the contact form to send an email to _contact@woningfinder.nl_                    |
 | /waitinglist                | POST       | Handles the city waiting list                                                             |

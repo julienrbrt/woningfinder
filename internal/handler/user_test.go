@@ -30,7 +30,7 @@ func Test_UserInfo_ErrUnauthorized(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/me", nil)
+	req, err := http.NewRequest(http.MethodGet, "/me", nil)
 	a.NoError(err)
 
 	// record response
@@ -58,7 +58,7 @@ func Test_UserInfo_ErrUserService(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/me", nil)
+	req, err := http.NewRequest(http.MethodGet, "/me", nil)
 	a.NoError(err)
 
 	// record response
@@ -72,7 +72,7 @@ func Test_UserInfo_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("failed get user information")))
+	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("failed to get user information")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
@@ -88,7 +88,7 @@ func Test_UserInfo(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/me", nil)
+	req, err := http.NewRequest(http.MethodGet, "/me", nil)
 	a.NoError(err)
 
 	// record response
@@ -106,4 +106,98 @@ func Test_UserInfo(t *testing.T) {
 
 	// verify body
 	a.Equal(string(data), rr.Body.String())
+}
+
+func Test_UpdateUserInfo_BadRequestError(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(errors.New("foo"))
+	emailServiceMock := emailService.NewServiceMock(nil)
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/me", nil)
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.UpdateUserInfo)
+
+	// server request
+	h.ServeHTTP(rr, authenticateRequest(req))
+
+	// verify status code
+	a.Equal(http.StatusBadRequest, rr.Code)
+
+	// verify expected value
+	a.Contains(rr.Body.String(), "Bad request")
+}
+
+func Test_UpdateUserInfo_ErrUserService(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(errors.New("foo"))
+	emailServiceMock := emailService.NewServiceMock(nil)
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
+
+	// request data
+	data, err := ioutil.ReadFile("testdata/update-user-info-request.json")
+	a.NoError(err)
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/me", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.UpdateUserInfo)
+
+	// server request
+	h.ServeHTTP(rr, authenticateRequest(req))
+
+	// verify status code
+	a.Equal(http.StatusInternalServerError, rr.Code)
+
+	// verify expected value
+	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("failed to update housing information")))
+	a.NoError(err)
+	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
+}
+
+func Test_UpdateUserInfo(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
+
+	// request data
+	data, err := ioutil.ReadFile("testdata/update-user-info-request.json")
+	a.NoError(err)
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/me", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.UpdateUserInfo)
+
+	// server request
+	h.ServeHTTP(rr, authenticateRequest(req))
+
+	// verify status code
+	a.Equal(http.StatusOK, rr.Code)
 }

@@ -15,8 +15,8 @@ type Service interface {
 
 	// Cities
 	LinkCities(cities []city.City, corp ...corporation.Corporation) error
-	GetCities() ([]city.City, error)
-	GetCity(name string) (city.City, error)
+	GetCities() ([]*city.City, error)
+	GetCity(name string) (*city.City, error)
 }
 
 type service struct {

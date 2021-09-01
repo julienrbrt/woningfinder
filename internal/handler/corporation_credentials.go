@@ -23,13 +23,13 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 	}
 
 	// get user from jwt claims
-	user, err := auth.ExtractUserFromJWT(claims)
+	userFromJWT, err := auth.ExtractUserFromJWT(claims)
 	if err != nil {
 		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
 
-	corporations, err := h.userService.GetHousingPreferencesMatchingCorporation(user)
+	corporations, err := h.userService.GetHousingPreferencesMatchingCorporation(userFromJWT.ID)
 	if err != nil {
 		errorMsg := fmt.Errorf("failed getting housing corporation relevant for you")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
@@ -47,7 +47,7 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 	var credentials []response
 	for _, corporation := range corporations {
 		var isKnown bool
-		if creds, err := h.userService.GetCorporationCredentials(user.ID, corporation.Name); err == nil {
+		if creds, err := h.userService.GetCorporationCredentials(userFromJWT.ID, corporation.Name); err == nil {
 			if creds.Login != "" {
 				isKnown = true
 			}

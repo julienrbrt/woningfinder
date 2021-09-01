@@ -51,7 +51,7 @@ func (*contactFormRequest) Render(w http.ResponseWriter, r *http.Request) error 
 func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 	message := &contactFormRequest{}
 	if err := render.Bind(r, message); err != nil {
-		render.Render(w, r, handlerErrors.ErrorRenderer(err))
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(err))
 		return
 	}
 

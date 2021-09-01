@@ -7,7 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
-// TODO eventually use a prepare function to create it in one query only
+// CreateOrUpdateCorporation creates or update a housing corporation
 func (s *service) CreateOrUpdateCorporation(corp corporation.Corporation) error {
 	// verify corporation
 	if err := corp.HasMinimal(); err != nil {
