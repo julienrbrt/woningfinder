@@ -28,7 +28,7 @@ func main() {
 
 	// read email to delete from arguments
 	if len(os.Args) != 2 {
-		logger.Sugar().Fatal("user-delete must have an user email as (only) argument\n")
+		logger.Sugar().Fatal("customer-delete must have an user email as (only) argument\n")
 	}
 	email := os.Args[1]
 	if !util.IsEmailValid(email) {
@@ -45,5 +45,5 @@ func main() {
 		logger.Sugar().Fatal(err)
 	}
 
-	logger.Sugar().Infof("user %s successfully deleted 😢\n", email)
+	logger.Sugar().Infof("customer %s successfully deleted 😢\n", email)
 }
