@@ -11,9 +11,8 @@ import (
 
 // HousingPreferences defines the user preference on a housing
 type HousingPreferences struct {
-	ID            uint                      `pg:",pk" json:"-"`
 	CreatedAt     time.Time                 `pg:"default:now()" json:"-"`
-	UserID        uint                      `json:"-"`
+	UserID        uint                      `pg:",pk" json:"-"`
 	Type          []corporation.HousingType `pg:"-" json:"type"` // linked to HousingPreferencesHousingType
 	MaximumPrice  float64                   `json:"maximum_price"`
 	City          []city.City               `pg:"-" json:"city,omitempty"` // linked to HousingPreferencesCity and HousingPreferencesCityDistrict

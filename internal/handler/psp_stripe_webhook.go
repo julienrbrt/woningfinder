@@ -34,7 +34,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 	// parse event
 	event := stripeGo.Event{}
 	if err := json.Unmarshal(payload, &event); err != nil {
-		render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("failed to parse webhook body json: %w", err)))
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("failed to parse webhook body json: %w", err)))
 		return
 	}
 
@@ -42,7 +42,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 	signatureHeader := r.Header.Get(stripeHeader)
 	event, err = webhook.ConstructEvent(payload, signatureHeader, h.stripeClient.WebhookSigningKey())
 	if err != nil {
-		render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("⚠️ Webhook signature verification failed: %w", err)))
 		return
 	}
 
@@ -51,7 +51,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 		var paymentIntent stripeGo.PaymentIntent
 		err := json.Unmarshal(event.Data.Raw, &paymentIntent)
 		if err != nil {
-			render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
+			render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
 			return
 		}
 

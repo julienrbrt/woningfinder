@@ -16,7 +16,7 @@ import (
 func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	type response struct {
 		Plan                 []customer.Plan `json:"plan"`
-		SupportedCities      []city.City     `json:"supported_cities"`
+		SupportedCities      []*city.City    `json:"supported_cities"`
 		SupportedHousingType []string        `json:"supported_housing_type"`
 	}
 

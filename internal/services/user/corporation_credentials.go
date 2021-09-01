@@ -6,7 +6,6 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/customer"
-	"github.com/woningfinder/woningfinder/internal/services"
 )
 
 func (s *service) CreateCorporationCredentials(userID uint, credentials customer.CorporationCredentials) error {
@@ -61,26 +60,6 @@ func (s *service) GetCorporationCredentials(userID uint, corporationName string)
 	}
 
 	return &credentials, nil
-}
-
-// GetAllCorporationCredentials gets all the user corporation credentials that we need to react for
-// The corporation credentials are sorted by account creation date (and not by plan - see issue #21)
-func (s *service) GetAllCorporationCredentials(corporationName string) ([]customer.CorporationCredentials, error) {
-	credentials := []customer.CorporationCredentials{}
-	if err := s.dbClient.Conn().
-		Model(&credentials).
-		Where("corporation_name = ?", corporationName).
-		Order("created_at ASC"). // people having registered their credentials for the longer get reaction priority
-		Select(); err != nil {
-		return nil, fmt.Errorf("error getting user credentials: %w", err)
-	}
-
-	// no users found
-	if len(credentials) == 0 {
-		return nil, services.ErrNoMatchFound
-	}
-
-	return credentials, nil
 }
 
 func (s *service) UpdateCorporationCredentialsFailureCount(userID uint, corporationName string, failureCount int) error {

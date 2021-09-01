@@ -83,6 +83,7 @@ func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationSer
 
 		r.Route("/me", func(r chi.Router) {
 			r.Get("/", handler.UserInfo)
+			r.Post("/", handler.UpdateUserInfo)
 			r.Get("/corporation-credentials", handler.GetCorporationCredentials)
 			r.Post("/corporation-credentials", handler.UpdateCorporationCredentials)
 		})

@@ -16,7 +16,7 @@ import (
 func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 	user := &customer.User{}
 	if err := render.Bind(r, user); err != nil {
-		render.Render(w, r, handlerErrors.ErrorRenderer(err))
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(err))
 		return
 	}
 
@@ -27,7 +27,7 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 		errorMsg := fmt.Errorf("error while creating user")
 
 		if errors.Is(err, userService.ErrUserAlreadyExist) {
-			render.Render(w, r, handlerErrors.ErrorRenderer(fmt.Errorf("%s: %s", errorMsg, err.Error())))
+			render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("%s: %s", errorMsg, err.Error())))
 			return
 		}
 

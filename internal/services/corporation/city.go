@@ -32,20 +32,20 @@ func (s *service) LinkCities(cities []city.City, corporations ...corporation.Cor
 	return nil
 }
 
-func (s *service) GetCity(name string) (city.City, error) {
+func (s *service) GetCity(name string) (*city.City, error) {
 	var c city.City
 	if err := s.dbClient.Conn().Model(&c).Where("name = ?", name).Select(); err != nil {
-		return city.City{}, fmt.Errorf("failing getting city %s: %w", name, err)
+		return nil, fmt.Errorf("failing getting city %s: %w", name, err)
 	}
 
 	// enrich city with suggested city districts
 	c.District = city.SuggestedCityDistrictFromName(s.logger, c.Name)
 
-	return c, nil
+	return &c, nil
 }
 
-func (s *service) GetCities() ([]city.City, error) {
-	var cities []city.City
+func (s *service) GetCities() ([]*city.City, error) {
+	var cities []*city.City
 
 	if err := s.dbClient.Conn().Model(&cities).Select(); err != nil {
 		return nil, fmt.Errorf("failing getting cities: %w", err)
