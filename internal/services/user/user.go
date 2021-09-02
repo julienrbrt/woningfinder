@@ -35,9 +35,9 @@ func (s *service) CreateUser(user *customer.User) error {
 	}
 
 	// create user plan
-	if _, err := s.dbClient.Conn().Model(&customer.UserPlan{UserID: user.ID, Name: user.Plan.Name}).Insert(); err != nil {
+	if _, err := db.Model(&customer.UserPlan{UserID: user.ID, Name: user.Plan.Name}).Insert(); err != nil {
 		// rollback
-		if _, err2 := db.Model(user).Where("email ILIKE ?", user.Email).Delete(); err2 != nil {
+		if err2 := s.DeleteUser(user.Email); err2 != nil {
 			s.logger.Sugar().Errorf("error %w and error when rolling back user creation: %w", err, err2)
 		}
 
@@ -47,7 +47,7 @@ func (s *service) CreateUser(user *customer.User) error {
 	// create user housing preferences
 	if err := s.CreateHousingPreferences(user.ID, &user.HousingPreferences); err != nil {
 		// rollback
-		if _, err2 := db.Model(user).Where("email ILIKE ?", user.Email).Delete(); err2 != nil {
+		if err2 := s.DeleteUser(user.Email); err2 != nil {
 			s.logger.Sugar().Errorf("error %w and error when rolling back user creation: %w", err, err2)
 		}
 
