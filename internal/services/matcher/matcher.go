@@ -45,7 +45,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			}
 
 			// check if we already checked all offers
-			// this is done before login in order to do not spam the housing corporation
+			// this is done before login in order to do not spam login to the housing corporation and reacting to nothing
 			uncheckedOffers, ok := s.hasNonReactedOffers(user, offers)
 			if !ok {
 				s.logger.Sugar().Debugf("no new offers from %s for %s...", offers.Corporation.Name, user.Email)

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	pg "github.com/go-pg/pg/v10"
+	"github.com/go-pg/pg/v10/orm"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
@@ -126,7 +127,9 @@ func (s *service) GetUsersWithGivenCorporationCredentials(corporationName string
 	if err := s.dbClient.Conn().
 		Model(&users).
 		Relation("Plan").
-		Relation("CorporationCredentials").
+		Relation("CorporationCredentials", func(q *orm.Query) (*orm.Query, error) {
+			return q.Where("corporation_name = ?", corporationName), nil
+		}).
 		Join("INNER JOIN corporation_credentials cc ON id = cc.user_id").
 		Where("cc.corporation_name = ?", corporationName).
 		Order("created_at ASC"). // first created user first
@@ -144,7 +147,9 @@ func (s *service) GetUsersWithHousingPreferencesMatch() ([]*customer.User, error
 		Model(&users).
 		Relation("Plan").
 		Relation("CorporationCredentials").
-		Relation("HousingPreferencesMatch").
+		Relation("HousingPreferencesMatch", func(q *orm.Query) (*orm.Query, error) {
+			return q.Where("created_at >= now() - interval '7 day'"), nil
+		}).
 		Join("INNER JOIN housing_preferences_matches hpm ON \"user\".\"id\" = hpm.user_id").
 		Where("hpm.created_at >= now() - interval '7 day'").
 		Order("created_at ASC"). // first created user first
