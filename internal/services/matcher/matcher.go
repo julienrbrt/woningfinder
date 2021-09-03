@@ -44,17 +44,18 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				return
 			}
 
+			// enrinch housing preferences
+			user.HousingPreferences, err = s.userService.GetHousingPreferences(user.ID)
+			if err != nil {
+				s.logger.Sugar().Warnf("failed to get users preferences from %s: %w", user.Email, err)
+				return
+			}
+
 			// check if we already checked all offers
 			// this is done before login in order to do not spam login to the housing corporation and reacting to nothing
 			uncheckedOffers, ok := s.hasNonReactedOffers(user, offers)
 			if !ok {
 				s.logger.Sugar().Debugf("no new offers from %s for %s...", offers.Corporation.Name, user.Email)
-				return
-			}
-
-			// decrypt housing corporation credentials
-			if len(user.CorporationCredentials) != 1 {
-				s.logger.Sugar().Errorf("user corporation credentials should be of len 1: got len %d", len(user.CorporationCredentials))
 				return
 			}
 

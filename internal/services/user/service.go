@@ -19,7 +19,7 @@ type Service interface {
 	ConfirmPayment(email string) (*customer.User, error)
 
 	GetUsersWithGivenCorporationCredentials(corporationName string) ([]*customer.User, error)
-	GetUsersWithHousingPreferencesMatch() ([]*customer.User, error)
+	GetWeeklyUpdateUsers() ([]*customer.User, error)
 
 	// Housing Preferences
 	CreateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error

@@ -13,7 +13,7 @@ func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
 	c.AddJob(spec, cron.FuncJob(func() {
 		j.logger.Sugar().Info("send-weekly-update job started")
 
-		users, err := j.userService.GetUsersWithHousingPreferencesMatch()
+		users, err := j.userService.GetWeeklyUpdateUsers()
 		if err != nil {
 			j.logger.Sugar().Errorf("error while sending weekly update: %w", err)
 		}
