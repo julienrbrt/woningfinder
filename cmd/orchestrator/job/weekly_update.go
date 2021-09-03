@@ -20,6 +20,11 @@ func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
 
 		// send confirmation email to each user
 		for _, user := range users {
+			// skip invalid free trial / unpaid users
+			if !user.Plan.IsValid() {
+				continue
+			}
+
 			// user has no corporation credentials and no match didn't react for them be we cannot
 			if len(user.HousingPreferencesMatch) == 0 && len(user.CorporationCredentials) == 0 {
 				if err := j.emailService.SendCorporationCredentialsMissing(user); err != nil {
