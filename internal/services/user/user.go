@@ -140,8 +140,8 @@ func (s *service) GetUsersWithGivenCorporationCredentials(corporationName string
 	return users, nil
 }
 
-// GetUsersWithHousingPreferencesMatch gets all reactions of paid user for the last week
-func (s *service) GetUsersWithHousingPreferencesMatch() ([]*customer.User, error) {
+// GetWeeklyUpdateUsers gets all reactions of paid user for the last week
+func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 	var users []*customer.User
 	if err := s.dbClient.Conn().
 		Model(&users).
