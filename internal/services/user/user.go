@@ -150,8 +150,6 @@ func (s *service) GetUsersWithHousingPreferencesMatch() ([]*customer.User, error
 		Relation("HousingPreferencesMatch", func(q *orm.Query) (*orm.Query, error) {
 			return q.Where("created_at >= now() - interval '7 day'"), nil
 		}).
-		Join("INNER JOIN housing_preferences_matches hpm ON \"user\".\"id\" = hpm.user_id").
-		Where("hpm.created_at >= now() - interval '7 day'").
 		Order("created_at ASC"). // first created user first
 		Select(); err != nil {
 		return nil, fmt.Errorf("failed getting users with housing preferences match: %w", err)
