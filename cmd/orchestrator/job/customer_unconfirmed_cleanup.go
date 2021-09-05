@@ -3,6 +3,7 @@ package job
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/go-pg/pg/v10"
@@ -11,8 +12,9 @@ import (
 )
 
 const (
-	unconfirmedReminderTime = 4 * time.Hour
-	maxUnconfirmedTime      = 72 * time.Hour
+	firstUnconfirmedReminderTime  = 24 * time.Hour
+	secondUnconfirmedReminderTime = 72 * time.Hour
+	maxUnconfirmedTime            = 168 * time.Hour
 )
 
 // CustomerUnconfirmedCleanup reminds a unconfirmed customers to confirm their emails
@@ -38,24 +40,18 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 
 		for _, user := range users {
 			// send reminder to users that didn't confirm their email
-			switch {
-			case time.Until(user.CreatedAt.Add(unconfirmedReminderTime)) <= 0:
-				// check if reminder already sent
-				uuid := buildCustomerUnconfirmedEmailReminderUUID(user)
-				if j.isAlreadySent(uuid) {
-					continue
-				}
+			if time.Until(user.CreatedAt.Add(firstUnconfirmedReminderTime)) <= 0 {
+				j.sendEmailReminder(user, 1)
+				continue
+			}
 
-				// send reminder
-				if err := j.emailService.SendEmailConfirmationReminder(user); err != nil {
-					j.logger.Sugar().Error("error sending %s email confirmation reminder: %w", user.Email, err)
-				}
-
-				// set reminder as sent
-				j.markAsSent(uuid)
+			if time.Until(user.CreatedAt.Add(secondUnconfirmedReminderTime)) <= 0 {
+				j.sendEmailReminder(user, 2)
+				continue
+			}
 
 			// delete only user that did not paid since 48h
-			case time.Until(user.CreatedAt.Add(maxUnconfirmedTime)) <= 0:
+			if time.Until(user.CreatedAt.Add(maxUnconfirmedTime)) <= 0 {
 				if err := j.userService.DeleteUser(user.Email); err != nil {
 					j.logger.Sugar().Errorf("failed deleting user %s: %w", user.Email, err)
 				}
@@ -64,6 +60,18 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 	}))
 }
 
-func buildCustomerUnconfirmedEmailReminderUUID(user *customer.User) string {
-	return base64.StdEncoding.EncodeToString([]byte(user.Email + "customer confirmation email reminder sent"))
+func (j *Jobs) sendEmailReminder(user *customer.User, count int) {
+	// check if reminder already sent
+	uuid := base64.StdEncoding.EncodeToString([]byte(user.Email + fmt.Sprintf("customer confirmation email reminder %d sent", count)))
+	if j.isAlreadySent(uuid) {
+		return
+	}
+
+	// send reminder
+	if err := j.emailService.SendEmailConfirmationReminder(user); err != nil {
+		j.logger.Sugar().Error("error sending %s email confirmation reminder: %w", user.Email, err)
+	}
+
+	// set reminder as sent
+	j.markAsSent(uuid)
 }
