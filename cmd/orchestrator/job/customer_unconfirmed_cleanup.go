@@ -14,7 +14,7 @@ import (
 const (
 	firstUnconfirmedReminderTime  = 24 * time.Hour
 	secondUnconfirmedReminderTime = 72 * time.Hour
-	maxUnconfirmedTime            = 168 * time.Hour
+	maxUnconfirmedTime            = 14 * 24 * time.Hour
 )
 
 // CustomerUnconfirmedCleanup reminds a unconfirmed customers to confirm their emails
@@ -42,15 +42,13 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 			// send reminder to users that didn't confirm their email
 			if time.Until(user.CreatedAt.Add(firstUnconfirmedReminderTime)) <= 0 {
 				j.sendEmailReminder(user, 1)
-				continue
 			}
 
 			if time.Until(user.CreatedAt.Add(secondUnconfirmedReminderTime)) <= 0 {
 				j.sendEmailReminder(user, 2)
-				continue
 			}
 
-			// delete only user that did not paid since 48h
+			// delete only user that did confirm their email since a week
 			if time.Until(user.CreatedAt.Add(maxUnconfirmedTime)) <= 0 {
 				if err := j.userService.DeleteUser(user.Email); err != nil {
 					j.logger.Sugar().Errorf("failed deleting user %s: %w", user.Email, err)
