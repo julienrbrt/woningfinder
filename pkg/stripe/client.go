@@ -1,7 +1,7 @@
 package stripe
 
 import (
-	"github.com/stripe/stripe-go"
+	stripe "github.com/stripe/stripe-go/v72"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 

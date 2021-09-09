@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	stripeGo "github.com/stripe/stripe-go"
-	"github.com/stripe/stripe-go/webhook"
+	stripeGo "github.com/stripe/stripe-go/v72"
+	webhook "github.com/stripe/stripe-go/v72/webhook"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/stripe"

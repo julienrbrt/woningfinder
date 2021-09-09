@@ -1,6 +1,6 @@
 package stripe
 
-import "github.com/stripe/stripe-go"
+import stripe "github.com/stripe/stripe-go/v72"
 
 var stripeKeyTest = "sk_test_51HkWn4HWufZqidI12yfUuTsZxIdKfSlblDYcAYPda4hzMnGrDcDCLannohEiYI0TUXT1rPdx186CyhKvo67H96Ty00vP5NDSrZ"
 
