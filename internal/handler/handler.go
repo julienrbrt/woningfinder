@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	chi "github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/httprate"
-	"github.com/go-chi/jwtauth"
+	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	customMiddleware "github.com/woningfinder/woningfinder/internal/handler/middleware"

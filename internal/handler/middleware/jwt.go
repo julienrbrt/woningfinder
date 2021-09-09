@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/go-chi/jwtauth"
+	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
 	"github.com/lestrrat-go/jwx/jwt"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
