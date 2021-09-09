@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-chi/jwtauth"
+	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )

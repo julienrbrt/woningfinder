@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/go-chi/render"
-	"github.com/stripe/stripe-go"
-	"github.com/stripe/stripe-go/checkout/session"
+	stripe "github.com/stripe/stripe-go/v72"
+	"github.com/stripe/stripe-go/v72/checkout/session"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )

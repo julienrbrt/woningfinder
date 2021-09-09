@@ -3,7 +3,7 @@ package email
 import (
 	"embed"
 
-	"github.com/go-chi/jwtauth"
+	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/pkg/email"
 	"github.com/woningfinder/woningfinder/pkg/logging"
