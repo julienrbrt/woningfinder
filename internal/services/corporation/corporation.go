@@ -29,7 +29,7 @@ func (s *service) CreateOrUpdateCorporation(corp corporation.Corporation) error 
 
 func (s *service) GetCorporation(name string) (*corporation.Corporation, error) {
 	var corp corporation.Corporation
-	if err := s.dbClient.Conn().Model(&corp).Where("name = ?", name).Select(); err != nil {
+	if err := s.dbClient.Conn().Model(&corp).Where("name ILIKE ?", name).Select(); err != nil {
 		return nil, fmt.Errorf("failed getting corporation %s: %w", name, err)
 	}
 

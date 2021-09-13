@@ -34,7 +34,7 @@ func (s *service) LinkCities(cities []city.City, corporations ...corporation.Cor
 
 func (s *service) GetCity(name string) (*city.City, error) {
 	var c city.City
-	if err := s.dbClient.Conn().Model(&c).Where("name = ?", name).Select(); err != nil {
+	if err := s.dbClient.Conn().Model(&c).Where("name ILIKE ?", name).Select(); err != nil {
 		return nil, fmt.Errorf("failing getting city %s: %w", name, err)
 	}
 
