@@ -29,7 +29,7 @@ func (s *service) SendLogin(user *customer.User) error {
 	}
 
 	if err := s.emailClient.Send("Jouw WoningFinder login link", body.String(), user.Email); err != nil {
-		return fmt.Errorf("error sending welcome email: %w", err)
+		return fmt.Errorf("error sending login email: %w", err)
 	}
 
 	return nil

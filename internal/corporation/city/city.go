@@ -72,6 +72,7 @@ var cityTable = map[string]City{
 	Hertme.Name:      Hertme,
 	Apeldoorn.Name:   Apeldoorn,
 	Heerenberg.Name:  Heerenberg,
+	Zenderen.Name:    Zenderen,
 }
 
 // HasSuggestedCityDistrict permit to see if a city has an city districts

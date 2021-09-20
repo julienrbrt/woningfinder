@@ -17,3 +17,7 @@ var Borne = City{
 var Hertme = City{
 	Name: "Hertme",
 }
+
+var Zenderen = City{
+	Name: "Zenderen",
+}
