@@ -12,7 +12,7 @@ require (
 	github.com/getsentry/sentry-go v0.11.0 // indirect
 	github.com/go-chi/chi/v5 v5.0.4
 	github.com/go-chi/httprate v0.5.1
-	github.com/go-chi/jwtauth/v5 v5.0.1
+	github.com/go-chi/jwtauth/v5 v5.0.2
 	github.com/go-chi/render v1.0.1
 	github.com/go-pg/migrations/v8 v8.1.0
 	github.com/go-pg/pg/v10 v10.10.5
