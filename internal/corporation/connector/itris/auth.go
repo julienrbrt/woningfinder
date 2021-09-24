@@ -9,12 +9,10 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 )
 
-var (
-	ErrItrisBlocked = errors.New("itris connector: error authentication: woningfinder blocked")
-)
+var errItrisBlocked = errors.New("itris connector: error authentication: woningfinder blocked")
 
 func (c *client) Login(username, password string) error {
-	loginURL := c.url + "/inloggen/index.xml"
+	loginURL := c.corporation.APIEndpoint.String() + "/inloggen/index.xml"
 	loginRequest := map[string][]byte{
 		"Password":                               []byte(password),
 		"Username":                               []byte(username),
@@ -75,7 +73,7 @@ func checkLogin(body string) error {
 	}
 
 	if strings.Contains(body, errItrisBlockedMsg) || strings.Contains(body, errItrisBlockedMsg2) {
-		return ErrItrisBlocked
+		return errItrisBlocked
 	}
 
 	if !strings.Contains(body, "Uitloggen") {

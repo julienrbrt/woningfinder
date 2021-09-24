@@ -26,8 +26,8 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 				return
 			}
 
-			if err := paginationCollector.Visit(c.url + paginatedURL); err != nil {
-				c.logger.Sugar().Warnf("domijn connector: error while checking pagination %s: %w", c.url+paginatedURL, err)
+			if err := paginationCollector.Visit(c.corporation.APIEndpoint.String() + paginatedURL); err != nil {
+				c.logger.Sugar().Warnf("domijn connector: error while checking pagination %s: %w", c.corporation.APIEndpoint.String()+paginatedURL, err)
 			}
 		})
 	})
@@ -41,7 +41,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offer.SelectionMethod = corporation.SelectionRandom
 
 			// get offer url
-			offer.URL = c.url + strings.ReplaceAll(e.ChildAttr("div.image-wrapper a", "href"), " ", "%20") // manual space escaping
+			offer.URL = c.corporation.APIEndpoint.String() + strings.ReplaceAll(e.ChildAttr("div.image-wrapper a", "href"), " ", "%20") // manual space escaping
 
 			// get housing type
 			offer.Housing.Type = c.parseHousingType(e.ChildText("div.info div.row div p"))
@@ -87,7 +87,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	})
 
 	// parse offers
-	offerURL := c.url + "/woningaanbod/?advertisementType=rent"
+	offerURL := c.corporation.APIEndpoint.String() + "/woningaanbod/?advertisementType=rent"
 	if err := c.collector.Visit(offerURL); err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 
 	// parse price
 	priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("span.price"), ",", "."), "€", ""))
-	offer.Housing.Price, err = strconv.ParseFloat(priceStr, 16)
+	offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32)
 	if err != nil {
 		c.logger.Sugar().Infof("domijn connector: error while parsing price of %s: %w", offer.Housing.Address, err)
 		return

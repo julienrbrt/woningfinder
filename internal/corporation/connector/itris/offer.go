@@ -27,7 +27,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offer.SelectionMethod = corporation.SelectionRandom // TODO to fix - all houses from onshuis are random
 
 			// get offer url
-			offer.URL = c.url + e.ChildAttr(detailsHousingChildAttr, "href")
+			offer.URL = c.corporation.APIEndpoint.String() + e.ChildAttr(detailsHousingChildAttr, "href")
 			offer.ExternalID = e.Attr("data-aanbod-id")
 
 			// get housing type
@@ -47,7 +47,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 				}
 			}
 
-			offer.Housing.Price, err = strconv.ParseFloat(e.Attr("data-prijs"), 16)
+			offer.Housing.Price, err = strconv.ParseFloat(e.Attr("data-prijs"), 32)
 			if err != nil {
 				c.logger.Sugar().Warnf("itris connector: error while parsing price of %s: %w", offer.Housing.Address, err)
 				return
@@ -94,7 +94,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	})
 
 	// parse offers
-	offerURL := c.url + "/woningaanbod/"
+	offerURL := c.corporation.APIEndpoint.String() + "/woningaanbod/"
 	if err := c.collector.Visit(offerURL); err != nil {
 		return nil, err
 	}

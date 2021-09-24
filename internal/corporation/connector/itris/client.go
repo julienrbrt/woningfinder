@@ -17,8 +17,8 @@ import (
 type client struct {
 	collector      *colly.Collector
 	logger         *logging.Logger
+	corporation    corporation.Corporation
 	mapboxClient   mapbox.Client
-	url            string
 	itrisCSRFToken string
 }
 
@@ -74,6 +74,6 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, corporation c
 		collector:    c,
 		logger:       logger,
 		mapboxClient: mapboxClient,
-		url:          corporation.APIEndpoint.String(),
+		corporation:  corporation,
 	}, nil
 }

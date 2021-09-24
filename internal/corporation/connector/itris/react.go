@@ -11,7 +11,7 @@ import (
 
 func (c *client) React(offer corporation.Offer) error {
 	// e.g. https://mijn.onshuis.com/mijn-portaal/inschrijvingen/aanmakenWoningreactie/index.xml?reac_csrf_protection=65159aa78108a8370fc71d49a95aa416859b18e1&ogeNr=380000000020135&PublicatieNr=380009660 - it seems that ogeNr is not required
-	reactURL := fmt.Sprintf("%s/mijn-portaal/inschrijvingen/aanmakenWoningreactie/index.xml?reac_csrf_protection=%s&PublicatieNr=%s", c.url, c.itrisCSRFToken, offer.ExternalID)
+	reactURL := fmt.Sprintf("%s/mijn-portaal/inschrijvingen/aanmakenWoningreactie/index.xml?reac_csrf_protection=%s&PublicatieNr=%s", c.corporation.APIEndpoint.String(), c.itrisCSRFToken, offer.ExternalID)
 
 	// parse react error
 	var hasReacted error

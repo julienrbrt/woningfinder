@@ -9,7 +9,7 @@ import (
 )
 
 func (c *client) React(offer corporation.Offer) error {
-	reactURL := c.url + offer.ExternalID
+	reactURL := c.corporation.APIEndpoint.String() + offer.ExternalID
 
 	// parse react error
 	var hasReacted error

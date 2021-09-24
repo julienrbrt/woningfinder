@@ -9,7 +9,7 @@ import (
 )
 
 func (c *client) Login(username, password string) error {
-	loginURL := c.url + "/mijndomijn/inloggen/"
+	loginURL := c.corporation.APIEndpoint.String() + "/mijndomijn/inloggen/"
 	loginRequest := map[string]string{
 		"Email":                      username,
 		"Password":                   password,
