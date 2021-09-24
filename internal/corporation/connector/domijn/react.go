@@ -14,7 +14,7 @@ func (c *client) React(offer corporation.Offer) error {
 	// parse react error
 	var hasReacted error
 	c.collector.OnScraped(func(resp *colly.Response) {
-		hasReacted = checkReact(string(resp.Body))
+		hasReacted = c.checkReact(string(resp.Body))
 	})
 
 	if err := c.collector.PostRaw(reactURL, nil); err != nil {
@@ -24,10 +24,8 @@ func (c *client) React(offer corporation.Offer) error {
 	return hasReacted
 }
 
-func checkReact(body string) error {
-	domijnReactMsg := "We hebben jouw reactie ontvangen."
-
-	if !strings.Contains(string(body), domijnReactMsg) {
+func (c *client) checkReact(body string) error {
+	if !strings.Contains(string(body), "We hebben jouw reactie ontvangen.") {
 		return connector.ErrReactUnknown
 	}
 

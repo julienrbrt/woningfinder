@@ -41,7 +41,7 @@ func (c *client) Login(username, password string) error {
 	// parse login error (from second collector)
 	var hasErrLogin error
 	collector.OnScraped(func(resp *colly.Response) {
-		hasErrLogin = checkLogin(string(resp.Body))
+		hasErrLogin = c.checkLogin(string(resp.Body))
 	})
 
 	// visit login page
@@ -52,7 +52,7 @@ func (c *client) Login(username, password string) error {
 	return hasErrLogin
 }
 
-func checkLogin(body string) error {
+func (c *client) checkLogin(body string) error {
 	errDomijnLogin := "De opgegeven gegevens zijn niet bekend bij ons. Controleer of jouw e-mailadres en wachtwoord correct zijn ingevoerd."
 
 	if strings.Contains(body, errDomijnLogin) {

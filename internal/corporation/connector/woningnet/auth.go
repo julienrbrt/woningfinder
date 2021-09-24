@@ -43,7 +43,7 @@ func (c *client) Login(username, password string) error {
 	// parse login error (from second collector)
 	var hasErrLogin error
 	collector.OnScraped(func(resp *colly.Response) {
-		hasErrLogin = checkLogin(string(resp.Body))
+		hasErrLogin = c.checkLogin(string(resp.Body))
 	})
 
 	// visit login page
@@ -54,7 +54,7 @@ func (c *client) Login(username, password string) error {
 	return hasErrLogin
 }
 
-func checkLogin(body string) error {
+func (c *client) checkLogin(body string) error {
 	if strings.Contains(body, "Je inloggegevens zijn niet correct.") {
 		return connector.ErrAuthFailed
 	}
