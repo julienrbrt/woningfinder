@@ -8,6 +8,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/extensions"
+	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
@@ -16,8 +17,8 @@ import (
 type client struct {
 	collector    *colly.Collector
 	logger       *logging.Logger
+	corporation  corporation.Corporation
 	mapboxClient mapbox.Client
-	url          string
 }
 
 // Note, if we start to get blocked investigate in proxy switcher
@@ -71,7 +72,7 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Cl
 	return &client{
 		collector:    c,
 		logger:       logger,
+		corporation:  Info,
 		mapboxClient: mapboxClient,
-		url:          Info.APIEndpoint.String(),
 	}, nil
 }

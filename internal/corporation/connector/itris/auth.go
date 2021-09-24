@@ -9,12 +9,10 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 )
 
-var (
-	ErrItrisBlocked = errors.New("itris connector: error authentication: woningfinder blocked")
-)
+var errItrisBlocked = errors.New("itris connector: error authentication: woningfinder blocked")
 
 func (c *client) Login(username, password string) error {
-	loginURL := c.url + "/inloggen/index.xml"
+	loginURL := c.corporation.APIEndpoint.String() + "/inloggen/index.xml"
 	loginRequest := map[string][]byte{
 		"Password":                               []byte(password),
 		"Username":                               []byte(username),
@@ -54,7 +52,7 @@ func (c *client) Login(username, password string) error {
 	// parse login error (from second collector)
 	var hasErrLogin error
 	collector.OnScraped(func(resp *colly.Response) {
-		hasErrLogin = checkLogin(string(resp.Body))
+		hasErrLogin = c.checkLogin(string(resp.Body))
 	})
 
 	// visit login page
@@ -65,7 +63,7 @@ func (c *client) Login(username, password string) error {
 	return hasErrLogin
 }
 
-func checkLogin(body string) error {
+func (c *client) checkLogin(body string) error {
 	errItrisLoginMsg := "Combinatie inlognaam / wachtwoord is niet bekend of onjuist. Controleer de invoer en probeer het opnieuw."
 	errItrisBlockedMsg := "Om veiligheidsredenen is dit veld tijdelijk geblokkeerd, probeer het later nog eens"
 	errItrisBlockedMsg2 := "De beveiliging van dit formulier weigert uw verzoek"
@@ -75,7 +73,7 @@ func checkLogin(body string) error {
 	}
 
 	if strings.Contains(body, errItrisBlockedMsg) || strings.Contains(body, errItrisBlockedMsg2) {
-		return ErrItrisBlocked
+		return errItrisBlocked
 	}
 
 	if !strings.Contains(body, "Uitloggen") {
