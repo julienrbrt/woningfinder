@@ -23,3 +23,26 @@ var HengeloBorneInfo = corporation.Corporation{
 		corporation.SelectionRegistrationDate,
 	},
 }
+
+var UtrechtInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregioutrecht.nl", Path: "/webapi"},
+	Name:        "WoningNet Utrecht",
+	URL:         "https://www.woningnetregioutrecht.nl",
+	Cities: []city.City{
+		city.Utrecht,
+		city.Zeist,
+		// woerden
+		// dorn
+		// doorn
+		// nieuwegein
+		// oudewater
+		// IJsselstein
+		// breukelen
+		// nigtevecht
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionFirstComeFirstServed,
+		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+	},
+}
