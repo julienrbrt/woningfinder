@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/woningfinder/woningfinder/internal/city"
-	"github.com/woningfinder/woningfinder/internal/city/manipulate"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
@@ -40,7 +39,7 @@ func (s *service) GetCity(name string) (*city.City, error) {
 	}
 
 	// enrich city with suggested city districts
-	distritcs, ok := manipulate.SuggestedCityDistrictFromName(c.Name)
+	distritcs, ok := city.SuggestedCityDistrictFromName(c.Name)
 	if !ok {
 		s.logger.Sugar().Warnf("failed to get city district of %s", name)
 	}
@@ -58,7 +57,7 @@ func (s *service) GetCities() ([]*city.City, error) {
 
 	// enrich city with suggested city districts
 	for i, c := range cities {
-		districts, ok := manipulate.SuggestedCityDistrictFromName(c.Name)
+		districts, ok := city.SuggestedCityDistrictFromName(c.Name)
 		if !ok {
 			s.logger.Sugar().Warnf("failed to get city district of %s", c.Name)
 		}

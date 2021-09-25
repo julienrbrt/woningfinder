@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/woningfinder/woningfinder/internal/city"
-	"github.com/woningfinder/woningfinder/internal/city/manipulate"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
@@ -127,7 +126,7 @@ func matchDistrict(cityPreferences city.City, housing corporation.Housing) bool 
 		return false
 	}
 
-	cityDistricts, ok := manipulate.SuggestedCityDistrictFromName(cityPreferences.Name)
+	cityDistricts, ok := city.SuggestedCityDistrictFromName(cityPreferences.Name)
 	if !ok {
 		return false
 	}
