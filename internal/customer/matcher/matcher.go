@@ -4,10 +4,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
-	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 type Matcher interface {
@@ -127,7 +126,11 @@ func matchDistrict(cityPreferences city.City, housing corporation.Housing) bool 
 		return false
 	}
 
-	cityDistricts := city.SuggestedCityDistrictFromName(&logging.Logger{}, cityPreferences.Name)
+	cityDistricts, ok := city.SuggestedCityDistrictFromName(cityPreferences.Name)
+	if !ok {
+		return false
+	}
+
 	for district := range cityPreferences.District {
 		// get neighboorhoud for district and try finding a match
 		if neighboorhoud, ok := cityDistricts[district]; ok {

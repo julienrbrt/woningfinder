@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 )
 
@@ -52,16 +52,13 @@ func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corpo
 	// get cities from offers
 	for _, offer := range offers {
 		// merge city names
-		city := offer.Housing.City.Merge()
+		city := city.MergeCity(offer.Housing.City)
 		cities[city.Name] = city
 	}
 
 	// check against cities from housing corporation
 	for _, city := range corp.Cities {
-		_, ok := cities[city.Name]
-		if ok {
-			delete(cities, city.Name)
-		}
+		delete(cities, city.Name)
 	}
 
 	// no cities to add

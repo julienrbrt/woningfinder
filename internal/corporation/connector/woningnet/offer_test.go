@@ -13,30 +13,38 @@ import (
 
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
-	client := bootstrapCorporation.CreateWoningNetClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"), woningnet.HengeloBorneInfo)
 
-	offers, err := client.GetOffers()
-	a.NoError(err)
-	a.True(len(offers) > 0)
+	corporations := []corporation.Corporation{
+		woningnet.UtrechtInfo,
+		woningnet.HengeloBorneInfo,
+	}
 
-	for _, offer := range offers {
-		// verify housing validity
-		a.NotEmpty(offer.Housing.Type)
-		if offer.Housing.Type == corporation.HousingTypeUndefined {
-			continue
+	for _, c := range corporations {
+		client := bootstrapCorporation.CreateWoningNetClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"), c)
+
+		offers, err := client.GetOffers()
+		a.NoError(err)
+		a.True(len(offers) > 0)
+
+		for _, offer := range offers {
+			// verify housing validity
+			a.NotEmpty(offer.Housing.Type)
+			if offer.Housing.Type == corporation.HousingTypeUndefined {
+				continue
+			}
+
+			a.NotEmpty(offer.Housing.Address)
+			a.NotEmpty(offer.Housing.City.Name)
+			a.NotEmpty(offer.Housing.CityDistrict)
+			a.NotEmpty(offer.Housing.EnergyLabel)
+			a.True(offer.Housing.Price > 0)
+			a.True(offer.Housing.Size > 0)
+			a.True(offer.Housing.NumberBedroom > 0)
+			a.True(offer.Housing.BuildingYear > 0)
+
+			a.NotEmpty(offer.SelectionMethod)
+			a.NotEmpty(offer.URL)
+			a.NotEmpty(offer.ExternalID)
 		}
-
-		a.NotEmpty(offer.Housing.Address)
-		a.NotEmpty(offer.Housing.City.Name)
-		a.NotEmpty(offer.Housing.CityDistrict)
-		a.NotEmpty(offer.Housing.EnergyLabel)
-		a.True(offer.Housing.Price > 0)
-		a.True(offer.Housing.Size > 0)
-		a.True(offer.Housing.NumberBedroom > 0)
-		a.True(offer.Housing.BuildingYear > 0)
-
-		a.NotEmpty(offer.SelectionMethod)
-		a.NotEmpty(offer.URL)
-		a.NotEmpty(offer.ExternalID)
 	}
 }

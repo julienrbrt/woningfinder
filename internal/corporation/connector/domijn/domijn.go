@@ -3,8 +3,8 @@ package domijn
 import (
 	"net/url"
 
+	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 var Info = corporation.Corporation{

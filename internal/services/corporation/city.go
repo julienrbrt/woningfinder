@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 // LinkCities permits to creates a city and when given associate that city to a corporation
@@ -39,7 +39,11 @@ func (s *service) GetCity(name string) (*city.City, error) {
 	}
 
 	// enrich city with suggested city districts
-	c.District = city.SuggestedCityDistrictFromName(s.logger, c.Name)
+	distritcs, ok := city.SuggestedCityDistrictFromName(c.Name)
+	if !ok {
+		s.logger.Sugar().Warnf("failed to get city district of %s", name)
+	}
+	c.District = distritcs
 
 	return &c, nil
 }
@@ -53,7 +57,11 @@ func (s *service) GetCities() ([]*city.City, error) {
 
 	// enrich city with suggested city districts
 	for i, c := range cities {
-		cities[i].District = city.SuggestedCityDistrictFromName(s.logger, c.Name)
+		districts, ok := city.SuggestedCityDistrictFromName(c.Name)
+		if !ok {
+			s.logger.Sugar().Warnf("failed to get city district of %s", c.Name)
+		}
+		cities[i].District = districts
 	}
 
 	return cities, nil
