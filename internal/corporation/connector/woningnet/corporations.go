@@ -48,6 +48,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.DeBilt,
 		city.IJsselstein,
 		city.Vleuten,
+		city.DriebergenRijsenburg,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

@@ -7,7 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/city"
 )
 
-func TestManipulate_MergeCity(t *testing.T) {
+func TestCity_MergeCity(t *testing.T) {
 	a := assert.New(t)
 
 	a.Equal((city.MergeCity(city.City{Name: "Hengelo OV"})), city.Hengelo)
@@ -16,7 +16,7 @@ func TestManipulate_MergeCity(t *testing.T) {
 	a.Equal(city.MergeCity(expected), expected)
 }
 
-func TestManipulate_SuggestedCityDistrictFromName(t *testing.T) {
+func TestCity_SuggestedCityDistrictFromName(t *testing.T) {
 	a := assert.New(t)
 
 	data, ok := city.SuggestedCityDistrictFromName(city.Enschede.Name)
@@ -35,7 +35,7 @@ func TestManipulate_SuggestedCityDistrictFromName(t *testing.T) {
 	a.False(ok)
 }
 
-func TestManipulate_HasSuggestedCityDistrict(t *testing.T) {
+func TestCity_HasSuggestedCityDistrict(t *testing.T) {
 	a := assert.New(t)
 	a.True(city.HasSuggestedCityDistrict(city.Enschede.Name))
 	a.False(city.HasSuggestedCityDistrict(city.DeLutte.Name))
