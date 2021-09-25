@@ -4,23 +4,23 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/woningfinder/woningfinder/internal/city"
 )
 
-func TestCity_Merge(t *testing.T) {
+func TestManipulate_MergeCity(t *testing.T) {
 	a := assert.New(t)
 
-	a.Equal((&city.City{Name: "Hengelo OV"}).Merge(), city.Hengelo)
-	a.Equal((&city.City{Name: "Hengelo"}).Merge(), city.Hengelo)
+	a.Equal((city.MergeCity(city.City{Name: "Hengelo OV"})), city.Hengelo)
+	a.Equal(city.MergeCity(city.City{Name: "Hengelo"}), city.Hengelo)
 	expected := city.City{Name: "a city"}
-	a.Equal(expected.Merge(), expected)
+	a.Equal(city.MergeCity(expected), expected)
 }
 
-func TestCity_SuggestedCityDistrictFromName(t *testing.T) {
+func TestManipulate_SuggestedCityDistrictFromName(t *testing.T) {
 	a := assert.New(t)
 
-	data := city.SuggestedCityDistrictFromName(logging.NewZapLoggerWithoutSentry(), city.Enschede.Name)
+	data, ok := city.SuggestedCityDistrictFromName(city.Enschede.Name)
+	a.True(ok)
 	a.Len(data, len(city.Enschede.Districts()))
 
 	var districts, neighbourhood []string
@@ -31,10 +31,11 @@ func TestCity_SuggestedCityDistrictFromName(t *testing.T) {
 	a.ElementsMatch(districts, city.Enschede.Districts())
 	a.ElementsMatch(neighbourhood, city.Enschede.Neighbourhoods())
 
-	a.Len(city.SuggestedCityDistrictFromName(logging.NewZapLoggerWithoutSentry(), "unexisting"), 0)
+	_, ok = city.SuggestedCityDistrictFromName("unexisting")
+	a.False(ok)
 }
 
-func TestCity_HasSuggestedCityDistrict(t *testing.T) {
+func TestManipulate_HasSuggestedCityDistrict(t *testing.T) {
 	a := assert.New(t)
 	a.True(city.HasSuggestedCityDistrict(city.Enschede.Name))
 	a.False(city.HasSuggestedCityDistrict(city.DeLutte.Name))

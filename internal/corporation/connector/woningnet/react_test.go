@@ -4,6 +4,6 @@ import (
 	"testing"
 )
 
-func Test_React(t *testing.T) {
+func Test_FetchReact(t *testing.T) {
 
 }

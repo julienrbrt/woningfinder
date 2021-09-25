@@ -115,3 +115,119 @@ var Utrecht = City{
 		"Vleuten-De Meern ": nil,
 	},
 }
+
+// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Zeist
+var Zeist = City{
+	Name: "Zeist",
+	District: map[string][]string{
+		"Centrum": {
+			"Carre",
+			"Centrumschil-Zuid",
+			"Centrumschil-Noord",
+			"Lyceumkwartier",
+			"Het Slot",
+		},
+		"Zeist-Noord": {
+			"Patijnpark",
+			"Dijnselburg en Verzetswijk",
+			"Staatsliedenkwartier",
+			"Mooi Zeist, Sanatorium en omgeving",
+			"Vollenhove",
+			"Utrechtseweg",
+		},
+		"Zeist-West": {
+			"Griffensteijn en Kersbergen",
+			"	Nijenheim",
+			"	Crosestein",
+			"	Vogelwijk",
+			"	Brugakker en De Clomp",
+			"Couwenhoven",
+			"Blikkenburg",
+			"Wiedegebied",
+		},
+		"Zeist-Oost": {
+			"Hoge Dennen",
+			"Kerckebosch",
+			"Driebergseweg",
+			"Station NS",
+			"Zeister Bos",
+			"Austerlitz",
+		},
+	},
+}
+
+// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_De_Bilt
+var Bilthoven = City{
+	Name: "Bilthoven",
+}
+
+var Bunnik = City{
+	Name: "Bunnik",
+}
+
+// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Nieuwegein
+var Nieuwegein = City{
+	Name: "Nieuwegein",
+}
+
+// https://allecijfers.nl/gemeente-overzicht/stichtse-vecht/
+var Maarssen = City{
+	Name: "Maarssen",
+}
+
+// https://allecijfers.nl/gemeente-overzicht/stichtse-vecht/
+var WijkBijDuurstede = City{
+	Name: "Wijk bij Duurstede",
+}
+
+var DenDoler = City{
+	Name: "Den Dolder",
+}
+
+var Maartensdijk = City{
+	Name: "Maartensdijk",
+}
+
+var Baambrugge = City{
+	Name: "Baambrugge",
+}
+
+var Wilnis = City{
+	Name: "Wilnis",
+}
+
+var Woerden = City{
+	Name: "Woerden",
+}
+
+var Vianen = City{
+	Name: "Vianen",
+}
+
+var DeMeern = City{
+	Name: "De Meern",
+}
+
+var Papekop = City{
+	Name: "Papekop",
+}
+
+var Breukelen = City{
+	Name: "Breukelen",
+}
+
+var DeBilt = City{
+	Name: "De Bilt",
+}
+
+var DriebergenRijsenburg = City{
+	Name: "Driebergen-Rijsenburg",
+}
+
+var IJsselstein = City{
+	Name: "IJsselstein",
+}
+
+var Vleuten = City{
+	Name: "Vleuten",
+}

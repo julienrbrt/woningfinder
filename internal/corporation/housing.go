@@ -1,6 +1,6 @@
 package corporation
 
-import "github.com/woningfinder/woningfinder/internal/corporation/city"
+import "github.com/woningfinder/woningfinder/internal/city"
 
 // Housing defines an appartement and a house
 type Housing struct {
