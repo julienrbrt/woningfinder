@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
@@ -32,7 +31,7 @@ type offer struct {
 	Longitude             float64 `json:"lng"`
 	Address               string  `json:"adres"`
 	District              string  `json:"wijk"`
-	City                  string  `json:"plaats"`
+	CityName              string  `json:"plaats"`
 	Postcode              string  `json:"postcode"`
 	RentPrice             float64 `json:"relevante_huurprijs,omitempty"`
 	RentPriceForAllowance string  `json:"toeslagprijs"`
@@ -124,11 +123,9 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 func (c *client) Map(offer offer, houseType corporation.HousingType) corporation.Offer {
 	house := corporation.Housing{
-		Type:    houseType,
-		Address: fmt.Sprintf("%s %s %s", offer.Address, offer.Postcode, offer.City),
-		City: city.City{
-			Name: offer.City,
-		},
+		Type:          houseType,
+		Address:       fmt.Sprintf("%s %s %s", offer.Address, offer.Postcode, offer.CityName),
+		CityName:      offer.CityName,
 		EnergyLabel:   offer.EnergieLabel,
 		NumberBedroom: offer.NumberBedroom,
 		Size:          c.parseHouseSize(offer.Size),
@@ -144,13 +141,10 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 
 	// get address city district
 	var err error
-
-	if city.HasSuggestedCityDistrict(house.City.Name) {
-		house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
-		if err != nil {
-			house.CityDistrict = offer.District
-			c.logger.Sugar().Infof("de woonplaats connector: could not get city district of %s: %w", house.Address, err)
-		}
+	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
+	if err != nil {
+		house.CityDistrict = offer.District
+		c.logger.Sugar().Infof("de woonplaats connector: could not get city district of %s: %w", house.Address, err)
 	}
 
 	return corporation.Offer{

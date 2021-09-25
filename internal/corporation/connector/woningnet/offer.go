@@ -11,7 +11,6 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
-	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
@@ -218,11 +217,9 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 
 	// fill in already known housing characteristics
 	house := corporation.Housing{
-		Type:    houseType,
-		Address: fmt.Sprintf("%s %s", offer.Address, cityName[0]),
-		City: city.City{
-			Name: cityName[0],
-		},
+		Type:       houseType,
+		Address:    fmt.Sprintf("%s %s", offer.Address, cityName[0]),
+		CityName:   cityName[0],
 		Accessible: offer.ToegankelijkheidslabelCSSClass != "ToegankelijkheidslabelZON",
 	}
 
@@ -237,12 +234,10 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 	}
 
 	// get address city district
-	if city.HasSuggestedCityDistrict(house.City.Name) {
-		house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
-		if err != nil {
-			house.CityDistrict = cityName[len(cityName)-1]
-			c.logger.Sugar().Infof("woningnet connector: could not get city district of %s: %w", house.Address, err)
-		}
+	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
+	if err != nil {
+		house.CityDistrict = cityName[len(cityName)-1]
+		c.logger.Sugar().Infof("woningnet connector: could not get city district of %s: %w", house.Address, err)
 	}
 
 	// TODO

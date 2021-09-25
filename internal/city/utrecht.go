@@ -3,7 +3,7 @@ package city
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Utrecht
 var Utrecht = City{
 	Name: "Utrecht",
-	District: map[string][]string{
+	SuggestedDistrict: map[string][]string{
 		"West": {
 			"Welgelegen",
 			"Den Hommel",
@@ -112,14 +112,13 @@ var Utrecht = City{
 			"Langerak",
 			"Strijkviertel",
 		},
-		"Vleuten-De Meern ": nil,
 	},
 }
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Zeist
 var Zeist = City{
 	Name: "Zeist",
-	District: map[string][]string{
+	SuggestedDistrict: map[string][]string{
 		"Centrum": {
 			"Carre",
 			"Centrumschil-Zuid",
@@ -137,10 +136,10 @@ var Zeist = City{
 		},
 		"Zeist-West": {
 			"Griffensteijn en Kersbergen",
-			"	Nijenheim",
-			"	Crosestein",
-			"	Vogelwijk",
-			"	Brugakker en De Clomp",
+			"Nijenheim",
+			"Crosestein",
+			"Vogelwijk",
+			"Brugakker en De Clomp",
 			"Couwenhoven",
 			"Blikkenburg",
 			"Wiedegebied",

@@ -14,8 +14,8 @@ func NewServiceMock(err error) Service {
 	return &serviceMock{
 		err: err,
 		expectedMockGetCities: []*city.City{
-			{Name: "Enschede", District: map[string][]string{"Centrum": nil, "Noord": {"Roombeek"}}},
-			{Name: "Hengelo"},
+			&city.Enschede,
+			&city.Hengelo,
 		},
 	}
 }

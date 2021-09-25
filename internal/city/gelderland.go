@@ -16,13 +16,6 @@ var Bredevoort = City{
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Apeldoorn
 var Apeldoorn = City{
 	Name: "Apeldoorn",
-	District: map[string][]string{
-		"Centrum": nil,
-		"West":    nil,
-		"Zuid":    nil,
-		"Oost":    nil,
-		"Noord":   nil,
-	},
 }
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Berkelland
@@ -53,11 +46,4 @@ var Ulft = City{
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Winterswijk
 var Winterswijk = City{
 	Name: "Winterswijk",
-	District: map[string][]string{
-		"Centrale deel": nil,
-		"Noordoost":     nil,
-		"Noordwest":     nil,
-		"Zuidoost":      nil,
-		"Zuidwest":      nil,
-	},
 }
