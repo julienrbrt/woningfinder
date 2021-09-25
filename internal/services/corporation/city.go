@@ -38,6 +38,14 @@ func (s *service) GetCity(name string) (*city.City, error) {
 		return nil, fmt.Errorf("failing getting city %s: %w", name, err)
 	}
 
+	// enrich city with suggested city districts
+	var districts []string
+	for district := range c.SuggestedCityDistrict() {
+		districts = append(districts, district)
+	}
+
+	c.District = districts
+
 	return &c, nil
 }
 
@@ -45,6 +53,16 @@ func (s *service) GetCities() ([]*city.City, error) {
 	var cities []*city.City
 	if err := s.dbClient.Conn().Model(&cities).Select(); err != nil {
 		return nil, fmt.Errorf("failing getting cities: %w", err)
+	}
+
+	// enrich cities with suggested city districts
+	for i, c := range cities {
+		var districts []string
+		for district := range c.SuggestedCityDistrict() {
+			districts = append(districts, district)
+		}
+
+		cities[i].District = districts
 	}
 
 	return cities, nil
