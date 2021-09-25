@@ -3,8 +3,8 @@ package itris
 import (
 	"net/url"
 
+	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 var OnsHuisInfo = corporation.Corporation{

@@ -3,8 +3,8 @@ package woningnet
 import (
 	"net/url"
 
+	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 var HengeloBorneInfo = corporation.Corporation{
@@ -25,20 +25,29 @@ var HengeloBorneInfo = corporation.Corporation{
 }
 
 var UtrechtInfo = corporation.Corporation{
-	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregioutrecht.nl", Path: "/webapi"},
-	Name:        "WoningNet Utrecht",
-	URL:         "https://www.woningnetregioutrecht.nl",
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregiocity.nl", Path: "/webapi"},
+	Name:        "WoningNet city",
+	URL:         "https://www.woningnetregiocity.nl",
 	Cities: []city.City{
 		city.Utrecht,
 		city.Zeist,
-		// woerden
-		// dorn
-		// doorn
-		// nieuwegein
-		// oudewater
-		// IJsselstein
-		// breukelen
-		// nigtevecht
+		city.Bilthoven,
+		city.Bunnik,
+		city.Nieuwegein,
+		city.Maarssen,
+		city.WijkBijDuurstede,
+		city.DenDoler,
+		city.Maartensdijk,
+		city.Baambrugge,
+		city.Wilnis,
+		city.Woerden,
+		city.Vianen,
+		city.DeMeern,
+		city.Papekop,
+		city.Breukelen,
+		city.DeBilt,
+		city.IJsselstein,
+		city.Vleuten,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

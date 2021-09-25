@@ -8,10 +8,9 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 
+	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
@@ -589,17 +588,4 @@ func (c *client) parseEnergyLabel(offer *offerDetails) string {
 
 func (c *client) getExternalID(offer *offerDetails) string {
 	return fmt.Sprint(offer.Assignmentid) + externalIDSeperator + offer.ID
-}
-
-func (c *client) parseSelectionDate(str string) time.Time {
-	if len(str) == 0 {
-		return time.Time{}
-	}
-
-	date, err := time.Parse("2006-01-02 15:04:05", str)
-	if err != nil {
-		return time.Time{}
-	}
-
-	return date
 }

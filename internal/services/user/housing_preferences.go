@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	pg "github.com/go-pg/pg/v10"
+	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 

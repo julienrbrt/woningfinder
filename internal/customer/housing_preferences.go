@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 // HousingPreferences defines the user preference on a housing
