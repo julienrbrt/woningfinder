@@ -1,6 +1,6 @@
 package city
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Bussum
 var Bussum = City{
-	Name: "Bussum",
+	Name:        "Bussum",
+	Coordinates: []float64{5.162747, 52.277421},
 }

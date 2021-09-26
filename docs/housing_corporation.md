@@ -10,7 +10,11 @@ WoningFinder is implementing these systems permitting to interact with the housi
   - Update client_provider with its client
   - If a new city is supported add all suggested city districts for that city and add the city in the city table
 
-Note: Suggested city districts are useful when Mapbox does not get the main neighbourhood but only its descendent (example what people call in Enschede "Centrum" is composed of different districts, the suggested districts let the user select them all instead of one by one).
+### City
+
+Suggested city districts are useful when Mapbox does not get the main neighbourhood but only its descendent (example what people call in Enschede "Centrum" is composed of different districts, the suggested districts let the user select them all instead of one by one).
+
+City coordinates can be found via https://developer.mapquest.com/documentation/tools/latitude-longitude-finder.
 
 ## Update Housing Corporation
 

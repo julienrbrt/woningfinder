@@ -1,9 +1,9 @@
 package city
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Enschede
-// https://allecijfers.nl/gemeente-overzicht/enschede/
 var Enschede = City{
-	Name: "Enschede",
+	Name:        "Enschede",
+	Coordinates: []float64{6.893587, 52.217948},
 	SuggestedDistrict: map[string][]string{
 		"Centrum": {
 			"City",
@@ -68,27 +68,30 @@ var Enschede = City{
 		}},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Almelo
 var Almelo = City{
-	Name: "Almelo",
+	Name:        "Almelo",
+	Coordinates: []float64{6.660925, 52.355085},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Borne
 var Borne = City{
-	Name: "Borne",
+	Name:        "Borne",
+	Coordinates: []float64{6.75032, 52.30185},
 }
 
 var Hertme = City{
-	Name: "Hertme",
+	Name:        "Hertme",
+	Coordinates: []float64{6.761139, 52.321502},
 }
 
 var Zenderen = City{
-	Name: "Zenderen",
+	Name:        "Zenderen",
+	Coordinates: []float64{6.72451, 52.32378},
 }
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Haaksbergen
 var Haaksbergen = City{
-	Name: "Haaksbergen",
+	Name:        "Haaksbergen",
+	Coordinates: []float64{6.733021, 52.160845},
 	SuggestedDistrict: map[string][]string{
 		"Kern": {"Haaksbergen Kern-1",
 			"Haaksbergen Kern-2",
@@ -98,25 +101,27 @@ var Haaksbergen = City{
 	},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Hengelo
 var Hengelo = City{
-	Name: "Hengelo",
+	Name:        "Hengelo",
+	Coordinates: []float64{6.791866, 52.267014},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Losser
 var Losser = City{
-	Name: "Losser",
+	Name:        "Losser",
+	Coordinates: []float64{7.004768, 52.262136},
 }
 
 var Overdinkel = City{
-	Name: "Overdinkel",
+	Name:        "Overdinkel",
+	Coordinates: []float64{7.03673, 52.23492},
 }
 
 var DeLutte = City{
-	Name: "De Lutte",
+	Name:        "De Lutte",
+	Coordinates: []float64{6.99045, 52.31443},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Zwolle
 var Zwolle = City{
-	Name: "Zwolle",
+	Name:        "Zwolle",
+	Coordinates: []float64{6.094377, 52.508976},
 }

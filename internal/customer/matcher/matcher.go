@@ -127,7 +127,7 @@ func (m *matcher) matchDistrict(cityPreferences city.City, housing corporation.H
 	}
 
 	// check if has suggested districts
-	suggested := cityPreferences.SuggestedCityDistrict()
+	suggested := city.SuggestedCityDistrict(cityPreferences.Name)
 	for _, district := range cityPreferences.District {
 		// user has suggested district has preferences
 		if innerDistricts, ok := suggested[district]; ok && hasDistricts(innerDistricts, housing.CityDistrict) {
