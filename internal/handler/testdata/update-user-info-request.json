@@ -6,10 +6,10 @@
   "city": [
     {
       "name": "enschede",
-      "district": {
-        "Centrum": null,
-        "Roombeek": null
-      }
+      "district": [
+        "Centrum",
+        "Roombeek"
+      ]
     }
   ],
   "maximum_price": 0,

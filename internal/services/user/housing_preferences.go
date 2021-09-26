@@ -54,7 +54,7 @@ func (s *service) CreateHousingPreferences(userID uint, preferences *customer.Ho
 		}
 
 		// add cities district
-		for district := range city.District {
+		for _, district := range city.District {
 			if _, err := db.Model(&customer.HousingPreferencesCityDistrict{UserID: userID, CityName: city.Name, Name: district}).
 				Where("user_id = ? and city_name = ? and name = ?", userID, city.Name, district).
 				SelectOrInsert(); err != nil {
@@ -88,30 +88,28 @@ func (s *service) GetHousingPreferences(userID uint) (customer.HousingPreference
 		housingPreferences.Type = append(housingPreferences.Type, corporation.HousingType(housingType.HousingType))
 	}
 
-	// add its city districts
+	// query its city districts
 	var cityDistricts []customer.HousingPreferencesCityDistrict
 	if err := db.Model(&cityDistricts).Where("user_id = ?", userID).Select(); err != nil {
 		return housingPreferences, fmt.Errorf("failed getting userID %d housing preferences city districts: %w", userID, err)
 	}
 
-	// add its city
+	// query its city
 	var cities []customer.HousingPreferencesCity
 	if err := db.Model(&cities).Where("user_id = ?", userID).Select(); err != nil {
 		return housingPreferences, fmt.Errorf("failed getting userID %d housing preferences cities: %w", userID, err)
 	}
 
+	// enrinch city and districts
 	for _, c := range cities {
-		districts := map[string][]string{}
+		var districts []string
 		for _, district := range cityDistricts {
 			if district.CityName == c.CityName {
-				// this permits to use same districts map[string][]string that is used for suggestion of districts for the user too
-				// we however set the districts only as a key, so only the key is used in the preferences matcher
-				districts[district.Name] = nil
+				districts = append(districts, district.Name)
 			}
 		}
 
 		housingPreferences.City = append(housingPreferences.City, city.City{Name: c.CityName, District: districts})
-
 	}
 
 	return housingPreferences, nil

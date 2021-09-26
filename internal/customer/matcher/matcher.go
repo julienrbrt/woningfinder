@@ -54,12 +54,12 @@ func (m *matcher) matchPreferences(preferences customer.HousingPreferences, offe
 	}
 
 	// match house type
-	if !matchHouseType(preferences, offer.Housing) {
+	if !m.matchHouseType(preferences, offer.Housing) {
 		return false
 	}
 
 	// match location
-	if !matchLocation(preferences, offer.Housing) {
+	if !m.matchLocation(preferences, offer.Housing) {
 		return false
 	}
 
@@ -87,7 +87,7 @@ func (m *matcher) matchPreferences(preferences customer.HousingPreferences, offe
 	return true
 }
 
-func matchHouseType(housingPreference customer.HousingPreferences, housing corporation.Housing) bool {
+func (m *matcher) matchHouseType(housingPreference customer.HousingPreferences, housing corporation.Housing) bool {
 	if len(housingPreference.Type) == 0 {
 		return true
 	}
@@ -101,16 +101,16 @@ func matchHouseType(housingPreference customer.HousingPreferences, housing corpo
 	return false
 }
 
-func matchLocation(housingPreference customer.HousingPreferences, housing corporation.Housing) bool {
+func (m *matcher) matchLocation(housingPreference customer.HousingPreferences, housing corporation.Housing) bool {
 	if len(housingPreference.City) == 0 {
 		return true
 	}
 
-	for _, preferences := range housingPreference.City {
+	for _, cityPreferences := range housingPreference.City {
 		// prevent that if actual is an empty, then strings.Contains returns true
-		if housing.City.Name != "" && strings.EqualFold(housing.City.Name, preferences.Name) {
-			if len(preferences.District) > 0 {
-				return matchDistrict(preferences, housing)
+		if housing.CityName != "" && strings.EqualFold(housing.CityName, cityPreferences.Name) {
+			if len(cityPreferences.District) > 0 {
+				return m.matchDistrict(cityPreferences, housing)
 			}
 
 			return true
@@ -120,29 +120,29 @@ func matchLocation(housingPreference customer.HousingPreferences, housing corpor
 	return false
 }
 
-func matchDistrict(cityPreferences city.City, housing corporation.Housing) bool {
+func (m *matcher) matchDistrict(cityPreferences city.City, housing corporation.Housing) bool {
 	// no district but user has preferences so reject
 	if housing.CityDistrict == "" {
 		return false
 	}
 
-	cityDistricts, ok := city.SuggestedCityDistrictFromName(cityPreferences.Name)
-	if !ok {
-		return false
-	}
-
-	for district := range cityPreferences.District {
-		// get neighboorhoud for district and try finding a match
-		if neighboorhoud, ok := cityDistricts[district]; ok {
-			for _, n := range neighboorhoud {
-				if strings.EqualFold(n, housing.CityDistrict) {
-					return true
-				}
-			}
+	// check if has suggested districts
+	suggested := city.SuggestedCityDistrict(cityPreferences.Name)
+	for _, district := range cityPreferences.District {
+		// user has suggested district has preferences
+		if innerDistricts, ok := suggested[district]; ok && hasDistricts(innerDistricts, housing.CityDistrict) {
+			return true
 		}
 
-		// advanced user defined district immediatly so perform basic check
-		if strings.Contains(strings.ToLower(district), strings.ToLower(housing.CityDistrict)) || strings.Contains(strings.ToLower(housing.CityDistrict), strings.ToLower(district)) {
+	}
+
+	return hasDistricts(cityPreferences.District, housing.CityDistrict)
+}
+
+func hasDistricts(districts []string, district string) bool {
+	district = strings.ToLower(district)
+	for _, d := range districts {
+		if strings.Contains(strings.ToLower(d), district) || strings.Contains(district, strings.ToLower(d)) {
 			return true
 		}
 	}

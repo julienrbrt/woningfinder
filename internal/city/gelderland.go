@@ -1,63 +1,51 @@
 package city
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Aalten
 var Aalten = City{
-	Name: "Aalten",
+	Name:        "Aalten",
+	Coordinates: []float64{6.580902, 51.928567},
 }
 
 var Dinxperlo = City{
-	Name: "Dinxperlo",
+	Name:        "Dinxperlo",
+	Coordinates: []float64{6.488560, 51.861610},
 }
 
 var Bredevoort = City{
-	Name: "Bredevoort",
+	Name:        "Bredevoort",
+	Coordinates: []float64{6.617230, 51.942650},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Apeldoorn
 var Apeldoorn = City{
-	Name: "Apeldoorn",
-	District: map[string][]string{
-		"Centrum": nil,
-		"West":    nil,
-		"Zuid":    nil,
-		"Oost":    nil,
-		"Noord":   nil,
-	},
+	Name:        "Apeldoorn",
+	Coordinates: []float64{5.963949, 52.215646},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Berkelland
 var Neede = City{
-	Name: "Neede",
+	Name:        "Neede",
+	Coordinates: []float64{6.611415, 52.135043},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Doetinchem
 var Wehl = City{
-	Name: "Wehl",
+	Name:        "Wehl",
+	Coordinates: []float64{6.21204, 51.96284},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Montferland
 var Heerenberg = City{
-	Name: "'s-Heerenberg",
+	Name:        "'s-Heerenberg",
+	Coordinates: []float64{6.25531, 51.87779},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Oost_Gelre
 var Groenlo = City{
-	Name: "Groenlo",
+	Name:        "Groenlo",
+	Coordinates: []float64{6.611633, 52.040754},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Oude_IJsselstreek
 var Ulft = City{
-	Name: "Ulft",
+	Name:        "Ulft",
+	Coordinates: []float64{6.378519, 51.898208},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Winterswijk
 var Winterswijk = City{
-	Name: "Winterswijk",
-	District: map[string][]string{
-		"Centrale deel": nil,
-		"Noordoost":     nil,
-		"Noordwest":     nil,
-		"Zuidoost":      nil,
-		"Zuidwest":      nil,
-	},
+	Name:        "Winterswijk",
+	Coordinates: []float64{6.722406, 51.974731},
 }

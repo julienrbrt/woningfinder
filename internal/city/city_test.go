@@ -7,10 +7,17 @@ import (
 	"github.com/woningfinder/woningfinder/internal/city"
 )
 
-func TestCity(t *testing.T) {
+func TestCity_Merge(t *testing.T) {
 	a := assert.New(t)
 
-	a.Equal(city.Hengelo.Name, "Hengelo OV")
-	a.Equal(len(city.Almelo.Districts()), len(city.Almelo.District))
-	a.Empty(city.Almelo.Neighbourhoods())
+	a.Equal(((&city.City{Name: "Hengelo OV"}).Merge()), city.Hengelo)
+	a.Equal(((&city.City{Name: "Hengelo"}).Merge()), city.Hengelo)
+	expected := &city.City{Name: "a city"}
+	a.Equal(*expected, expected.Merge())
+}
+
+func TestCity_GetCoordinates(t *testing.T) {
+	a := assert.New(t)
+
+	a.Equal(city.Hengelo.Coordinates, city.GetCoordinates(city.Hengelo.Name))
 }

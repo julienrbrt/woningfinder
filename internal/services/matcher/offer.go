@@ -52,7 +52,7 @@ func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corpo
 	// get cities from offers
 	for _, offer := range offers {
 		// merge city names
-		city := city.MergeCity(offer.Housing.City)
+		city := (&city.City{Name: offer.Housing.CityName}).Merge()
 		cities[city.Name] = city
 	}
 

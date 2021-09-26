@@ -2,8 +2,9 @@ package city
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Utrecht
 var Utrecht = City{
-	Name: "Utrecht",
-	District: map[string][]string{
+	Name:        "Utrecht",
+	Coordinates: []float64{5.110414, 52.095942},
+	SuggestedDistrict: map[string][]string{
 		"West": {
 			"Welgelegen",
 			"Den Hommel",
@@ -112,14 +113,14 @@ var Utrecht = City{
 			"Langerak",
 			"Strijkviertel",
 		},
-		"Vleuten-De Meern ": nil,
 	},
 }
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Zeist
 var Zeist = City{
-	Name: "Zeist",
-	District: map[string][]string{
+	Name:        "Zeist",
+	Coordinates: []float64{5.22785, 52.08944},
+	SuggestedDistrict: map[string][]string{
 		"Centrum": {
 			"Carre",
 			"Centrumschil-Zuid",
@@ -137,10 +138,10 @@ var Zeist = City{
 		},
 		"Zeist-West": {
 			"Griffensteijn en Kersbergen",
-			"	Nijenheim",
-			"	Crosestein",
-			"	Vogelwijk",
-			"	Brugakker en De Clomp",
+			"Nijenheim",
+			"Crosestein",
+			"Vogelwijk",
+			"Brugakker en De Clomp",
 			"Couwenhoven",
 			"Blikkenburg",
 			"Wiedegebied",
@@ -156,78 +157,92 @@ var Zeist = City{
 	},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_De_Bilt
 var Bilthoven = City{
-	Name: "Bilthoven",
+	Name:        "Bilthoven",
+	Coordinates: []float64{5.20454, 52.129141},
 }
 
 var Bunnik = City{
-	Name: "Bunnik",
+	Name:        "Bunnik",
+	Coordinates: []float64{5.194111, 52.066344},
 }
 
-// https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Nieuwegein
 var Nieuwegein = City{
-	Name: "Nieuwegein",
+	Name:        "Nieuwegein",
+	Coordinates: []float64{5.083612, 52.036715},
 }
 
-// https://allecijfers.nl/gemeente-overzicht/stichtse-vecht/
 var Maarssen = City{
-	Name: "Maarssen",
+	Name:        "Maarssen",
+	Coordinates: []float64{5.040082, 52.138485},
 }
 
-// https://allecijfers.nl/gemeente-overzicht/stichtse-vecht/
 var WijkBijDuurstede = City{
-	Name: "Wijk bij Duurstede",
+	Name:        "Wijk bij Duurstede",
+	Coordinates: []float64{5.33743, 51.97516},
 }
 
 var DenDoler = City{
-	Name: "Den Dolder",
+	Name:        "Den Dolder",
+	Coordinates: []float64{4.36658, 51.633405},
 }
 
 var Maartensdijk = City{
-	Name: "Maartensdijk",
+	Name:        "Maartensdijk",
+	Coordinates: []float64{5.17294, 52.15842},
 }
 
 var Baambrugge = City{
-	Name: "Baambrugge",
+	Name:        "Baambrugge",
+	Coordinates: []float64{4.990842, 52.247595},
 }
 
 var Wilnis = City{
-	Name: "Wilnis",
+	Name:        "Wilnis",
+	Coordinates: []float64{4.899067, 52.195378},
 }
 
 var Woerden = City{
-	Name: "Woerden",
+	Name:        "Woerden",
+	Coordinates: []float64{4.891356, 52.086757},
 }
 
 var Vianen = City{
-	Name: "Vianen",
+	Name:        "Vianen",
+	Coordinates: []float64{5.09372, 51.989039},
 }
 
 var DeMeern = City{
-	Name: "De Meern",
+	Name:        "De Meern",
+	Coordinates: []float64{5.03658, 52.080582},
 }
 
 var Papekop = City{
-	Name: "Papekop",
+	Name:        "Papekop",
+	Coordinates: []float64{4.853489, 52.044843},
 }
 
 var Breukelen = City{
-	Name: "Breukelen",
+	Name:        "Breukelen",
+	Coordinates: []float64{5.002549, 52.172152},
 }
 
 var DeBilt = City{
-	Name: "De Bilt",
+	Name:        "De Bilt",
+	Coordinates: []float64{5.178706, 52.109701},
 }
 
 var DriebergenRijsenburg = City{
-	Name: "Driebergen-Rijsenburg",
+	Name:        "Driebergen-Rijsenburg",
+	Coordinates: []float64{5.28267, 52.051922},
 }
 
 var IJsselstein = City{
-	Name: "IJsselstein",
+	Name:        "IJsselstein",
+	Coordinates: []float64{5.045879, 52.024638},
 }
 
 var Vleuten = City{
-	Name: "Vleuten",
+	Name:        "Vleuten",
+	Coordinates: []float64{5.011092, 52.106979},
 }

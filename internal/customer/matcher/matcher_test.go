@@ -38,7 +38,7 @@ var offer = corporation.Offer{
 	ExternalID: "w758752",
 	Housing: corporation.Housing{
 		Type:          corporation.HousingTypeHouse,
-		City:          city.City{Name: "Enschede"},
+		CityName:      city.Enschede.Name,
 		CityDistrict:  "deppenbroek",
 		Address:       "Beatrixstraat 1 R 7142BM Enschede",
 		EnergyLabel:   "A",
@@ -110,10 +110,10 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	user.HousingPreferences.City = []city.City{
 		{
 			Name: "Enschede",
-			District: map[string][]string{
-				"Roombeek":   nil,
-				"Glanerbrug": nil,
-				"Stokhorst":  nil,
+			District: []string{
+				"Roombeek",
+				"Glanerbrug", // from suggested districts
+				"Stokhorst",
 			},
 		},
 	}

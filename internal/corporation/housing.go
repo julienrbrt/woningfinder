@@ -1,12 +1,10 @@
 package corporation
 
-import "github.com/woningfinder/woningfinder/internal/city"
-
 // Housing defines an appartement and a house
 type Housing struct {
 	Type          HousingType
 	Address       string
-	City          city.City
+	CityName      string
 	CityDistrict  string
 	EnergyLabel   string
 	Price         float64
