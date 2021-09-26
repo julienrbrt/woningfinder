@@ -38,30 +38,33 @@ func (s *service) GetCity(name string) (*city.City, error) {
 		return nil, fmt.Errorf("failing getting city %s: %w", name, err)
 	}
 
-	// enrich city with suggested city districts
-	distritcs, ok := city.SuggestedCityDistrictFromName(c.Name)
-	if !ok {
-		s.logger.Sugar().Warnf("failed to get city district of %s", name)
+	// enrich city with suggested city districts and coordinates
+	var districts []string
+	for district := range city.SuggestedCityDistrict(c.Name) {
+		districts = append(districts, district)
 	}
-	c.District = distritcs
+
+	c.District = districts
+	c.Coordinates = city.GetCoordinates(c.Name)
 
 	return &c, nil
 }
 
 func (s *service) GetCities() ([]*city.City, error) {
 	var cities []*city.City
-
 	if err := s.dbClient.Conn().Model(&cities).Select(); err != nil {
 		return nil, fmt.Errorf("failing getting cities: %w", err)
 	}
 
-	// enrich city with suggested city districts
+	// enrich cities with suggested city districts and coordinates
 	for i, c := range cities {
-		districts, ok := city.SuggestedCityDistrictFromName(c.Name)
-		if !ok {
-			s.logger.Sugar().Warnf("failed to get city district of %s", c.Name)
+		var districts []string
+		for district := range city.SuggestedCityDistrict(c.Name) {
+			districts = append(districts, district)
 		}
+
 		cities[i].District = districts
+		cities[i].Coordinates = city.GetCoordinates(c.Name)
 	}
 
 	return cities, nil

@@ -9,7 +9,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/woningfinder/woningfinder/internal/city"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 )
@@ -502,11 +501,9 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	}
 
 	house := corporation.Housing{
-		Type:    houseType,
-		Address: fmt.Sprintf("%s %s-%s %s %s", offer.Street, offer.Housenumber, offer.Housenumberaddition, offer.Postalcode, offer.City.Name),
-		City: city.City{
-			Name: offer.City.Name,
-		},
+		Type:          houseType,
+		Address:       fmt.Sprintf("%s %s-%s %s %s", offer.Street, offer.Housenumber, offer.Housenumberaddition, offer.Postalcode, offer.City.Name),
+		CityName:      offer.City.Name,
 		EnergyLabel:   c.parseEnergyLabel(offer),
 		NumberBedroom: numberBedroom,
 		Size:          offer.Areadwelling,
@@ -521,11 +518,9 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	}
 
 	// get address city district
-	if city.HasSuggestedCityDistrict(house.City.Name) {
-		house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
-		if err != nil {
-			c.logger.Sugar().Infof("zig connector: could not get city district of %s: %w", house.Address, err)
-		}
+	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
+	if err != nil {
+		c.logger.Sugar().Infof("zig connector: could not get city district of %s: %w", house.Address, err)
 	}
 
 	return corporation.Offer{

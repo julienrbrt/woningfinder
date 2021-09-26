@@ -11,6 +11,8 @@
   - [Housing-Matcher](#housing-matcher)
     - [Matching](#matching)
     - [Corporation credentials](#corporation-credentials)
+  - [Email](#email)
+    - [Configuration](#configuration)
   - [DevOps](#devops)
     - [GitHub Actions](#github-actions)
     - [Environment Variables](#environment-variables)
@@ -102,6 +104,25 @@ People having registered their credentials for the longest get reaction priority
 
 For reacting to an offer, WoningFinder must authenticate itself as the customer. This means that WoningFinder stores the consumer credentials in the database (`CorporationCredentials`).
 WoningFinder supports privacy and security of its customers. We use AES encryption to encrypt and store the user password in the datababse. The password is only decrypted to login to the housing corporation with a private key. No plaintext password is ever stored.
+
+## Email
+
+The major interaction that WoningFinder has with its customers is via email.
+The distribution of the email must thus be perfect and their design as well.
+
+The templates are written in MJML and are generated to html with `mjml file.mjml -o file.html` or using the script `generate-html.sh` in the `email/templates` folder.
+Note that when were this `range` or `if` condition in the mjml, it has to be re-added manually in the html after each re-generation.
+
+### Configuration
+
+Email are sent from `contact@woningfinder.nl` via SMTP using the following enviroment variable:
+
+```
+EMAIL_ADDRESS=''
+EMAIL_PASSWORD=''
+EMAIL_SMTP_ADDRESS=''
+EMAIL_SMTP_PORT=
+```
 
 ## DevOps
 
