@@ -100,7 +100,7 @@ var Haaksbergen = City{
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Hengelo
 var Hengelo = City{
-	Name: "Hengelo OV",
+	Name: "Hengelo",
 }
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Losser
