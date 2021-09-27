@@ -49,6 +49,10 @@ var UtrechtInfo = corporation.Corporation{
 		city.IJsselstein,
 		city.Vleuten,
 		city.DriebergenRijsenburg,
+		city.Mijdrecht,
+		city.Linschoten,
+		city.Odijk,
+		city.Doorn,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

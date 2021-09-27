@@ -246,3 +246,21 @@ var Vleuten = City{
 	Name:        "Vleuten",
 	Coordinates: []float64{5.011092, 52.106979},
 }
+
+var Mijdrecht = City{
+	Name:        "Mijdrecht",
+	Coordinates: []float64{4.864817, 52.206018},
+}
+
+var Linschoten = City{
+	Name:        "Linschoten",
+	Coordinates: []float64{4.91286, 52.06433},
+}
+var Odijk = City{
+	Name:        "Odijk",
+	Coordinates: []float64{5.23439, 52.04947},
+}
+var Doorn = City{
+	Name:        "Doorn",
+	Coordinates: []float64{5.345864, 52.033299},
+}

@@ -49,6 +49,10 @@ var cityTable = map[string]City{
 	IJsselstein.Name:          IJsselstein,
 	Vleuten.Name:              Vleuten,
 	DriebergenRijsenburg.Name: DriebergenRijsenburg,
+	Mijdrecht.Name:            Mijdrecht,
+	Linschoten.Name:           Linschoten,
+	Odijk.Name:                Odijk,
+	Doorn.Name:                Doorn,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
