@@ -59,4 +59,5 @@ type HousingPreferencesMatch struct {
 	HousingAddress  string    `json:"housing_address"`
 	CorporationName string    `json:"corporation_name"`
 	OfferURL        string    `json:"offer_url"`
+	PictureURL      string    `json:"picture_url"`
 }

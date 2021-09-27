@@ -1,5 +1,7 @@
 package corporation
 
+import "net/url"
+
 // Offers defines a list of offer belonging to a housing corporation
 type Offers struct {
 	Corporation Corporation
@@ -11,6 +13,7 @@ type Offer struct {
 	Housing                      Housing
 	SelectionMethod              SelectionMethod
 	URL                          string
+	RawPictureURL                *url.URL
 	ExternalID                   string // identifier of the house at the housing coporation in order to react
 	MinFamilySize, MaxFamilySize int
 	MinAge, MaxAge               int

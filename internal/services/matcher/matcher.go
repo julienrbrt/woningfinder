@@ -59,7 +59,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				return
 			}
 
-			newCreds, err := s.userService.DecryptCredentials(&user.CorporationCredentials[0])
+			newCreds, err := s.userService.DecryptCredentials(user.CorporationCredentials[0])
 			if err != nil {
 				s.logger.Sugar().Errorf("error while decrypting credentials for %s: %w", user.Email, err)
 				return
@@ -91,8 +91,11 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 						continue
 					}
 
+					// get and upload housing picture
+					pictureURL := s.uploadHousingPicture(offer)
+
 					// save match to database
-					if err := s.userService.CreateHousingPreferencesMatch(user.ID, offer, user.CorporationCredentials[0].CorporationName); err != nil {
+					if err := s.userService.CreateHousingPreferencesMatch(user.ID, offer, user.CorporationCredentials[0].CorporationName, pictureURL); err != nil {
 						s.logger.Sugar().Errorf("failed to add %s from %s match to user %s: %w", offer.Housing.Address, offers.Corporation.Name, user.Email, err)
 					}
 
@@ -169,6 +172,15 @@ func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Of
 	}
 
 	return uncheckedOffers, len(uncheckedOffers) > 0
+}
+
+func (s *service) uploadHousingPicture(offer corporation.Offer) string {
+	fileName, err := s.spacesClient.UploadPicture(offer.Housing.Address, offer.RawPictureURL)
+	if err != nil {
+		s.logger.Sugar().Warnf("failed to upload picture: %w", err)
+	}
+
+	return fileName
 }
 
 func buildReactionUUID(user *customer.User, offer corporation.Offer) string {

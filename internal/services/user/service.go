@@ -27,7 +27,7 @@ type Service interface {
 	UpdateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error
 	DeleteHousingPreferences(userID uint) error
 	GetHousingPreferencesMatchingCorporation(userID uint) ([]*corporation.Corporation, error)
-	CreateHousingPreferencesMatch(userID uint, offer corporation.Offer, corporationName string) error
+	CreateHousingPreferencesMatch(userID uint, offer corporation.Offer, corporationName, pictureURL string) error
 
 	// Corporation Credentials
 	CreateCorporationCredentials(userID uint, credentials customer.CorporationCredentials) error

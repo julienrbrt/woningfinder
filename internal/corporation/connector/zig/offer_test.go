@@ -13,6 +13,7 @@ import (
 
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
+	// note for testing mapbox city parsing please use the bootstrap client instead of the mock
 	client := bootstrapCorporation.CreateZigClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"), zig.RoomspotInfo)
 
 	offers, err := client.GetOffers()
@@ -35,6 +36,7 @@ func Test_FetchOffer(t *testing.T) {
 		a.True(offer.Housing.BuildingYear >= 0)
 		a.NotEmpty(offer.SelectionMethod)
 		a.NotEmpty(offer.URL)
+		a.NotEmpty(offer.RawPictureURL)
 		a.NotEmpty(offer.ExternalID)
 	}
 }

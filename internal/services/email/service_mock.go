@@ -32,7 +32,7 @@ func (s *serviceMock) SendLogin(_ *customer.User) error {
 	return s.err
 }
 
-func (s *serviceMock) SendWeeklyUpdate(_ *customer.User, _ []customer.HousingPreferencesMatch) error {
+func (s *serviceMock) SendWeeklyUpdate(_ *customer.User, _ []*customer.HousingPreferencesMatch) error {
 	return s.err
 }
 
