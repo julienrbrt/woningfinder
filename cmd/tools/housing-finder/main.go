@@ -28,11 +28,12 @@ func main() {
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
 	mapboxClient := bootstrap.CreateMapboxClient()
+	spacesClient := bootstrap.CreateDOSpacesClient(logger)
 
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporation.NewService(logger, dbClient)
 	userService := user.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
-	matcherService := matcherService.NewService(logger, redisClient, userService, nil, corporationService, matcher.NewMatcher(), clientProvider)
+	matcherService := matcherService.NewService(logger, redisClient, userService, nil, corporationService, spacesClient, matcher.NewMatcher(), clientProvider)
 
 	for _, corp := range clientProvider.List() {
 		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable

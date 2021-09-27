@@ -41,7 +41,7 @@
 
 
     {{ range $index, $match := .Match }}
-    <mj-section background-url="https://static.woningfinder.nl/email/img-1.png" vertical-align="middle" background-size="cover" padding="30px" background-repeat="no-repeat">
+    <mj-section background-url="https://static.woningfinder.nl/{{ $match.PictureURL }}" vertical-align="middle" background-size="cover" padding="30px" background-repeat="no-repeat">
       <mj-column vertical-align="middle" width="60%">
         <mj-text align="center" padding="40px 30px" color="#FFFFFF" font-size="32px" line-height="48px" font-family="Inter, Helvetica, Arial, sans-serif">{{ $match.HousingAddress }}</mj-text>
       </mj-column>

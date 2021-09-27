@@ -21,6 +21,7 @@ func Test_FetchOffer(t *testing.T) {
 	mockMapbox := mapbox.NewClientMock(nil, "district")
 
 	for _, clientURL := range clientList {
+		// note for testing mapbox city parsing please use the bootstrap client instead of the mock
 		client, err := itris.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox, clientURL)
 		a.NoError(err)
 
@@ -46,6 +47,7 @@ func Test_FetchOffer(t *testing.T) {
 
 			a.NotEmpty(offer.SelectionMethod)
 			a.NotEmpty(offer.URL)
+			a.NotEmpty(offer.RawPictureURL)
 			a.NotEmpty(offer.ExternalID)
 		}
 	}

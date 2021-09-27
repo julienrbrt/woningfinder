@@ -19,7 +19,7 @@ type Service interface {
 	SendThankYou(user *customer.User) error
 	SendFreeTrialReminder(user *customer.User) error
 	SendLogin(user *customer.User) error
-	SendWeeklyUpdate(user *customer.User, housingMatch []customer.HousingPreferencesMatch) error
+	SendWeeklyUpdate(user *customer.User, matches []*customer.HousingPreferencesMatch) error
 	SendCorporationCredentialsMissing(user *customer.User) error
 	SendCorporationCredentialsError(user *customer.User, corporationName string) error
 	SendBye(user *customer.User) error

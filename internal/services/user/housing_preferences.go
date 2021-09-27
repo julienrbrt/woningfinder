@@ -160,12 +160,13 @@ func (s *service) DeleteHousingPreferences(userID uint) error {
 	return nil
 }
 
-func (s *service) CreateHousingPreferencesMatch(userID uint, offer corporation.Offer, corporationName string) error {
+func (s *service) CreateHousingPreferencesMatch(userID uint, offer corporation.Offer, corporationName, pictureURL string) error {
 	if _, err := s.dbClient.Conn().Model(&customer.HousingPreferencesMatch{
 		UserID:          userID,
 		HousingAddress:  offer.Housing.Address,
 		CorporationName: corporationName,
 		OfferURL:        offer.URL,
+		PictureURL:      pictureURL,
 	}).Insert(); err != nil {
 		return fmt.Errorf("error when adding housing preferences match: %w", err)
 	}

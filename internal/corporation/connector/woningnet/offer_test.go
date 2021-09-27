@@ -20,6 +20,7 @@ func Test_FetchOffer(t *testing.T) {
 	}
 
 	for _, c := range corporations {
+		// note for testing mapbox city parsing please use the bootstrap client instead of the mock
 		client := bootstrapCorporation.CreateWoningNetClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"), c)
 
 		offers, err := client.GetOffers()
@@ -44,6 +45,7 @@ func Test_FetchOffer(t *testing.T) {
 
 			a.NotEmpty(offer.SelectionMethod)
 			a.NotEmpty(offer.URL)
+			a.NotEmpty(offer.RawPictureURL)
 			a.NotEmpty(offer.ExternalID)
 		}
 	}

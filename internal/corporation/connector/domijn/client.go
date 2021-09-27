@@ -17,8 +17,8 @@ import (
 type client struct {
 	collector    *colly.Collector
 	logger       *logging.Logger
-	corporation  corporation.Corporation
 	mapboxClient mapbox.Client
+	corporation  corporation.Corporation
 }
 
 // Note, if we start to get blocked investigate in proxy switcher
@@ -72,7 +72,7 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Cl
 	return &client{
 		collector:    c,
 		logger:       logger,
-		corporation:  Info,
 		mapboxClient: mapboxClient,
+		corporation:  Info,
 	}, nil
 }

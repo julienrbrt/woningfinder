@@ -2,6 +2,7 @@ package domijn
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -41,6 +42,12 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			// get offer url
 			offer.URL = c.corporation.APIEndpoint.String() + strings.ReplaceAll(e.ChildAttr("div.image-wrapper a", "href"), " ", "%20") // manual space escaping
+
+			// get image url
+			offer.RawPictureURL, err = c.parsePictureURL(e.ChildAttr("div.image-wrapper a img", "src"))
+			if err != nil {
+				c.logger.Sugar().Info(err)
+			}
 
 			// get housing type
 			offer.Housing.Type = c.parseHousingType(e.ChildText("div.info div.row div p"))
@@ -163,6 +170,19 @@ func (c *client) parseHousingType(houseType string) corporation.HousingType {
 	}
 
 	return corporation.HousingTypeUndefined
+}
+
+func (c *client) parsePictureURL(path string) (*url.URL, error) {
+	if path == "" {
+		return nil, nil
+	}
+
+	pictureURL, err := url.Parse(c.corporation.APIEndpoint.String() + strings.ReplaceAll(path, "280/190", "600/400"))
+	if err != nil {
+		return nil, fmt.Errorf("domijn connector: failed to parse picture url %s: %w", path, err)
+	}
+
+	return pictureURL, nil
 }
 
 func cleanProperty(input, property string) string {

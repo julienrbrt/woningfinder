@@ -60,13 +60,6 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:5UOPhoYyocEPlDtXzKaRQGiSd8Hhs8Io:84zgfM9uH+yB/rWQpqgG6K5/4zgwkJBN8OGtqM7XYUblZCce/I+jPluN9t4a6MBoeLip7HjA6l3977pC5IKOH17PLBQFz41vuTdJLqbbca5tOQRLjRrh9WmcVsqMuAXue/DlVIBqmwMcAqynaQ==]
-  - key: EMAIL_ADDRESS
-    scope: RUN_AND_BUILD_TIME
-    value: contact@woningfinder.nl
-  - key: EMAIL_PASSWORD
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:arWBP+2uUHy9VdFhwf+xuooH9jaFN6wf:uQZ4IwAYk9p6CQ3bJUGAIleCsmDrWN/KmvLuNVV8HW59W/X9+UskwrNUw0tlH/A=]
   - key: EMAIL_SMTP_ADDRESS
     scope: RUN_AND_BUILD_TIME
     value: mail.gandi.net
@@ -92,6 +85,20 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:1yMZIQy+N77ggGD5Jc8aJswelmQnfzLC:azAlZ+KZde1dG17CiIp4oimc/7UGGgFwaYoz8/TX+EmuFo+T0DX18a8B++ir71YXNb/N3XpRKDFGHdF2]
+  - key: EMAIL_ADDRESS
+    scope: RUN_AND_BUILD_TIME
+    value: contact@woningfinder.nl
+  - key: EMAIL_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:kG6qIr7k6XpN+UAzboyxS0svRExEBeIp:LQe/9v7RIHplgFp8E0dFo6d8I2sr1DLJd+RuPhhHvzcsQxDjnPGh0Z6p8rfX1LA=]
+  - key: DO_SPACES_KEY
+    scope: RUN_AND_BUILD_TIME
+    value: 6HFGIEXLFFAF3ZEU5MAF
+  - key: DO_SPACES_SECRET
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:ufYKg6W8Qx1uYDEDc/FtS2FChgbHl3oe:VzLuvScsHhQnmIgp4IbO16zDFF6GVdIf7Gjd21XvwvSXaw1dkFqfUWfvyKZU1emLN//p3IeVk11ZJgw=]
 jobs:
   - alerts:
       - operator: GREATER_THAN
