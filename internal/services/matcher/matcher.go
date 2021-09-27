@@ -175,7 +175,7 @@ func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Of
 }
 
 func (s *service) uploadHousingPicture(offer corporation.Offer) string {
-	fileName, err := s.spacesClient.UploadOfferPicture(offer.Housing.Address, offer.RawPictureURL)
+	fileName, err := s.spacesClient.UploadPicture(offer.Housing.Address, offer.RawPictureURL)
 	if err != nil {
 		s.logger.Sugar().Warnf("failed to upload picture: %w", err)
 	}

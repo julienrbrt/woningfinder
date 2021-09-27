@@ -15,7 +15,7 @@ func NewClientMock(err error, output string) Client {
 	}
 }
 
-func (m *mockClient) UploadOfferPicture(housingAddress string, pictureURL *url.URL) (string, error) {
+func (m *mockClient) UploadPicture(housingAddress string, pictureURL *url.URL) (string, error) {
 	if m.err != nil {
 		return m.output, m.err
 	}

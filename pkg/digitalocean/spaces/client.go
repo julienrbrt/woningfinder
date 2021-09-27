@@ -15,7 +15,7 @@ import (
 )
 
 type Client interface {
-	UploadOfferPicture(name string, pictureURL *url.URL) (string, error)
+	UploadPicture(name string, pictureURL *url.URL) (string, error)
 }
 
 type client struct {
@@ -47,7 +47,7 @@ func NewClient(logger *logging.Logger, c networking.Client, endpoint, bucketName
 	}, nil
 }
 
-func (c *client) UploadOfferPicture(name string, pictureURL *url.URL) (string, error) {
+func (c *client) UploadPicture(name string, pictureURL *url.URL) (string, error) {
 	fileName := c.buildFileName(name)
 	if c.doesPictureExists(fileName) {
 		return fileName, nil
@@ -74,6 +74,10 @@ func (c *client) downloadPicture(url *url.URL) (io.Reader, int64, error) {
 	})
 	if err != nil {
 		return nil, 0, fmt.Errorf("error while downloading %s: %w", url.String(), err)
+	}
+
+	if response.StatusCode != 200 {
+		return nil, 0, fmt.Errorf("error while downloading %s: response status code %d", url.String(), response.StatusCode)
 	}
 
 	return response.RawResponse.Body, response.RawResponse.ContentLength, nil
