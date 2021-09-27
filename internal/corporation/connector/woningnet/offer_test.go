@@ -15,7 +15,7 @@ func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
 
 	corporations := []corporation.Corporation{
-		// woningnet.UtrechtInfo,
+		woningnet.UtrechtInfo,
 		woningnet.HengeloBorneInfo,
 	}
 
