@@ -149,11 +149,16 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		c.logger.Sugar().Infof("de woonplaats connector: could not get city district of %s: %w", house.Address, err)
 	}
 
+	rawPictureURL, err := c.parsePictureURL(offer.Thumbnail)
+	if err != nil {
+		c.logger.Sugar().Info(err)
+	}
+
 	return corporation.Offer{
 		ExternalID:      offer.ID,
 		Housing:         house,
 		URL:             fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", offer.ID),
-		RawPictureURL:   c.parsePictureURL(offer.Thumbnail),
+		RawPictureURL:   rawPictureURL,
 		SelectionMethod: c.parseSelectionMethod(offer.IsSelectionRandom),
 		MinFamilySize:   offer.Criteria.MinGezinsgrootte,
 		MaxFamilySize:   offer.Criteria.MaxGezinsgrootte,
@@ -193,15 +198,15 @@ func (c *client) parseSelectionMethod(random bool) corporation.SelectionMethod {
 	return corporation.SelectionFirstComeFirstServed
 }
 
-func (c *client) parsePictureURL(path string) *url.URL {
+func (c *client) parsePictureURL(path string) (*url.URL, error) {
 	if path == "" {
-		return nil
+		return nil, nil
 	}
 
 	pictureURL, err := url.Parse(c.corporation.URL + path)
 	if err != nil {
-		c.logger.Sugar().Warnf("dewoonplaats connector: failed to parse picture url %s: %w", path, err)
+		return nil, fmt.Errorf("dewoonplaats connector: failed to parse picture url %s: %w", path, err)
 	}
 
-	return pictureURL
+	return pictureURL, nil
 }

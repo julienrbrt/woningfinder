@@ -25,9 +25,9 @@ var HengeloBorneInfo = corporation.Corporation{
 }
 
 var UtrechtInfo = corporation.Corporation{
-	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregiocity.nl", Path: "/webapi"},
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregioutrecht.nl", Path: "/webapi"},
 	Name:        "WoningNet city",
-	URL:         "https://www.woningnetregiocity.nl",
+	URL:         "https://www.woningnetregioutrecht.nl",
 	Cities: []city.City{
 		city.Utrecht,
 		city.Zeist,

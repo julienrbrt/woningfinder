@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -35,7 +36,7 @@ type offer struct {
 	Aanbieder                   string      `json:"Aanbieder"`
 	Prijs                       string      `json:"Prijs"`
 	Kamers                      string      `json:"Kamers"`
-	AfbeeldingURL               string      `json:"AfbeeldingUrl"`
+	RawPictureURL               string      `json:"AfbeeldingUrl"`
 	SoortWoning                 interface{} `json:"SoortWoning"`
 	Slaagkans                   interface{} `json:"Slaagkans"`
 	SlaagkansText               interface{} `json:"SlaagkansText"`
@@ -240,6 +241,12 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		c.logger.Sugar().Infof("woningnet connector: could not get city district of %s: %w", house.Address, err)
 	}
 
+	// get housing picture url
+	rawPictureURL, err := c.parsePictureURL(offer.RawPictureURL)
+	if err != nil {
+		c.logger.Sugar().Info(err)
+	}
+
 	// TODO
 	// c.collector.OnHTML("#Overzicht", func(e *colly.HTMLElement) {
 	// 	// minFamilySize, maxFamilySize, minAge, maxAge int
@@ -285,6 +292,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		ExternalID:      fmt.Sprintf("%s/%s", offer.PublicatieID, offer.CurrentRegioCode),
 		Housing:         house,
 		URL:             offerURL,
+		RawPictureURL:   rawPictureURL,
 		SelectionMethod: selectionMethod,
 		MinFamilySize:   minFamilySize,
 		MaxFamilySize:   maxFamilySize,
@@ -314,6 +322,9 @@ func (c *client) parseHousingType(houseType string) corporation.HousingType {
 }
 
 func (c *client) parsePrice(priceStr string) (float64, error) {
+	// remove dot delimiter in price
+	priceStr = strings.ReplaceAll(priceStr, ".", "")
+
 	price, err := strconv.ParseFloat(strings.ReplaceAll(strings.TrimLeft(priceStr, "€ "), ",", "."), 64)
 	if err != nil {
 		return 0, fmt.Errorf("error parsing housing price %s: %w", priceStr, err)
@@ -346,7 +357,7 @@ func (c *client) parseBedroom(bedroomStr string) (int, error) {
 	return bedroom, nil
 }
 
-// parseContentValue is use to get the value from a table in the woningnet housing description page
+// getContentValue is use to get the value from a table in the woningnet housing description page
 func (c *client) getContentValue(name string, selection *goquery.Selection) string {
 	var value string
 	selection.Children().Each(func(i int, s *goquery.Selection) {
@@ -356,4 +367,17 @@ func (c *client) getContentValue(name string, selection *goquery.Selection) stri
 	})
 
 	return strings.ToLower(value)
+}
+
+func (c *client) parsePictureURL(path string) (*url.URL, error) {
+	if path == "" {
+		return nil, nil
+	}
+
+	pictureURL, err := url.Parse(path)
+	if err != nil {
+		return nil, fmt.Errorf("woningnet connector: failed to parse picture url %s: %w", path, err)
+	}
+
+	return pictureURL, nil
 }
