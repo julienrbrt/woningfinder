@@ -17,8 +17,8 @@ import (
 type client struct {
 	collector      *colly.Collector
 	logger         *logging.Logger
-	corporation    corporation.Corporation
 	mapboxClient   mapbox.Client
+	corporation    corporation.Corporation
 	itrisCSRFToken string
 }
 

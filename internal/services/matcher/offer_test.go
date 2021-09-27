@@ -44,7 +44,7 @@ func Test_PushOffers_CorporationClientError(t *testing.T) {
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
 
 	a.Error(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{}, err), corporationInfo))
 }
@@ -55,7 +55,7 @@ func Test_PushOffers_RedisClientError(t *testing.T) {
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, err)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
 
 	a.Error(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{{}}, nil), corporationInfo))
 }
@@ -64,7 +64,7 @@ func Test_PushOffers_Success_NoOffers(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
 
 	a.Nil(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{}, nil), corporationInfo))
 }
@@ -73,7 +73,7 @@ func Test_PushOffers_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, &mockCorporationService{}, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, &mockCorporationService{}, nil, matcher.NewMatcher(), nil)
 
 	a.Nil(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{{}}, nil), corporationInfo))
 }
@@ -83,7 +83,7 @@ func Test_SubscribeOffers_RedisClientError(t *testing.T) {
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, err)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
 
 	c := make(chan corporation.Offers)
 	a.Error(matcherService.SubscribeOffers(c))
@@ -96,7 +96,7 @@ func Test_SubscribeOffers_Success(t *testing.T) {
 	a.NoError(err)
 
 	redisMock := database.NewRedisClientMock("", []string{string(corpInfo)}, err)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
 
 	c := make(chan corporation.Offers)
 	go func(c chan corporation.Offers) {

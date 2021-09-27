@@ -3,15 +3,28 @@ package dewoonplaats_test
 import (
 	"testing"
 
+	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
+// init is invoked before main()
+func init() {
+	// loads values from .env into the system
+	// fallback to system env if unexisting
+	// if not defined on system, panics
+	if err := godotenv.Load("../../../../.env"); err != nil {
+		_ = config.MustGetString("APP_NAME")
+	}
+}
+
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
+	// note for testing mapbox city parsing please use the bootstrap client instead of the mock
 	client := bootstrapCorporation.CreateDeWoonplaatsClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"))
 
 	offers, err := client.GetOffers()
@@ -35,6 +48,7 @@ func Test_FetchOffer(t *testing.T) {
 
 		a.NotEmpty(offer.SelectionMethod)
 		a.NotEmpty(offer.URL)
+		a.NotEmpty(offer.RawPictureURL)
 		a.NotEmpty(offer.ExternalID)
 	}
 }

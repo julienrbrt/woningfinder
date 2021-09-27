@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -53,6 +54,7 @@ type offer struct {
 	IsSelectionRandom     bool    `json:"loting"`
 	Size                  string  `json:"woonoppervlak"`
 	Accessible            bool    `json:"rolstoeltoegankelijk"`
+	Thumbnail             string  `json:"thumbnail"`
 	RoomSize              []struct {
 		Name string `json:"titel"`
 		Size string `json:"oppervlak"`
@@ -151,6 +153,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		ExternalID:      offer.ID,
 		Housing:         house,
 		URL:             fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", offer.ID),
+		RawPictureURL:   c.parsePictureURL(offer.Thumbnail),
 		SelectionMethod: c.parseSelectionMethod(offer.IsSelectionRandom),
 		MinFamilySize:   offer.Criteria.MinGezinsgrootte,
 		MaxFamilySize:   offer.Criteria.MaxGezinsgrootte,
@@ -188,4 +191,17 @@ func (c *client) parseSelectionMethod(random bool) corporation.SelectionMethod {
 	}
 
 	return corporation.SelectionFirstComeFirstServed
+}
+
+func (c *client) parsePictureURL(path string) *url.URL {
+	if path == "" {
+		return nil
+	}
+
+	pictureURL, err := url.Parse(c.corporation.URL + path)
+	if err != nil {
+		c.logger.Sugar().Warnf("dewoonplaats connector: failed to parse picture url %s: %w", path, err)
+	}
+
+	return pictureURL
 }

@@ -14,6 +14,7 @@ func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
 	mockMapbox := mapbox.NewClientMock(nil, "district")
 
+	// note for testing mapbox city parsing please use the bootstrap client instead of the mock
 	client, err := domijn.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox)
 	a.NoError(err)
 
@@ -40,6 +41,7 @@ func Test_FetchOffer(t *testing.T) {
 
 		a.NotEmpty(offer.SelectionMethod)
 		a.NotEmpty(offer.URL)
+		a.NotEmpty(offer.RawPictureURL)
 		a.NotEmpty(offer.ExternalID)
 	}
 }
