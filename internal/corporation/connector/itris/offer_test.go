@@ -12,8 +12,6 @@ import (
 
 var clientList = []corporation.Corporation{
 	itris.OnsHuisInfo,
-	// "https://mijn.mijande.nl",
-	// "https://mijn.woongoedzvl.nl",
 }
 
 func Test_FetchOffer(t *testing.T) {
