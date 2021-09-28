@@ -53,6 +53,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.Linschoten,
 		city.Odijk,
 		city.Doorn,
+		city.Oudewater,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

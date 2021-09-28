@@ -53,6 +53,7 @@ var cityTable = map[string]City{
 	Linschoten.Name:           Linschoten,
 	Odijk.Name:                Odijk,
 	Doorn.Name:                Doorn,
+	Oudewater.Name:            Oudewater,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
