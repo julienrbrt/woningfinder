@@ -523,10 +523,17 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 		c.logger.Sugar().Infof("zig connector: could not get city district of %s: %w", house.Address, err)
 	}
 
+	// get picture url
+	rawPictureURL, err := c.parsePictureURL(offer)
+	if err != nil {
+		c.logger.Sugar().Info(err)
+	}
+
 	return corporation.Offer{
 		ExternalID:      c.getExternalID(offer),
 		Housing:         house,
 		URL:             fmt.Sprintf("%s/aanbod/te-huur/details/%s", c.corporation.URL, offer.Urlkey),
+		RawPictureURL:   rawPictureURL,
 		SelectionMethod: c.parseSelectionMethod(offer),
 		MinFamilySize:   offer.Minimumhouseholdsize,
 		MaxFamilySize:   offer.Maximumhouseholdsize,
@@ -583,4 +590,18 @@ func (c *client) parseEnergyLabel(offer *offerDetails) string {
 
 func (c *client) getExternalID(offer *offerDetails) string {
 	return fmt.Sprint(offer.Assignmentid) + externalIDSeperator + offer.ID
+}
+
+func (c *client) parsePictureURL(offer *offerDetails) (*url.URL, error) {
+	if len(offer.Pictures) == 0 {
+		return nil, nil
+	}
+
+	path := c.corporation.URL + offer.Pictures[0].URI
+	pictureURL, err := url.Parse(path)
+	if err != nil {
+		return nil, fmt.Errorf("zig connector: failed to parse picture url %s: %w", path, err)
+	}
+
+	return pictureURL, nil
 }
