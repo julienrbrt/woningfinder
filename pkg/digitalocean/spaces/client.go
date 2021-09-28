@@ -15,7 +15,7 @@ import (
 )
 
 type Client interface {
-	UploadPicture(name string, pictureURL *url.URL) (string, error)
+	UploadPicture(prefix, orignalName string, pictureURL *url.URL) (string, error)
 }
 
 type client struct {
@@ -47,8 +47,11 @@ func NewClient(logger *logging.Logger, c networking.Client, endpoint, bucketName
 	}, nil
 }
 
-func (c *client) UploadPicture(name string, pictureURL *url.URL) (string, error) {
-	fileName := c.buildFileName(name)
+// UploadPicture uploads a given picture to DigitalOcean Spaces
+// prefix is the folder where the picture must be stored
+// orignalName is the orignal file name
+func (c *client) UploadPicture(prefix, orignalName string, pictureURL *url.URL) (string, error) {
+	fileName := c.buildFileName(prefix, orignalName)
 	if c.doesPictureExists(fileName) {
 		return fileName, nil
 	}
@@ -59,10 +62,13 @@ func (c *client) UploadPicture(name string, pictureURL *url.URL) (string, error)
 		return "", err
 	}
 
-	// upload the image to our bucket
-	_, err = c.client.PutObject(context.Background(), c.bucketName, fileName, pictureRaw, pictureSize, minio.PutObjectOptions{ContentType: "image/jpeg"})
+	// set picture public
+	userMetaData := map[string]string{"x-amz-acl": "public-read"}
+
+	// upload the picture to our bucket
+	_, err = c.client.PutObject(context.Background(), c.bucketName, fileName, pictureRaw, pictureSize, minio.PutObjectOptions{UserMetadata: userMetaData, ContentType: "image/jpeg"})
 	if err != nil {
-		return "", fmt.Errorf("failed uploading %s image to digitalocean spaces: %w", name, err)
+		return "", fmt.Errorf("failed uploading %s image to digitalocean spaces: %w", orignalName, err)
 	}
 
 	return fileName, nil
@@ -83,8 +89,14 @@ func (c *client) downloadPicture(url *url.URL) (io.Reader, int64, error) {
 	return response.RawResponse.Body, response.RawResponse.ContentLength, nil
 }
 
-func (c *client) buildFileName(name string) string {
-	return "offers/" + strings.ToLower(base64.StdEncoding.EncodeToString([]byte(name)))
+func (c *client) buildFileName(prefix, orignalName string) string {
+	fileName := strings.ToLower(base64.StdEncoding.EncodeToString([]byte(orignalName)))
+
+	if prefix == "" {
+		return fileName
+	}
+
+	return fmt.Sprintf("%s/%s", prefix, fileName)
 }
 
 func (c *client) doesPictureExists(fileName string) bool {
