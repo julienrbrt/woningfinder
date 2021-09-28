@@ -256,11 +256,18 @@ var Linschoten = City{
 	Name:        "Linschoten",
 	Coordinates: []float64{4.91286, 52.06433},
 }
+
 var Odijk = City{
 	Name:        "Odijk",
 	Coordinates: []float64{5.23439, 52.04947},
 }
+
 var Doorn = City{
 	Name:        "Doorn",
 	Coordinates: []float64{5.345864, 52.033299},
+}
+
+var Oudewater = City{
+	Name:        "Oudewater",
+	Coordinates: []float64{4.866287, 52.024527},
 }
