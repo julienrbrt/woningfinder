@@ -1,6 +1,8 @@
 package itris
 
 import (
+	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -28,6 +30,12 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			// get offer url
 			offer.URL = c.corporation.APIEndpoint.String() + e.ChildAttr(detailsHousingChildAttr, "href")
 			offer.ExternalID = e.Attr("data-aanbod-id")
+
+			// get picture url
+			offer.RawPictureURL, err = c.parsePictureURL(e.ChildAttr("div.image-wrapper", "style"))
+			if err != nil {
+				c.logger.Sugar().Info(err)
+			}
 
 			// get housing type
 			offer.Housing.Type = c.parseHousingType(e.Text)
@@ -175,4 +183,21 @@ func (c *client) parseHousingType(houseType string) corporation.HousingType {
 	}
 
 	return corporation.HousingTypeUndefined
+}
+
+func (c *client) parsePictureURL(path string) (*url.URL, error) {
+	if path == "" {
+		return nil, nil
+	}
+
+	// format path
+	path = strings.ReplaceAll(path, "background-image:url(", "")
+	path = strings.ReplaceAll(path, ");", "")
+
+	pictureURL, err := url.Parse(c.corporation.APIEndpoint.String() + path)
+	if err != nil {
+		return nil, fmt.Errorf("itris connector: failed to parse picture url %s: %w", path, err)
+	}
+
+	return pictureURL, nil
 }
