@@ -54,6 +54,10 @@ var cityTable = map[string]City{
 	Odijk.Name:                Odijk,
 	Doorn.Name:                Doorn,
 	Oudewater.Name:            Oudewater,
+	Vreeland.Name:             Vreeland,
+	Denekamp.Name:             Denekamp,
+	Ootmarsum.Name:            Ootmarsum,
+	Vriezenveen.Name:          Vriezenveen,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

@@ -125,3 +125,18 @@ var Zwolle = City{
 	Name:        "Zwolle",
 	Coordinates: []float64{6.094377, 52.508976},
 }
+
+var Denekamp = City{
+	Name:        "Denekamp",
+	Coordinates: []float64{7.00601, 52.3781},
+}
+
+var Ootmarsum = City{
+	Name:        "Ootmarsum",
+	Coordinates: []float64{6.894645, 52.406676},
+}
+
+var Vriezenveen = City{
+	Name:        "Vriezenveen",
+	Coordinates: []float64{6.61511, 52.408613},
+}

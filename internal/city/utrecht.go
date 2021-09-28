@@ -271,3 +271,8 @@ var Oudewater = City{
 	Name:        "Oudewater",
 	Coordinates: []float64{4.866287, 52.024527},
 }
+
+var Vreeland = City{
+	Name:        "Vreeland",
+	Coordinates: []float64{5.021718, 52.209893},
+}
