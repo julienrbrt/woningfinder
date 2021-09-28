@@ -12,6 +12,7 @@ import (
 
 var clientList = []corporation.Corporation{
 	itris.OnsHuisInfo,
+	itris.MijandeWonenInfo,
 }
 
 func Test_FetchOffer(t *testing.T) {

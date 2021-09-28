@@ -19,3 +19,17 @@ var OnsHuisInfo = corporation.Corporation{
 		corporation.SelectionRandom,
 	},
 }
+
+var MijandeWonenInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "mijn.mijande.nl"},
+	Name:        "Mijande Wonen",
+	URL:         "https://www.mijande.nl",
+	Cities: []city.City{
+		city.Denekamp,
+		city.Ootmarsum,
+		city.Vriezenveen,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRegistrationDate,
+	},
+}
