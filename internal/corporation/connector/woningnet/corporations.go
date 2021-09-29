@@ -56,6 +56,8 @@ var UtrechtInfo = corporation.Corporation{
 		city.Oudewater,
 		city.Vreeland,
 		city.Houten,
+		city.Vinkeveen,
+		city.Harmelen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
