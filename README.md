@@ -39,6 +39,7 @@ There is as well small **tools** that are run for special reasons:
 - _[customer-delete](../cmd/tools/customer-delete)_ permits to delete customers given their email.
 - _[impersonate](../cmd/tools/impersonate)_ permits to get a JWT token for an user in order to impersonate it.
 - _[housing-finder](../cmd/tools/housing-finder)_ replicates _HousingFinder_ as a command line tool.
+- _[weekly-update](../cmd/tools/weekly-update)_ replicates _WeeklyUpdate_ as a command line tool.
 
 ## Landing Page
 
