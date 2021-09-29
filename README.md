@@ -31,7 +31,7 @@ WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _
   - _CustomerUnconfirmedCleanup_ sends a reminder to unconfirmed email user and deletes the customers that did not confirm their email within 72 hours. Runs everyday at 08:00, 16:00.
   - _CustomerEndFreeTrialReminder_ reminds a free trial customer to pay the plan. Runs everyday at 08:00, 14:00 and 20:00.
   - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue (triggering _HousingMatcher_).
-  - _WeeklyUpdate_ generates and send the customer weekly updates. Runs every Friday at 20:00.
+  - _WeeklyUpdate_ generates and send the customer weekly updates. Runs every Friday at 19:00.
 
 There is as well small **tools** that are run for special reasons:
 
