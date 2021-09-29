@@ -39,29 +39,29 @@
       </mj-column>
     </mj-section>
 
-
     {{ range $index, $match := .Match }}
-    <mj-section background-url="https://static.woningfinder.nl/{{ $match.PictureURL }}" vertical-align="middle" background-size="cover" padding="30px" background-repeat="no-repeat">
-      <mj-column vertical-align="middle" width="60%">
-        <mj-text align="center" padding="40px 30px" color="#FFFFFF" font-size="32px" line-height="48px" font-family="Inter, Helvetica, Arial, sans-serif">{{ $match.HousingAddress }}</mj-text>
+    <mj-section padding="30px 30px 0px 30px" background-color="#FFFFFF">
+      <mj-column width="40%" background-color="#FFFFFF">
+        <mj-text color="#28003A" align="center" padding="10px 0 20px 0" font-size="24px" line-height="30px" font-family="Inter, Helvetica, Arial, sans-serif">– {{ $match.CorporationName }} –</mj-text>
+
+        <mj-image src="https://static.woningfinder.nl/{{ $match.PictureURL }}" width="256px" alt="" align="center"></mj-image>
       </mj-column>
-      <mj-column vertical-align="middle" width="40%" background-color="#FFFFFF">
-        <mj-text align="center" padding="20px 20px 0 20px" color="#28003A" font-size="20px" line-height="30px" font-family="Inter, Helvetica, Arial, sans-serif">– {{ $match.CorporationName }} –</mj-text>
-        <mj-text align="center" padding="0 20px">Gereageerd op {{ $match.CreatedAt.Day }}-{{ $match.CreatedAt.Month }}-{{ $match.CreatedAt.Year }}</mj-text>
+      <mj-column width="60%">
+
+        <mj-text align="center" padding="10px 30px" color="#111111" font-size="24px" line-height="30px" font-family="Inter, Helvetica, Arial, sans-serif">{{ $match.HousingAddress }}</mj-text>
+
+        <mj-text align="center" padding="10px">Gereageerd op {{ $match.CreatedAt.Day }}-{{ $match.CreatedAt.Month }}-{{ $match.CreatedAt.Year }}</mj-text>
 
         <mj-button href="{{ $match.OfferURL }}" background-color="#F44E3C" color="white" padding="20px 20px 30px 20px" border-radius="20px">Openen</mj-button>
       </mj-column>
     </mj-section>
 
-    <mj-section padding="5px" background-color="#FFFFFF">
-    </mj-section>
-    {{ end }}
-
-    <mj-section padding="20px" background-color="#FFFFFF">
+    <mj-section padding="0 20px 20px 0" background-color="#FFFFFF">
       <mj-column width="100%">
         <mj-image src="https://static.woningfinder.nl/email/symbol-1.png" alt="" width="213px" align="right" border="none"></mj-image>
       </mj-column>
     </mj-section>
+    {{ end }}
 
     <mj-section padding="0 30px 30px" background-color="#FFFFFF">
       <mj-column background-color="#FFFFFF">

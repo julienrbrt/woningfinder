@@ -6,8 +6,8 @@ import (
 
 // SendWeeklyUpdate populates the weekly updates cron jobs (once a week)
 func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
-	// emails update are send every friday at 20:00
-	spec := "0 0 20 * * 5"
+	// emails update are send every friday at 19:00
+	spec := "0 0 19 * * 5"
 
 	// populate cron
 	c.AddJob(spec, cron.FuncJob(func() {
@@ -25,7 +25,7 @@ func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
 				continue
 			}
 
-			// user has no corporation credentials and no match didn't react for them be we cannot
+			// user has no corporation credentials and no match didn't react for them be we cannot send weekly update
 			if len(user.HousingPreferencesMatch) == 0 && len(user.CorporationCredentials) == 0 {
 				if err := j.emailService.SendCorporationCredentialsMissing(user); err != nil {
 					j.logger.Sugar().Errorf("error while sending weekly update (credentials missing): %w", err)
