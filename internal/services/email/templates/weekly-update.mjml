@@ -42,14 +42,15 @@
     {{ range $index, $match := .Match }}
     <mj-section padding="30px 30px 0px 30px" background-color="#FFFFFF">
       <mj-column width="40%" background-color="#FFFFFF">
-        <mj-image src="https://static.woningfinder.nl/{{ $match.PictureURL }}" width="256px" alt="" align="center"></mj-image>
+        <mj-text color="#28003A" align="center" padding="10px 0 20px 0" font-size="24px" line-height="30px" font-family="Inter, Helvetica, Arial, sans-serif">– {{ $match.CorporationName }} –</mj-text>
 
-        <mj-text align="center" padding="10px">Gereageerd op {{ $match.CreatedAt.Day }}-{{ $match.CreatedAt.Month }}-{{ $match.CreatedAt.Year }}</mj-text>
+        <mj-image src="https://static.woningfinder.nl/{{ $match.PictureURL }}" width="256px" alt="" align="center"></mj-image>
       </mj-column>
       <mj-column width="60%">
-        <mj-text color="#28003A" align="center" padding-bottom="20px" font-size="24px" line-height="30px" font-family="Inter, Helvetica, Arial, sans-serif">– {{ $match.CorporationName }} –</mj-text>
 
         <mj-text align="center" padding="10px 30px" color="#111111" font-size="24px" line-height="30px" font-family="Inter, Helvetica, Arial, sans-serif">{{ $match.HousingAddress }}</mj-text>
+
+        <mj-text align="center" padding="10px">Gereageerd op {{ $match.CreatedAt.Day }}-{{ $match.CreatedAt.Month }}-{{ $match.CreatedAt.Year }}</mj-text>
 
         <mj-button href="{{ $match.OfferURL }}" background-color="#F44E3C" color="white" padding="20px 20px 30px 20px" border-radius="20px">Openen</mj-button>
       </mj-column>
