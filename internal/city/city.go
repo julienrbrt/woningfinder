@@ -59,6 +59,8 @@ var cityTable = map[string]City{
 	Ootmarsum.Name:            Ootmarsum,
 	Vriezenveen.Name:          Vriezenveen,
 	Houten.Name:               Houten,
+	Vinkeveen.Name:            Vinkeveen,
+	Harmelen.Name:             Harmelen,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

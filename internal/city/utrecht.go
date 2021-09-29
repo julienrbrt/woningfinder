@@ -281,3 +281,13 @@ var Houten = City{
 	Name:        "Houten",
 	Coordinates: []float64{5.167245, 52.035909},
 }
+
+var Vinkeveen = City{
+	Name:        "Vinkeveen",
+	Coordinates: []float64{4.932163, 52.214764},
+}
+
+var Harmelen = City{
+	Name:        "Harmelen",
+	Coordinates: []float64{4.963882, 52.091534},
+}
