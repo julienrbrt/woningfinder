@@ -15,7 +15,7 @@ func init() {
 	// loads values from .env into the system
 	// fallback to system env if unexisting
 	// if not defined on system, panics
-	if err := godotenv.Load("../../../.env"); err != nil {
+	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
 }

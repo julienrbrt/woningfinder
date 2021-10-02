@@ -12,6 +12,9 @@ import (
 type KeyStore interface {
 	Get(key string) (string, error)
 	Set(key string, value interface{}) error
+
+	SetUUID(uuid string)
+	HasUUID(uuid string) bool
 }
 
 // ErrRedisKeyNotFound is an error returned when a key does not have a value

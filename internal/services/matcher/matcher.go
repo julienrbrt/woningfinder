@@ -10,7 +10,6 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/customer"
-	"github.com/woningfinder/woningfinder/internal/database"
 )
 
 // MatcherOffer matcher a corporation offer with customer housing preferences
@@ -103,7 +102,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				}
 
 				// save that we've checked the offer for the user
-				s.storeReaction(uuid)
+				s.redisClient.SetUUID(uuid)
 			}
 		}(&wg, user)
 	}
@@ -137,34 +136,13 @@ func (s *service) hasFailedLogin(user *customer.User, credentials *customer.Corp
 	return nil
 }
 
-// hasReacted check if a user already reacted to an offer
-func (s *service) hasReacted(uuid string) bool {
-	_, err := s.redisClient.Get(uuid)
-	if err != nil {
-		if !errors.Is(err, database.ErrRedisKeyNotFound) {
-			s.logger.Sugar().Errorf("error when getting reaction: %w", err)
-		}
-		// does not have reacted
-		return false
-	}
-
-	return true
-}
-
-// storeReaction saves that an user reacted to an offer
-func (s *service) storeReaction(uuid string) {
-	if err := s.redisClient.Set(uuid, true); err != nil {
-		s.logger.Sugar().Errorf("error when saving reaction to redis: %w", err)
-	}
-}
-
 // hasNonReactedOffers returns the offers that has not been already reacted to
 func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Offers) (map[string]corporation.Offer, bool) {
 	uncheckedOffers := make(map[string]corporation.Offer)
 
 	for _, offer := range offers.Offer {
 		uuid := buildReactionUUID(user, offer)
-		if s.hasReacted(uuid) {
+		if s.redisClient.HasUUID(uuid) {
 			continue
 		}
 

@@ -32,6 +32,14 @@ func (c *redisClientMock) Set(key string, value interface{}) error {
 	return c.err
 }
 
+func (c *redisClientMock) SetUUID(uuid string) {
+
+}
+
+func (c *redisClientMock) HasUUID(uuid string) bool {
+	return c.err == nil
+}
+
 // Queue
 func (c *redisClientMock) Push(listName string, data []byte) error {
 	return c.err

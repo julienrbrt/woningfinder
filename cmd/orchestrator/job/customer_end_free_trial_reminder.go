@@ -42,7 +42,7 @@ func (j *Jobs) SendCustomerEndFreeTrialReminder(c *cron.Cron) {
 
 			// check if reminder already sent
 			uuid := buildFreeTrialReminderReminderUUID(user)
-			if j.isAlreadySent(uuid) {
+			if j.redisClient.HasUUID(uuid) {
 				// delete old expired free trial users
 				if err := j.deleteExpiredFreeTrialUsers(user); err != nil {
 					j.logger.Sugar().Error(err)
@@ -57,7 +57,7 @@ func (j *Jobs) SendCustomerEndFreeTrialReminder(c *cron.Cron) {
 			}
 
 			// set reminder as sent
-			j.markAsSent(uuid)
+			j.redisClient.SetUUID(uuid)
 		}
 	}))
 }
