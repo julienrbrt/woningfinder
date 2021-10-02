@@ -18,7 +18,7 @@ func init() {
 	// loads values from .env into the system
 	// fallback to system env if unexisting
 	// if not defined on system, panics
-	if err := godotenv.Load("../../../.env"); err != nil {
+	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
 }
@@ -30,6 +30,7 @@ func main() {
 	if len(os.Args) != 2 {
 		logger.Sugar().Fatal("customer-delete must have an user email as (only) argument\n")
 	}
+
 	email := os.Args[1]
 	if !util.IsEmailValid(email) {
 		logger.Sugar().Fatal("incorrect argument for user to delete, have %s, expect a valid email", email)
