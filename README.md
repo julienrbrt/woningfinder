@@ -3,7 +3,7 @@
 - [WoningFinder](#woningfinder)
   - [Architecture](#architecture)
   - [Landing Page](#landing-page)
-  - [WoningFinder-API](#woningfinder-api)
+  - [API](#api)
     - [Authentication](#authentication)
     - [Payment](#payment)
   - [Housing-Finder](#housing-finder)
@@ -23,32 +23,27 @@
 
 This document defines the archtitecture of WoningFinder.
 
-WoningFinder is split in 3 components: _WoningFinder-API_, _HousingFinder_ and _HousingMatcher_ and a landing page.
+WoningFinder is split in multiple components:
 
-- _[WoningFinder](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for woningfinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
-- _[HousingMatcher](../cmd/housing-matcher)_, is triggered by _HousingFinder_ via a queue (redis list). It will match the new offers to the customer search option and react to it.
-- _[Orchestrator](../cmd/orchestrator)_, permits to orchestrate the different jobs that needs to be often ran by WoningFinder.
+- _[woningfinder-api](../cmd/woningfinder-api)_, is serving the different handlers, it serves as API for woningfinder.nl frontend so the user can register, login to a housing corporation and manage their housing preferences.
+- _[housing-matcher](../cmd/housing-matcher)_, is triggered by _HousingFinder_ via a queue (redis list). It will match the new offers to the customer search option and react to it.
+- _[orchestrator](../cmd/orchestrator)_, permits to orchestrate the different jobs that needs to be often ran by WoningFinder.
   - _CustomerUnconfirmedCleanup_ sends a reminder to unconfirmed email user and deletes the customers that did not confirm their email within 72 hours. Runs everyday at 08:00, 16:00.
   - _CustomerEndFreeTrialReminder_ reminds a free trial customer to pay the plan. Runs everyday at 08:00, 14:00 and 20:00.
   - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue (triggering _HousingMatcher_).
   - _WeeklyUpdate_ generates and send the customer weekly updates. Runs every Friday at 19:00.
-
-There is as well small **tools** that are run for special reasons:
-
-- _[db-migrator](../cmd/tools/db-migrator)_ permits to initialize the database with default values (housing corporations, cities, housing types, selection methods...) and run the databases migrations. It is run as a job before every deploy.
-- _[customer-delete](../cmd/tools/customer-delete)_ permits to delete customers given their email.
-- _[impersonate](../cmd/tools/impersonate)_ permits to get a JWT token for an user in order to impersonate it.
-- _[housing-finder](../cmd/tools/housing-finder)_ replicates _HousingFinder_ as a command line tool.
-- _[weekly-update](../cmd/tools/weekly-update)_ replicates _WeeklyUpdate_ as a command line tool.
+- _[impersonate](../cmd/impersonate)_ permits to get a JWT token for an user in order to impersonate it.
+- _[customer-delete](../cmd/customer-delete)_ permits to delete customers given their email.
+- _[db-migrator](../cmd/db-migrator)_ permits to initialize the database with default values (housing corporations, cities, housing types, selection methods...) and run the databases migrations. It is run as a job before every deploy.
 
 ## Landing Page
 
 The landing page is available at https://woningfinder.nl.
 The source code is available in another [repository](https://github.com/woningfinder/woningfinder.nl).
 
-## WoningFinder-API
+## API
 
-Following is a list of endpoint supported by WoningFinder-API. The API works exclusively with JSON. Validation is obviously performed in the frontend and the backend.
+Following is a list of endpoint supported the WoningFinder API. The API works exclusively with JSON. Validation is obviously performed in the frontend and the backend.
 
 | Endpoint Name               | Method     | Description                                                                               |
 | --------------------------- | ---------- | ----------------------------------------------------------------------------------------- |

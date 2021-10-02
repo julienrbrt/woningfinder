@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/city"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 )
 
 func TestCity_Merge(t *testing.T) {

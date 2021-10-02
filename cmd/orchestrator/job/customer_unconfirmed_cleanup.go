@@ -61,7 +61,7 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 func (j *Jobs) sendEmailReminder(user *customer.User, count int) {
 	// check if reminder already sent
 	uuid := base64.StdEncoding.EncodeToString([]byte(user.Email + fmt.Sprintf("customer confirmation email reminder %d sent", count)))
-	if j.isAlreadySent(uuid) {
+	if j.redisClient.HasUUID(uuid) {
 		return
 	}
 
@@ -71,5 +71,5 @@ func (j *Jobs) sendEmailReminder(user *customer.User, count int) {
 	}
 
 	// set reminder as sent
-	j.markAsSent(uuid)
+	j.redisClient.SetUUID(uuid)
 }
