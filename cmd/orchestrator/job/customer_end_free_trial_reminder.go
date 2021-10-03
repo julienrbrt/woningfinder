@@ -3,17 +3,13 @@ package job
 import (
 	"encoding/base64"
 	"errors"
-	"fmt"
-	"time"
 
 	"github.com/go-pg/pg/v10"
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
-const maxFreeTrialExpiredTime = 14 * 24 * time.Hour
-
-// SendCustomerEndFreeTrialReminder reminds a free trial customer to pay the plan
+// SendCustomerEndFreeTrialReminder reminds a free trial customer to pay its plan
 func (j *Jobs) SendCustomerEndFreeTrialReminder(c *cron.Cron) {
 	// checks performed everyday at 08:00, 14:00, 20:00
 	spec := "0 0 8,14,20 * * *"
@@ -42,34 +38,18 @@ func (j *Jobs) SendCustomerEndFreeTrialReminder(c *cron.Cron) {
 
 			// check if reminder already sent
 			uuid := buildFreeTrialReminderReminderUUID(user)
-			if j.redisClient.HasUUID(uuid) {
-				// delete old expired free trial users
-				if err := j.deleteExpiredFreeTrialUsers(user); err != nil {
-					j.logger.Sugar().Error(err)
+			if !j.redisClient.HasUUID(uuid) {
+
+				// send reminder
+				if err := j.emailService.SendFreeTrialReminder(user); err != nil {
+					j.logger.Sugar().Error("error sending %s free trial reminder: %w", user.Email, err)
 				}
 
-				continue
+				// set reminder as sent
+				j.redisClient.SetUUID(uuid)
 			}
-
-			// send reminder
-			if err := j.emailService.SendFreeTrialReminder(user); err != nil {
-				j.logger.Sugar().Error("error sending %s free trial reminder: %w", user.Email, err)
-			}
-
-			// set reminder as sent
-			j.redisClient.SetUUID(uuid)
 		}
 	}))
-}
-
-func (j *Jobs) deleteExpiredFreeTrialUsers(user *customer.User) error {
-	if time.Until(user.Plan.CreatedAt.Add(maxFreeTrialExpiredTime)) <= 0 {
-		if err := j.userService.DeleteUser(user.Email); err != nil {
-			return fmt.Errorf("failed deleting user %s: %w", user.Email, err)
-		}
-	}
-
-	return nil
 }
 
 func buildFreeTrialReminderReminderUUID(user *customer.User) string {
