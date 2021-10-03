@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Je reageert nog niet automatisch</mj-title>
+    <mj-title>Activeer je WoningFinder account</mj-title>
     <mj-font name="Inter" href="https://fonts.googleapis.com/css?family=Inter:400,700"></mj-font>
     <mj-attributes>
       <mj-all font-family="Inter, Helvetica, Arial, sans-serif" padding="0px"></mj-all>
@@ -15,7 +15,7 @@
       <mj-column width="570px">
         <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
-        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Je reageert nog niet automatisch
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Activeer je WoningFinder account
         </mj-text>
         <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
         </mj-text>
@@ -25,16 +25,19 @@
     <mj-section background-color="#FFFFFF">
       <mj-column width="360px">
         <mj-text align="left" padding="0 20px 30px 20px">
-          Hi {{ .Name }},
+          Hallo {{ .Name }},
           <br /><br />
 
-          Normaal gesproken zou je een wekelijkse update krijgen, maar je bent nog niet ingelogd op woningcorporaties websites in je WoningFinder account.
+          Je zoekopdracht is ingesteld! 👏
           <br /><br />
 
-          <strong>Let op: Als je dat niet doet dan reageer je nog niet automatisch.</strong>
-          <br /><br />
-
-          Je kunt dat eenvoudig doen via de onderstaande link.
+          Om automatisch voor jou te kunnen reageren,
+          <strong>hoef je alleen maar in te loggen bij de woningcorporaties waar je
+            wilt reageren</strong>. <br />
+          <br />
+          We hebben voor jou alleen de woningcorporaties geselecteerd die met
+          jouw zoekopdracht matchen. We raden je aan bij elke in te loggen zodat
+          je sneller een huis kunt vinden. Je kunt dat gemakkelijk doen via de onderstaande link.
         </mj-text>
       </mj-column>
       <mj-column width="200px">
@@ -44,7 +47,7 @@
 
     <mj-section padding="0 20px" background-color="#FFFFFF">
       <mj-column>
-        <mj-button href="{{ .URL }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Mijn zoekopdracht</mj-button>
+        <mj-button href="{{ .URL }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Activeer mijn account</mj-button>
       </mj-column>
     </mj-section>
 

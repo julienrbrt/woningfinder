@@ -8,7 +8,9 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
-func (s *service) CreateCorporationCredentials(userID uint, credentials customer.CorporationCredentials) error {
+const ErrValidationCorporationCredentials = "error when validating corporation credentials"
+
+func (s *service) CreateCorporationCredentials(userID uint, credentials *customer.CorporationCredentials) error {
 	if credentials.CorporationName == "" {
 		return errors.New("error when creating corporation credentials: corporation invalid")
 	}
@@ -19,7 +21,7 @@ func (s *service) CreateCorporationCredentials(userID uint, credentials customer
 
 	// check credentials validity
 	if err := s.validateCredentials(credentials); err != nil {
-		return fmt.Errorf("error when validation corporation credentials: %w", err)
+		return fmt.Errorf("%s: %w", ErrValidationCorporationCredentials, err)
 	}
 
 	// encrypt credentials
@@ -39,7 +41,7 @@ func (s *service) CreateCorporationCredentials(userID uint, credentials customer
 	credentials.UserID = userID
 
 	// check if already existing
-	if _, err := s.dbClient.Conn().Model(&credentials).
+	if _, err := s.dbClient.Conn().Model(credentials).
 		OnConflict("(user_id, corporation_name) DO UPDATE").
 		Insert(); err != nil {
 		return fmt.Errorf("error when creating or updating corporation credentials: %w", err)
@@ -62,6 +64,20 @@ func (s *service) GetCorporationCredentials(userID uint, corporationName string)
 	return &credentials, nil
 }
 
+// HasCorporationCredentials checks if an user has corporation credentials
+func (s *service) HasCorporationCredentials(userID uint) (bool, error) {
+	credentials := customer.CorporationCredentials{
+		UserID: userID,
+	}
+
+	count, err := s.dbClient.Conn().Model(&credentials).Where("user_id = ?", userID).Count()
+	if err != nil {
+		return false, fmt.Errorf("failed to count corproation credentials for userID %d: %w", userID, err)
+	}
+
+	return count > 0, nil
+}
+
 func (s *service) UpdateCorporationCredentialsFailureCount(userID uint, corporationName string, failureCount int) error {
 	credentials := customer.CorporationCredentials{
 		UserID:          userID,
@@ -73,7 +89,7 @@ func (s *service) UpdateCorporationCredentialsFailureCount(userID uint, corporat
 		Set("failure_count = ?", failureCount).
 		Where("user_id = ? and corporation_name = ?", credentials.UserID, corporationName).
 		Update(); err != nil {
-		return fmt.Errorf("error whenupdating corporation credentials failure count: %w", err)
+		return fmt.Errorf("error when updating corporation credentials failure count: %w", err)
 	}
 
 	return nil
@@ -108,7 +124,7 @@ func (s *service) DecryptCredentials(credentials *customer.CorporationCredential
 	return credentials, nil
 }
 
-func (s *service) validateCredentials(credentials customer.CorporationCredentials) error {
+func (s *service) validateCredentials(credentials *customer.CorporationCredentials) error {
 	client, err := s.clientProvider.Get(credentials.CorporationName)
 	if err != nil {
 		return err
