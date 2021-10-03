@@ -11,6 +11,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
+	userService "github.com/woningfinder/woningfinder/internal/services/user"
 )
 
 // GetCorporationCredentials gets a list of corporation credentials that match the user housing preferences
@@ -85,21 +86,36 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	corporationCredentials := customer.CorporationCredentials{
+	corporationCredentials := &customer.CorporationCredentials{
 		UserID:          user.ID,
 		CorporationName: credentials.CorporationName,
 		Login:           credentials.Login,
 		Password:        credentials.Password,
 	}
+
+	hasCorproationCredentials, err := h.userService.HasCorporationCredentials(user.ID)
+	if err != nil {
+		h.logger.Sugar().Warnf("failed to get corproation credentials count: %w", err)
+	}
+
 	if err := h.userService.CreateCorporationCredentials(user.ID, corporationCredentials); err != nil {
 		errorMsg := fmt.Errorf("failed creating corporation credentials")
 		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
-		if strings.Contains(err.Error(), "error when validation corporation credentials") {
+
+		if strings.Contains(err.Error(), userService.ErrValidationCorporationCredentials) {
 			render.Render(w, r, handlerErrors.ErrUnauthorized)
 		} else {
 			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		}
+
 		return
+	}
+
+	// first time adding corporation credentials: send welcome email
+	if !hasCorproationCredentials {
+		if err := h.emailService.SendCorporationCredentialsFirstTimeAdded(user); err != nil {
+			h.logger.Sugar().Error(err)
+		}
 	}
 
 	// returns 200 by default

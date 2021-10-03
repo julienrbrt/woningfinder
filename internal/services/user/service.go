@@ -30,7 +30,8 @@ type Service interface {
 	CreateHousingPreferencesMatch(userID uint, offer corporation.Offer, corporationName, pictureURL string) error
 
 	// Corporation Credentials
-	CreateCorporationCredentials(userID uint, credentials customer.CorporationCredentials) error
+	HasCorporationCredentials(userID uint) (bool, error)
+	CreateCorporationCredentials(userID uint, credentials *customer.CorporationCredentials) error
 	GetCorporationCredentials(userID uint, corporationName string) (*customer.CorporationCredentials, error)
 	DeleteCorporationCredentials(userID uint, corporationName string) error
 	UpdateCorporationCredentialsFailureCount(userID uint, corporationName string, failureCount int) error

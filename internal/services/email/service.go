@@ -14,12 +14,13 @@ var emailTemplates embed.FS
 
 // Service permits to handle the management of the email
 type Service interface {
-	SendWelcome(user *customer.User) error
+	SendActivationEmail(user *customer.User) error
 	SendEmailConfirmationReminder(user *customer.User) error
 	SendThankYou(user *customer.User) error
 	SendFreeTrialReminder(user *customer.User) error
 	SendLogin(user *customer.User) error
 	SendWeeklyUpdate(user *customer.User, matches []*customer.HousingPreferencesMatch) error
+	SendCorporationCredentialsFirstTimeAdded(user *customer.User) error
 	SendCorporationCredentialsMissing(user *customer.User) error
 	SendCorporationCredentialsError(user *customer.User, corporationName string) error
 	SendBye(user *customer.User) error
