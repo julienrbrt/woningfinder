@@ -78,6 +78,10 @@ func (s *serviceMock) CreateCorporationCredentials(userID uint, creds *customer.
 	return s.err
 }
 
+func (s *serviceMock) HasCorporationCredentials(userID uint) (bool, error) {
+	return false, s.err
+}
+
 func (s *serviceMock) GetCorporationCredentials(userID uint, corporationName string) (*customer.CorporationCredentials, error) {
 	return &customer.CorporationCredentials{}, s.err
 }
