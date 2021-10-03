@@ -36,8 +36,8 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// send welcome email
-	if err := h.emailService.SendWelcome(user); err != nil {
+	// send activation email
+	if err := h.emailService.SendActivationEmail(user); err != nil {
 		// just logging error
 		h.logger.Sugar().Warnf("error while sending activation email: %w", err)
 	}

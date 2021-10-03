@@ -3,7 +3,6 @@ package email
 import "github.com/woningfinder/woningfinder/internal/customer"
 
 type serviceMock struct {
-	Service
 	err error
 }
 
@@ -12,7 +11,7 @@ func NewServiceMock(err error) Service {
 	return &serviceMock{err: err}
 }
 
-func (s *serviceMock) SendWelcome(_ *customer.User) error {
+func (s *serviceMock) SendActivationEmail(_ *customer.User) error {
 	return s.err
 }
 
@@ -33,6 +32,10 @@ func (s *serviceMock) SendLogin(_ *customer.User) error {
 }
 
 func (s *serviceMock) SendWeeklyUpdate(_ *customer.User, _ []*customer.HousingPreferencesMatch) error {
+	return s.err
+}
+
+func (s *serviceMock) SendCorporationCredentialsFirstTimeAdded(_ *customer.User) error {
 	return s.err
 }
 

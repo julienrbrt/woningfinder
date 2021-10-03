@@ -28,7 +28,7 @@ func (s *service) SendCorporationCredentialsMissing(user *customer.User) error {
 		return fmt.Errorf("error sending corporation credentials missing email: %w", err)
 	}
 
-	if err := s.emailClient.Send("Wekelijkse update", body.String(), user.Email); err != nil {
+	if err := s.emailClient.Send("Je reageert nog niet automatisch", body.String(), user.Email); err != nil {
 		return fmt.Errorf("error sending corporation credentials email: %w", err)
 	}
 

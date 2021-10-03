@@ -74,8 +74,12 @@ func (s *serviceMock) GetHousingPreferencesMatchingCorporation(userID uint) ([]*
 	return []*corporation.Corporation{{Name: "De Woonplaats", URL: "https://dewoonplaats.nl"}}, nil
 }
 
-func (s *serviceMock) CreateCorporationCredentials(userID uint, creds customer.CorporationCredentials) error {
+func (s *serviceMock) CreateCorporationCredentials(userID uint, creds *customer.CorporationCredentials) error {
 	return s.err
+}
+
+func (s *serviceMock) HasCorporationCredentials(userID uint) (bool, error) {
+	return false, s.err
 }
 
 func (s *serviceMock) GetCorporationCredentials(userID uint, corporationName string) (*customer.CorporationCredentials, error) {
