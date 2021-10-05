@@ -23,14 +23,14 @@ type Plan struct {
 // PlanBasis is the plan for social houses
 var PlanBasis = Plan{
 	Name:          "basis",
-	Price:         12,
+	Price:         20,
 	MaximumIncome: MaximumIncomeSocialHouse,
 }
 
 // PlanPro is the free sector houses
 var PlanPro = Plan{
 	Name:          "pro",
-	Price:         25,
+	Price:         30,
 	MaximumIncome: math.MaxInt32,
 }
 
