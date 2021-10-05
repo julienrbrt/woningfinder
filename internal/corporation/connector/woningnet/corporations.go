@@ -65,3 +65,31 @@ var UtrechtInfo = corporation.Corporation{
 		corporation.SelectionRegistrationDate,
 	},
 }
+
+var AmsterdamInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregioamsterdam.nl", Path: "/webapi"},
+	Name:        "WoningNet Stadsregio Amsterdam",
+	URL:         "https://www.woningnetregioamsterdam.nl",
+	Cities: []city.City{
+		city.Amsterdam,
+		city.Amstelveen,
+		city.Zaandam,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionFirstComeFirstServed,
+		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+	},
+}
+
+var RooftrackInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.rooftrack.nl", Path: "/webapi"},
+	Name:        "Rooftrack - Vrijesectorhuurwoningen",
+	URL:         "https://www.rooftrack.nl",
+	Cities: []city.City{
+		city.Utrecht,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionFirstComeFirstServed,
+	},
+}
