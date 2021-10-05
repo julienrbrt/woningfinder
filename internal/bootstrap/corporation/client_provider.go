@@ -42,6 +42,12 @@ func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) co
 				return CreateWoningNetClient(logger, mapboxClient, woningnet.UtrechtInfo)
 			},
 		},
+		{
+			Corporation: woningnet.AmsterdamInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.AmsterdamInfo)
+			},
+		},
 	}
 
 	return connector.NewClientProvider(providers)

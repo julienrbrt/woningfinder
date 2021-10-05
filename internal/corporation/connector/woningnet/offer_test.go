@@ -17,6 +17,7 @@ func Test_FetchOffer(t *testing.T) {
 	corporations := []corporation.Corporation{
 		woningnet.UtrechtInfo,
 		woningnet.HengeloBorneInfo,
+		woningnet.AmsterdamInfo,
 	}
 
 	for _, c := range corporations {
