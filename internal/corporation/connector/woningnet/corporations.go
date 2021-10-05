@@ -96,15 +96,3 @@ var AmsterdamInfo = corporation.Corporation{
 		corporation.SelectionRegistrationDate,
 	},
 }
-
-var RooftrackInfo = corporation.Corporation{
-	APIEndpoint: &url.URL{Scheme: "https", Host: "www.rooftrack.nl", Path: "/webapi"},
-	Name:        "Rooftrack - Vrijesectorhuurwoningen",
-	URL:         "https://www.rooftrack.nl",
-	Cities: []city.City{
-		city.Utrecht,
-	},
-	SelectionMethod: []corporation.SelectionMethod{
-		corporation.SelectionFirstComeFirstServed,
-	},
-}
