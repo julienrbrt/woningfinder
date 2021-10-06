@@ -79,6 +79,8 @@ var cityTable = map[string]City{
 	Vijfhuizen.Name:           Vijfhuizen,
 	Wormer.Name:               Wormer,
 	Zwanenburg.Name:           Zwanenburg,
+	Lopik.Name:                Lopik,
+	Langbroek.Name:            Langbroek,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

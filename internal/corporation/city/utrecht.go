@@ -291,3 +291,13 @@ var Harmelen = City{
 	Name:        "Harmelen",
 	Coordinates: []float64{4.963882, 52.091534},
 }
+
+var Langbroek = City{
+	Name:        "Langbroek",
+	Coordinates: []float64{5.32597, 52.01114},
+}
+
+var Lopik = City{
+	Name:        "Lopik",
+	Coordinates: []float64{4.94915, 51.97528},
+}
