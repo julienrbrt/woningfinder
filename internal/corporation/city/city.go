@@ -81,6 +81,9 @@ var cityTable = map[string]City{
 	Zwanenburg.Name:           Zwanenburg,
 	Lopik.Name:                Lopik,
 	Langbroek.Name:            Langbroek,
+	Zuidoostbeemster.Name:     Zuidoostbeemster,
+	Zaandijk.Name:             Zaandijk,
+	Badhoevedorp.Name:         Badhoevedorp,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

@@ -91,6 +91,9 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Vijfhuizen,
 		city.Wormer,
 		city.Zwanenburg,
+		city.Badhoevedorp,
+		city.Zaandijk,
+		city.Zuidoostbeemster,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

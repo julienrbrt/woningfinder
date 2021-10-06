@@ -94,3 +94,18 @@ var Zaandam = City{
 	Name:        "Zaandam",
 	Coordinates: []float64{4.829861, 52.442493},
 }
+
+var Badhoevedorp = City{
+	Name:        "Badhoevedorp",
+	Coordinates: []float64{4.78447, 52.33888},
+}
+
+var Zaandijk = City{
+	Name:        "Zaandijk",
+	Coordinates: []float64{4.808028, 52.474415},
+}
+
+var Zuidoostbeemster = City{
+	Name:        "Zuidoostbeemster",
+	Coordinates: []float64{4.942899, 52.515353},
+}
