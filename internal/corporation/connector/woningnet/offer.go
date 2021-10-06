@@ -167,7 +167,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			result, err := c.Map(offer, houseType, selectionMethod)
 			if err != nil {
-				c.logger.Sugar().Warnf("woningnet connector: error getting parsing %s: %w", offer.Address, err)
+				c.logger.Sugar().Warnf("woningnet connector: error parsing %s: %w", offer.Address, err)
 				continue
 			}
 
