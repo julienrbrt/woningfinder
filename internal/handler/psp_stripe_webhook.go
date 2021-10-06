@@ -66,14 +66,14 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 		user, err := h.userService.ConfirmPayment(paymentIntent.ReceiptEmail)
 		if err != nil {
 			errorMsg := fmt.Errorf("error while processing payment")
-			h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+			h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
 			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 			return
 		}
 
 		// send payment confirmation email
 		if err := h.emailService.SendThankYou(user); err != nil {
-			h.logger.Sugar().Warn(err)
+			h.logger.Sugar().Error(err)
 		}
 
 		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s paid %d€ 🎉🎉🎉", paymentIntent.ReceiptEmail, paymentIntent.Amount/100)

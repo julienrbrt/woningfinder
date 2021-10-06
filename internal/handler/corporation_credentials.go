@@ -33,7 +33,7 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 	corporations, err := h.userService.GetHousingPreferencesMatchingCorporation(userFromJWT.ID)
 	if err != nil {
 		errorMsg := fmt.Errorf("failed getting housing corporation relevant for you")
-		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
@@ -95,12 +95,12 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 
 	hasCorproationCredentials, err := h.userService.HasCorporationCredentials(user.ID)
 	if err != nil {
-		h.logger.Sugar().Warnf("failed to get corproation credentials count: %w", err)
+		h.logger.Sugar().Errorf("failed to get corproation credentials count: %w", err)
 	}
 
 	if err := h.userService.CreateCorporationCredentials(user.ID, corporationCredentials); err != nil {
 		errorMsg := fmt.Errorf("failed creating corporation credentials")
-		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
 
 		if strings.Contains(err.Error(), userService.ErrValidationCorporationCredentials) {
 			render.Render(w, r, handlerErrors.ErrUnauthorized)

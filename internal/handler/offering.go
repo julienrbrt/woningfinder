@@ -26,7 +26,7 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	cities, err := h.corporationService.GetCities()
 	if err != nil {
 		errorMsg := fmt.Errorf("error while getting offering")
-		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}

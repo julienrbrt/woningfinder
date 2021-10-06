@@ -46,7 +46,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			// enrinch housing preferences
 			user.HousingPreferences, err = s.userService.GetHousingPreferences(user.ID)
 			if err != nil {
-				s.logger.Sugar().Warnf("failed to get users preferences from %s: %w", user.Email, err)
+				s.logger.Sugar().Errorf("failed to get users preferences from %s: %w", user.Email, err)
 				return
 			}
 
@@ -74,7 +74,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				// user has failed login
 				s.logger.Sugar().Debugf("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
 				if err := s.hasFailedLogin(user, newCreds); err != nil {
-					s.logger.Sugar().Warn(err)
+					s.logger.Sugar().Error(err)
 				}
 
 				return
@@ -155,7 +155,7 @@ func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Of
 func (s *service) uploadHousingPicture(offer corporation.Offer) string {
 	fileName, err := s.spacesClient.UploadPicture("offers", offer.Housing.Address, offer.RawPictureURL)
 	if err != nil {
-		s.logger.Sugar().Warnf("failed to upload picture: %w", err)
+		s.logger.Sugar().Errorf("failed to upload picture: %w", err)
 	}
 
 	return fileName
