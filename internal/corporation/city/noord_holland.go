@@ -1,13 +1,107 @@
 package city
 
-var Aalsmeer = City{
-	Name:        "Aalsmeer",
-	Coordinates: []float64{4.761114, 52.265986},
-}
-
 var Amsterdam = City{
 	Name:        "Amsterdam",
 	Coordinates: []float64{4.900112, 52.371009},
+	SuggestedDistrict: map[string][]string{
+		"Centrum": {
+			"Burgwallen-Oude Zijde",
+			"Burgwallen-Nieuwe Zijde",
+			"Grachtengordel-West",
+			"Haarlemmerbuurt",
+			"Jordaan",
+			"De Weteringschans",
+			"Grachtengordel-Zuid",
+			"Nieuwmarkt",
+			"Lastage",
+			"Kadijken",
+			"Oostelijke Eilanden",
+			"Weesperbuurt",
+			"Plantage",
+		},
+		"Noord": {
+			"Buikslotermeer",
+			"Elzenhagen",
+			"Waterland",
+			"Waterlandpleinbuurt",
+			"Vogelbuurt",
+			"IJplein",
+			"Buiksloterdijk",
+			"Nieuwendammerdijk",
+			"Noordelijke IJ-oevers",
+			"Volewijck",
+			"Nieuwendam",
+		},
+		"West": {
+			"De Kolenkit",
+			"Erasmuspark",
+			"Landlust",
+			"Sloterdijk",
+			"Chassébuurt",
+			"Da Costabuurt",
+			"Geuzenbuurt",
+			"Helmersbuurt",
+			"Hoofdweg",
+			"Kinkerbuurt",
+			"Overtoomse Sluis",
+			"Van Galenbuurt",
+			"Van Lennepbuurt",
+			"Vondelbuurt",
+			"Westindische Buurt",
+			"Centrale Markt",
+			"Frederik Hendrikbuurt",
+			"Houthavens",
+			"Spaarndammerbuurt",
+			"Zeeheldenbuurt",
+			"Staatsliedenbuurt",
+		},
+		"Nieuw-West": {
+			"De Aker",
+			"Sloten",
+			"Sloterdijk",
+			"Slotermeer",
+			"Osdorp",
+			"Slotervaart",
+		},
+		"Zuid": {
+			"Rivierenbuurt",
+			"Buitenveldert",
+			"Zuidas",
+			"Pijp", // oude, nieuwe...
+			"Rijnbuurt",
+			"Scheldebuurt",
+			"IJselbuurt",
+			"Apollobuurt",
+			"Hoofddorppleinbuurt",
+			"Museumkwartier",
+			"Schinkelbuurt",
+			"Stadionbuurt",
+			"Willemspark",
+		},
+		"Oost": {
+			"IJburg",
+			"Zeeburg",
+			"Indische Buurt",
+			"Oostelijk Havengebied",
+			"Dapperbuurt",
+			"Oosterparkbuurt",
+			"Transvaalbuurt",
+			"Weesperzijde",
+			"Betondorp",
+			"Frankendael",
+			"Middenmeer",
+			"Overamstel",
+			"Omval",
+		},
+		"Westpoort": {
+			"Westelijk Havengebied",
+		},
+	},
+}
+
+var Aalsmeer = City{
+	Name:        "Aalsmeer",
+	Coordinates: []float64{4.761114, 52.265986},
 }
 
 var Diemen = City{
@@ -93,4 +187,19 @@ var Bussum = City{
 var Zaandam = City{
 	Name:        "Zaandam",
 	Coordinates: []float64{4.829861, 52.442493},
+}
+
+var Badhoevedorp = City{
+	Name:        "Badhoevedorp",
+	Coordinates: []float64{4.78447, 52.33888},
+}
+
+var Zaandijk = City{
+	Name:        "Zaandijk",
+	Coordinates: []float64{4.808028, 52.474415},
+}
+
+var Zuidoostbeemster = City{
+	Name:        "Zuidoostbeemster",
+	Coordinates: []float64{4.942899, 52.515353},
 }

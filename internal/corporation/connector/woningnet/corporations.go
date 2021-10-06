@@ -58,6 +58,8 @@ var UtrechtInfo = corporation.Corporation{
 		city.Houten,
 		city.Vinkeveen,
 		city.Harmelen,
+		city.Langbroek,
+		city.Lopik,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
@@ -89,6 +91,9 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Vijfhuizen,
 		city.Wormer,
 		city.Zwanenburg,
+		city.Badhoevedorp,
+		city.Zaandijk,
+		city.Zuidoostbeemster,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

@@ -31,7 +31,7 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		h.logger.Sugar().Warnf("%s: %w", errorMsg, err)
+		h.logger.Sugar().Errorf("%s: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
@@ -39,6 +39,6 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 	// send activation email
 	if err := h.emailService.SendActivationEmail(user); err != nil {
 		// just logging error
-		h.logger.Sugar().Warnf("error while sending activation email: %w", err)
+		h.logger.Sugar().Errorf("error while sending activation email: %w", err)
 	}
 }
