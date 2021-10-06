@@ -35,7 +35,7 @@ func (h *handler) createStripeCheckoutSession(email string, plan customer.Plan, 
 	session, err := session.New(params)
 	if err != nil {
 		errorMsg := fmt.Errorf("error while creating stripe new checkout session")
-		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}

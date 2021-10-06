@@ -53,13 +53,13 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			offer.Housing.Price, err = strconv.ParseFloat(e.Attr("data-prijs"), 32)
 			if err != nil {
-				c.logger.Sugar().Warnf("itris connector: error while parsing price of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Infof("itris connector: error while parsing price of %s: %w", offer.Housing.Address, err)
 				return
 			}
 
 			offer.Housing.NumberBedroom, err = strconv.Atoi(e.Attr("data-kamers"))
 			if err != nil {
-				c.logger.Sugar().Warnf("itris connector: error while parsing number bedroom of %s: %w", offer.Housing.Address, err)
+				c.logger.Sugar().Infof("itris connector: error while parsing number bedroom of %s: %w", offer.Housing.Address, err)
 				return
 			}
 

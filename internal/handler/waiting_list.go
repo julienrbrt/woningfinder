@@ -58,7 +58,7 @@ func (h *handler) WaitingListForm(w http.ResponseWriter, r *http.Request) {
 	// save waiting list
 	if err := h.userService.CreateWaitingList(&customer.WaitingList{Email: waitingListRequest.Email, CityName: waitingListRequest.CityName}); err != nil {
 		errorMsg := fmt.Errorf("error while adding %s to the waiting list", waitingListRequest.Email)
-		h.logger.Sugar().Warnf("%w: %w", errorMsg, err)
+		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
