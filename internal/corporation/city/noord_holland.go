@@ -203,3 +203,8 @@ var Zuidoostbeemster = City{
 	Name:        "Zuidoostbeemster",
 	Coordinates: []float64{4.942899, 52.515353},
 }
+
+var DeKwakel = City{
+	Name:        "De Kwakel",
+	Coordinates: []float64{4.790833, 52.240833},
+}
