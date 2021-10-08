@@ -208,3 +208,13 @@ var DeKwakel = City{
 	Name:        "De Kwakel",
 	Coordinates: []float64{4.790833, 52.240833},
 }
+
+var Lisserbroek = City{
+	Name:        "Lisserbroek",
+	Coordinates: []float64{4.566667, 52.25},
+}
+
+var Purmerland = City{
+	Name:        "Purmerland",
+	Coordinates: []float64{4.926380, 52.481470},
+}
