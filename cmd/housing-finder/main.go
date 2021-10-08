@@ -27,7 +27,7 @@ func main() {
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
-	mapboxClient := bootstrap.CreateMapboxClient()
+	mapboxClient := bootstrap.CreateMapboxClient(logger, redisClient)
 	spacesClient := bootstrap.CreateDOSpacesClient(logger)
 
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, mapboxClient)

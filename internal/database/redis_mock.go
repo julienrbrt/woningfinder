@@ -6,6 +6,7 @@ type RedisClientMock interface {
 }
 
 type redisClientMock struct {
+	RedisClient
 	keyStoreOutput string
 	queueOutput    []string
 	err            error
@@ -29,11 +30,13 @@ func (c *redisClientMock) Get(key string) (string, error) {
 }
 
 func (c *redisClientMock) Set(key string, value interface{}) error {
+	// this error cannot happen in set to it has been defined in the mock for the Get
+	// to bypass
+	if c.err == ErrRedisKeyNotFound {
+		return nil
+	}
+
 	return c.err
-}
-
-func (c *redisClientMock) SetUUID(uuid string) {
-
 }
 
 func (c *redisClientMock) HasUUID(uuid string) bool {

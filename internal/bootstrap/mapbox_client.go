@@ -4,7 +4,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 	"github.com/woningfinder/woningfinder/pkg/networking"
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
@@ -12,7 +14,7 @@ import (
 )
 
 // CreateMapboxClient creates a Mapbox client
-func CreateMapboxClient() mapbox.Client {
+func CreateMapboxClient(logger *logging.Logger, redisClient database.RedisClient) mapbox.Client {
 	client := &http.Client{
 		Timeout: retry.DefaultTimeout,
 	}
@@ -25,5 +27,5 @@ func CreateMapboxClient() mapbox.Client {
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
 
-	return mapbox.NewClient(httpClient, config.MustGetString("MAPBOX_API_KEY"))
+	return mapbox.NewClient(logger, httpClient, redisClient, config.MustGetString("MAPBOX_API_KEY"))
 }
