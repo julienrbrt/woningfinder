@@ -85,6 +85,8 @@ var cityTable = map[string]City{
 	Zaandijk.Name:             Zaandijk,
 	Badhoevedorp.Name:         Badhoevedorp,
 	DeKwakel.Name:             DeKwakel,
+	Lisserbroek.Name:          Lisserbroek,
+	Purmerland.Name:           Purmerland,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
