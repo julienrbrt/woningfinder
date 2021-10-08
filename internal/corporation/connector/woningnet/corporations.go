@@ -95,6 +95,8 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Zaandijk,
 		city.Zuidoostbeemster,
 		city.DeKwakel,
+		city.Lisserbroek,
+		city.Purmerland,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
