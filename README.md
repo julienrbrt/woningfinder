@@ -31,7 +31,7 @@ WoningFinder is split in multiple components:
   - _CustomerUnconfirmedCleanup_ sends a reminder to unconfirmed email user and deletes the customers that did not confirm their email within 72 hours. Runs everyday at 08:00, 16:00.
   - _CustomerEndFreeTrialReminder_ reminds a free trial customer to pay its plan. Runs everyday at 08:00, 14:00 and 20:00.
   - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue (triggering _HousingMatcher_).
-  - _WeeklyUpdate_ generates and send the customer weekly updates. Runs every Friday at 19:00.
+  - _WeeklyUpdate_ generates and send the customer weekly updates. Runs every Friday at 18:00.
 - _[impersonate](../cmd/impersonate)_ permits to get a JWT token for an user in order to impersonate it.
 - _[customer-delete](../cmd/customer-delete)_ permits to delete customers given their email.
 - _[db-migrator](../cmd/db-migrator)_ permits to initialize the database with default values (housing corporations, cities, housing types, selection methods...) and run the databases migrations. It is run as a job before every deploy.
