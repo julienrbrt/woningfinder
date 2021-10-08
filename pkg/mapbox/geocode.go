@@ -1,6 +1,7 @@
 package mapbox
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"strings"
@@ -26,7 +27,29 @@ type response struct {
 
 // CityDistrictFromAddress obtains the city district name of a given address
 func (c *client) CityDistrictFromAddress(address string) (string, error) {
-	return c.getCityDistrict(address)
+	uuid := c.buildAddressUUID(address)
+
+	// check if district is in cache
+	if district, err := c.redisClient.Get(uuid); err == nil {
+		return district, nil
+	}
+
+	// make request from mapbox
+	district, err := c.getCityDistrict(address)
+	if err != nil {
+		return district, nil
+	}
+
+	// cache district
+	if err := c.redisClient.Set(uuid, district); err != nil {
+		c.logger.Sugar().Errorf("failed saving address %s district in redis: %w", address, err)
+	}
+
+	return district, nil
+}
+
+func (c *client) buildAddressUUID(address string) string {
+	return base64.StdEncoding.EncodeToString([]byte(address))
 }
 
 func (c *client) getCityDistrict(search string) (string, error) {
