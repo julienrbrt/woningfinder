@@ -334,6 +334,10 @@ func (c *client) parsePrice(priceStr string) (float64, error) {
 }
 
 func (c *client) parseHouseSize(sizeStr string) (float64, error) {
+	if strings.Contains(sizeStr, " - ") {
+		sizeStr = strings.Split(sizeStr, " - ")[0]
+	}
+
 	size, err := strconv.ParseFloat(sizeStr, 64)
 	if err != nil {
 		return 0, fmt.Errorf("error parsing housing size %s: %w", sizeStr, err)
