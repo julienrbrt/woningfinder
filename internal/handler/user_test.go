@@ -201,7 +201,7 @@ func Test_UpdateUserInfo(t *testing.T) {
 	a.Equal(http.StatusOK, rr.Code)
 }
 
-func Test_DeleteUser_BadRequestError(t *testing.T) {
+func Test_DeleteUser_ErrEmptyRequest(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -226,6 +226,36 @@ func Test_DeleteUser_BadRequestError(t *testing.T) {
 
 	// verify expected value
 	a.Contains(rr.Body.String(), "Bad request")
+}
+
+func Test_DeleteUser_BadRequestError(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
+
+	// request data
+	data, err := ioutil.ReadFile("testdata/delete-user-invalid-request.json")
+	a.NoError(err)
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/me/delete", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.DeleteUser)
+
+	// server request
+	h.ServeHTTP(rr, authenticateRequest(req))
+
+	// verify status code
+	a.Equal(http.StatusBadRequest, rr.Code)
 }
 
 func Test_DeleteUser_ErrUserService(t *testing.T) {
@@ -275,36 +305,6 @@ func Test_DeleteUser(t *testing.T) {
 
 	// request data
 	data, err := ioutil.ReadFile("testdata/delete-user-request.json")
-	a.NoError(err)
-
-	// create request
-	req, err := http.NewRequest(http.MethodPost, "/me/delete", strings.NewReader(string(data)))
-	req.Header.Set("Content-Type", "application/json")
-	a.NoError(err)
-
-	// record response
-	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.DeleteUser)
-
-	// server request
-	h.ServeHTTP(rr, authenticateRequest(req))
-
-	// verify status code
-	a.Equal(http.StatusOK, rr.Code)
-}
-
-func Test_DeleteUser_WithFeedback(t *testing.T) {
-	a := assert.New(t)
-	logger := logging.NewZapLoggerWithoutSentry()
-
-	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(nil)
-	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
-
-	// request data
-	data, err := ioutil.ReadFile("testdata/delete-user-request-with-feedback.json")
 	a.NoError(err)
 
 	// create request
