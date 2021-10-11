@@ -19,7 +19,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
-func Test_UserInfo_ErrUnauthorized(t *testing.T) {
+func Test_GetUserInfo_ErrUnauthorized(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -35,7 +35,7 @@ func Test_UserInfo_ErrUnauthorized(t *testing.T) {
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.UserInfo)
+	h := http.HandlerFunc(handler.GetUserInfo)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -47,7 +47,7 @@ func Test_UserInfo_ErrUnauthorized(t *testing.T) {
 	a.Contains(rr.Body.String(), "Bad request")
 }
 
-func Test_UserInfo_ErrUserService(t *testing.T) {
+func Test_GetUserInfo_ErrUserService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -63,7 +63,7 @@ func Test_UserInfo_ErrUserService(t *testing.T) {
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.UserInfo)
+	h := http.HandlerFunc(handler.GetUserInfo)
 
 	// server request
 	h.ServeHTTP(rr, authenticateRequest(req))
@@ -77,7 +77,7 @@ func Test_UserInfo_ErrUserService(t *testing.T) {
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
 
-func Test_UserInfo(t *testing.T) {
+func Test_GetUserInfo(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -93,7 +93,7 @@ func Test_UserInfo(t *testing.T) {
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.UserInfo)
+	h := http.HandlerFunc(handler.GetUserInfo)
 
 	// server request
 	h.ServeHTTP(rr, authenticateRequest(req))
@@ -120,7 +120,6 @@ func Test_UpdateUserInfo_BadRequestError(t *testing.T) {
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me", nil)
-	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
@@ -194,6 +193,128 @@ func Test_UpdateUserInfo(t *testing.T) {
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(handler.UpdateUserInfo)
+
+	// server request
+	h.ServeHTTP(rr, authenticateRequest(req))
+
+	// verify status code
+	a.Equal(http.StatusOK, rr.Code)
+}
+
+func Test_DeleteUser_BadRequestError(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(errors.New("foo"))
+	emailServiceMock := emailService.NewServiceMock(nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), nil}
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/me/delete", nil)
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.DeleteUser)
+
+	// server request
+	h.ServeHTTP(rr, authenticateRequest(req))
+
+	// verify status code
+	a.Equal(http.StatusBadRequest, rr.Code)
+
+	// verify expected value
+	a.Contains(rr.Body.String(), "Bad request")
+}
+
+func Test_DeleteUser_ErrUserService(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(errors.New("foo"))
+	emailServiceMock := emailService.NewServiceMock(nil)
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
+
+	// request data
+	data, err := ioutil.ReadFile("testdata/delete-user-request.json")
+	a.NoError(err)
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/me/delete", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.DeleteUser)
+
+	// server request
+	h.ServeHTTP(rr, authenticateRequest(req))
+
+	// verify status code
+	a.Equal(http.StatusInternalServerError, rr.Code)
+
+	// verify expected value
+	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("failed to delete user")))
+	a.NoError(err)
+	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
+}
+
+func Test_DeleteUser(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
+
+	// request data
+	data, err := ioutil.ReadFile("testdata/delete-user-request.json")
+	a.NoError(err)
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/me/delete", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.DeleteUser)
+
+	// server request
+	h.ServeHTTP(rr, authenticateRequest(req))
+
+	// verify status code
+	a.Equal(http.StatusOK, rr.Code)
+}
+
+func Test_DeleteUser_WithFeedback(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(nil)
+	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
+
+	// request data
+	data, err := ioutil.ReadFile("testdata/delete-user-request-with-feedback.json")
+	a.NoError(err)
+
+	// create request
+	req, err := http.NewRequest(http.MethodPost, "/me/delete", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.DeleteUser)
 
 	// server request
 	h.ServeHTTP(rr, authenticateRequest(req))

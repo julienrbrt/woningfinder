@@ -25,7 +25,7 @@
     <mj-section background-color="#FFFFFF">
       <mj-column width="360px">
         <mj-text align="left" padding="0 20px 30px 20px">
-          Hallo {{ . }},
+          Hoi,
           <br /><br />
 
           We hebben gezien dat je een huis hebt gevonden. <strong>Van harte gefeliciteerd!</strong>

@@ -13,8 +13,8 @@ import (
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 )
 
-// UserInfo gets all the user information
-func (h *handler) UserInfo(w http.ResponseWriter, r *http.Request) {
+// GetUserInfo gets all the user information
+func (h *handler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	// extract jwt
 	_, claims, err := jwtauth.FromContext(r.Context())
 	if err != nil {
@@ -98,12 +98,6 @@ func (h *handler) UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// check if body not empty
-	if r.Body == nil {
-		render.Render(w, r, handlerErrors.ErrBadRequest)
-		return
-	}
-
 	userInfoRequest := new(updateUserInfoRequest)
 	if err := render.Bind(r, userInfoRequest); err != nil {
 		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(err))
@@ -119,4 +113,65 @@ func (h *handler) UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// returns 200 by default
+}
+
+type deleteUserRequest struct {
+	HasHouse bool   `json:"has_house"`
+	Feedback string `json:"feedback"`
+}
+
+// Bind permits go-chi router to verify the user input and marshal it
+func (d *deleteUserRequest) Bind(r *http.Request) error {
+	if !d.HasHouse && len(d.Feedback) == 0 {
+		return fmt.Errorf("feedback is required when house not found")
+	}
+
+	return nil
+}
+
+// Render permits go-chi router to render the user
+func (*deleteUserRequest) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
+}
+
+// DeleteUser let an user delete its account
+func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	// extract jwt
+	_, claims, err := jwtauth.FromContext(r.Context())
+	if err != nil {
+		render.Render(w, r, handlerErrors.ErrBadRequest)
+		return
+	}
+
+	// get user from jwt claims
+	user, err := auth.ExtractUserFromJWT(claims)
+	if err != nil {
+		render.Render(w, r, handlerErrors.ErrBadRequest)
+		return
+	}
+
+	var request deleteUserRequest
+	if err := render.Bind(r, &request); err != nil {
+		render.Render(w, r, handlerErrors.ErrBadRequest)
+		return
+	}
+
+	// send feedback
+	if request.HasHouse {
+		if err := h.emailService.SendBye(user); err != nil {
+			h.logger.Sugar().Error(err)
+		}
+	} else {
+		if err := h.emailService.ContactFormSubmission("User Deleted", user.Email, request.Feedback); err != nil {
+			h.logger.Sugar().Error(err)
+		}
+	}
+
+	// delete user
+	if err := h.userService.DeleteUser(user.Email); err != nil {
+		errorMsg := fmt.Errorf("failed to delete user")
+		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		return
+	}
 }
