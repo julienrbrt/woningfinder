@@ -122,8 +122,8 @@ type deleteUserRequest struct {
 
 // Bind permits go-chi router to verify the user input and marshal it
 func (d *deleteUserRequest) Bind(r *http.Request) error {
-	if !d.HasHouse && len(d.Feedback) == 0 {
-		return fmt.Errorf("feedback is required when house not found")
+	if len(d.Feedback) == 0 {
+		return fmt.Errorf("feedback is required")
 	}
 
 	return nil
