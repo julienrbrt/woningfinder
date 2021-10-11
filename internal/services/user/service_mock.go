@@ -58,6 +58,10 @@ func (s *serviceMock) GetUser(email string) (*customer.User, error) {
 	}, s.err
 }
 
+func (s *serviceMock) DeleteUser(email string) error {
+	return s.err
+}
+
 func (s *serviceMock) UpdateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error {
 	return s.err
 }
