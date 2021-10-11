@@ -82,10 +82,11 @@ func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationSer
 		r.Use(customMiddleware.CreateJWTValidatorMiddleware)
 
 		r.Route("/me", func(r chi.Router) {
-			r.Get("/", handler.UserInfo)
+			r.Get("/", handler.GetUserInfo)
 			r.Post("/", handler.UpdateUserInfo)
 			r.Get("/corporation-credentials", handler.GetCorporationCredentials)
 			r.Post("/corporation-credentials", handler.UpdateCorporationCredentials)
+			r.Post("/delete", handler.DeleteUser)
 		})
 	})
 
