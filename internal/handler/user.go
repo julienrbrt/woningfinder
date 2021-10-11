@@ -161,8 +161,10 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		if err := h.emailService.SendBye(user); err != nil {
 			h.logger.Sugar().Error(err)
 		}
-	} else {
-		if err := h.emailService.ContactFormSubmission("User Deleted", user.Email, request.Feedback); err != nil {
+	}
+
+	if len(request.Feedback) > 0 {
+		if err := h.emailService.ContactFormSubmission("Deleted user", user.Email, request.Feedback); err != nil {
 			h.logger.Sugar().Error(err)
 		}
 	}
