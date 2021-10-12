@@ -9,7 +9,7 @@ For that WoningFinder uses Mapbox Geocoding API.
 
 [More information about that API](https://docs.mapbox.com/api/search/geocoding/).
 
-### Adding Housing Corporation / COnnectors
+### Adding Housing Corporation / Connectors
 
 - Add new housing corporation in database (check documentation [here](https://github.com/WoningFinder/woningfinder/blob/main/docs/architecture.md))
   - Write database migration
