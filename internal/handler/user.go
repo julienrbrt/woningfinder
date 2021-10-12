@@ -56,6 +56,12 @@ func (h *handler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// filter housing match to maximum 20
+	var maximumHousingPreferences = 20
+	if len(user.HousingPreferencesMatch) > maximumHousingPreferences {
+		user.HousingPreferencesMatch = user.HousingPreferencesMatch[len(user.HousingPreferencesMatch)-maximumHousingPreferences:]
+	}
+
 	json.NewEncoder(w).Encode(struct {
 		*customer.User
 		ValidPlan bool `json:"valid_plan"`
