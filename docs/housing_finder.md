@@ -9,7 +9,7 @@ For that WoningFinder uses Mapbox Geocoding API.
 
 [More information about that API](https://docs.mapbox.com/api/search/geocoding/).
 
-### Adding Housing Corporation
+### Adding Housing Corporation / Connectors
 
 - Add new housing corporation in database (check documentation [here](https://github.com/WoningFinder/woningfinder/blob/main/docs/architecture.md))
   - Write database migration
@@ -24,22 +24,18 @@ City coordinates can be found via https://developer.mapquest.com/documentation/t
 
 ### Update Housing Corporation
 
-- New cities supported by the housing corporation are added automatically. Some work must be done however to update their cities in the codebase directly too (see Sentry warning).
-- Any other update must made directly in the database and then synchronize with the corporation struct.
-
+New cities supported by the housing corporation are added automatically. Some work must be done however to update their cities in the codebase directly too (see Sentry warning).
 ### Supported Housing Corporation
 
 Housing Corporations are supported in WoningFinder by _connectors_. Those connector are based in the ERPs that the housing corporations use. This permits to make a connector be compabible with multiples housing corporations. WoningFinder supports for now the following:
 
-- [x] [Itris ERP](https://www.itris.nl/#itris) - Itris Connector
-- [x] [Zig](https://zig.nl) - Zig Connector
+- [x] [Itris ERP](https://www.itris.nl/#itris)
+- [x] [Zig](https://zig.nl)
 - [x] [WoningNet WRB](https://www.woningnet.nl)
 
-Some housing corporation (or group of housing corporation) sometimes have their homemade system, the _connectors_ supports then that system and no specific ERPs:
-
-- [De Woonplaats](http://www.dewoonplaats.nl) - JSON API
-- [Woonbureau Almelo](http://www.woonburoalmelo.nl) - JSON API
-- Woonkeus Stedendriehoek - JSON API
+Some housing corporation (or group of housing corporation) sometimes have their homemade system, the _connectors_ supports then that system and no specific ERPs (e.g. [De Woonplaats](http://www.dewoonplaats.nl)).
 
 The definition of corporation is something done offline, once a corporation is supported and a client is created.
 The mapping of the corporation and the client is made in the `client_provider` using the name of the housing corporation.
+
+Each connectors has a GitHub Actions in order to track regression. Everytime a new connectors is added, its corresponding GitHub Actions must be added too.
