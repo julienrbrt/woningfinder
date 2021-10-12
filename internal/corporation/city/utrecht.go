@@ -301,3 +301,13 @@ var Lopik = City{
 	Name:        "Lopik",
 	Coordinates: []float64{4.94915, 51.97528},
 }
+
+var Kockengen = City{
+	Name:        "Kockengen",
+	Coordinates: []float64{4.952222, 52.151667},
+}
+
+var Polsbroek = City{
+	Name:        "Polsbroek",
+	Coordinates: []float64{4.851944, 51.978056},
+}

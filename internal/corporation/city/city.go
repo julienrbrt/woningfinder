@@ -87,6 +87,8 @@ var cityTable = map[string]City{
 	DeKwakel.Name:             DeKwakel,
 	Lisserbroek.Name:          Lisserbroek,
 	Purmerland.Name:           Purmerland,
+	Kockengen.Name:            Kockengen,
+	Polsbroek.Name:            Polsbroek,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
