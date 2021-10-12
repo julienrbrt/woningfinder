@@ -60,6 +60,8 @@ var UtrechtInfo = corporation.Corporation{
 		city.Harmelen,
 		city.Langbroek,
 		city.Lopik,
+		city.Kockengen,
+		city.Polsbroek,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
