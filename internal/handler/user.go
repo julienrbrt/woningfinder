@@ -56,13 +56,22 @@ func (h *handler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// filter housing match
+	totalReaction := len(user.HousingPreferencesMatch)
+	maximumHousingPreferences := 6
+	if len(user.HousingPreferencesMatch) > maximumHousingPreferences {
+		user.HousingPreferencesMatch = user.HousingPreferencesMatch[len(user.HousingPreferencesMatch)-maximumHousingPreferences:]
+	}
+
 	json.NewEncoder(w).Encode(struct {
 		*customer.User
-		ValidPlan bool `json:"valid_plan"`
+		ValidPlan     bool `json:"valid_plan"`
+		TotalReaction int  `json:"total_reaction"`
 	}{
 		user,
 		// consider a plan valid if user not activated for not displaying the invalid plan alert at first login of an user
 		!user.Plan.IsActivated() || user.Plan.IsValid(),
+		totalReaction,
 	})
 }
 

@@ -52,7 +52,7 @@ func (h *HousingPreferences) HasMinimal() error {
 // HousingPreferencesMatch defines an offer that matched with an user
 // It is used to determined to which offer WoningFinder has applied
 type HousingPreferencesMatch struct {
-	ID              uint      `pg:",pk" json:"id"`
+	ID              uint      `pg:",pk" json:"-"`
 	CreatedAt       time.Time `pg:"default:now()" json:"created_at"`
 	DeletedAt       time.Time `pg:",soft_delete" json:"-"`
 	UserID          uint      `json:"-"`

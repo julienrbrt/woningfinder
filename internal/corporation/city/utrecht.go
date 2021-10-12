@@ -311,3 +311,8 @@ var Polsbroek = City{
 	Name:        "Polsbroek",
 	Coordinates: []float64{4.851944, 51.978056},
 }
+
+var Hagestein = City{
+	Name:        "Hagestein",
+	Coordinates: []float64{5.120556, 51.979722},
+}
