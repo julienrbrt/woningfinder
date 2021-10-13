@@ -100,6 +100,7 @@ var AmsterdamInfo = corporation.Corporation{
 		city.DeKwakel,
 		city.Lisserbroek,
 		city.Purmerland,
+		city.KoogaandeZaan,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

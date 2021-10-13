@@ -218,3 +218,8 @@ var Purmerland = City{
 	Name:        "Purmerland",
 	Coordinates: []float64{4.926380, 52.481470},
 }
+
+var KoogaandeZaan = City{
+	Name:        "Koog aan de Zaan",
+	Coordinates: []float64{4.802778, 52.458889},
+}
