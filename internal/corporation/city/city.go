@@ -90,6 +90,14 @@ var cityTable = map[string]City{
 	Kockengen.Name:            Kockengen,
 	Polsbroek.Name:            Polsbroek,
 	Hagestein.Name:            Hagestein,
+	Kampen.Name:               Kampen,
+	IJsselmuiden.Name:         IJsselmuiden,
+	Wanneperveen.Name:         Wanneperveen,
+	Vollenhove.Name:           Vollenhove,
+	KoogaandeZaan.Name:        KoogaandeZaan,
+	Leersum.Name:              Leersum,
+	Abcoude.Name:              Abcoude,
+	Maarn.Name:                Maarn,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

@@ -542,7 +542,7 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	}
 }
 
-// supportedHousing filters the offer of roomspot to only houses supported by WoningFinder (no shared room for instance)
+// supportedHousing filters the offers to only houses supported by WoningFinder (no shared room for instance)
 func supportedHousing(offer offerList) bool {
 	if offer.Rentbuy != "Huur" {
 		return false

@@ -20,3 +20,20 @@ var RoomspotInfo = corporation.Corporation{
 		corporation.SelectionRegistrationDate,
 	},
 }
+
+var DeWoningZoekerInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.dewoningzoeker.nl"},
+	Name:        "DeWoningZoeker",
+	URL:         "https://www.dewoningzoeker.nl",
+	Cities: []city.City{
+		city.Zwolle,
+		city.IJsselmuiden,
+		city.Kampen,
+		city.Wanneperveen,
+		city.Vollenhove,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+	},
+}

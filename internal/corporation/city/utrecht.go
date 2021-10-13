@@ -316,3 +316,18 @@ var Hagestein = City{
 	Name:        "Hagestein",
 	Coordinates: []float64{5.120556, 51.979722},
 }
+
+var Leersum = City{
+	Name:        "Leersum",
+	Coordinates: []float64{5.432013, 52.010658},
+}
+
+var Abcoude = City{
+	Name:        "Abcoude",
+	Coordinates: []float64{4.974134, 52.271248},
+}
+
+var Maarn = City{
+	Name:        "Maarn",
+	Coordinates: []float64{5.370910, 52.064015},
+}
