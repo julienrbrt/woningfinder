@@ -140,3 +140,23 @@ var Vriezenveen = City{
 	Name:        "Vriezenveen",
 	Coordinates: []float64{6.61511, 52.408613},
 }
+
+var Kampen = City{
+	Name:        "Kampen",
+	Coordinates: []float64{5.916761, 52.558203},
+}
+
+var IJsselmuiden = City{
+	Name:        "IJsselmuiden",
+	Coordinates: []float64{5.9275, 52.564722},
+}
+
+var Wanneperveen = City{
+	Name:        "Wanneperveen",
+	Coordinates: []float64{6.120556, 52.704444},
+}
+
+var Vollenhove = City{
+	Name:        "Vollenhove",
+	Coordinates: []float64{5.95, 52.683333},
+}
