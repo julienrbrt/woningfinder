@@ -48,6 +48,10 @@ func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) co
 				return CreateWoningNetClient(logger, mapboxClient, woningnet.AmsterdamInfo)
 			},
 		},
+		{
+			Corporation: zig.DeWoningZoekerInfo,
+			ClientFunc:  func() connector.Client { return CreateZigClient(logger, mapboxClient, zig.DeWoningZoekerInfo) },
+		},
 	}
 
 	return connector.NewClientProvider(providers)
