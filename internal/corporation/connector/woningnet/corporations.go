@@ -63,6 +63,9 @@ var UtrechtInfo = corporation.Corporation{
 		city.Kockengen,
 		city.Polsbroek,
 		city.Hagestein,
+		city.Leersum,
+		city.Abcoude,
+		city.Maarn,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
