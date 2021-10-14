@@ -66,6 +66,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.Leersum,
 		city.Abcoude,
 		city.Maarn,
+		city.Leerdam,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
