@@ -10,7 +10,7 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.0-20210906140327-598bf66f24a6 // indirect
 	github.com/getsentry/sentry-go v0.11.0 // indirect
 	github.com/go-chi/chi/v5 v5.0.4
-	github.com/go-chi/httprate v0.5.1
+	github.com/go-chi/httprate v0.5.2
 	github.com/go-chi/jwtauth/v5 v5.0.2
 	github.com/go-chi/render v1.0.1
 	github.com/go-pg/migrations/v8 v8.1.0
