@@ -98,6 +98,7 @@ var cityTable = map[string]City{
 	Leersum.Name:              Leersum,
 	Abcoude.Name:              Abcoude,
 	Maarn.Name:                Maarn,
+	Leerdam.Name:              Leerdam,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

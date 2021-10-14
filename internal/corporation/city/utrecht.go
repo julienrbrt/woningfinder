@@ -331,3 +331,8 @@ var Maarn = City{
 	Name:        "Maarn",
 	Coordinates: []float64{5.370910, 52.064015},
 }
+
+var Leerdam = City{
+	Name:        "Leerdam",
+	Coordinates: []float64{5.093719, 51.891664},
+}
