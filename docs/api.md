@@ -23,10 +23,10 @@ The authentication works with JWT. The token are generated in the sent mail and 
 One can use the token as header (`Authorization`) and as query parameter (`jwt`).
 More information on how built the token in the [code](../internal/auth/jwt.go).
 
-### Payment
+### Subscription
 
-The payment is managed by Stripe. Note only the pro plan is a paying plan.
-The PSP will then confirms that an user has subscribe via the _/stripe-webhook_ webhook.
+The payment and the subscription of the plans is managed by Stripe.
+Stripe will then confirms that an user has subscribed via the _/stripe-webhook_ webhook endpoint.
 
 The information returned by Stripe must be the user email address and the payment amount.
 Our webhook then update the plan information of the concerned user.
