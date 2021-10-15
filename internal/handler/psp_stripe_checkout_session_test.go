@@ -11,7 +11,6 @@ import (
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/cryptocom"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
@@ -23,8 +22,7 @@ func Test_CreateStripeCheckoutSession_ErrAPIKeyMissing(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)
@@ -53,8 +51,7 @@ func Test_CreateStripeCheckoutSession_InvalidPlan(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true), cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true)}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)
@@ -83,8 +80,7 @@ func Test_CreateStripeCheckoutSession(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true), cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true)}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "", nil)

@@ -13,27 +13,21 @@ import (
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/cryptocom"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
-func Test_Subscription_InvalidRequest(t *testing.T) {
+func Test_Subscription_ErrEmptyRequest(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
-
-	data, err := ioutil.ReadFile("testdata/subscription-invalid-payment-method-request.json")
-	a.NoError(err)
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(string(data)))
-	req.Header.Set("Content-Type", "application/json")
+	req, err := http.NewRequest(http.MethodPost, "/subscribe", nil)
 	a.NoError(err)
 
 	// record response
@@ -47,7 +41,7 @@ func Test_Subscription_InvalidRequest(t *testing.T) {
 	a.Equal(http.StatusBadRequest, rr.Code)
 
 	// verify expected value
-	a.Contains(rr.Body.String(), "invalid payment method: invalid")
+	a.Contains(rr.Body.String(), "Bad request")
 }
 
 func Test_Subscription_ErrUserService(t *testing.T) {
@@ -57,10 +51,9 @@ func Test_Subscription_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
 
-	data, err := ioutil.ReadFile("testdata/subscription-stripe-request.json")
+	data, err := ioutil.ReadFile("testdata/subscription-request.json")
 	a.NoError(err)
 
 	// create request
@@ -79,17 +72,16 @@ func Test_Subscription_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusNotFound, rr.Code)
 }
 
-func Test_Subscription_Stripe(t *testing.T) {
+func Test_Subscription_Handle(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true), cryptoMock}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true)}
 
-	data, err := ioutil.ReadFile("testdata/subscription-stripe-request.json")
+	data, err := ioutil.ReadFile("testdata/subscription-request.json")
 	a.NoError(err)
 
 	// create request
@@ -112,41 +104,4 @@ func Test_Subscription_Stripe(t *testing.T) {
 
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 	a.NotEmpty(response.StripeSessionID)
-	a.Empty(response.CryptoPaymentURL)
-}
-
-func Test_Subscription_Crypto(t *testing.T) {
-	a := assert.New(t)
-	logger := logging.NewZapLoggerWithoutSentry()
-
-	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(nil)
-	emailServiceMock := emailService.NewServiceMock(nil)
-	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{PaymentURL: "https://example.com"}, nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
-
-	data, err := ioutil.ReadFile("testdata/subscription-crypto-request.json")
-	a.NoError(err)
-
-	// create request
-	req, err := http.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(string(data)))
-	req.Header.Set("Content-Type", "application/json")
-	a.NoError(err)
-
-	// record response
-	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.Subscription)
-
-	// server request
-	h.ServeHTTP(rr, req)
-
-	// verify status code
-	a.Equal(http.StatusOK, rr.Code)
-
-	// verify expected value
-	var response subscriptionResponse
-
-	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
-	a.Equal(response.CryptoPaymentURL, "https://example.com")
-	a.Empty(response.StripeSessionID)
 }
