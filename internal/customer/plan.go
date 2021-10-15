@@ -56,6 +56,7 @@ type UserPlan struct {
 	CreatedAt             time.Time `pg:"default:now()" json:"created_at"`
 	ActivatedAt           time.Time `json:"activated_at"`
 	SubscriptionStartedAt time.Time `json:"subscription_started_at"`
+	LastPaymentSucceeded  bool      `json:"last_payment_succeeded"`
 	Name                  string    `json:"name"`
 }
 
@@ -80,5 +81,5 @@ func (u *UserPlan) IsFree() bool {
 }
 
 func (u *UserPlan) IsSubscribed() bool {
-	return u.SubscriptionStartedAt != (time.Time{})
+	return u.SubscriptionStartedAt != (time.Time{}) && u.LastPaymentSucceeded
 }

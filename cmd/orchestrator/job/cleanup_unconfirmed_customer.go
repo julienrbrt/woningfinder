@@ -17,15 +17,15 @@ const (
 	maxUnconfirmedTime            = 30 * 24 * time.Hour
 )
 
-// CustomerUnconfirmedCleanup reminds a unconfirmed customers to confirm their account
+// CleanupUnconfirmedCustomer reminds a unconfirmed customers to confirm their account
 // and deletes the customers that have an unconfirmed email for more than maxUnconfirmedTime
-func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
+func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 	// checks perfomed at 08:00, 16:00
 	spec := "0 0 8,16 * * *"
 
 	// populate cron
 	c.AddJob(spec, cron.FuncJob(func() {
-		j.logger.Sugar().Info("customer-unconfirmed-cleanup job started")
+		j.logger.Sugar().Info("cleanup-unconfirmed-customer job started")
 
 		var users []*customer.User
 		// delete unconfirmed account

@@ -26,7 +26,7 @@ More information on how built the token in the [code](../internal/auth/jwt.go).
 
 ### Payment
 
-The payment is managed by Stripe and by Crypto.com. Only the pro plan is paying.
+The payment is managed by Stripe and by Crypto.com. Only the pro plan is a paying plan.
 The PSP will then confirms that an user has subscribe via a webhook (_/stripe-webhook_ or _/crypto-webhook_).
 
 The information returned by Stripe must be the user email address and the payment amount.

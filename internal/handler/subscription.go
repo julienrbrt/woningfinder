@@ -68,11 +68,6 @@ func (h *handler) Subscription(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if user.Plan.IsSubscribed() {
-		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(errors.New("user is already subscribed")))
-		return
-	}
-
 	plan, err := customer.PlanFromName(user.Plan.Name)
 	if err != nil {
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(err))

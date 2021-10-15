@@ -68,9 +68,14 @@ func Test_User_Plan(t *testing.T) {
 	a.False(testUser.Plan.IsSubscribed())
 	a.True(testUser.Plan.IsActivated())
 	a.False(testUser.Plan.IsFree())
-	testUser.Plan = customer.UserPlan{CreatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), Name: customer.PlanPro.Name, ActivatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), SubscriptionStartedAt: time.Now()}
+	testUser.Plan = customer.UserPlan{CreatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), Name: customer.PlanPro.Name, ActivatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), SubscriptionStartedAt: time.Now(), LastPaymentSucceeded: true}
 	a.True(testUser.Plan.IsValid())
 	a.True(testUser.Plan.IsSubscribed())
+	a.True(testUser.Plan.IsActivated())
+	a.False(testUser.Plan.IsFree())
+	testUser.Plan = customer.UserPlan{CreatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), Name: customer.PlanPro.Name, ActivatedAt: time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC), SubscriptionStartedAt: time.Now(), LastPaymentSucceeded: false}
+	a.False(testUser.Plan.IsValid())
+	a.False(testUser.Plan.IsSubscribed())
 	a.True(testUser.Plan.IsActivated())
 	a.False(testUser.Plan.IsFree())
 }
