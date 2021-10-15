@@ -15,7 +15,7 @@ import (
 
 const cryptoHeader = "Pay-Signature"
 
-// CryptoWebhook is called via the Crypto.com webhook and confirm that a user has paid
+// CryptoWebhook is called via the Crypto.com webhook and confirm that a user is subscribed
 func (h *handler) CryptoWebhook(w http.ResponseWriter, r *http.Request) {
 	// get request
 	payload, err := ioutil.ReadAll(r.Body)
@@ -42,16 +42,16 @@ func (h *handler) CryptoWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if event.Type == cryptocom.PaymentCaptured {
-		// populate payment - 1€ is 100 cents
-		_, err = customer.PlanFromPrice(int64(event.Data.Object.Amount / 100))
-		if err != nil {
-			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s: %w", event.Data.Object.Amount/100, event.Data.Object.Metadata.Email, err)
+	switch event.Type {
+	case cryptocom.PaymentCaptured:
+		// check payment - 1€ is 100 cents
+		if _, err = customer.PlanFromPrice(int64(event.Data.Object.Amount / 100)); err != nil {
+			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s expected %d: %w", event.Data.Object.Amount/100, customer.PlanPro.Price, event.Data.Object.Metadata.Email, err)
 			return
 		}
 
-		// set payment as proceed
-		user, err := h.userService.ConfirmPayment(event.Data.Object.Metadata.Email)
+		// confirm subscription has payment went through
+		user, err := h.userService.ConfirmSubscription(event.Data.Object.Metadata.Email)
 		if err != nil {
 			errorMsg := fmt.Errorf("error while processing payment")
 			h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
@@ -64,7 +64,7 @@ func (h *handler) CryptoWebhook(w http.ResponseWriter, r *http.Request) {
 			h.logger.Sugar().Error(err)
 		}
 
-		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s paid %d€ 🎉🎉🎉", event.Data.Object.Metadata.Email, event.Data.Object.Amount/100)
+		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s subscribed 🎉🎉🎉", event.Data.Object.Metadata.Email)
 	}
 
 	// returns 200 by default

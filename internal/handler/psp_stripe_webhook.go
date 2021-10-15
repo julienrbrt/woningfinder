@@ -16,7 +16,7 @@ import (
 
 const stripeHeader = "Stripe-Signature"
 
-// StripeWebhook is called via the Stripe webhook and confirm that a user has paid
+// StripeWebhook is called via the Stripe webhook and confirm that a user is subscribed
 func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 	// get request
 	const MaxBodyBytes = int64(65536)
@@ -47,7 +47,8 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if customer successfully paid
-	if event.Type == stripe.PaymentIntentSucceeded {
+	switch event.Type {
+	case stripe.PaymentIntentSucceeded:
 		var paymentIntent stripeGo.PaymentIntent
 		err := json.Unmarshal(event.Data.Raw, &paymentIntent)
 		if err != nil {
@@ -55,15 +56,14 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// populate payment - 1€ is 100 cents
-		_, err = customer.PlanFromPrice(paymentIntent.Amount / 100)
-		if err != nil {
+		// check payment - 1€ is 100 cents
+		if _, err = customer.PlanFromPrice(paymentIntent.Amount / 100); err != nil {
 			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)
 			return
 		}
 
-		// set payment as proceed
-		user, err := h.userService.ConfirmPayment(paymentIntent.ReceiptEmail)
+		// confirm subscription has payment went through
+		user, err := h.userService.ConfirmSubscription(paymentIntent.ReceiptEmail)
 		if err != nil {
 			errorMsg := fmt.Errorf("error while processing payment")
 			h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
@@ -76,7 +76,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 			h.logger.Sugar().Error(err)
 		}
 
-		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s paid %d€ 🎉🎉🎉", paymentIntent.ReceiptEmail, paymentIntent.Amount/100)
+		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s subscribed 🎉🎉🎉", paymentIntent.ReceiptEmail)
 	}
 
 	// returns 200 by default

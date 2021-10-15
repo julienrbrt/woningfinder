@@ -21,18 +21,18 @@ const (
 	cancelURL  = "https://woningfinder.nl/start/voltooien?cancelled=true"
 )
 
-type paymentProcessorRequest struct {
+type subscriptionRequest struct {
 	Email  string        `json:"email"`
 	Method PaymentMethod `json:"method"`
 }
 
-type paymentProcessorResponse struct {
+type subscriptionResponse struct {
 	StripeSessionID  string `json:"stripe_session_id"`
 	CryptoPaymentURL string `json:"crypto_payment_url"`
 }
 
 // Bind permits go-chi router to verify the user input and marshal it
-func (p *paymentProcessorRequest) Bind(r *http.Request) error {
+func (p *subscriptionRequest) Bind(r *http.Request) error {
 	if !util.IsEmailValid(p.Email) {
 		return errors.New("please enter a valid email")
 	}
@@ -45,30 +45,39 @@ func (p *paymentProcessorRequest) Bind(r *http.Request) error {
 }
 
 // Render permits go-chi router to render the user
-func (*paymentProcessorRequest) Render(w http.ResponseWriter, r *http.Request) error {
+func (*subscriptionRequest) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
-	request := &paymentProcessorRequest{}
+func (h *handler) Subscription(w http.ResponseWriter, r *http.Request) {
+	request := &subscriptionRequest{}
 	if err := render.Bind(r, request); err != nil {
 		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(err))
 		return
 	}
 
-	// check if user exists
+	// get given user
 	user, err := h.userService.GetUser(request.Email)
 	if err != nil {
 		render.Render(w, r, handlerErrors.ErrNotFound)
 		return
 	}
 
-	if user.Plan.IsPaid() {
-		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(errors.New("user has already already paid")))
+	if user.Plan.IsFree() {
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(errors.New("user has free plan")))
 		return
 	}
 
-	plan, _ := customer.PlanFromName(user.Plan.Name)
+	if user.Plan.IsSubscribed() {
+		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(errors.New("user is already subscribed")))
+		return
+	}
+
+	plan, err := customer.PlanFromName(user.Plan.Name)
+	if err != nil {
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(err))
+		return
+	}
 
 	switch request.Method {
 	case PaymentMethodStripe:

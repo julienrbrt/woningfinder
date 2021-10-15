@@ -59,7 +59,6 @@ func main() {
 	// populate crons
 	job.CustomerUnconfirmedCleanup(c)
 	job.HousingFinder(c, clientProvider)
-	job.SendCustomerEndFreeTrialReminder(c)
 	job.SendWeeklyUpdate(c)
 
 	// start cron scheduler

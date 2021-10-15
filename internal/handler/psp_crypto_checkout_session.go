@@ -22,14 +22,7 @@ func (h *handler) createCryptoCheckoutSession(email string, plan customer.Plan, 
 		},
 	}
 
-	switch plan {
-	case customer.PlanBasis:
-		params.Description = strings.Title(customer.PlanBasis.Name)
-		params.Amount = customer.PlanBasis.Price * 100 // price in cents
-	case customer.PlanPro:
-		params.Description = strings.Title(customer.PlanPro.Name)
-		params.Amount = customer.PlanPro.Price * 100
-	}
+	params = enrichWithPlan(params, plan)
 
 	response, err := h.cryptoClient.CreatePayment(params)
 	if err != nil {
@@ -40,7 +33,17 @@ func (h *handler) createCryptoCheckoutSession(email string, plan customer.Plan, 
 	}
 
 	// return response
-	json.NewEncoder(w).Encode(paymentProcessorResponse{
+	json.NewEncoder(w).Encode(subscriptionResponse{
 		CryptoPaymentURL: response.PaymentURL,
 	})
+}
+
+func enrichWithPlan(params cryptocom.CryptoCheckoutSession, plan customer.Plan) cryptocom.CryptoCheckoutSession {
+	switch plan {
+	case customer.PlanPro:
+		params.Description = strings.Title(customer.PlanPro.Name)
+		params.Amount = customer.PlanPro.Price * 100 // price in cents
+	}
+
+	return params
 }

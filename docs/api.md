@@ -6,7 +6,7 @@ Following is a list of endpoint supported the WoningFinder API. The API works ex
 | --------------------------- | ---------- | ----------------------------------------------------------------------------------------- |
 | /offering                   | GET        | Gets all supported plans and type housing and cities                                      |
 | /register                   | POST       | Handles the registration flow                                                             |
-| /payment                    | POST       | Permits to complete a payment registration (after trial or cancellation)                  |
+| /subscribe                  | POST       | Permits subscribe to a plan                                                               |
 | /stripe-webhook             | POST       | Endpoint where Stripe sends its webhook events (used for validating user payment)         |
 | /crypto-webhook             | POST       | Endpoint where Crypto.com Pay sends its webhook events (used for validating user payment) |
 | /login                      | POST       | Sends a link to the user in order to log him. The link is valid 6h                        |
@@ -26,8 +26,8 @@ More information on how built the token in the [code](../internal/auth/jwt.go).
 
 ### Payment
 
-The payment is managed by Stripe and by Crypto.com. We use Stripe Checkout Session in order to redirect the user after free trial ended (the user is informed via mail or via its interface).
-The PSP will then confirms that an user has paid via a webhook (_/stripe-webhook_ or _/crypto-webhook_).
+The payment is managed by Stripe and by Crypto.com. Only the pro plan is paying.
+The PSP will then confirms that an user has subscribe via a webhook (_/stripe-webhook_ or _/crypto-webhook_).
 
 The information returned by Stripe must be the user email address and the payment amount.
 Our webhook then update the plan information of the concerned user.

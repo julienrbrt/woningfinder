@@ -41,21 +41,14 @@ func (h *handler) createStripeCheckoutSession(email string, plan customer.Plan, 
 	}
 
 	// return response
-	json.NewEncoder(w).Encode(paymentProcessorResponse{
+	json.NewEncoder(w).Encode(subscriptionResponse{
 		StripeSessionID: session.ID,
 	})
 }
 
-// planToLineItems gets the plan price and converts it to cents
+// planToLineItems gets the plan costs and converts it to cents
 func planToLineItems(plan customer.Plan) *stripe.CheckoutSessionLineItemParams {
 	switch plan {
-	case customer.PlanBasis:
-		return &stripe.CheckoutSessionLineItemParams{
-			Currency: stripe.String(string(stripe.CurrencyEUR)),
-			Name:     stripe.String(strings.Title(customer.PlanBasis.Name)),
-			Amount:   stripe.Int64(int64(customer.PlanBasis.Price) * 100),
-			Quantity: stripe.Int64(1),
-		}
 	case customer.PlanPro:
 		return &stripe.CheckoutSessionLineItemParams{
 			Currency: stripe.String(string(stripe.CurrencyEUR)),

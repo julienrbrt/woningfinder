@@ -26,7 +26,7 @@ func (s *serviceMock) ConfirmUser(email string) error {
 	return s.err
 }
 
-func (s *serviceMock) ConfirmPayment(email string) (*customer.User, error) {
+func (s *serviceMock) ConfirmSubscription(email string) (*customer.User, error) {
 	return s.GetUser(email)
 }
 
@@ -39,9 +39,9 @@ func (s *serviceMock) GetUser(email string) (*customer.User, error) {
 		YearlyIncome: 30000,
 		FamilySize:   3,
 		Plan: customer.UserPlan{
-			CreatedAt:          time.Date(2021, 12, 31, 1, 1, 0, 0, time.UTC),
-			Name:               customer.PlanBasis.Name,
-			FreeTrialStartedAt: time.Date(2099, 12, 31, 15, 1, 0, 0, time.UTC),
+			CreatedAt:   time.Date(2021, 12, 31, 1, 1, 0, 0, time.UTC),
+			Name:        customer.PlanPro.Name,
+			ActivatedAt: time.Date(2099, 12, 31, 15, 1, 0, 0, time.UTC),
 		},
 		HousingPreferences: customer.HousingPreferences{
 			Type: []corporation.HousingType{

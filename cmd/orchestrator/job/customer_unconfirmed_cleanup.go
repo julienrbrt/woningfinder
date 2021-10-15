@@ -17,8 +17,8 @@ const (
 	maxUnconfirmedTime            = 30 * 24 * time.Hour
 )
 
-// CustomerUnconfirmedCleanup reminds a unconfirmed customers to confirm their emails
-// and deletes the customers that have an unconfirmed email for more than unconfirmedReminderTime
+// CustomerUnconfirmedCleanup reminds a unconfirmed customers to confirm their account
+// and deletes the customers that have an unconfirmed email for more than maxUnconfirmedTime
 func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 	// checks perfomed at 08:00, 16:00
 	spec := "0 0 8,16 * * *"
@@ -32,10 +32,10 @@ func (j *Jobs) CustomerUnconfirmedCleanup(c *cron.Cron) {
 		err := j.dbClient.Conn().
 			Model(&users).
 			Join("INNER JOIN user_plans up ON id = up.user_id").
-			Where("up.free_trial_started_at IS NULL").
+			Where("up.activated_at IS NULL").
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
-			j.logger.Sugar().Errorf("failed getting users get unconfirmed users: %w", err)
+			j.logger.Sugar().Errorf("failed getting unconfirmed users: %w", err)
 		}
 
 		for _, user := range users {

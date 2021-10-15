@@ -38,7 +38,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			// use one housing corporation client per user
 			client := client()
 
-			// skip user with invalid plan (not paid and free trial-expired)
+			// skip user with invalid plan
 			if !user.Plan.IsValid() {
 				return
 			}

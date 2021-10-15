@@ -16,7 +16,7 @@ type Service interface {
 	GetUser(email string) (*customer.User, error)
 	DeleteUser(email string) error
 	ConfirmUser(email string) error
-	ConfirmPayment(email string) (*customer.User, error)
+	ConfirmSubscription(email string) (*customer.User, error)
 
 	GetUsersWithGivenCorporationCredentials(corporationName string) ([]*customer.User, error)
 	GetWeeklyUpdateUsers() ([]*customer.User, error)

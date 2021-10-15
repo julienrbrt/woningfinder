@@ -18,7 +18,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
-func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
+func Test_Subscription_InvalidRequest(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -28,17 +28,17 @@ func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
-	data, err := ioutil.ReadFile("testdata/payment-processor-invalid-payment-method-request.json")
+	data, err := ioutil.ReadFile("testdata/subscription-invalid-payment-method-request.json")
 	a.NoError(err)
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/payment", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.PaymentProcessor)
+	h := http.HandlerFunc(handler.Subscription)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -50,7 +50,7 @@ func Test_PaymentProcessor_InvalidRequest(t *testing.T) {
 	a.Contains(rr.Body.String(), "invalid payment method: invalid")
 }
 
-func Test_PaymentProcessor_ErrUserService(t *testing.T) {
+func Test_Subscription_ErrUserService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -60,17 +60,17 @@ func Test_PaymentProcessor_ErrUserService(t *testing.T) {
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
-	data, err := ioutil.ReadFile("testdata/payment-processor-stripe-request.json")
+	data, err := ioutil.ReadFile("testdata/subscription-stripe-request.json")
 	a.NoError(err)
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/payment", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.PaymentProcessor)
+	h := http.HandlerFunc(handler.Subscription)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -79,7 +79,7 @@ func Test_PaymentProcessor_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusNotFound, rr.Code)
 }
 
-func Test_PaymentProcessor_Stripe(t *testing.T) {
+func Test_Subscription_Stripe(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -89,17 +89,17 @@ func Test_PaymentProcessor_Stripe(t *testing.T) {
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{}, nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true), cryptoMock}
 
-	data, err := ioutil.ReadFile("testdata/payment-processor-stripe-request.json")
+	data, err := ioutil.ReadFile("testdata/subscription-stripe-request.json")
 	a.NoError(err)
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/payment", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.PaymentProcessor)
+	h := http.HandlerFunc(handler.Subscription)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -108,14 +108,14 @@ func Test_PaymentProcessor_Stripe(t *testing.T) {
 	a.Equal(http.StatusOK, rr.Code)
 
 	// verify expected value
-	var response paymentProcessorResponse
+	var response subscriptionResponse
 
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 	a.NotEmpty(response.StripeSessionID)
 	a.Empty(response.CryptoPaymentURL)
 }
 
-func Test_PaymentProcessor_Crypto(t *testing.T) {
+func Test_Subscription_Crypto(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -125,17 +125,17 @@ func Test_PaymentProcessor_Crypto(t *testing.T) {
 	cryptoMock := cryptocom.NewClientMock(cryptocom.CryptoCheckoutSession{PaymentURL: "https://example.com"}, nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
-	data, err := ioutil.ReadFile("testdata/payment-processor-crypto-request.json")
+	data, err := ioutil.ReadFile("testdata/subscription-crypto-request.json")
 	a.NoError(err)
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/payment", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.PaymentProcessor)
+	h := http.HandlerFunc(handler.Subscription)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -144,7 +144,7 @@ func Test_PaymentProcessor_Crypto(t *testing.T) {
 	a.Equal(http.StatusOK, rr.Code)
 
 	// verify expected value
-	var response paymentProcessorResponse
+	var response subscriptionResponse
 
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 	a.Equal(response.CryptoPaymentURL, "https://example.com")

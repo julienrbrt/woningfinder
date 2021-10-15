@@ -34,7 +34,7 @@ func Test_CreateCryptoCheckoutSession_Error(t *testing.T) {
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createCryptoCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
+		handler.createCryptoCheckoutSession("foo@bar.com", customer.PlanPro, w, r)
 	})
 
 	// server request
@@ -66,7 +66,7 @@ func Test_CreateCryptoCheckoutSession(t *testing.T) {
 	// record response
 	rr := httptest.NewRecorder()
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.createCryptoCheckoutSession("foo@bar.com", customer.PlanBasis, w, r)
+		handler.createCryptoCheckoutSession("foo@bar.com", customer.PlanPro, w, r)
 	})
 
 	// server request
@@ -76,7 +76,7 @@ func Test_CreateCryptoCheckoutSession(t *testing.T) {
 	a.Equal(http.StatusOK, rr.Code)
 
 	// verify expected value
-	var response paymentProcessorResponse
+	var response subscriptionResponse
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 
 	a.NotEmpty(response.CryptoPaymentURL)

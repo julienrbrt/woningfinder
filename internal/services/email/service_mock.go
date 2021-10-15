@@ -23,7 +23,7 @@ func (s *serviceMock) SendThankYou(_ *customer.User) error {
 	return s.err
 }
 
-func (s *serviceMock) SendFreeTrialReminder(_ *customer.User) error {
+func (s *serviceMock) SendPaymentFailed(_ *customer.User) error {
 	return s.err
 }
 

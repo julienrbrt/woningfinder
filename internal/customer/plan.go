@@ -6,39 +6,35 @@ import (
 	"time"
 )
 
-const (
-	// Free trial of 14 days
-	FreeTrialDuration = 14 * 24 * time.Hour
-	// TODO update every year with the "passend toewijze"
-	MaximumIncomeSocialHouse = 44655
-)
+// TODO update every year with the "passend toewijze"
+const MaximumIncomeSocialHouse = 44655
 
 // Plan defines the different plans
 type Plan struct {
 	Name          string `json:"name"`
-	Price         int    `json:"price"`
+	Price         int    `json:"costs"`
 	MaximumIncome int    `json:"maximum_income"`
 }
 
-// PlanBasis is the plan for social houses
+// PlanBasis is the free plan for social houses
 var PlanBasis = Plan{
 	Name:          "basis",
-	Price:         18,
+	Price:         0,
 	MaximumIncome: MaximumIncomeSocialHouse,
 }
 
 // PlanPro is the free sector houses
 var PlanPro = Plan{
 	Name:          "pro",
-	Price:         30,
+	Price:         15,
 	MaximumIncome: math.MaxInt32,
 }
 
 func PlanFromName(name string) (Plan, error) {
 	switch name {
-	case "basis":
+	case PlanBasis.Name:
 		return PlanBasis, nil
-	case "pro":
+	case PlanPro.Name:
 		return PlanPro, nil
 	}
 
@@ -47,8 +43,6 @@ func PlanFromName(name string) (Plan, error) {
 
 func PlanFromPrice(price int64) (Plan, error) {
 	switch price {
-	case int64(PlanBasis.Price):
-		return PlanBasis, nil
 	case int64(PlanPro.Price):
 		return PlanPro, nil
 	}
@@ -56,28 +50,35 @@ func PlanFromPrice(price int64) (Plan, error) {
 	return Plan{}, fmt.Errorf("cannot find plan from price: %d", price)
 }
 
-// UserPlan stores the user plan and payment details (when paid)
+// UserPlan stores the user plan and payment details
 type UserPlan struct {
-	UserID             uint      `pg:",pk" json:"-"`
-	CreatedAt          time.Time `pg:"default:now()" json:"created_at"`
-	FreeTrialStartedAt time.Time `json:"free_trial_started_at"`
-	PurchasedAt        time.Time `json:"purchased_at"`
-	Name               string    `json:"name"`
+	UserID                uint      `pg:",pk" json:"-"`
+	CreatedAt             time.Time `pg:"default:now()" json:"created_at"`
+	ActivatedAt           time.Time `json:"activated_at"`
+	SubscriptionStartedAt time.Time `json:"subscription_started_at"`
+	Name                  string    `json:"name"`
 }
 
-// IsValid checks if an activated user has a paid plan or is within its free trial
 func (u *UserPlan) IsValid() bool {
-	return u.IsActivated() && (u.IsPaid() || u.IsFreeTrialValid())
-}
+	if plan, _ := PlanFromName(u.Name); plan.Price > 0 {
+		return u.IsActivated() && u.IsSubscribed()
+	}
 
-func (u *UserPlan) IsPaid() bool {
-	return u.PurchasedAt != (time.Time{})
-}
-
-func (u *UserPlan) IsFreeTrialValid() bool {
-	return time.Until(u.FreeTrialStartedAt.Add(FreeTrialDuration)) > 0
+	return u.IsActivated()
 }
 
 func (u *UserPlan) IsActivated() bool {
-	return u.FreeTrialStartedAt != (time.Time{})
+	return u.ActivatedAt != (time.Time{})
+}
+
+func (u *UserPlan) IsFree() bool {
+	if plan, _ := PlanFromName(u.Name); plan.Price == 0 {
+		return true
+	}
+
+	return false
+}
+
+func (u *UserPlan) IsSubscribed() bool {
+	return u.SubscriptionStartedAt != (time.Time{})
 }

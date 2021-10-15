@@ -29,7 +29,7 @@ func Test_CryptoWebhook_MissingSignatureHeader(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// request data
-	data, err := ioutil.ReadFile("testdata/payment-processor-crypto-webhook-test.json")
+	data, err := ioutil.ReadFile("testdata/subscription-crypto-webhook-test.json")
 	a.NoError(err)
 
 	// create request
@@ -61,7 +61,7 @@ func Test_CryptoWebhook(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false), cryptoMock}
 
 	// request data
-	data, err := ioutil.ReadFile("testdata/payment-processor-crypto-webhook-test.json")
+	data, err := ioutil.ReadFile("testdata/subscription-crypto-webhook-test.json")
 	a.NoError(err)
 
 	// create request
