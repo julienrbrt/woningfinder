@@ -12,7 +12,7 @@ const MaximumIncomeSocialHouse = 44655
 // Plan defines the different plans
 type Plan struct {
 	Name          string `json:"name"`
-	Price         int    `json:"costs"`
+	Price         int    `json:"price"`
 	MaximumIncome int    `json:"maximum_income"`
 }
 

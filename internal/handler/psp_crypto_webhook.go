@@ -46,7 +46,7 @@ func (h *handler) CryptoWebhook(w http.ResponseWriter, r *http.Request) {
 	case cryptocom.PaymentCaptured:
 		// check payment - 1€ is 100 cents
 		if _, err = customer.PlanFromPrice(int64(event.Data.Object.Amount / 100)); err != nil {
-			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s expected %d: %w", event.Data.Object.Amount/100, customer.PlanPro.Price, event.Data.Object.Metadata.Email, err)
+			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s: %w", event.Data.Object.Amount/100, event.Data.Object.Metadata.Email, err)
 			return
 		}
 
