@@ -17,7 +17,6 @@ type Service interface {
 	SendActivationEmail(user *customer.User) error
 	SendEmailConfirmationReminder(user *customer.User) error
 	SendThankYou(user *customer.User) error
-	SendPaymentFailed(user *customer.User) error
 	SendLogin(user *customer.User) error
 	SendWeeklyUpdate(user *customer.User, matches []*customer.HousingPreferencesMatch) error
 	SendCorporationCredentialsFirstTimeAdded(user *customer.User) error
