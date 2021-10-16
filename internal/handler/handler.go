@@ -66,7 +66,7 @@ func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationSer
 		r.Post("/waitinglist", handler.WaitingListForm)
 		r.Post("/login", handler.Login)
 		r.Post("/register", handler.Register)
-		r.Post("/subscribe", handler.Subscription)
+		r.Post("/payment", handler.PaymentProcessor)
 		r.Post("/stripe-webhook", handler.StripeWebhook)
 	})
 

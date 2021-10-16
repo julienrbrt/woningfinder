@@ -18,7 +18,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
-func Test_Subscription_ErrEmptyRequest(t *testing.T) {
+func Test_PaymentProcessor_ErrEmptyRequest(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -28,12 +28,12 @@ func Test_Subscription_ErrEmptyRequest(t *testing.T) {
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/subscribe", nil)
+	req, err := http.NewRequest(http.MethodPost, "/payment", nil)
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.Subscription)
+	h := http.HandlerFunc(handler.PaymentProcessor)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -45,7 +45,7 @@ func Test_Subscription_ErrEmptyRequest(t *testing.T) {
 	a.Contains(rr.Body.String(), "Bad request")
 }
 
-func Test_Subscription_ErrUserService(t *testing.T) {
+func Test_PaymentProcessor_ErrUserService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -54,17 +54,17 @@ func Test_Subscription_ErrUserService(t *testing.T) {
 	emailServiceMock := emailService.NewServiceMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
 
-	data, err := ioutil.ReadFile("testdata/subscription-request.json")
+	data, err := ioutil.ReadFile("testdata/payment-processor-request.json")
 	a.NoError(err)
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/payment", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.Subscription)
+	h := http.HandlerFunc(handler.PaymentProcessor)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -73,7 +73,7 @@ func Test_Subscription_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusNotFound, rr.Code)
 }
 
-func Test_Subscription_Handle(t *testing.T) {
+func Test_PaymentProcessor_Handle(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
@@ -82,17 +82,17 @@ func Test_Subscription_Handle(t *testing.T) {
 	emailServiceMock := emailService.NewServiceMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(true)}
 
-	data, err := ioutil.ReadFile("testdata/subscription-request.json")
+	data, err := ioutil.ReadFile("testdata/payment-processor-request.json")
 	a.NoError(err)
 
 	// create request
-	req, err := http.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(string(data)))
+	req, err := http.NewRequest(http.MethodPost, "/payment", strings.NewReader(string(data)))
 	req.Header.Set("Content-Type", "application/json")
 	a.NoError(err)
 
 	// record response
 	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.Subscription)
+	h := http.HandlerFunc(handler.PaymentProcessor)
 
 	// server request
 	h.ServeHTTP(rr, req)
@@ -101,7 +101,7 @@ func Test_Subscription_Handle(t *testing.T) {
 	a.Equal(http.StatusOK, rr.Code)
 
 	// verify expected value
-	var response subscriptionResponse
+	var response paymentResponse
 
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 	a.NotEmpty(response.StripeSessionID)
@@ -191,7 +191,7 @@ func Test_CreateStripeCheckoutSession(t *testing.T) {
 	a.Equal(http.StatusOK, rr.Code)
 
 	// verify expected value
-	var response subscriptionResponse
+	var response paymentResponse
 	a.NoError(json.Unmarshal(rr.Body.Bytes(), &response))
 
 	a.NotEmpty(response.StripeSessionID)

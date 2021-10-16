@@ -20,16 +20,16 @@ const (
 	cancelURL  = "https://woningfinder.nl/start/voltooien?cancelled=true"
 )
 
-type subscriptionRequest struct {
+type paymentRequest struct {
 	Email string `json:"email"`
 }
 
-type subscriptionResponse struct {
+type paymentResponse struct {
 	StripeSessionID string `json:"stripe_session_id"`
 }
 
 // Bind permits go-chi router to verify the user input and marshal it
-func (p *subscriptionRequest) Bind(r *http.Request) error {
+func (p *paymentRequest) Bind(r *http.Request) error {
 	if !util.IsEmailValid(p.Email) {
 		return errors.New("please enter a valid email")
 	}
@@ -38,12 +38,12 @@ func (p *subscriptionRequest) Bind(r *http.Request) error {
 }
 
 // Render permits go-chi router to render the user
-func (*subscriptionRequest) Render(w http.ResponseWriter, r *http.Request) error {
+func (*paymentRequest) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (h *handler) Subscription(w http.ResponseWriter, r *http.Request) {
-	request := &subscriptionRequest{}
+func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
+	request := &paymentRequest{}
 	if err := render.Bind(r, request); err != nil {
 		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(err))
 		return
@@ -99,7 +99,7 @@ func (h *handler) createStripeCheckoutSession(email string, plan customer.Plan, 
 	}
 
 	// return response
-	json.NewEncoder(w).Encode(subscriptionResponse{
+	json.NewEncoder(w).Encode(paymentResponse{
 		StripeSessionID: session.ID,
 	})
 }

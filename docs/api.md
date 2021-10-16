@@ -6,7 +6,7 @@ Following is a list of endpoint supported the WoningFinder API. The API works ex
 | --------------------------- | ---------- | ---------------------------------------------------------------------------------------- |
 | /offering                   | GET        | Gets all supported plans and type housing and cities                                     |
 | /register                   | POST       | Handles the registration flow                                                            |
-| /subscribe                  | POST       | Permits subscribe to a plan                                                              |
+| /payment                    | POST       | Permits to complete a payment registration and subscribe to a plan                       |
 | /stripe-webhook             | POST       | Endpoint where Stripe sends its webhook events (used for validating user payment)        |
 | /login                      | POST       | Sends a link to the user in order to log him. The link is valid 6h                       |
 | /me                         | GET + POST | Get and update all the user information. Confirms user account the first time requested. |
@@ -30,5 +30,8 @@ Stripe will then confirms that an user has subscribed via the _/stripe-webhook_ 
 
 The information returned by Stripe must be the user email address and the payment amount.
 Our webhook then update the plan information of the concerned user.
+
+In case of a payment failure in a subscription, Stripe notifies the user by email in order to keep paying its subcription.
+We the reactions temporarily on our side till the payments are settled.
 
 More [documentation on Stripe webhook](https://stripe.com/docs/webhooks/test).
