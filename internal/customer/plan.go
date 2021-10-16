@@ -11,9 +11,10 @@ const MaximumIncomeSocialHouse = 44655
 
 // Plan defines the different plans
 type Plan struct {
-	Name          string `json:"name"`
-	Price         int    `json:"price"`
-	MaximumIncome int    `json:"maximum_income"`
+	StripeProductID string `json:"-"`
+	Name            string `json:"name"`
+	Price           int    `json:"price"`
+	MaximumIncome   int    `json:"maximum_income"`
 }
 
 // PlanBasis is the free plan for social houses
@@ -25,9 +26,10 @@ var PlanBasis = Plan{
 
 // PlanPro is the free sector houses
 var PlanPro = Plan{
-	Name:          "pro",
-	Price:         15,
-	MaximumIncome: math.MaxInt32,
+	StripeProductID: "price_1JlDuPHWufZqidI1zXocKAsS",
+	Name:            "pro",
+	Price:           15,
+	MaximumIncome:   math.MaxInt32,
 }
 
 func PlanFromName(name string) (Plan, error) {
@@ -36,23 +38,17 @@ func PlanFromName(name string) (Plan, error) {
 		return PlanBasis, nil
 	case PlanPro.Name:
 		return PlanPro, nil
+	case "test-ugly-woningfinder-plan": // used for tests :(
+		return Plan{Price: 1000, StripeProductID: "price_1JlDZnHWufZqidI1hmzlgann"}, nil
 	}
 
 	return Plan{}, fmt.Errorf("cannot find plan from name: %s invalid", name)
 }
 
-func PlanFromPrice(price int64) (Plan, error) {
-	switch price {
-	case int64(PlanPro.Price):
-		return PlanPro, nil
-	}
-
-	return Plan{}, fmt.Errorf("cannot find plan from price: %d", price)
-}
-
 // UserPlan stores the user plan and payment details
 type UserPlan struct {
 	UserID                uint      `pg:",pk" json:"-"`
+	StripeCustomerID      string    `json:"-"`
 	CreatedAt             time.Time `pg:"default:now()" json:"created_at"`
 	ActivatedAt           time.Time `json:"activated_at"`
 	SubscriptionStartedAt time.Time `json:"subscription_started_at"`

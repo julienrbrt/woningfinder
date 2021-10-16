@@ -25,7 +25,7 @@ More information on how built the token in the [code](../internal/auth/jwt.go).
 
 ### Subscription
 
-The payment and the subscription of the plans is managed by Stripe.
+The payment and the subscription of the plans is managed by Stripe. Both plan (Basis and Pro) are defined in the Stripe dashboard.
 Stripe will then confirms that an user has subscribed via the _/stripe-webhook_ webhook endpoint.
 
 The information returned by Stripe must be the user email address and the payment amount.

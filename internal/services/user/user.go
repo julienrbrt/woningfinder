@@ -102,7 +102,7 @@ func (s *service) ConfirmUser(email string) error {
 }
 
 // ConfirmSubscription set that the user has starting its paid subscription
-func (s *service) ConfirmSubscription(email string) (*customer.User, error) {
+func (s *service) ConfirmSubscription(email string, stripeID string) (*customer.User, error) {
 	// get user
 	var user *customer.User
 	if err := s.dbClient.Conn().Model(&user).Where("email ILIKE ?", email).Select(); err != nil {
@@ -113,12 +113,27 @@ func (s *service) ConfirmSubscription(email string) (*customer.User, error) {
 	if _, err := s.dbClient.Conn().
 		Model((*customer.UserPlan)(nil)).
 		Set("subscription_started_at = now()").
+		Set("stripe_id = ?", stripeID).
 		Where("user_id = ?", user.ID).
 		Update(); err != nil {
-		return nil, fmt.Errorf("error when updating user plan: %w", err)
+		return nil, fmt.Errorf("error when confirming subscription in user plan: %w", err)
 	}
 
 	return user, nil
+}
+
+// UpdateSubscriptionStatus update the subcription last payment status
+func (s *service) UpdateSubscriptionStatus(stripeID string, status bool) error {
+	// set that user is subscribed
+	if _, err := s.dbClient.Conn().
+		Model((*customer.UserPlan)(nil)).
+		Set("last_payment_succeeded = ?", status).
+		Where("stripe_customer_id = ?", stripeID).
+		Update(); err != nil {
+		return fmt.Errorf("error when updating subscription status in user plan: %w", err)
+	}
+
+	return nil
 }
 
 // GetUsersWithGivenCorporationCredentials gets all the users with a given corporation credentials
