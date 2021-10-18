@@ -31,13 +31,12 @@ func main() {
 	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
 	emailClient := bootstrap.CreateEmailClient()
 	stripeClient := bootstrap.CreateSripeClient(logger) // init stripe library
-	cryptoClient := bootstrap.CreateCryptoComClient()
 
 	corporationService := corporation.NewService(logger, dbClient)
 	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the api
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	router := handler.NewHandler(logger, jwtAuth, corporationService, userService, emailService, stripeClient, cryptoClient)
+	router := handler.NewHandler(logger, jwtAuth, corporationService, userService, emailService, stripeClient)
 
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
 		logger.Sugar().Fatalf("failed to start server: %w", err)

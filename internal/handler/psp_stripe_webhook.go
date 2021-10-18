@@ -8,15 +8,14 @@ import (
 
 	"github.com/go-chi/render"
 	stripeGo "github.com/stripe/stripe-go/v72"
-	webhook "github.com/stripe/stripe-go/v72/webhook"
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/stripe/stripe-go/v72/webhook"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
 const stripeHeader = "Stripe-Signature"
 
-// StripeWebhook is called via the Stripe webhook and confirm that a user has paid
+// StripeWebhook is called via the Stripe webhook and confirm that a user is subscribed
 func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 	// get request
 	const MaxBodyBytes = int64(65536)
@@ -46,24 +45,18 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// check if customer successfully paid
-	if event.Type == stripe.PaymentIntentSucceeded {
-		var paymentIntent stripeGo.PaymentIntent
-		err := json.Unmarshal(event.Data.Raw, &paymentIntent)
+	switch event.Type {
+	// confirm subscription started
+	case stripe.CheckoutSessionCompleted:
+		var checkoutSession stripeGo.CheckoutSession
+		err := json.Unmarshal(event.Data.Raw, &checkoutSession)
 		if err != nil {
 			render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
 			return
 		}
 
-		// populate payment - 1€ is 100 cents
-		_, err = customer.PlanFromPrice(paymentIntent.Amount / 100)
-		if err != nil {
-			h.logger.Sugar().Errorf("⚠️ Unknown amount %d€ paid by %s: %w", paymentIntent.Amount/100, paymentIntent.ReceiptEmail, err)
-			return
-		}
-
-		// set payment as proceed
-		user, err := h.userService.ConfirmPayment(paymentIntent.ReceiptEmail)
+		// confirm subscription has payment went through
+		user, err := h.userService.ConfirmSubscription(checkoutSession.Customer.Email, checkoutSession.Customer.ID)
 		if err != nil {
 			errorMsg := fmt.Errorf("error while processing payment")
 			h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
@@ -76,7 +69,35 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 			h.logger.Sugar().Error(err)
 		}
 
-		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s paid %d€ 🎉🎉🎉", paymentIntent.ReceiptEmail, paymentIntent.Amount/100)
+		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s subscribed 🎉🎉🎉", user.Email)
+
+	// user keeps paying
+	case stripe.InvoicePaid:
+		var invoice stripeGo.Invoice
+		err := json.Unmarshal(event.Data.Raw, &invoice)
+		if err != nil {
+			render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
+			return
+		}
+
+		if err := h.userService.UpdateSubscriptionStatus(invoice.Customer.ID, true); err != nil {
+			h.logger.Sugar().Error(err)
+		}
+
+	// user didn't pay, mark subscription as unpaid
+	case stripe.InvoicePaymentFailed:
+		var invoice stripeGo.Invoice
+		err := json.Unmarshal(event.Data.Raw, &invoice)
+		if err != nil {
+			render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
+			return
+		}
+
+		if err := h.userService.UpdateSubscriptionStatus(invoice.Customer.ID, false); err != nil {
+			h.logger.Sugar().Error(err)
+		}
+
+		// stripe notifies the user of the failed payment
 	}
 
 	// returns 200 by default

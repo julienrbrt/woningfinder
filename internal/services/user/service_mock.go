@@ -22,11 +22,11 @@ func (s *serviceMock) CreateUser(_ *customer.User) error {
 	return s.err
 }
 
-func (s *serviceMock) ConfirmUser(email string) error {
+func (s *serviceMock) ConfirmUser(_ string) error {
 	return s.err
 }
 
-func (s *serviceMock) ConfirmPayment(email string) (*customer.User, error) {
+func (s *serviceMock) ConfirmSubscription(email string, _ string) (*customer.User, error) {
 	return s.GetUser(email)
 }
 
@@ -39,9 +39,10 @@ func (s *serviceMock) GetUser(email string) (*customer.User, error) {
 		YearlyIncome: 30000,
 		FamilySize:   3,
 		Plan: customer.UserPlan{
-			CreatedAt:          time.Date(2021, 12, 31, 1, 1, 0, 0, time.UTC),
-			Name:               customer.PlanBasis.Name,
-			FreeTrialStartedAt: time.Date(2099, 12, 31, 15, 1, 0, 0, time.UTC),
+			CreatedAt:        time.Date(2021, 12, 31, 1, 1, 0, 0, time.UTC),
+			Name:             "test-ugly-woningfinder-plan",
+			StripeCustomerID: "cus_KQoZm6zke6gelu",
+			ActivatedAt:      time.Date(2099, 12, 31, 15, 1, 0, 0, time.UTC),
 		},
 		HousingPreferences: customer.HousingPreferences{
 			Type: []corporation.HousingType{
@@ -58,19 +59,19 @@ func (s *serviceMock) GetUser(email string) (*customer.User, error) {
 	}, s.err
 }
 
-func (s *serviceMock) DeleteUser(email string) error {
+func (s *serviceMock) DeleteUser(_ string) error {
 	return s.err
 }
 
-func (s *serviceMock) UpdateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error {
+func (s *serviceMock) UpdateHousingPreferences(_ uint, _ *customer.HousingPreferences) error {
 	return s.err
 }
 
-func (s *serviceMock) DeleteHousingPreferences(userID uint) error {
+func (s *serviceMock) DeleteHousingPreferences(_ uint) error {
 	return s.err
 }
 
-func (s *serviceMock) GetHousingPreferencesMatchingCorporation(userID uint) ([]*corporation.Corporation, error) {
+func (s *serviceMock) GetHousingPreferencesMatchingCorporation(_ uint) ([]*corporation.Corporation, error) {
 	if s.err != nil {
 		return nil, s.err
 	}
@@ -78,18 +79,22 @@ func (s *serviceMock) GetHousingPreferencesMatchingCorporation(userID uint) ([]*
 	return []*corporation.Corporation{{Name: "De Woonplaats", URL: "https://dewoonplaats.nl"}}, nil
 }
 
-func (s *serviceMock) CreateCorporationCredentials(userID uint, creds *customer.CorporationCredentials) error {
+func (s *serviceMock) CreateCorporationCredentials(_ uint, _ *customer.CorporationCredentials) error {
 	return s.err
 }
 
-func (s *serviceMock) HasCorporationCredentials(userID uint) (bool, error) {
+func (s *serviceMock) HasCorporationCredentials(_ uint) (bool, error) {
 	return false, s.err
 }
 
-func (s *serviceMock) GetCorporationCredentials(userID uint, corporationName string) (*customer.CorporationCredentials, error) {
+func (s *serviceMock) GetCorporationCredentials(_ uint, _ string) (*customer.CorporationCredentials, error) {
 	return &customer.CorporationCredentials{}, s.err
 }
 
-func (s *serviceMock) CreateWaitingList(w *customer.WaitingList) error {
+func (s *serviceMock) CreateWaitingList(_ *customer.WaitingList) error {
+	return s.err
+}
+
+func (s *serviceMock) UpdateSubscriptionStatus(_ string, _ bool) error {
 	return s.err
 }

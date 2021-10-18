@@ -23,8 +23,8 @@ func (s *service) CreateUser(user *customer.User) error {
 	}
 
 	// a user cannot have paid when being created so reset by security
-	user.Plan.FreeTrialStartedAt = (time.Time{})
-	user.Plan.PurchasedAt = (time.Time{})
+	user.Plan.ActivatedAt = (time.Time{})
+	user.Plan.SubscriptionStartedAt = (time.Time{})
 
 	// create user - if exist throw error
 	if _, err := db.Model(user).Insert(); err != nil {
@@ -81,7 +81,7 @@ func (s *service) GetUser(email string) (*customer.User, error) {
 	return &user, nil
 }
 
-// ConfirmUser validate user account and start free trial
+// ConfirmUser validate user account
 func (s *service) ConfirmUser(email string) error {
 	// get user
 	var user customer.User
@@ -89,10 +89,10 @@ func (s *service) ConfirmUser(email string) error {
 		return fmt.Errorf("failed getting user %s: %w", email, err)
 	}
 
-	// set that has started its free trial
+	// activate user account
 	if _, err := s.dbClient.Conn().
 		Model((*customer.UserPlan)(nil)).
-		Set("free_trial_started_at = now()").
+		Set("activated_at = now()").
 		Where("user_id = ?", user.ID).
 		Update(); err != nil {
 		return fmt.Errorf("error when updating user plan: %w", err)
@@ -101,24 +101,39 @@ func (s *service) ConfirmUser(email string) error {
 	return nil
 }
 
-// ConfirmPayment set that the user has paid
-func (s *service) ConfirmPayment(email string) (*customer.User, error) {
+// ConfirmSubscription set that the user has starting its paid subscription
+func (s *service) ConfirmSubscription(email string, stripeID string) (*customer.User, error) {
 	// get user
-	var user *customer.User
+	var user customer.User
 	if err := s.dbClient.Conn().Model(&user).Where("email ILIKE ?", email).Select(); err != nil {
 		return nil, fmt.Errorf("failed getting user %s: %w", email, err)
 	}
 
-	// set that user has paid
+	// set that user is subscribed
 	if _, err := s.dbClient.Conn().
 		Model((*customer.UserPlan)(nil)).
-		Set("purchased_at = now()").
+		Set("subscription_started_at = now()").
+		Set("stripe_customer_id = ?", stripeID).
 		Where("user_id = ?", user.ID).
 		Update(); err != nil {
-		return nil, fmt.Errorf("error when updating user plan: %w", err)
+		return nil, fmt.Errorf("error when confirming subscription in user plan: %w", err)
 	}
 
-	return user, nil
+	return &user, nil
+}
+
+// UpdateSubscriptionStatus update the subcription last payment status
+func (s *service) UpdateSubscriptionStatus(stripeID string, status bool) error {
+	// set that user is subscribed
+	if _, err := s.dbClient.Conn().
+		Model((*customer.UserPlan)(nil)).
+		Set("last_payment_succeeded = ?", status).
+		Where("stripe_customer_id = ?", stripeID).
+		Update(); err != nil {
+		return fmt.Errorf("error when updating subscription status in user plan: %w", err)
+	}
+
+	return nil
 }
 
 // GetUsersWithGivenCorporationCredentials gets all the users with a given corporation credentials
@@ -140,7 +155,7 @@ func (s *service) GetUsersWithGivenCorporationCredentials(corporationName string
 	return users, nil
 }
 
-// GetWeeklyUpdateUsers gets all reactions of paid user for the last week
+// GetWeeklyUpdateUsers gets all reactions of users from the last week
 func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 	var users []*customer.User
 	if err := s.dbClient.Conn().

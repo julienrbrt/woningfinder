@@ -4,8 +4,6 @@ import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/zig"
-	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
@@ -19,13 +17,29 @@ func init() {
 	}
 
 	logger := logging.NewZapLoggerWithoutSentry()
-	dbClient := bootstrap.CreateDBClient(logger)
-	corporationService := corporation.NewService(logger, dbClient)
+	_ = bootstrap.CreateDBClient(logger)
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {
-		if err := corporationService.CreateOrUpdateCorporation(zig.DeWoningZoekerInfo); err != nil {
+		_, err := db.Exec(`ALTER TABLE user_plans RENAME COLUMN purchased_at TO subscription_started_at`)
+		if err != nil {
 			return err
 		}
+
+		_, err = db.Exec(`ALTER TABLE user_plans RENAME COLUMN free_trial_started_at TO activated_at`)
+		if err != nil {
+			return err
+		}
+
+		_, err = db.Exec(`ALTER TABLE user_plans ADD IF NOT EXISTS last_payment_succeeded boolean`)
+		if err != nil {
+			return err
+		}
+
+		_, err = db.Exec(`ALTER TABLE user_plans ADD IF NOT EXISTS stripe_customer_id text`)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 }
