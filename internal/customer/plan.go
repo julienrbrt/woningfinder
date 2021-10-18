@@ -28,7 +28,7 @@ var PlanBasis = Plan{
 var PlanPro = Plan{
 	StripeProductID: "price_1JlDuPHWufZqidI1zXocKAsS",
 	Name:            "pro",
-	Price:           15,
+	Price:           10,
 	MaximumIncome:   math.MaxInt32,
 }
 
@@ -39,7 +39,7 @@ func PlanFromName(name string) (Plan, error) {
 	case PlanPro.Name:
 		return PlanPro, nil
 	case "test-ugly-woningfinder-plan": // used for tests :(
-		return Plan{Price: 1000, StripeProductID: "price_1JlDZnHWufZqidI1hmzlgann"}, nil
+		return Plan{Price: 1000, StripeProductID: "price_1JluzPHWufZqidI1x1xejNuM"}, nil
 	}
 
 	return Plan{}, fmt.Errorf("cannot find plan from name: %s invalid", name)
