@@ -20,7 +20,7 @@ func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
 
 		// send confirmation email to each user
 		for _, user := range users {
-			// skip invalid free trial / unpaid users
+			// skip user with invalid plan
 			if !user.Plan.IsValid() {
 				continue
 			}

@@ -57,9 +57,8 @@ func main() {
 	c := cron.New(cron.WithLocation(nl), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
 
 	// populate crons
-	job.CustomerUnconfirmedCleanup(c)
+	job.CleanupUnconfirmedCustomer(c)
 	job.HousingFinder(c, clientProvider)
-	job.SendCustomerEndFreeTrialReminder(c)
 	job.SendWeeklyUpdate(c)
 
 	// start cron scheduler

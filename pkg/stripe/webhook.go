@@ -1,7 +1,9 @@
 package stripe
 
 const (
-	PaymentIntentSucceeded = "payment_intent.succeeded"
+	CheckoutSessionCompleted = "checkout.session.completed"
+	InvoicePaid              = "invoice.paid"
+	InvoicePaymentFailed     = "invoice.payment_failed"
 )
 
 func (c *client) WebhookSigningKey() string {

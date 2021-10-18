@@ -28,7 +28,7 @@
           Hallo {{ . }},
           <br /> <br />
 
-          <strong>Je blijft nu automatisch reageren tot je een huis vindt!</strong>
+          <strong>Je kunt nu automatisch reageren op alle woningen!</strong>
           Bedankt voor je vertrouwen in ons, we hopen dat je snel een woning vind.
         </mj-text>
 
