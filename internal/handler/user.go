@@ -171,10 +171,11 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	errorMsg := fmt.Errorf("failed to delete user")
+
 	// get user
 	user, err = h.userService.GetUser(user.Email)
 	if err != nil {
-		errorMsg := fmt.Errorf("failed to get user")
 		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
@@ -189,7 +190,6 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	// delete user
 	if err := h.userService.DeleteUser(user.Email); err != nil {
-		errorMsg := fmt.Errorf("failed to delete user")
 		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return

@@ -41,7 +41,7 @@ func (s *serviceMock) GetUser(email string) (*customer.User, error) {
 		Plan: customer.UserPlan{
 			CreatedAt:        time.Date(2021, 12, 31, 1, 1, 0, 0, time.UTC),
 			Name:             "test-ugly-woningfinder-plan",
-			StripeCustomerID: "cus_KQ5ih76AxfW3VD",
+			StripeCustomerID: "cus_KQoZm6zke6gelu",
 			ActivatedAt:      time.Date(2099, 12, 31, 15, 1, 0, 0, time.UTC),
 		},
 		HousingPreferences: customer.HousingPreferences{
