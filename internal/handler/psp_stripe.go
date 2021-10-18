@@ -16,8 +16,8 @@ import (
 )
 
 const (
-	successURL = "https://woningfinder.nl/login?thanks=true"
-	cancelURL  = "https://woningfinder.nl/start/voltooien?cancelled=true"
+	successURL = "https://woningfinder.nl?thanks=true"
+	cancelURL  = "https://woningfinder.nl/start/voltooien"
 )
 
 type paymentRequest struct {
