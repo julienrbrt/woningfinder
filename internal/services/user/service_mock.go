@@ -71,6 +71,10 @@ func (s *serviceMock) DeleteHousingPreferences(_ uint) error {
 	return s.err
 }
 
+func (s *serviceMock) GetUserStripeCustomerID(email string) (string, error) {
+	return "stripeID", s.err
+}
+
 func (s *serviceMock) GetHousingPreferencesMatchingCorporation(_ uint) ([]*corporation.Corporation, error) {
 	if s.err != nil {
 		return nil, s.err

@@ -82,6 +82,7 @@ func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationSer
 			r.Post("/", handler.UpdateUserInfo)
 			r.Get("/corporation-credentials", handler.GetCorporationCredentials)
 			r.Post("/corporation-credentials", handler.UpdateCorporationCredentials)
+			r.Get("/stripe-customer-portal", handler.StripeCustomerPortal)
 			r.Post("/delete", handler.DeleteUser)
 		})
 	})
