@@ -98,6 +98,17 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// stripe notifies the user of the failed payment
+	case stripe.CustomerSubscriptionDeleted:
+		var subscription stripeGo.Subscription
+		err := json.Unmarshal(event.Data.Raw, &subscription)
+		if err != nil {
+			render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("failed to parse webhook json: %w", err)))
+			return
+		}
+
+		if err := h.userService.UpdateSubscriptionStatus(subscription.Customer.ID, false); err != nil {
+			h.logger.Sugar().Error(err)
+		}
 	}
 
 	// returns 200 by default
