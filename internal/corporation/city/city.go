@@ -99,6 +99,10 @@ var cityTable = map[string]City{
 	Abcoude.Name:              Abcoude,
 	Maarn.Name:                Maarn,
 	Leerdam.Name:              Leerdam,
+	Kamerik.Name:              Kamerik,
+	Assendelft.Name:           Assendelft,
+	Wormerveer.Name:           Wormerveer,
+	Wijthmen.Name:             Wijthmen,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

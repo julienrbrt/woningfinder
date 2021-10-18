@@ -223,3 +223,13 @@ var KoogaandeZaan = City{
 	Name:        "Koog aan de Zaan",
 	Coordinates: []float64{4.802778, 52.458889},
 }
+
+var Assendelft = City{
+	Name:        "Assendelft",
+	Coordinates: []float64{4.752192, 52.488680},
+}
+
+var Wormerveer = City{
+	Name:        "Wormerveer",
+	Coordinates: []float64{4.786674, 52.494728},
+}
