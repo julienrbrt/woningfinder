@@ -160,3 +160,13 @@ var Vollenhove = City{
 	Name:        "Vollenhove",
 	Coordinates: []float64{5.95, 52.683333},
 }
+
+var Wijthmen = City{
+	Name:        "Wijthmen",
+	Coordinates: []float64{6.171641, 52.487794},
+}
+
+var Zalk = City{
+	Name:        "Zalk",
+	Coordinates: []float64{5.971669, 52.505088},
+}
