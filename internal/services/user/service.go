@@ -19,7 +19,6 @@ type Service interface {
 	ConfirmSubscription(email string, stripeID string) (*customer.User, error)
 	UpdateSubscriptionStatus(stripeID string, status bool) error
 
-	GetUserStripeCustomerID(email string) (string, error)
 	GetUsersWithGivenCorporationCredentials(corporationName string) ([]*customer.User, error)
 	GetWeeklyUpdateUsers() ([]*customer.User, error)
 

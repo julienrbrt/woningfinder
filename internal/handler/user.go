@@ -7,6 +7,9 @@ import (
 
 	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
+	stripe "github.com/stripe/stripe-go/v72"
+	stripeCustomer "github.com/stripe/stripe-go/v72/customer"
+	"github.com/stripe/stripe-go/v72/sub"
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
@@ -168,6 +171,22 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// get user
+	user, err = h.userService.GetUser(user.Email)
+	if err != nil {
+		errorMsg := fmt.Errorf("failed to get user")
+		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		return
+	}
+
+	// cancel plan if subscribed
+	if user.Plan.IsSubscribed() {
+		if err := h.cancelStripeSubscription(user.Plan.StripeCustomerID); err != nil {
+			h.logger.Sugar().Error(err)
+		}
+	}
+
 	// delete user
 	if err := h.userService.DeleteUser(user.Email); err != nil {
 		errorMsg := fmt.Errorf("failed to delete user")
@@ -175,4 +194,20 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
 		return
 	}
+
+}
+
+func (h *handler) cancelStripeSubscription(stripeCustomerID string) error {
+	customer, err := stripeCustomer.Get(stripeCustomerID, &stripe.CustomerParams{})
+	if err != nil {
+		return fmt.Errorf("failed to get stripe customer: %w", err)
+	}
+
+	if len(customer.Subscriptions.Data) > 0 {
+		if _, err := sub.Cancel(customer.Subscriptions.Data[0].ID, nil); err != nil {
+			return fmt.Errorf("failed to cancel stripe subscription: %w", err)
+		}
+	}
+
+	return nil
 }

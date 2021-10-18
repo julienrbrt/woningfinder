@@ -136,25 +136,6 @@ func (s *service) UpdateSubscriptionStatus(stripeID string, status bool) error {
 	return nil
 }
 
-// GetUserStripeCustomerID get the user stripe customer ID
-func (s *service) GetUserStripeCustomerID(email string) (string, error) {
-	// get user
-	var user customer.User
-	if err := s.dbClient.Conn().Model(&user).Where("email ILIKE ?", email).Select(); err != nil {
-		return "", fmt.Errorf("failed getting user %s: %w", email, err)
-	}
-
-	var plan customer.UserPlan
-	if err := s.dbClient.Conn().
-		Model(&plan).
-		Where("user_id = ?", user.ID).
-		Select(); err != nil {
-		return "", fmt.Errorf("error when getting stripe customer ID: %w", err)
-	}
-
-	return plan.StripeCustomerID, nil
-}
-
 // GetUsersWithGivenCorporationCredentials gets all the users with a given corporation credentials
 func (s *service) GetUsersWithGivenCorporationCredentials(corporationName string) ([]*customer.User, error) {
 	var users []*customer.User

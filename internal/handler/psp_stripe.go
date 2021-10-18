@@ -6,13 +6,10 @@ import (
 	"fmt"
 	"net/http"
 
-	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
 	stripe "github.com/stripe/stripe-go/v72"
-	billingPortalSession "github.com/stripe/stripe-go/v72/billingportal/session"
 	checkoutSession "github.com/stripe/stripe-go/v72/checkout/session"
 	stripeCustomer "github.com/stripe/stripe-go/v72/customer"
-	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/util"
@@ -133,38 +130,4 @@ func (h *handler) createStripeCheckoutSession(customer *stripe.Customer, priceID
 	}
 
 	return checkoutSession.New(params)
-}
-
-// StripeCustomerPortal redirects to the stripe subscription portal
-func (h *handler) StripeCustomerPortal(w http.ResponseWriter, r *http.Request) {
-	// extract jwt
-	_, claims, err := jwtauth.FromContext(r.Context())
-	if err != nil {
-		render.Render(w, r, handlerErrors.ErrBadRequest)
-		return
-	}
-
-	// get user from jwt claims
-	userFromJWT, err := auth.ExtractUserFromJWT(claims)
-	if err != nil {
-		render.Render(w, r, handlerErrors.ErrBadRequest)
-		return
-	}
-
-	stripeID, err := h.userService.GetUserStripeCustomerID(userFromJWT.Email)
-	if err != nil {
-		h.logger.Sugar().Errorf("failed to get stripe customer ID: %w", err)
-		return
-	}
-
-	s, err := billingPortalSession.New(&stripe.BillingPortalSessionParams{
-		Customer:  stripe.String(stripeID),
-		ReturnURL: stripe.String("https://woningfinder.nl/mijn-zoekopdracht"),
-	})
-	if err != nil {
-		h.logger.Sugar().Errorf("failed to get stripe customer ID: %w", err)
-		return
-	}
-
-	http.Redirect(w, r, s.URL, http.StatusFound)
 }
