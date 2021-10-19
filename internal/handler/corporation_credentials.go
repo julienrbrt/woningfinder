@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -13,6 +14,24 @@ import (
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 )
+
+type corporationCredentialsRequest struct {
+	*customer.CorporationCredentials
+}
+
+// Bind permits go-chi router to verify the user input and marshal it
+func (c *corporationCredentialsRequest) Bind(r *http.Request) error {
+	if c.CorporationName == "" || c.Login == "" || c.Password == "" {
+		return errors.New("credentials cannot be empty")
+	}
+
+	return nil
+}
+
+// Render permits go-chi router to render the user
+func (*corporationCredentialsRequest) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
+}
 
 // GetCorporationCredentials gets a list of corporation credentials that match the user housing preferences
 func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Request) {
@@ -80,7 +99,7 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	var credentials customer.CorporationCredentials
+	var credentials corporationCredentialsRequest
 	if err := render.Bind(r, &credentials); err != nil {
 		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
