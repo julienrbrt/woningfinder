@@ -99,8 +99,8 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	var credentials corporationCredentialsRequest
-	if err := render.Bind(r, &credentials); err != nil {
+	credentials := &corporationCredentialsRequest{}
+	if err := render.Bind(r, credentials); err != nil {
 		render.Render(w, r, handlerErrors.ErrBadRequest)
 		return
 	}
