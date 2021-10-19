@@ -109,6 +109,7 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Assendelft,
 		city.Wormerveer,
 		city.Jisp,
+		city.Rijsenhout,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
