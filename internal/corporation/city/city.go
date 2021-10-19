@@ -103,6 +103,7 @@ var cityTable = map[string]City{
 	Assendelft.Name:           Assendelft,
 	Wormerveer.Name:           Wormerveer,
 	Wijthmen.Name:             Wijthmen,
+	Jisp.Name:                 Jisp,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

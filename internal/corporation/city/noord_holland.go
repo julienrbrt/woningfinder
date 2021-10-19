@@ -233,3 +233,8 @@ var Wormerveer = City{
 	Name:        "Wormerveer",
 	Coordinates: []float64{4.786674, 52.494728},
 }
+
+var Jisp = City{
+	Name:        "Jisp",
+	Coordinates: []float64{4.859545, 52.511382},
+}
