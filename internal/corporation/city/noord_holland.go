@@ -238,3 +238,8 @@ var Jisp = City{
 	Name:        "Jisp",
 	Coordinates: []float64{4.859545, 52.511382},
 }
+
+var Rijsenhout = City{
+	Name:        "Rijsenhout",
+	Coordinates: []float64{4.687844, 52.258205},
+}
