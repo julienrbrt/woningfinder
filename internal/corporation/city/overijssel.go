@@ -180,3 +180,18 @@ var Giethoorn = City{
 	Name:        "Giethoorn",
 	Coordinates: []float64{6.074150, 52.721939},
 }
+
+var Aadorp = City{
+	Name:        "Aadorp",
+	Coordinates: []float64{6.629431, 52.375081},
+}
+
+var Bornerbroek = City{
+	Name:        "Bornerbroek",
+	Coordinates: []float64{6.655433, 52.308271},
+}
+
+var Wierden = City{
+	Name:        "Wierden",
+	Coordinates: []float64{6.591684, 52.357695},
+}
