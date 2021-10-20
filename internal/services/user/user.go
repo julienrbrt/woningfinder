@@ -114,6 +114,7 @@ func (s *service) ConfirmSubscription(email string, stripeID string) (*customer.
 		Model((*customer.UserPlan)(nil)).
 		Set("subscription_started_at = now()").
 		Set("stripe_customer_id = ?", stripeID).
+		Set("last_payment_succeeded = ?", true).
 		Where("user_id = ?", user.ID).
 		Update(); err != nil {
 		return nil, fmt.Errorf("error when confirming subscription in user plan: %w", err)
