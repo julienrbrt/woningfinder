@@ -170,3 +170,8 @@ var Zalk = City{
 	Name:        "Zalk",
 	Coordinates: []float64{5.971669, 52.505088},
 }
+
+var Willemsoord = City{
+	Name:        "Willemsoord",
+	Coordinates: []float64{6.061362, 52.825496},
+}
