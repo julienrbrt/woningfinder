@@ -112,6 +112,9 @@ var cityTable = map[string]City{
 	Westzaan.Name:             Westzaan,
 	Beinsdorp.Name:            Beinsdorp,
 	Cothen.Name:               Cothen,
+	Aadorp.Name:               Aadorp,
+	Bornerbroek.Name:          Bornerbroek,
+	Wierden.Name:              Wierden,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
