@@ -100,7 +100,7 @@ func (h *handler) UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userInfoRequest := new(updateUserInfoRequest)
+	userInfoRequest := &updateUserInfoRequest{}
 	if err := render.Bind(r, userInfoRequest); err != nil {
 		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(err))
 		return

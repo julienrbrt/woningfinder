@@ -1,8 +1,6 @@
 package customer
 
 import (
-	"errors"
-	"net/http"
 	"time"
 )
 
@@ -14,18 +12,4 @@ type CorporationCredentials struct {
 	Login           string    `json:"login"`
 	Password        string    `json:"password"`
 	FailureCount    int       `json:"-"` // FailureCount measures the number of login failure
-}
-
-// Bind permits go-chi router to verify the user input and marshal it
-func (c *CorporationCredentials) Bind(r *http.Request) error {
-	if c.CorporationName == "" || c.Login == "" || c.Password == "" {
-		return errors.New("credentials cannot be empty")
-	}
-
-	return nil
-}
-
-// Render permits go-chi router to render the user
-func (*CorporationCredentials) Render(w http.ResponseWriter, r *http.Request) error {
-	return nil
 }
