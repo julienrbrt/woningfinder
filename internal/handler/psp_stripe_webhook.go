@@ -56,7 +56,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// confirm subscription has payment went through
-		user, err := h.userService.ConfirmSubscription(checkoutSession.Customer.Email, checkoutSession.Customer.ID)
+		user, err := h.userService.ConfirmSubscription(checkoutSession.CustomerDetails.Email, checkoutSession.Customer.ID)
 		if err != nil {
 			errorMsg := fmt.Errorf("error while processing payment")
 			h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
