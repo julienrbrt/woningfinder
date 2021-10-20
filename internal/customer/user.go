@@ -2,7 +2,6 @@ package customer
 
 import (
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/woningfinder/woningfinder/pkg/util"
@@ -57,15 +56,5 @@ func (u *User) HasMinimal() error {
 		return fmt.Errorf("user housing preferences invalid: %w", err)
 	}
 
-	return nil
-}
-
-// Bind permits go-chi router to verify the user input and marshal it
-func (u *User) Bind(r *http.Request) error {
-	return u.HasMinimal()
-}
-
-// Render permits go-chi router to render the user
-func (*User) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
