@@ -341,3 +341,8 @@ var Kamerik = City{
 	Name:        "Kamerik",
 	Coordinates: []float64{4.894307, 52.111790},
 }
+
+var Zegveld = City{
+	Name:        "Zegveld",
+	Coordinates: []float64{4.837293, 52.115317},
+}
