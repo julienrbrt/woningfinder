@@ -7,7 +7,6 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/dewoonplaats"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/woonburo"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
@@ -29,7 +28,7 @@ func CreateWoonburoClient(logger *logging.Logger, mapboxClient mapbox.Client, co
 		Jar:     jar,
 	}
 	defaultMiddleWare := []networking.ClientMiddleware{
-		middleware.CreateHostMiddleware(dewoonplaats.Info.APIEndpoint),
+		middleware.CreateHostMiddleware(corporation.APIEndpoint),
 		middleware.CreateDefaultHeadersMiddleware(map[string]string{
 			// note if detected than blocked by user-agent check https://techblog.willshouse.com/2012/01/03/most-common-user-agents/
 			"User-Agent":   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36",

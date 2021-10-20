@@ -9,7 +9,7 @@ import (
 )
 
 var AlmeloInfo = corporation.Corporation{
-	APIEndpoint: &url.URL{Scheme: "https", Host: "www.dewoonplaats.nl", Path: "/wh_services"},
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woonburoalmelo", Path: "/wsAlmelo/WoningenModule/Service.asmx"},
 	Name:        "Woonburo Almelo",
 	URL:         "https://www.woonburoalmelo.nl",
 	Cities: []city.City{
