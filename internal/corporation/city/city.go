@@ -107,6 +107,7 @@ var cityTable = map[string]City{
 	Rijsenhout.Name:           Rijsenhout,
 	Willemsoord.Name:          Willemsoord,
 	Zegveld.Name:              Zegveld,
+	Middenbeemster.Name:       Middenbeemster,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
