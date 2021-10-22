@@ -112,6 +112,7 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Jisp,
 		city.Rijsenhout,
 		city.Middenbeemster,
+		city.Monnickendam,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

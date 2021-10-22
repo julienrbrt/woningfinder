@@ -248,3 +248,8 @@ var Middenbeemster = City{
 	Name:        "Middenbeemster",
 	Coordinates: []float64{4.909276, 52.549300},
 }
+
+var Monnickendam = City{
+	Name:        "Monnickendam",
+	Coordinates: []float64{5.038278, 52.451878},
+}
