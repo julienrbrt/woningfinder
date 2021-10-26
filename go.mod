@@ -3,7 +3,7 @@ module github.com/woningfinder/woningfinder
 go 1.16
 
 require (
-	github.com/PuerkitoBio/goquery v1.7.1
+	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/TheZeroSlave/zapsentry v1.8.0
 	github.com/antchfx/xmlquery v1.3.6 // indirect
 	github.com/antchfx/xpath v1.2.0 // indirect
@@ -29,7 +29,6 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.19.1
-	golang.org/x/net v0.0.0-20210908191846-a5e095526f91 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
