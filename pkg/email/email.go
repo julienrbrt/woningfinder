@@ -1,18 +1,24 @@
 package email
 
+import (
+	"net/http"
+
+	"github.com/mattevans/postmark-go"
+)
+
 type Client interface {
-	Send(subject, html, to string) error
+	Send(subject, htmlBody, to string) error
 }
 
 type client struct {
-	name     string
-	from     string
-	password string
-	server   string
-	port     int
+	postmark *postmark.Client
 }
 
 // NewClient permits to send an email
-func NewClient(name, from, password, server string, port int) Client {
-	return &client{name, from, password, server, port}
+func NewClient(apiKey string) Client {
+	return &client{
+		postmark: postmark.NewClient(&http.Client{
+			Transport: &postmark.AuthTransport{Token: apiKey},
+		}),
+	}
 }

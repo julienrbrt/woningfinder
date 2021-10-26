@@ -8,11 +8,4 @@ Note that when were this `range` or `if` condition in the mjml, it has to be re-
 
 ### Configuration
 
-Email are sent from `contact@woningfinder.nl` via SMTP using the following enviroment variable:
-
-```
-EMAIL_ADDRESS=''
-EMAIL_PASSWORD=''
-EMAIL_SMTP_ADDRESS=''
-EMAIL_SMTP_PORT=
-```
+Email are sent using [Postmark](https://postmarkapp.com) email service.
