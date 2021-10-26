@@ -322,6 +322,10 @@ func (c *client) parseHousingType(houseType string) corporation.HousingType {
 }
 
 func (c *client) parsePrice(priceStr string) (float64, error) {
+	if strings.Contains(priceStr, " - ") {
+		priceStr = strings.Split(priceStr, " - ")[0]
+	}
+
 	// remove dot delimiter in price
 	priceStr = strings.ReplaceAll(priceStr, ".", "")
 
