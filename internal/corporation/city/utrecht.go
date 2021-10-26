@@ -346,3 +346,8 @@ var Zegveld = City{
 	Name:        "Zegveld",
 	Coordinates: []float64{4.837293, 52.115317},
 }
+
+var Cothen = City{
+	Name:        "Cothen",
+	Coordinates: []float64{5.310461, 51.995363},
+}
