@@ -69,6 +69,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.Leerdam,
 		city.Kamerik,
 		city.Zegveld,
+		city.Cothen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
