@@ -253,3 +253,13 @@ var Monnickendam = City{
 	Name:        "Monnickendam",
 	Coordinates: []float64{5.038278, 52.451878},
 }
+
+var Westzaan = City{
+	Name:        "Westzaan",
+	Coordinates: []float64{4.770612, 52.464256},
+}
+
+var Beinsdorp = City{
+	Name:        "Beinsdorp",
+	Coordinates: []float64{4.593097, 52.286690},
+}
