@@ -60,12 +60,6 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:5UOPhoYyocEPlDtXzKaRQGiSd8Hhs8Io:84zgfM9uH+yB/rWQpqgG6K5/4zgwkJBN8OGtqM7XYUblZCce/I+jPluN9t4a6MBoeLip7HjA6l3977pC5IKOH17PLBQFz41vuTdJLqbbca5tOQRLjRrh9WmcVsqMuAXue/DlVIBqmwMcAqynaQ==]
-  - key: EMAIL_SMTP_ADDRESS
-    scope: RUN_AND_BUILD_TIME
-    value: mail.gandi.net
-  - key: EMAIL_SMTP_PORT
-    scope: RUN_AND_BUILD_TIME
-    value: "587"
   - key: STRIPE_PUBLISHABLE_KEY
     scope: RUN_AND_BUILD_TIME
     value: pk_live_51HkWn4HWufZqidI1Z4GzL62vF8bmW3mCxRQxyLU45Mk04jaSoSXer3AV8LsNnivKp0LZmy9Jr4s7o65z1qoSjHzz00ZCs4FbMu
@@ -77,21 +71,6 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:7lD/Fzd9pKs6wH0lOg/fWeuajnsATIpP:GJHUFMZL24tYyV56wAlaShoDNH0h1XfQ4l28uA9mnWJQAn9OqfJUuvuFdoSbS1VZDl53BdkH]
-  - key: CRYPTOCOM_API_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:dUNg7FV87DkROif7dBgcwH55NgAcZ3BF:Kk5t8cWkSvb9Q7rs3bEW3GpdIbqPsEqaFh2F5xuh7iowVkZh+58q6W6aQjnpOAbH]
-  - key: CRYPTOCOM_WEBHOOK_SIGNING_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:1yMZIQy+N77ggGD5Jc8aJswelmQnfzLC:azAlZ+KZde1dG17CiIp4oimc/7UGGgFwaYoz8/TX+EmuFo+T0DX18a8B++ir71YXNb/N3XpRKDFGHdF2]
-  - key: EMAIL_ADDRESS
-    scope: RUN_AND_BUILD_TIME
-    value: contact@woningfinder.nl
-  - key: EMAIL_PASSWORD
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:kG6qIr7k6XpN+UAzboyxS0svRExEBeIp:LQe/9v7RIHplgFp8E0dFo6d8I2sr1DLJd+RuPhhHvzcsQxDjnPGh0Z6p8rfX1LA=]
   - key: DO_SPACES_KEY
     scope: RUN_AND_BUILD_TIME
     value: 6HFGIEXLFFAF3ZEU5MAF
@@ -99,6 +78,10 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:ufYKg6W8Qx1uYDEDc/FtS2FChgbHl3oe:VzLuvScsHhQnmIgp4IbO16zDFF6GVdIf7Gjd21XvwvSXaw1dkFqfUWfvyKZU1emLN//p3IeVk11ZJgw=]
+  - key: POSTMARK_SERVER_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:JXgqgjIsGuinhdZilO0bl32ZYOu1G5hx:4scP3dByJvVm1OjjPdnXPn8vabqFtorzdKc1aMNaZWi8BidbjbLsVRwaQEKx2UUNXAVjvw==]
 jobs:
   - alerts:
       - operator: GREATER_THAN
