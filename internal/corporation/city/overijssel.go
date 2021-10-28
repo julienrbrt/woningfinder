@@ -175,3 +175,8 @@ var Willemsoord = City{
 	Name:        "Willemsoord",
 	Coordinates: []float64{6.061362, 52.825496},
 }
+
+var Giethoorn = City{
+	Name:        "Giethoorn",
+	Coordinates: []float64{6.074150, 52.721939},
+}
