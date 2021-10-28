@@ -34,6 +34,7 @@ var DeWoningZoekerInfo = corporation.Corporation{
 		city.Wijthmen,
 		city.Zalk,
 		city.Willemsoord,
+		city.Giethoorn,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

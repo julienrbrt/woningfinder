@@ -116,6 +116,7 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Monnickendam,
 		city.Beinsdorp,
 		city.Westzaan,
+		city.Cruquius,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
