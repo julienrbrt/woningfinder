@@ -9,7 +9,7 @@ import (
 
 var Info = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "ikwilhuren.nu"},
-	Name:        "ikwilhuren.nu",
+	Name:        "MVGM Wonen",
 	URL:         "https://ikwilhuren.nu",
 	Cities: []city.City{
 		city.Almelo,
