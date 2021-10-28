@@ -263,3 +263,8 @@ var Beinsdorp = City{
 	Name:        "Beinsdorp",
 	Coordinates: []float64{4.593097, 52.286690},
 }
+
+var Cruquius = City{
+	Name:        "Cruquius",
+	Coordinates: []float64{4.630087, 52.333317},
+}
