@@ -195,3 +195,8 @@ var Wierden = City{
 	Name:        "Wierden",
 	Coordinates: []float64{6.591684, 52.357695},
 }
+
+var Giethoorn = City{
+	Name:        "Giethoorn",
+	Coordinates: []float64{6.074150, 52.721939},
+}
