@@ -114,6 +114,10 @@ var cityTable = map[string]City{
 	Cothen.Name:               Cothen,
 	Giethoorn.Name:            Giethoorn,
 	Cruquius.Name:             Cruquius,
+	Aadorp.Name:               Aadorp,
+	Bornerbroek.Name:          Bornerbroek,
+	Wierden.Name:              Wierden,
+	Cruquius.Name:             Cruquius,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
@@ -128,12 +132,16 @@ type City struct {
 // Merge cities that are supposed to be the same but that housing corporation name differently
 func (c *City) Merge() City {
 	switch {
+	case strings.Contains(c.Name, "Amsterdam"):
+		return Amsterdam
 	case strings.Contains(c.Name, "Hengelo"):
 		return Hengelo
 	case strings.Contains(c.Name, "Winterswijk"):
 		return Winterswijk
 	case strings.EqualFold(c.Name, "s-Heerenberg"):
 		return Heerenberg
+	case strings.Contains(c.Name, "IJsselstein"):
+		return IJsselstein
 	}
 
 	return *c
