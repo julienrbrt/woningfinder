@@ -4,8 +4,10 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/dewoonplaats"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/domijn"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector/ikwilhuren"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/woningnet"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector/woonburo"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/zig"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
@@ -51,6 +53,14 @@ func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) co
 		{
 			Corporation: zig.DeWoningZoekerInfo,
 			ClientFunc:  func() connector.Client { return CreateZigClient(logger, mapboxClient, zig.DeWoningZoekerInfo) },
+		},
+		{
+			Corporation: woonburo.AlmeloInfo,
+			ClientFunc:  func() connector.Client { return CreateWoonburoClient(logger, mapboxClient, woonburo.AlmeloInfo) },
+		},
+		{
+			Corporation: ikwilhuren.Info,
+			ClientFunc:  func() connector.Client { return CreateIkWilHurenClient(logger, mapboxClient) },
 		},
 	}
 
