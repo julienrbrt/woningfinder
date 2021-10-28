@@ -4,8 +4,10 @@ import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector/ikwilhuren"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector/woonburo"
-	"github.com/woningfinder/woningfinder/internal/services/corporation"
+	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 )
@@ -20,12 +22,15 @@ func init() {
 
 	logger := logging.NewZapLoggerWithoutSentry()
 	dbClient := bootstrap.CreateDBClient(logger)
-	corporationService := corporation.NewService(logger, dbClient)
+	corporationService := corporationService.NewService(logger, dbClient)
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {
-		if err := corporationService.CreateOrUpdateCorporation(woonburo.AlmeloInfo); err != nil {
-			return err
+		for _, corp := range []corporation.Corporation{woonburo.AlmeloInfo, ikwilhuren.Info} {
+			if err := corporationService.CreateOrUpdateCorporation(corp); err != nil {
+				return err
+			}
 		}
+
 		return nil
 	})
 }
