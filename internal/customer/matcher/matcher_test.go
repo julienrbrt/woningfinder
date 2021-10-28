@@ -55,7 +55,7 @@ var offer = corporation.Offer{
 	},
 }
 
-func Test_MatcIffer(t *testing.T) {
+func Test_MatchOffer(t *testing.T) {
 	a := assert.New(t)
 	offer := offer
 
@@ -93,6 +93,18 @@ func Test_MatchCriteria_PassendToewijzen(t *testing.T) {
 	a.True(matcher.MatchOffer(user, offer))
 	user.YearlyIncome = 40000
 	a.False(matcher.MatchOffer(user, offer))
+}
+
+func Test_MatchCriteria_MinimumIncome(t *testing.T) {
+	a := assert.New(t)
+	user := user
+
+	matcher := matcher.NewMatcher()
+	offer.Housing.Price = 950
+	offer.MinimumIncome = 45000
+	a.False(matcher.MatchOffer(user, offer))
+	user.YearlyIncome = 50000
+	a.True(matcher.MatchOffer(user, offer))
 }
 
 func Test_MatchPreferences_Location(t *testing.T) {
