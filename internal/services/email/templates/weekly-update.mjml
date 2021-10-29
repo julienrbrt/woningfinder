@@ -94,7 +94,7 @@
       <mj-column>
         <mj-text align="center" color="#9B9B9B" font-size="11px">
           © 2021 WoningFinder <br />
-          <a href="https://woningfinder.nl" style="color: #9b9b9b; text-decoration: none">woningfinder.nl</a></mj-text>
+          <a data-pm-no-track href="https://woningfinder.nl" style="color: #9b9b9b; text-decoration: none">woningfinder.nl</a></mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
