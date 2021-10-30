@@ -97,6 +97,7 @@ func Test_MatchCriteria_PassendToewijzen(t *testing.T) {
 func Test_MatchCriteria_MinimumIncome(t *testing.T) {
 	a := assert.New(t)
 	user := user
+	offer := offer
 
 	matcher := matcher.NewMatcher()
 	offer.Housing.Price = 950
