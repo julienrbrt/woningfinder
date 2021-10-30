@@ -49,7 +49,6 @@ type offer struct {
 	HasLowRentPrice       bool    `json:"ishuurlaag"`
 	Lift                  bool    `json:"lift"`
 	Garden                string  `json:"tuin"`
-	Attic                 bool    `json:"zolder"`
 	SelectionDate         string  `json:"lotingsdatum"`
 	IsSelectionRandom     bool    `json:"loting"`
 	Size                  string  `json:"woonoppervlak"`
@@ -136,7 +135,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		Garage:        offer.Garage,
 		Elevator:      offer.Lift,
 		Balcony:       offer.Balcony,
-		Attic:         offer.Attic,
 		Accessible:    offer.Accessible,
 	}
 

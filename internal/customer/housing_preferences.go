@@ -21,7 +21,6 @@ type HousingPreferences struct {
 	HasGarage     bool                      `json:"has_garage"`
 	HasGarden     bool                      `json:"has_garden"`
 	HasElevator   bool                      `json:"has_elevator"`
-	HasAttic      bool                      `json:"has_attic"`
 	IsAccessible  bool                      `json:"is_accessible"`
 }
 

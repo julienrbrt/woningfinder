@@ -260,9 +260,6 @@ type offerDetails struct {
 	Kitchen struct {
 		Localizedname string `json:"localizedName"`
 	} `json:"kitchen"`
-	Attic struct {
-		Localizedname string `json:"localizedName"`
-	} `json:"attic"`
 	Constructionyear         int `json:"constructionYear"`
 	Minimumincome            int `json:"minimumIncome"`
 	Maximumincome            int `json:"maximumIncome"`
@@ -503,7 +500,6 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 		Garage:        false,
 		Elevator:      true,
 		Balcony:       offer.Balcony,
-		Attic:         len(offer.Attic.Localizedname) > 0,
 		Accessible:    false,
 	}
 

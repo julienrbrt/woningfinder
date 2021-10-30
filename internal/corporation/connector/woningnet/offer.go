@@ -262,9 +262,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 			c.logger.Sugar().Infof("woningnet connector: error parsing number bedroom of %s: %w", house.Address, err)
 		}
 
-		// attic
-		house.Attic = len(c.getContentValue("Zolder", table)) > 0
-
 		// outside
 		outside := c.getContentValue("Buitenruimte", table)
 		house.Balcony = strings.Contains(outside, "balkon") || strings.Contains(outside, "terras")

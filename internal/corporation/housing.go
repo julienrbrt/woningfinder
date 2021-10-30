@@ -14,7 +14,6 @@ type Housing struct {
 	Garage        bool
 	Elevator      bool
 	Balcony       bool
-	Attic         bool
 	Accessible    bool // Accessible defines if the house is accessible for handicapt people
 }
 

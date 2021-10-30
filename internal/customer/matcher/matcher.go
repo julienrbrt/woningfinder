@@ -84,8 +84,7 @@ func (m *matcher) matchPreferences(preferences customer.HousingPreferences, offe
 
 	// house specific
 	if offer.Housing.Type == corporation.HousingTypeHouse &&
-		(preferences.HasGarden && !offer.Housing.Garden) ||
-		(preferences.HasAttic && !offer.Housing.Attic) {
+		(preferences.HasGarden && !offer.Housing.Garden) {
 		return false
 	}
 

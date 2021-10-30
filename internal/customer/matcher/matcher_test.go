@@ -49,7 +49,6 @@ var offer = corporation.Offer{
 		Garage:        false,
 		Elevator:      true,
 		Balcony:       true,
-		Attic:         false,
 		Accessible:    true,
 	},
 }
