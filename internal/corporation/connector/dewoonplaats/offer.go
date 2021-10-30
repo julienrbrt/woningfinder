@@ -128,7 +128,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		Type:          houseType,
 		Address:       fmt.Sprintf("%s %s %s", offer.Address, offer.Postcode, offer.CityName),
 		CityName:      offer.CityName,
-		EnergyLabel:   offer.EnergieLabel,
 		NumberBedroom: offer.NumberBedroom,
 		Size:          c.parseHouseSize(offer.Size),
 		Price:         offer.RentPrice,

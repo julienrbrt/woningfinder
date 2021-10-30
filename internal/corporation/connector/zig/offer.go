@@ -66,10 +66,6 @@ type offerList struct {
 		Amountofrooms string `json:"amountOfRooms"`
 		ID            string `json:"id"`
 	} `json:"sleepingRoom"`
-	Energylabel struct {
-		Icon interface{} `json:"icon"`
-		ID   interface{} `json:"id"`
-	} `json:"energyLabel"`
 	Floor struct {
 		ID            interface{} `json:"id"`
 		Localizedname string      `json:"localizedName"`
@@ -243,11 +239,6 @@ type offerDetails struct {
 		ID            string `json:"id"`
 		Localizedname string `json:"localizedName"`
 	} `json:"sleepingRoom"`
-	Energylabel struct {
-		Icon          interface{} `json:"icon"`
-		ID            interface{} `json:"id"`
-		Localizedname string      `json:"localizedName"`
-	} `json:"energyLabel"`
 	Energyindex string `json:"energyIndex"`
 	Floor       struct {
 		Localizedname string `json:"localizedName"`
@@ -504,7 +495,6 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 		Type:          houseType,
 		Address:       fmt.Sprintf("%s %s-%s %s %s", offer.Street, offer.Housenumber, offer.Housenumberaddition, offer.Postalcode, offer.City.Name),
 		CityName:      offer.City.Name,
-		EnergyLabel:   c.parseEnergyLabel(offer),
 		NumberBedroom: numberBedroom,
 		Size:          offer.Areadwelling,
 		Price:         offer.Totalrent,
@@ -560,7 +550,8 @@ func (c *client) parseHousingType(offer offerList) corporation.HousingType {
 		return corporation.HousingTypeUndefined
 	}
 
-	if strings.EqualFold(offer.Dwellingtype.Localizedname, "appartement") || strings.Contains(strings.ToLower(offer.Dwellingtype.Localizedname), "studio") {
+	if strings.EqualFold(offer.Dwellingtype.Localizedname, "appartement") ||
+		strings.Contains(strings.ToLower(offer.Dwellingtype.Localizedname), "studio") {
 		return corporation.HousingTypeAppartement
 	}
 
@@ -577,15 +568,6 @@ func (c *client) parseSelectionMethod(offer *offerDetails) corporation.Selection
 	}
 
 	return corporation.SelectionRandom
-}
-
-func (c *client) parseEnergyLabel(offer *offerDetails) string {
-	id, ok := offer.Energylabel.ID.(int)
-	if !ok || id == 0 {
-		return ""
-	}
-
-	return string(rune('A' - 1 + id))
 }
 
 func (c *client) getExternalID(offer *offerDetails) string {

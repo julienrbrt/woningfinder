@@ -6,7 +6,6 @@ type Housing struct {
 	Address       string
 	CityName      string
 	CityDistrict  string
-	EnergyLabel   string
 	Price         float64
 	Size          float64
 	NumberBedroom int

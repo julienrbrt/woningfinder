@@ -247,17 +247,8 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		c.logger.Sugar().Info(err)
 	}
 
-	// TODO
-	// c.collector.OnHTML("#Overzicht", func(e *colly.HTMLElement) {
-	// 	// minFamilySize, maxFamilySize, minAge, maxAge int
-	// 	// fmt.Println(e)
-	// })
-
 	c.collector.OnHTML("#Kenmerken", func(e *colly.HTMLElement) {
 		table := e.DOM.ChildrenFiltered(".contentBlock")
-
-		// energy label
-		house.EnergyLabel = c.getContentValue("Energielabel", table)
 
 		// building year
 		house.BuildingYear, err = strconv.Atoi(c.getContentValue("Bouwjaar", table))
@@ -281,7 +272,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		house.Garage = strings.Contains(outside, "garage") || strings.Contains(outside, "parkeer")
 
 		// TODO add lift parsing
-
 	})
 
 	if err = c.collector.Visit(offerURL); err != nil {

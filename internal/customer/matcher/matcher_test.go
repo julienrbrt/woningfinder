@@ -41,7 +41,6 @@ var offer = corporation.Offer{
 		CityName:      city.Enschede.Name,
 		CityDistrict:  "deppenbroek",
 		Address:       "Beatrixstraat 1 R 7142BM Enschede",
-		EnergyLabel:   "A",
 		Price:         656.39,
 		Size:          80,
 		NumberBedroom: 2,

@@ -123,12 +123,6 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 		offer.Housing.Size += roomSize
 	})
 
-	// add energie label
-	energieLabel := e.ChildText("#Woning-page strong.tag-text")
-	if energieLabel != "" {
-		offer.Housing.EnergyLabel = energieLabel
-	}
-
 	// add building year
 	e.ForEach("div.infor-wrapper", func(_ int, el *colly.HTMLElement) {
 		buildingYear, err := strconv.Atoi(el.Text)
@@ -174,7 +168,8 @@ func (c *client) getHousingDetailsFeatures(offer *corporation.Offer, e *colly.HT
 func (c *client) parseHousingType(houseType string) corporation.HousingType {
 	houseType = strings.ToLower(houseType)
 
-	if strings.Contains(houseType, "appartement") || strings.Contains(houseType, "penthouse") {
+	if strings.Contains(houseType, "appartement") ||
+		strings.Contains(houseType, "penthouse") {
 		return corporation.HousingTypeAppartement
 	}
 

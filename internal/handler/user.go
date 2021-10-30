@@ -73,7 +73,6 @@ type updateUserInfoRequest struct {
 }
 
 // Bind permits go-chi router to verify the user input and marshal it
-// TODO update all well user user (right now only update housing prefernces)
 func (u *updateUserInfoRequest) Bind(r *http.Request) error {
 	return u.HasMinimal()
 }
@@ -84,7 +83,7 @@ func (*updateUserInfoRequest) Render(w http.ResponseWriter, r *http.Request) err
 }
 
 // UpdateUserInfo updates the user and/or its housing preferences
-// TODO update all well user user (right now only update housing prefernces)
+// TODO update all well user user (right now only update housing preferences)
 func (h *handler) UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 	// extract jwt
 	_, claims, err := jwtauth.FromContext(r.Context())
