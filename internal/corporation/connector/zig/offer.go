@@ -35,9 +35,8 @@ type offerDetails struct {
 		Name string `json:"name"`
 	} `json:"city"`
 	Dwellingtype struct {
-		Categorie           string `json:"categorie"`
-		Huurprijsduuractief bool   `json:"huurprijsDuurActief"`
-		Localizedname       string `json:"localizedName"`
+		Categorie     string `json:"categorie"`
+		Localizedname string `json:"localizedName"`
 	} `json:"dwellingType"`
 	Totalrent    float64 `json:"totalRent"`
 	Sleepingroom struct {
@@ -45,52 +44,25 @@ type offerDetails struct {
 		ID            string `json:"id"`
 		Localizedname string `json:"localizedName"`
 	} `json:"sleepingRoom"`
-	Garden                   bool `json:"garden"`
-	Balcony                  bool `json:"balcony"`
-	Minimumincome            int  `json:"minimumIncome"`
-	Maximumincome            int  `json:"maximumIncome"`
-	Minimumhouseholdsize     int  `json:"minimumHouseholdSize"`
-	Maximumhouseholdsize     int  `json:"maximumHouseholdSize"`
-	Minimumage               int  `json:"minimumAge"`
-	Maximumage               int  `json:"maximumAge"`
-	Inwonendekinderenminimum int  `json:"inwonendeKinderenMinimum"`
-	Inwonendekinderenmaximum int  `json:"inwonendeKinderenMaximum"`
-	Model                    struct {
-		Modelcategorie struct {
-			Icon          string `json:"icon"`
-			Code          string `json:"code"`
-			Toonopwebsite bool   `json:"toonOpWebsite"`
-		} `json:"modelCategorie"`
-		Incode                            string `json:"inCode"`
-		Isvoorextraaanbod                 bool   `json:"isVoorExtraAanbod"`
-		Ishospiteren                      bool   `json:"isHospiteren"`
-		Advertentiesluitennaeerstereactie bool   `json:"advertentieSluitenNaEersteReactie"`
-		Einddatumtonen                    bool   `json:"einddatumTonen"`
-		Aantalreactiestonen               bool   `json:"aantalReactiesTonen"`
-		Slaagkanstonen                    bool   `json:"slaagkansTonen"`
-		ID                                string `json:"id"`
-		Localizedname                     string `json:"localizedName"`
-	} `json:"model"`
-	Rentbuy           string        `json:"rentBuy"`
-	Publicationdate   string        `json:"publicationDate"`
-	Closingdate       string        `json:"closingDate"`
-	Numberofreactions int           `json:"numberOfReactions"`
-	Assignmentid      int           `json:"assignmentID"`
-	Latitude          string        `json:"latitude"`
-	Longitude         string        `json:"longitude"`
-	Floorplans        []interface{} `json:"floorplans"`
-	Pictures          []struct {
+	Garden               bool   `json:"garden"`
+	Balcony              bool   `json:"balcony"`
+	Minimumincome        int    `json:"minimumIncome"`
+	Maximumincome        int    `json:"maximumIncome"`
+	Minimumhouseholdsize int    `json:"minimumHouseholdSize"`
+	Maximumhouseholdsize int    `json:"maximumHouseholdSize"`
+	Minimumage           int    `json:"minimumAge"`
+	Maximumage           int    `json:"maximumAge"`
+	Rentbuy              string `json:"rentBuy"`
+	Assignmentid         int    `json:"assignmentID"`
+	Pictures             []struct {
 		Label string `json:"label"`
 		URI   string `json:"uri"`
 		Type  string `json:"type"`
 	} `json:"pictures"`
-	Areadwelling      float64 `json:"areaDwelling"`
-	Areaperceel       string  `json:"areaPerceel"`
-	Iszelfstandig     bool    `json:"isZelfstandig"`
-	Urlkey            string  `json:"urlKey"`
-	Availablefromdate string  `json:"availableFromDate"`
-	ID                string  `json:"id"`
-	Isgepubliceerd    bool    `json:"isGepubliceerd"`
+	Areadwelling  float64 `json:"areaDwelling"`
+	Iszelfstandig bool    `json:"isZelfstandig"`
+	Urlkey        string  `json:"urlKey"`
+	ID            string  `json:"id"`
 }
 
 func offerRequest() networking.Request {
@@ -191,7 +163,7 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	if strings.Contains(offer.Dwellingtype.Localizedname, "studio") {
 		numberBedroom = 0
 	} else if numberBedroom == 0 {
-		numberBedroom = 1 // TODO TO FIX
+		numberBedroom = 1
 	}
 
 	house := corporation.Housing{
@@ -221,17 +193,16 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	}
 
 	return corporation.Offer{
-		ExternalID:      c.getExternalID(offer),
-		Housing:         house,
-		URL:             fmt.Sprintf("%s/aanbod/te-huur/details/%s", c.corporation.URL, offer.Urlkey),
-		RawPictureURL:   rawPictureURL,
-		SelectionMethod: c.parseSelectionMethod(offer),
-		MinFamilySize:   offer.Minimumhouseholdsize,
-		MaxFamilySize:   offer.Maximumhouseholdsize,
-		MinAge:          offer.Minimumage,
-		MaxAge:          offer.Maximumage,
-		MinimumIncome:   offer.Minimumincome,
-		MaximumIncome:   offer.Maximumincome,
+		ExternalID:    c.getExternalID(offer),
+		Housing:       house,
+		URL:           fmt.Sprintf("%s/aanbod/te-huur/details/%s", c.corporation.URL, offer.Urlkey),
+		RawPictureURL: rawPictureURL,
+		MinFamilySize: offer.Minimumhouseholdsize,
+		MaxFamilySize: offer.Maximumhouseholdsize,
+		MinAge:        offer.Minimumage,
+		MaxAge:        offer.Maximumage,
+		MinimumIncome: offer.Minimumincome,
+		MaximumIncome: offer.Maximumincome,
 	}
 }
 
@@ -247,18 +218,6 @@ func (c *client) parseHousingType(offer offerList) corporation.HousingType {
 	}
 
 	return corporation.HousingTypeHouse
-}
-
-func (c *client) parseSelectionMethod(offer *offerDetails) corporation.SelectionMethod {
-	if offer.Model.Modelcategorie.Code == "inschrijfduur" {
-		return corporation.SelectionRegistrationDate
-	}
-
-	if offer.Model.Modelcategorie.Code == "reactiedatum" {
-		return corporation.SelectionRandom
-	}
-
-	return corporation.SelectionFirstComeFirstServed
 }
 
 func (c *client) getExternalID(offer *offerDetails) string {

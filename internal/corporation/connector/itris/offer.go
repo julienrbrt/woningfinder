@@ -24,9 +24,6 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			var offer corporation.Offer
 			var err error
 
-			// add selection method
-			offer.SelectionMethod = corporation.SelectionRandom // TODO to fix - all houses from onshuis are random
-
 			// get offer url
 			offer.URL = c.corporation.APIEndpoint.String() + e.ChildAttr(detailsHousingChildAttr, "href")
 			offer.ExternalID = e.Attr("data-aanbod-id")

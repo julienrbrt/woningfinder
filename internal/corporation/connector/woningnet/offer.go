@@ -109,7 +109,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 				continue
 			}
 
-			result, err := c.Map(offer, houseType, selectionMethod)
+			result, err := c.Map(offer, houseType)
 			if err != nil {
 				c.logger.Sugar().Warnf("woningnet connector: error parsing %s: %w", offer.Address, err)
 				continue
@@ -154,7 +154,7 @@ func (c *client) getPaginatedOffers(commandURL string, resp response) ([]offer, 
 	return offers, nil
 }
 
-func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMethod corporation.SelectionMethod) (corporation.Offer, error) {
+func (c *client) Map(offer offer, houseType corporation.HousingType) (corporation.Offer, error) {
 	var err error
 	var minFamilySize, maxFamilySize, minAge, maxAge int
 	var offerURL = c.corporation.URL + offer.AdvertentieURL
@@ -205,8 +205,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		house.Balcony = strings.Contains(outside, "balkon") || strings.Contains(outside, "terras")
 		house.Garden = strings.Contains(outside, "tuin")
 		house.Garage = strings.Contains(outside, "garage") || strings.Contains(outside, "parkeer")
-
-		// TODO add lift parsing
+		house.Elevator = strings.Contains(e.Text, "lift")
 	})
 
 	if err = c.collector.Visit(offerURL); err != nil {
@@ -214,15 +213,14 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 	}
 
 	return corporation.Offer{
-		ExternalID:      fmt.Sprintf("%s/%s", offer.PublicatieID, offer.CurrentRegioCode),
-		Housing:         house,
-		URL:             offerURL,
-		RawPictureURL:   rawPictureURL,
-		SelectionMethod: selectionMethod,
-		MinFamilySize:   minFamilySize,
-		MaxFamilySize:   maxFamilySize,
-		MinAge:          minAge,
-		MaxAge:          maxAge,
+		ExternalID:    fmt.Sprintf("%s/%s", offer.PublicatieID, offer.CurrentRegioCode),
+		Housing:       house,
+		URL:           offerURL,
+		RawPictureURL: rawPictureURL,
+		MinFamilySize: minFamilySize,
+		MaxFamilySize: maxFamilySize,
+		MinAge:        minAge,
+		MaxAge:        maxAge,
 	}, nil
 }
 

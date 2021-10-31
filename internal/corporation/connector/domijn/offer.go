@@ -37,9 +37,6 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			var offer corporation.Offer
 			var err error
 
-			// set selection method - domijn is always random selection
-			offer.SelectionMethod = corporation.SelectionRandom
-
 			// get offer url
 			offer.URL = c.corporation.APIEndpoint.String() + strings.ReplaceAll(e.ChildAttr("div.image-wrapper a", "href"), " ", "%20") // manual space escaping
 

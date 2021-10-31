@@ -42,9 +42,6 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			var offer corporation.Offer
 			var err error
 
-			// set selection method - ikwilhuren is always random selection
-			offer.SelectionMethod = corporation.SelectionRandom
-
 			// get offer url
 			offer.URL = e.ChildAttr("div.search-result-button a", "href")
 

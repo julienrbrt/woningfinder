@@ -27,23 +27,22 @@ type offer struct {
 		MinInkomen       int  `json:"min_inkomen"`
 		MinLeeftijd      int  `json:"min_leeftijd"`
 	} `json:"criteria"`
-	Address           string  `json:"adres"`
-	District          string  `json:"wijk"`
-	CityName          string  `json:"plaats"`
-	Postcode          string  `json:"postcode"`
-	RentPrice         float64 `json:"relevante_huurprijs,omitempty"`
-	NumberBedroom     int     `json:"slaapkamers"`
-	CV                bool    `json:"cv"`
-	Balcony           bool    `json:"balkon"`
-	Garage            bool    `json:"garage"`
-	ForRent           bool    `json:"ishuur"`
-	HasLowRentPrice   bool    `json:"ishuurlaag"`
-	Lift              bool    `json:"lift"`
-	Garden            string  `json:"tuin"`
-	IsSelectionRandom bool    `json:"loting"`
-	Size              string  `json:"woonoppervlak"`
-	Accessible        bool    `json:"rolstoeltoegankelijk"`
-	Thumbnail         string  `json:"thumbnail"`
+	Address         string  `json:"adres"`
+	District        string  `json:"wijk"`
+	CityName        string  `json:"plaats"`
+	Postcode        string  `json:"postcode"`
+	RentPrice       float64 `json:"relevante_huurprijs,omitempty"`
+	NumberBedroom   int     `json:"slaapkamers"`
+	CV              bool    `json:"cv"`
+	Balcony         bool    `json:"balkon"`
+	Garage          bool    `json:"garage"`
+	ForRent         bool    `json:"ishuur"`
+	HasLowRentPrice bool    `json:"ishuurlaag"`
+	Lift            bool    `json:"lift"`
+	Garden          string  `json:"tuin"`
+	Size            string  `json:"woonoppervlak"`
+	Accessible      bool    `json:"rolstoeltoegankelijk"`
+	Thumbnail       string  `json:"thumbnail"`
 }
 
 func offerRequest() (networking.Request, error) {
@@ -137,17 +136,16 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 	}
 
 	return corporation.Offer{
-		ExternalID:      offer.ID,
-		Housing:         house,
-		URL:             fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", offer.ID),
-		RawPictureURL:   rawPictureURL,
-		SelectionMethod: c.parseSelectionMethod(offer.IsSelectionRandom),
-		MinFamilySize:   offer.Criteria.MinGezinsgrootte,
-		MaxFamilySize:   offer.Criteria.MaxGezinsgrootte,
-		MinAge:          offer.Criteria.MinLeeftijd,
-		MaxAge:          offer.Criteria.MaxLeeftijd,
-		MinimumIncome:   offer.Criteria.MinInkomen,
-		MaximumIncome:   offer.Criteria.MaxInkomen,
+		ExternalID:    offer.ID,
+		Housing:       house,
+		URL:           fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", offer.ID),
+		RawPictureURL: rawPictureURL,
+		MinFamilySize: offer.Criteria.MinGezinsgrootte,
+		MaxFamilySize: offer.Criteria.MaxGezinsgrootte,
+		MinAge:        offer.Criteria.MinLeeftijd,
+		MaxAge:        offer.Criteria.MaxLeeftijd,
+		MinimumIncome: offer.Criteria.MinInkomen,
+		MaximumIncome: offer.Criteria.MaxInkomen,
 	}
 }
 
@@ -172,14 +170,6 @@ func (c *client) parseHouseSize(houseSize string) float64 {
 	size, _ := strconv.ParseFloat(strings.ReplaceAll(houseSize, ",", "."), 32)
 
 	return size
-}
-
-func (c *client) parseSelectionMethod(random bool) corporation.SelectionMethod {
-	if random {
-		return corporation.SelectionRandom
-	}
-
-	return corporation.SelectionFirstComeFirstServed
 }
 
 func (c *client) parsePictureURL(path string) (*url.URL, error) {
