@@ -10,11 +10,12 @@ type Offers struct {
 
 // Offer defines a house or an appartement available in a housing corporation
 type Offer struct {
-	Housing                      Housing
-	SelectionMethod              SelectionMethod
-	URL                          string
-	RawPictureURL                *url.URL
-	ExternalID                   string // identifier of the house at the housing coporation in order to react
+	Housing         Housing
+	SelectionMethod SelectionMethod
+	URL             string
+	RawPictureURL   *url.URL
+	// identifier of the house at the housing coporation in order to react
+	ExternalID                   string
 	MinFamilySize, MaxFamilySize int
 	MinAge, MaxAge               int
 	MinimumIncome                int

@@ -9,7 +9,6 @@ type Housing struct {
 	Price         float64
 	Size          float64
 	NumberBedroom int
-	BuildingYear  int
 	Garden        bool
 	Garage        bool
 	Elevator      bool

@@ -60,7 +60,6 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offer.Housing.NumberBedroom, err = strconv.Atoi(e.Attr("data-kamers"))
 			if err != nil {
 				c.logger.Sugar().Infof("itris connector: error while parsing number bedroom of %s: %w", offer.Housing.Address, err)
-				return
 			}
 
 			// create new offer
@@ -121,17 +120,6 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 			return
 		}
 		offer.Housing.Size += roomSize
-	})
-
-	// add building year
-	e.ForEach("div.infor-wrapper", func(_ int, el *colly.HTMLElement) {
-		buildingYear, err := strconv.Atoi(el.Text)
-		if err != nil {
-			return
-		}
-		if buildingYear > 1800 { // random building year so high that it cannot be a number of room
-			offer.Housing.BuildingYear = buildingYear
-		}
 	})
 
 	// part of housing details can be found in housing description (accessibility)

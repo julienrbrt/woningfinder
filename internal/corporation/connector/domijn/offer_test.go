@@ -35,7 +35,6 @@ func Test_FetchOffer(t *testing.T) {
 		a.True(offer.Housing.Price > 0)
 		// a.True(offer.Housing.Size > 0) // not supported by domijn
 		a.True(offer.Housing.NumberBedroom > 0)
-		a.True(offer.Housing.BuildingYear > 0)
 
 		a.NotEmpty(offer.SelectionMethod)
 		a.NotEmpty(offer.URL)

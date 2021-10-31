@@ -126,7 +126,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 		case "Slaapkamers":
 			offer.Housing.NumberBedroom, err = strconv.Atoi(cleanProperty(el.Text, property))
 			if err != nil {
-				return
+				c.logger.Sugar().Infof("domijn connector: error parsing number bedroom of %s: %w", offer.Housing.Address, err)
 			}
 		case "Tuin / Balkon":
 			switch strings.ToLower(cleanProperty(el.Text, property)) {
@@ -134,11 +134,6 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 				offer.Housing.Balcony = true
 			case "tuin":
 				offer.Housing.Garden = true
-			}
-		case "Bouwjaar":
-			offer.Housing.BuildingYear, err = strconv.Atoi(cleanProperty(el.Text, property))
-			if err != nil {
-				return
 			}
 		case "Lift":
 			offer.Housing.Elevator = strings.EqualFold(cleanProperty(el.Text, property), "ja")

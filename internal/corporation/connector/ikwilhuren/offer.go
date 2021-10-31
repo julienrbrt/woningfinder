@@ -60,9 +60,12 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			}
 
 			// get location
-			cityRaw := strings.Split(strings.ReplaceAll(e.ChildText("h3 > .postal-code.plaats"), " - Centrum", ""), " ")
-			offer.Housing.CityName = cityRaw[len(cityRaw)-1]
-			offer.Housing.Address = fmt.Sprintf("%s, %s", e.ChildText("h3 > .street-name.straat"), e.ChildText("h3 > .postal-code.plaats"))
+			rawCity := e.ChildText("h3 > .postal-code.plaats")
+			offer.Housing.CityName, err = c.parseCity(rawCity)
+			if err != nil {
+				return
+			}
+			offer.Housing.Address = fmt.Sprintf("%s, %s", e.ChildText("h3 > .street-name.straat"), rawCity)
 			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 			if err != nil {
 				c.logger.Sugar().Infof("ikwilhuren connector: could not get city district of %s: %w", offer.Housing.Address, err)
@@ -139,7 +142,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	// parse housing characteristics
 	offer.Housing.NumberBedroom, err = strconv.Atoi(e.ChildText("#Main_Aantal_Slaapkamers > dd.text"))
 	if err != nil {
-		return
+		c.logger.Sugar().Infof("ikwilhuren connector: error parsing number bedroom of %s: %w", offer.Housing.Address, err)
 	}
 
 	offer.Housing.Size, err = strconv.ParseFloat(strings.ReplaceAll(e.ChildText("#Main_Woonopp > dd.text"), " m²", ""), 32)
@@ -202,4 +205,21 @@ func (c *client) parseExternalID(rawMessage string) (string, error) {
 	}
 
 	return rawID[0].Sku, nil
+}
+
+func (c *client) parseCity(rawCity string) (string, error) {
+	if len(rawCity) < 2 {
+		return "", fmt.Errorf("a city cannot have less than 2 charaters: got %s", rawCity)
+	}
+
+	// clean city data
+	if strings.Contains(rawCity, " - ") {
+		rawCity = strings.Split(rawCity, " - ")[0]
+	}
+
+	if strings.Contains(rawCity, " (") {
+		rawCity = strings.Split(rawCity, " (")[0]
+	}
+
+	return rawCity, nil
 }

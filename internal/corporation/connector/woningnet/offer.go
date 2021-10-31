@@ -255,12 +255,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 	c.collector.OnHTML("#Kenmerken", func(e *colly.HTMLElement) {
 		table := e.DOM.ChildrenFiltered(".contentBlock")
 
-		// building year
-		house.BuildingYear, err = strconv.Atoi(c.getContentValue("Bouwjaar", table))
-		if err != nil {
-			c.logger.Sugar().Infof("woningnet connector: error parsing building year of %s: %w", house.Address, err)
-		}
-
 		// number bedroom
 		house.NumberBedroom, err = c.parseBedroom(c.getContentValue("Aantal kamers (incl. woonkamer)", table))
 		if err != nil {
