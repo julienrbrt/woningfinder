@@ -44,7 +44,6 @@ var offer = corporation.Offer{
 		Price:         656.39,
 		Size:          80,
 		NumberBedroom: 2,
-		BuildingYear:  2010,
 		Garden:        false,
 		Garage:        false,
 		Elevator:      true,
