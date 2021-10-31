@@ -13,14 +13,8 @@ import (
 const methodLogin = "Login"
 
 type loginResponse struct {
-	Code     string `json:"code"`
-	Success  bool   `json:"success"`
-	Userinfo struct {
-		Name     string `json:"fullname"`
-		Gender   string `json:"geslacht"`
-		Age      int    `json:"leeftijd"`
-		Postcode string `json:"postcode"`
-	} `json:"userinfo"`
+	Code    string `json:"code"`
+	Success bool   `json:"success"`
 }
 
 // Authenticate to De Woonplaats

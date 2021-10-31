@@ -18,5 +18,5 @@ type Offer struct {
 	ExternalID                   string
 	MinFamilySize, MaxFamilySize int
 	MinAge, MaxAge               int
-	MinimumIncome                int
+	MinimumIncome, MaximumIncome int
 }

@@ -30,80 +30,19 @@ type response struct {
 }
 
 type offer struct {
-	Address                     string      `json:"Adres"`
-	CityAndDistrict             string      `json:"PlaatsWijk"`
-	Omschrijving                string      `json:"Omschrijving"`
-	Aanbieder                   string      `json:"Aanbieder"`
-	Prijs                       string      `json:"Prijs"`
-	Kamers                      string      `json:"Kamers"`
-	RawPictureURL               string      `json:"AfbeeldingUrl"`
-	SoortWoning                 interface{} `json:"SoortWoning"`
-	Slaagkans                   interface{} `json:"Slaagkans"`
-	SlaagkansText               interface{} `json:"SlaagkansText"`
-	SelectionDate               time.Time   `json:"PublicatieEinddatum"`
-	PublicatieBegindatum        time.Time   `json:"PublicatieBegindatum"`
-	PublicatieEinddatumVolledig string      `json:"PublicatieEinddatumVolledig"`
-	PublicatieWachttijd         string      `json:"PublicatieWachttijd"`
-	PublicatieBeschikbaarPer    string      `json:"PublicatieBeschikbaarPer"`
-	IsToonTegels                bool        `json:"IsToonTegels"`
-	Status                      string      `json:"Status"`
-	AantalReacties              interface{} `json:"AantalReacties"`
-	VoorlopigePositie           interface{} `json:"VoorlopigePositie"`
-	AantalWoningen              interface{} `json:"AantalWoningen"`
-	AantalBeschikbaar           interface{} `json:"AantalBeschikbaar"`
-	PublicatieID                string      `json:"PublicatieId"`
-	ResterendetijdUur           float64     `json:"ResterendetijdUur"`
-	ResterendetijdDagen         int         `json:"ResterendetijdDagen"`
-	ShowResterendeTijd          bool        `json:"ShowResterendeTijd"`
-	ResterendeTijdMinderDanUur  bool        `json:"ResterendeTijdMinderDanUur"`
-	AdvertentieURL              string      `json:"AdvertentieUrl"`
-	MinimalePositie             interface{} `json:"MinimalePositie"`
-	ResultaatIndex              int         `json:"ResultaatIndex"`
-	PreviewURL                  string      `json:"PreviewUrl"`
-	Latitude                    float64     `json:"Latitude"`
-	Longitude                   float64     `json:"Longitude"`
-	MapsIcon                    struct {
-		Origin struct {
-			X string `json:"X"`
-			Y string `json:"Y"`
-		} `json:"Origin"`
-		Size struct {
-			X string `json:"X"`
-			Y string `json:"Y"`
-		} `json:"Size"`
-		CSSClass string `json:"CssClass"`
-		Label    string `json:"Label"`
-	} `json:"MapsIcon"`
-	ToonMessageList                 bool   `json:"ToonMessageList"`
-	PublicatieModel                 string `json:"PublicatieModel"`
-	CurrentRegioCode                string `json:"CurrentRegioCode"`
-	IconName                        string `json:"IconName"`
-	PrijsHelpText                   string `json:"PrijsHelpText"`
-	IsNieuw                         bool   `json:"IsNieuw"`
-	IsWoonwensMatch                 bool   `json:"IsWoonwensMatch"`
-	Woonoppervlakte                 string `json:"Woonoppervlakte"`
-	DetailSoortCode                 string `json:"DetailSoortCode"`
-	HouseType                       string `json:"DetailSoortOmschrijving"`
-	PublicatieModulesCode           string `json:"PublicatieModulesCode"`
-	RegioCode                       string `json:"RegioCode"`
-	PublicatieDetailModel           string `json:"PublicatieDetailModel"`
-	IsKoop                          bool   `json:"IsKoop"`
-	IsSocialeHuur                   bool   `json:"IsSocialeHuur"`
-	IsVrijeSectorhuur               bool   `json:"IsVrijeSectorhuur"`
-	IsVrijesectorOfKoop             bool   `json:"IsVrijesectorOfKoop"`
-	IsLoting                        bool   `json:"IsLoting"`
-	IsGarage                        bool   `json:"IsGarage"`
-	IsTeWoon                        bool   `json:"IsTeWoon"`
-	IsDirectTeHuur                  bool   `json:"IsDirectTeHuur"`
-	WoningType                      int    `json:"WoningType"`
-	WoningTypeCSSClass              string `json:"WoningTypeCssClass"`
-	Samenvatting                    string `json:"Samenvatting"`
-	Toegankelijkheidslabel          string `json:"Toegankelijkheidslabel"`
-	ToegankelijkheidslabelCSSClass  string `json:"ToegankelijkheidslabelCssClass"`
-	ToegankelijkheidslabelHelpTekst string `json:"ToegankelijkheidslabelHelpTekst"`
-	HasFlexibelhurenIndicator       bool   `json:"HasFlexibelhurenIndicator"`
-	FlexibelhurenIndicatorCSSClass  string `json:"FlexibelhurenIndicatorCssClass"`
-	ToonSlaagkans                   bool   `json:"ToonSlaagkans"`
+	Address                        string    `json:"Adres"`
+	CityAndDistrict                string    `json:"PlaatsWijk"`
+	Prijs                          string    `json:"Prijs"`
+	RawPictureURL                  string    `json:"AfbeeldingUrl"`
+	SelectionDate                  time.Time `json:"PublicatieEinddatum"`
+	PublicatieBegindatum           time.Time `json:"PublicatieBegindatum"`
+	PublicatieID                   string    `json:"PublicatieId"`
+	AdvertentieURL                 string    `json:"AdvertentieUrl"`
+	PublicatieModel                string    `json:"PublicatieModel"`
+	CurrentRegioCode               string    `json:"CurrentRegioCode"`
+	Woonoppervlakte                string    `json:"Woonoppervlakte"`
+	HouseType                      string    `json:"DetailSoortOmschrijving"`
+	ToegankelijkheidslabelCSSClass string    `json:"ToegankelijkheidslabelCssClass"`
 }
 
 // offerRequest builds a WoningNet request
