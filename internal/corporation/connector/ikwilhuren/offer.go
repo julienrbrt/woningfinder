@@ -12,6 +12,8 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
+const offerReserved = "Onder optie"
+
 func (c *client) GetOffers() ([]corporation.Offer, error) {
 	offers := map[string]*corporation.Offer{}
 
@@ -46,6 +48,11 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			// get offer url
 			offer.URL = e.ChildAttr("div.search-result-button a", "href")
 
+			// skip houses under reservation
+			if e.ChildText("figure span.status-sticker") == offerReserved {
+				return
+			}
+
 			// get image url
 			offer.RawPictureURL, err = c.parsePictureURL(e.ChildAttr("figure img.img-fluid", "src"))
 			if err != nil {
@@ -59,6 +66,17 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 			if err != nil {
 				c.logger.Sugar().Infof("ikwilhuren connector: could not get city district of %s: %w", offer.Housing.Address, err)
+			}
+
+			// parse price
+			priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("div.huurprijs span.page-price"), ".", ""), "€", ""))
+			offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32)
+			if offer.Housing.Price < 100 { // TODO generalize that everywhere - for new skip all "houses" with a price lower than 100€
+				return
+			}
+			if err != nil {
+				c.logger.Sugar().Infof("ikwilhuren connector: error while parsing price of %s: %w", offer.Housing.Address, err)
+				return
 			}
 
 			// get housing type
@@ -115,14 +133,6 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	offer.ExternalID, err = c.parseExternalID(e.ChildText("script.saswp-schema-markup-output"))
 	if err != nil {
 		c.logger.Sugar().Infof("ikwilhuren connector: error while parsing external iD of %s: %w", offer.Housing.Address, err)
-		return
-	}
-
-	// parse price
-	priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("strong span.page-price"), ".", ""), "€", ""))
-	offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32)
-	if err != nil {
-		c.logger.Sugar().Infof("ikwilhuren connector: error while parsing price of %s: %w", offer.Housing.Address, err)
 		return
 	}
 
