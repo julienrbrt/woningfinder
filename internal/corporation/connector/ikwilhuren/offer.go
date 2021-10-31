@@ -207,6 +207,8 @@ func (c *client) parseExternalID(rawMessage string) (string, error) {
 }
 
 func (c *client) parseCity(rawCity string) (string, error) {
+	rawCity = strings.TrimSpace(rawCity)
+
 	if len(rawCity) < 2 {
 		return "", fmt.Errorf("a city cannot have less than 2 charaters: got %s", rawCity)
 	}
