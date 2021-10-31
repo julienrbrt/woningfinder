@@ -39,9 +39,9 @@ func (s *service) PushOffers(client connector.Client, corp corporation.Corporati
 	}
 
 	// verify supported cities
-	if err := s.verifyCorporationCities(offers, corp); err != nil {
-		return fmt.Errorf("error verifying corporation %s cities: %w", corp.Name, err)
-	}
+	// if err := s.verifyCorporationCities(offers, corp); err != nil {
+	// 	return fmt.Errorf("error verifying corporation %s cities: %w", corp.Name, err)
+	// }
 
 	return nil
 }
