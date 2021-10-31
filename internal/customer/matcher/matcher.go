@@ -28,12 +28,12 @@ func (m *matcher) matchCriteria(user customer.User, offer corporation.Offer) boo
 	age := time.Now().Year() - user.BirthYear
 
 	// checks if offer age is set and check boundaries
-	if offer.MinAge > 0 && ((age < offer.MinAge) || (offer.MaxAge > 0 && age > offer.MaxAge)) {
+	if (offer.MinAge > 0 && age < offer.MinAge) || (offer.MaxAge > 0 && age > offer.MaxAge) {
 		return false
 	}
 
 	// checks if offer family size is set and check boundaries
-	if offer.MinFamilySize > 0 && (user.FamilySize < offer.MinFamilySize) || (offer.MaxFamilySize > 0 && user.FamilySize > offer.MaxFamilySize) {
+	if (offer.MinFamilySize > 0 && user.FamilySize < offer.MinFamilySize) || (offer.MaxFamilySize > 0 && user.FamilySize > offer.MaxFamilySize) {
 		return false
 	}
 
@@ -44,7 +44,7 @@ func (m *matcher) matchCriteria(user customer.User, offer corporation.Offer) boo
 	}
 
 	// check incomes boundaries based on offer requirement
-	if offer.MinimumIncome > user.YearlyIncome {
+	if (offer.MinimumIncome > 0 && offer.MinimumIncome > user.YearlyIncome) || (offer.MaximumIncome > 0 && offer.MaximumIncome < user.YearlyIncome) {
 		return false
 	}
 

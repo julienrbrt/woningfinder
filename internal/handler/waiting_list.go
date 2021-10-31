@@ -10,6 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/util"
+	"go.uber.org/zap"
 )
 
 type waitinglistFormRequest struct {
@@ -57,9 +58,9 @@ func (h *handler) WaitingListForm(w http.ResponseWriter, r *http.Request) {
 
 	// save waiting list
 	if err := h.userService.CreateWaitingList(&customer.WaitingList{Email: waitingListRequest.Email, CityName: waitingListRequest.CityName}); err != nil {
-		errorMsg := fmt.Errorf("error while adding %s to the waiting list", waitingListRequest.Email)
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		errorMsg := fmt.Sprintf("error while adding %s to the waiting list", waitingListRequest.Email)
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 

@@ -92,7 +92,7 @@ func Test_MatchCriteria_PassendToewijzen(t *testing.T) {
 	a.False(matcher.MatchOffer(user, offer))
 }
 
-func Test_MatchCriteria_MinimumIncome(t *testing.T) {
+func Test_MatchCriteria_Incomes(t *testing.T) {
 	a := assert.New(t)
 	user := user
 	offer := offer
@@ -103,6 +103,8 @@ func Test_MatchCriteria_MinimumIncome(t *testing.T) {
 	a.False(matcher.MatchOffer(user, offer))
 	user.YearlyIncome = 50000
 	a.True(matcher.MatchOffer(user, offer))
+	offer.MaximumIncome = 48000
+	a.False(matcher.MatchOffer(user, offer))
 }
 
 func Test_MatchPreferences_Location(t *testing.T) {

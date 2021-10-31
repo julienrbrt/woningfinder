@@ -8,9 +8,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 )
 
-var (
-	parser = cron.NewParser(cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor)
-)
+var parser = cron.NewParser(cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor)
 
 // CorporationScheduler creates schedules (when to fetch their offer) given a selection time for a housing corporation
 func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {

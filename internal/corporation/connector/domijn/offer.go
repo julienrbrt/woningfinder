@@ -8,6 +8,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"go.uber.org/zap"
 )
 
 func (c *client) GetOffers() ([]corporation.Offer, error) {
@@ -27,7 +28,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			}
 
 			if err := paginationCollector.Visit(c.corporation.APIEndpoint.String() + paginatedURL); err != nil {
-				c.logger.Sugar().Warnf("domijn connector: error while checking pagination %s: %w", c.corporation.APIEndpoint.String()+paginatedURL, err)
+				c.logger.Warn("error while checking pagination", zap.String("url", c.corporation.APIEndpoint.String()+paginatedURL), zap.Error(err), logConnector)
 			}
 		})
 	})
@@ -37,16 +38,13 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			var offer corporation.Offer
 			var err error
 
-			// set selection method - domijn is always random selection
-			offer.SelectionMethod = corporation.SelectionRandom
-
 			// get offer url
 			offer.URL = c.corporation.APIEndpoint.String() + strings.ReplaceAll(e.ChildAttr("div.image-wrapper a", "href"), " ", "%20") // manual space escaping
 
 			// get image url
 			offer.RawPictureURL, err = c.parsePictureURL(e.ChildAttr("div.image-wrapper a img", "src"))
 			if err != nil {
-				c.logger.Sugar().Info(err)
+				c.logger.Info("failed parsing picture url", zap.Error(err), logConnector)
 			}
 
 			// get housing type
@@ -60,7 +58,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offer.Housing.Address = fmt.Sprintf("%s, %s", e.ChildText("div.info > h1"), offer.Housing.CityName)
 			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 			if err != nil {
-				c.logger.Sugar().Infof("domijn connector: could not get city district of %s: %w", offer.Housing.Address, err)
+				c.logger.Info("could not get city district", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 			}
 
 			// create new offer
@@ -68,7 +66,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			// visit offer url
 			if err := detailCollector.Visit(offer.URL); err != nil {
-				c.logger.Sugar().Warnf("domijn connector: error while checking offer details %s: %w", offer.Housing.Address, err)
+				c.logger.Warn("error while checking offer details", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 			}
 		})
 	}
@@ -114,7 +112,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("span.price"), ",", "."), "€", ""))
 	offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32)
 	if err != nil {
-		c.logger.Sugar().Infof("domijn connector: error while parsing price of %s: %w", offer.Housing.Address, err)
+		c.logger.Info("error while parsing price", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 		return
 	}
 
@@ -126,7 +124,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 		case "Slaapkamers":
 			offer.Housing.NumberBedroom, err = strconv.Atoi(cleanProperty(el.Text, property))
 			if err != nil {
-				c.logger.Sugar().Infof("domijn connector: error parsing number bedroom of %s: %w", offer.Housing.Address, err)
+				c.logger.Info("error parsing number bedroom", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 			}
 		case "Tuin / Balkon":
 			switch strings.ToLower(cleanProperty(el.Text, property)) {
@@ -173,7 +171,7 @@ func (c *client) parsePictureURL(path string) (*url.URL, error) {
 
 	pictureURL, err := url.Parse(c.corporation.APIEndpoint.String() + strings.ReplaceAll(path, "280/190", "600/400"))
 	if err != nil {
-		return nil, fmt.Errorf("domijn connector: failed to parse picture url %s: %w", path, err)
+		return nil, fmt.Errorf("failed to parse picture url %s: %w", path, err)
 	}
 
 	return pictureURL, nil

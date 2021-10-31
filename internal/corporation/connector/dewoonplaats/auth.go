@@ -13,14 +13,8 @@ import (
 const methodLogin = "Login"
 
 type loginResponse struct {
-	Code     string `json:"code"`
-	Success  bool   `json:"success"`
-	Userinfo struct {
-		Name     string `json:"fullname"`
-		Gender   string `json:"geslacht"`
-		Age      int    `json:"leeftijd"`
-		Postcode string `json:"postcode"`
-	} `json:"userinfo"`
+	Code    string `json:"code"`
+	Success bool   `json:"success"`
 }
 
 // Authenticate to De Woonplaats
@@ -37,11 +31,11 @@ func (c *client) Login(username, password string) error {
 
 	var response loginResponse
 	if err := json.Unmarshal(resp.Result, &response); err != nil {
-		return fmt.Errorf("de woonplaats connector: error parsing login result %v: %w", resp.Result, err)
+		return fmt.Errorf("error parsing login result %v: %w", resp.Result, err)
 	}
 
 	if !response.Success {
-		return fmt.Errorf("de woonplaats connector: error authentication %s: %w", response.Code, connector.ErrAuthFailed)
+		return fmt.Errorf("error authentication %s: %w", response.Code, connector.ErrAuthFailed)
 	}
 
 	return nil

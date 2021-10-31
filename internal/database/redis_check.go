@@ -1,11 +1,15 @@
 package database
 
-import "errors"
+import (
+	"errors"
+
+	"go.uber.org/zap"
+)
 
 // SetUUID saves an UUID in redis
 func (r *redisClient) SetUUID(uuid string) {
 	if err := r.Set(uuid, true); err != nil {
-		r.logger.Sugar().Errorf("error when saving reminder state to redis: %w", err)
+		r.logger.Error("error when saving reminder state to redis", zap.Error(err))
 	}
 }
 
@@ -14,7 +18,7 @@ func (r *redisClient) HasUUID(uuid string) bool {
 	_, err := r.Get(uuid)
 	if err != nil {
 		if !errors.Is(err, ErrRedisKeyNotFound) {
-			r.logger.Sugar().Errorf("error when getting state reminder from redis: %w", err)
+			r.logger.Error("error when getting state reminder from redis", zap.Error(err))
 		}
 
 		// does not have UUID

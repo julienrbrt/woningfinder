@@ -13,6 +13,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/util"
+	"go.uber.org/zap"
 )
 
 const (
@@ -70,18 +71,18 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 	// create customer in stripe for subscription
 	customer, err := h.createStripeCustomer(user)
 	if err != nil {
-		errorMsg := fmt.Errorf("failed creating stripe customer")
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(err))
+		errorMsg := "failed creating stripe customer"
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 
 	// creating a stripe checkout session
 	session, err := h.createStripeCheckoutSession(customer, plan.StripeProductID)
 	if err != nil {
-		errorMsg := fmt.Errorf("error while creating stripe new checkout session")
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(err))
+		errorMsg := "error while creating stripe new checkout session"
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 

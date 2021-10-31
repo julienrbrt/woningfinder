@@ -12,7 +12,10 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
+	"go.uber.org/zap"
 )
+
+var logConnector = zap.String("connector", "domijn")
 
 type client struct {
 	collector    *colly.Collector
@@ -66,7 +69,7 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Cl
 		// set content type header
 		r.Headers.Set("Content-Type", "application/x-www-form-urlencoded")
 
-		logger.Sugar().Infof("domijn connector: visiting %s", r.URL.String())
+		logger.Info("visiting", zap.String("url", r.URL.String()), logConnector)
 	})
 
 	return &client{

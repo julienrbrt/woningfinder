@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/render"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/util"
+	"go.uber.org/zap"
 )
 
 type contactFormRequest struct {
@@ -57,9 +58,9 @@ func (h *handler) ContactForm(w http.ResponseWriter, r *http.Request) {
 
 	// send contact message to woningfinder
 	if err := h.emailService.ContactFormSubmission(message.Name, message.Email, message.Message); err != nil {
-		errorMsg := fmt.Errorf("failed sending message: please try again")
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		errorMsg := "failed sending message: please try again"
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 
