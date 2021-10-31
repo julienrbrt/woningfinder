@@ -8,7 +8,7 @@ import (
 )
 
 var Info = corporation.Corporation{
-	APIEndpoint: &url.URL{Scheme: "https", Host: "ikwilhuren.nu"},
+	APIEndpoint: &url.URL{Scheme: "https", Host: "mijn.ikwilhuren.nu"},
 	Name:        "MVGM Wonen",
 	URL:         "https://ikwilhuren.nu",
 	Cities: []city.City{

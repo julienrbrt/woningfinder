@@ -89,13 +89,6 @@ func getCollector(logger *logging.Logger) (*colly.Collector, error) {
 	return collector, nil
 }
 
-// request builds a WoningNet request
-type request struct {
-	URL       string `json:"url"`
-	Command   string `json:"command"`
-	Hideunits string `json:"hideunits"`
-}
-
 func (c *client) Send(req networking.Request) (json.RawMessage, error) {
 	// send request to networking client
 	resp, err := c.networkingClient.Send(&req)

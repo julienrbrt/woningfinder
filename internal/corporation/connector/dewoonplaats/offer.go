@@ -49,7 +49,6 @@ type offer struct {
 	HasLowRentPrice       bool    `json:"ishuurlaag"`
 	Lift                  bool    `json:"lift"`
 	Garden                string  `json:"tuin"`
-	Attic                 bool    `json:"zolder"`
 	SelectionDate         string  `json:"lotingsdatum"`
 	IsSelectionRandom     bool    `json:"loting"`
 	Size                  string  `json:"woonoppervlak"`
@@ -128,7 +127,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		Type:          houseType,
 		Address:       fmt.Sprintf("%s %s %s", offer.Address, offer.Postcode, offer.CityName),
 		CityName:      offer.CityName,
-		EnergyLabel:   offer.EnergieLabel,
 		NumberBedroom: offer.NumberBedroom,
 		Size:          c.parseHouseSize(offer.Size),
 		Price:         offer.RentPrice,
@@ -137,7 +135,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		Garage:        offer.Garage,
 		Elevator:      offer.Lift,
 		Balcony:       offer.Balcony,
-		Attic:         offer.Attic,
 		Accessible:    offer.Accessible,
 	}
 

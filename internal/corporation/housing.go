@@ -6,7 +6,6 @@ type Housing struct {
 	Address       string
 	CityName      string
 	CityDistrict  string
-	EnergyLabel   string
 	Price         float64
 	Size          float64
 	NumberBedroom int
@@ -15,7 +14,6 @@ type Housing struct {
 	Garage        bool
 	Elevator      bool
 	Balcony       bool
-	Attic         bool
 	Accessible    bool // Accessible defines if the house is accessible for handicapt people
 }
 
