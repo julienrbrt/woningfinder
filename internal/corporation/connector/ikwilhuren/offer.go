@@ -221,5 +221,8 @@ func (c *client) parseCity(rawCity string) (string, error) {
 		rawCity = strings.Split(rawCity, " (")[0]
 	}
 
-	return rawCity, nil
+	// split city and postcode
+	resultArray := strings.Split(rawCity, " ")
+
+	return resultArray[len(resultArray)-1], nil
 }
