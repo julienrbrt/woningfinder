@@ -9,6 +9,7 @@ import (
 	pg "github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	"github.com/woningfinder/woningfinder/internal/customer"
+	"go.uber.org/zap"
 )
 
 var ErrUserAlreadyExist = errors.New("user already exist")
@@ -39,7 +40,7 @@ func (s *service) CreateUser(user *customer.User) error {
 	if _, err := db.Model(&customer.UserPlan{UserID: user.ID, Name: user.Plan.Name}).Insert(); err != nil {
 		// rollback
 		if err2 := s.DeleteUser(user.Email); err2 != nil {
-			s.logger.Sugar().Errorf("error %w and error when rolling back user creation: %w", err, err2)
+			s.logger.Error("error when rolling back user creation", zap.Any("originalErr", err), zap.Error(err2))
 		}
 
 		return fmt.Errorf("error when creating user plan: %w", err)
@@ -49,7 +50,7 @@ func (s *service) CreateUser(user *customer.User) error {
 	if err := s.CreateHousingPreferences(user.ID, &user.HousingPreferences); err != nil {
 		// rollback
 		if err2 := s.DeleteUser(user.Email); err2 != nil {
-			s.logger.Sugar().Errorf("error %w and error when rolling back user creation: %w", err, err2)
+			s.logger.Error("error when rolling back user creation: %w", zap.Any("originalErr", err), zap.Error(err2))
 		}
 
 		return fmt.Errorf("error when creating user %s: %w", user.Email, err)

@@ -33,7 +33,7 @@ func main() {
 
 	email := os.Args[1]
 	if !util.IsEmailValid(email) {
-		logger.Sugar().Fatal("incorrect argument for user to delete, have %s, expect a valid email", email)
+		logger.Sugar().Fatal("incorrect argument for user to delete: expects a valid email")
 	}
 
 	dbClient := bootstrap.CreateDBClient(logger)

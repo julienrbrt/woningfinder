@@ -9,7 +9,10 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 	"github.com/woningfinder/woningfinder/pkg/networking"
+	"go.uber.org/zap"
 )
+
+var logConnector = zap.String("connector", "de woonplaats")
 
 type client struct {
 	logger           *logging.Logger

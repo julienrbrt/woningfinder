@@ -14,7 +14,10 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 	"github.com/woningfinder/woningfinder/pkg/networking"
+	"go.uber.org/zap"
 )
+
+var logConnector = zap.String("connector", "woningnet")
 
 type client struct {
 	logger           *logging.Logger
@@ -83,7 +86,7 @@ func getCollector(logger *logging.Logger) (*colly.Collector, error) {
 		// set accept header
 		r.Headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
 
-		logger.Sugar().Infof("woningnet connector: visiting %s", r.URL.String())
+		logger.Info("visiting", zap.String("url", r.URL.String()), logConnector)
 	})
 
 	return collector, nil

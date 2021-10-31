@@ -11,6 +11,7 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
+	"go.uber.org/zap"
 )
 
 const externalIDSeperator = ";"
@@ -122,8 +123,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			offerDetails, err := c.getOfferDetails(offer.ID)
 			if err != nil {
-				// do not append the house but logs error
-				c.logger.Sugar().Warnf("zig connector: failed enriching %v: %w", offer, err)
+				c.logger.Warn("failed enriching", zap.Any("offer", offer), zap.Error(err), logConnector)
 				return
 			}
 
@@ -154,9 +154,11 @@ func (c *client) getOfferDetails(offerID string) (*offerDetails, error) {
 }
 
 func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) corporation.Offer {
+	address := fmt.Sprintf("%s %s-%s %s %s", offer.Street, offer.Housenumber, offer.Housenumberaddition, offer.Postalcode, offer.City.Name)
+
 	numberBedroom, err := strconv.Atoi(offer.Sleepingroom.Amountofrooms)
 	if err != nil {
-		c.logger.Sugar().Infof("zig connector: failed parsing number bedroom: %w", err)
+		c.logger.Info("failed parsing number bedroom", zap.String("address", address), zap.Error(err), logConnector)
 	}
 
 	// it seems that some appartment from roomspot does not contains rooms while they should (by definition)
@@ -168,7 +170,7 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 
 	house := corporation.Housing{
 		Type:          houseType,
-		Address:       fmt.Sprintf("%s %s-%s %s %s", offer.Street, offer.Housenumber, offer.Housenumberaddition, offer.Postalcode, offer.City.Name),
+		Address:       address,
 		CityName:      offer.City.Name,
 		NumberBedroom: numberBedroom,
 		Size:          offer.Areadwelling,
@@ -183,13 +185,13 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	// get address city district
 	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
 	if err != nil {
-		c.logger.Sugar().Infof("zig connector: could not get city district of %s: %w", house.Address, err)
+		c.logger.Info("could not get city district", zap.String("address", house.Address), zap.Error(err), logConnector)
 	}
 
 	// get picture url
 	rawPictureURL, err := c.parsePictureURL(offer)
 	if err != nil {
-		c.logger.Sugar().Info(err)
+		c.logger.Info("failed parsing picture url", zap.Error(err), logConnector)
 	}
 
 	return corporation.Offer{

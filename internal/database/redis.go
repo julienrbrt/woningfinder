@@ -36,7 +36,7 @@ func NewRedisClient(logger *logging.Logger, host, port, password string) (RedisC
 	}
 
 	if rdb != nil {
-		logger.Sugar().Info("successfully connected to redis 🎉")
+		logger.Info("successfully connected to redis 🎉")
 	}
 
 	return &redisClient{

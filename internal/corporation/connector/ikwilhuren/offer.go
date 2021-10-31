@@ -10,6 +10,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"go.uber.org/zap"
 )
 
 const offerReserved = "Onder optie"
@@ -25,14 +26,14 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	c.collector.OnHTML("ul.pagination", func(el *colly.HTMLElement) {
 		pageMax, err := strconv.Atoi(el.ChildText("li.page-item > a.page-link > span.sr-only"))
 		if err != nil {
-			c.logger.Sugar().Warnf("ikwilhuren connector: error while parsing pagination: %w", err)
+			c.logger.Warn("error while parsing pagination", zap.Error(err), logConnector)
 		}
 
 		for i := 1; i < pageMax; i++ {
 			// visit other pages
 			paginatedURL := fmt.Sprintf("%s/huurwoningen/pagina/%d", c.corporation.URL, i)
 			if err := paginationCollector.Visit(paginatedURL); err != nil {
-				c.logger.Sugar().Warnf("ikwilhuren connector: error while checking pagination %s: %w", paginatedURL, err)
+				c.logger.Warn("error while checking pagination", zap.String("url", paginatedURL), zap.Error(err), logConnector)
 			}
 		}
 	})
@@ -53,7 +54,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			// get image url
 			offer.RawPictureURL, err = c.parsePictureURL(e.ChildAttr("figure img.img-fluid", "src"))
 			if err != nil {
-				c.logger.Sugar().Info(err)
+				c.logger.Info("failed parsing picture url", zap.Error(err), logConnector)
 			}
 
 			// get location
@@ -65,17 +66,18 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offer.Housing.Address = fmt.Sprintf("%s, %s", e.ChildText("h3 > .street-name.straat"), rawCity)
 			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 			if err != nil {
-				c.logger.Sugar().Infof("ikwilhuren connector: could not get city district of %s: %w", offer.Housing.Address, err)
+				c.logger.Info("could not get city district", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 			}
 
 			// parse price
 			priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("div.huurprijs span.page-price"), ".", ""), "€", ""))
-			offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32)
-			if offer.Housing.Price < 100 { // TODO generalize that everywhere - for new skip all "houses" with a price lower than 100€
+			if offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32); offer.Housing.Price < 100 {
+				// skip all "houses" with a price lower than 100€
 				return
 			}
+
 			if err != nil {
-				c.logger.Sugar().Infof("ikwilhuren connector: error while parsing price of %s: %w", offer.Housing.Address, err)
+				c.logger.Info("error while parsing price", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 				return
 			}
 
@@ -90,7 +92,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			// visit offer url
 			if err := detailCollector.Visit(offer.URL); err != nil {
-				c.logger.Sugar().Warnf("ikwilhuren connector: error while checking offer details %s: %w", offer.Housing.Address, err)
+				c.logger.Warn("error while checking offer details", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 			}
 		})
 	}
@@ -132,14 +134,14 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	// parse externalID
 	offer.ExternalID, err = c.parseExternalID(e.ChildText("script.saswp-schema-markup-output"))
 	if err != nil {
-		c.logger.Sugar().Infof("ikwilhuren connector: error while parsing external iD of %s: %w", offer.Housing.Address, err)
+		c.logger.Info("error while parsing external ID", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 		return
 	}
 
 	// parse housing characteristics
 	offer.Housing.NumberBedroom, err = strconv.Atoi(e.ChildText("#Main_Aantal_Slaapkamers > dd.text"))
 	if err != nil {
-		c.logger.Sugar().Infof("ikwilhuren connector: error parsing number bedroom of %s: %w", offer.Housing.Address, err)
+		c.logger.Info("error parsing number bedroom", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 	}
 
 	offer.Housing.Size, err = strconv.ParseFloat(strings.ReplaceAll(e.ChildText("#Main_Woonopp > dd.text"), " m²", ""), 32)
@@ -182,7 +184,7 @@ func (c *client) parsePictureURL(path string) (*url.URL, error) {
 
 	pictureURL, err := url.Parse(path)
 	if err != nil {
-		return nil, fmt.Errorf("ikwilhuren connector: failed to parse picture url %s: %w", path, err)
+		return nil, fmt.Errorf("failed to parse picture url %s: %w", path, err)
 	}
 
 	return pictureURL, nil

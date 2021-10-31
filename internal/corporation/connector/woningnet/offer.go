@@ -14,6 +14,7 @@ import (
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
+	"go.uber.org/zap"
 )
 
 type response struct {
@@ -99,7 +100,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 		paginatedOffers, err := c.getPaginatedOffers(selectionMethodCommandMap[selectionMethod], response)
 		if err != nil {
-			c.logger.Sugar().Warnf("woningnet connector: error getting paginated offers: %w", err)
+			c.logger.Warn("error getting paginated offers", zap.Error(err), logConnector)
 		}
 		respOffers := append(response.Offer, paginatedOffers...)
 
@@ -111,7 +112,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			result, err := c.Map(offer, houseType)
 			if err != nil {
-				c.logger.Sugar().Warnf("woningnet connector: error parsing %s: %w", offer.Address, err)
+				c.logger.Warn("error parsing", zap.String("address", offer.Address), zap.Error(err), logConnector)
 				continue
 			}
 
@@ -182,13 +183,13 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) (corporatio
 	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
 	if err != nil {
 		house.CityDistrict = cityName[len(cityName)-1]
-		c.logger.Sugar().Infof("woningnet connector: could not get city district of %s: %w", house.Address, err)
+		c.logger.Info("could not get city district", zap.String("address", house.Address), zap.Error(err), logConnector)
 	}
 
 	// get housing picture url
 	rawPictureURL, err := c.parsePictureURL(offer.RawPictureURL)
 	if err != nil {
-		c.logger.Sugar().Info(err)
+		c.logger.Info("failed parsing picture url", zap.Error(err), logConnector)
 	}
 
 	c.collector.OnHTML("#Kenmerken", func(e *colly.HTMLElement) {
@@ -197,7 +198,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) (corporatio
 		// number bedroom
 		house.NumberBedroom, err = c.parseBedroom(c.getContentValue("Aantal kamers (incl. woonkamer)", table))
 		if err != nil {
-			c.logger.Sugar().Infof("woningnet connector: error parsing number bedroom of %s: %w", house.Address, err)
+			c.logger.Info("error parsing number bedroom", zap.String("address", house.Address), zap.Error(err), logConnector)
 		}
 
 		// outside

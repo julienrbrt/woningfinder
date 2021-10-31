@@ -12,7 +12,10 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
+	"go.uber.org/zap"
 )
+
+var logConnector = zap.String("connector", "itris")
 
 type client struct {
 	collector      *colly.Collector
@@ -67,7 +70,7 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, corporation c
 		// set accept header
 		r.Headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
 
-		logger.Sugar().Infof("itris connector: visiting %s", r.URL.String())
+		logger.Info("visiting", zap.String("url", r.URL.String()), logConnector)
 	})
 
 	return &client{

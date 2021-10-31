@@ -13,6 +13,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
+	"go.uber.org/zap"
 )
 
 // GetUserInfo gets all the user information
@@ -33,18 +34,18 @@ func (h *handler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.userService.GetUser(userFromJWT.Email)
 	if err != nil {
-		errorMsg := fmt.Errorf("failed to get user information")
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		errorMsg := "failed to get user information"
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 
 	// confirm user for first login
 	if !user.Plan.IsActivated() {
 		if err := h.userService.ConfirmUser(user.Email); err != nil {
-			errorMsg := fmt.Errorf("error while activating user")
-			h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+			errorMsg := "error while activating user"
+			h.logger.Error(errorMsg, zap.Error(err))
+			render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 			return
 		}
 	}
@@ -107,9 +108,9 @@ func (h *handler) UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 
 	// update housing preferences
 	if err := h.userService.UpdateHousingPreferences(userFromJWT.ID, userInfoRequest.HousingPreferences); err != nil {
-		errorMsg := fmt.Errorf("failed to update housing information")
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		errorMsg := "failed to update housing information"
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 
@@ -160,37 +161,37 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// send feedback
 	if request.HasHouse {
 		if err := h.emailService.SendBye(user); err != nil {
-			h.logger.Sugar().Error(err)
+			h.logger.Error("failed to send email", zap.Error(err))
 		}
 	}
 
 	if len(request.Feedback) > 0 {
 		if err := h.emailService.ContactFormSubmission("Deleted user", user.Email, request.Feedback); err != nil {
-			h.logger.Sugar().Error(err)
+			h.logger.Error("failed to send email", zap.Error(err))
 		}
 	}
 
-	errorMsg := fmt.Errorf("failed to delete user")
+	errorMsg := "failed to delete user"
 
 	// get user
 	user, err = h.userService.GetUser(user.Email)
 	if err != nil {
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 
 	// cancel plan if subscribed
 	if user.Plan.IsSubscribed() {
 		if err := h.cancelStripeSubscription(user.Plan.StripeCustomerID); err != nil {
-			h.logger.Sugar().Error(err)
+			h.logger.Error("failed to cancel stripe subscription", zap.Error(err))
 		}
 	}
 
 	// delete user
 	if err := h.userService.DeleteUser(user.Email); err != nil {
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 
@@ -204,7 +205,7 @@ func (h *handler) cancelStripeSubscription(stripeCustomerID string) error {
 
 	if len(customer.Subscriptions.Data) > 0 {
 		if _, err := sub.Cancel(customer.Subscriptions.Data[0].ID, nil); err != nil {
-			return fmt.Errorf("failed to cancel stripe subscription: %w", err)
+			return err
 		}
 	}
 

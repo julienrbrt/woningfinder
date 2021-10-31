@@ -11,6 +11,7 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
+	"go.uber.org/zap"
 )
 
 const methodOffer = "ZoekWoningen"
@@ -127,12 +128,12 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
 	if err != nil {
 		house.CityDistrict = offer.District
-		c.logger.Sugar().Infof("de woonplaats connector: could not get city district of %s: %w", house.Address, err)
+		c.logger.Info("could not get city district", zap.String("address", house.Address), zap.Error(err), logConnector)
 	}
 
 	rawPictureURL, err := c.parsePictureURL(offer.Thumbnail)
 	if err != nil {
-		c.logger.Sugar().Info(err)
+		c.logger.Info("failed parsing picture url", zap.Error(err), logConnector)
 	}
 
 	return corporation.Offer{
@@ -179,7 +180,7 @@ func (c *client) parsePictureURL(path string) (*url.URL, error) {
 
 	pictureURL, err := url.Parse(c.corporation.URL + path)
 	if err != nil {
-		return nil, fmt.Errorf("dewoonplaats connector: failed to parse picture url %s: %w", path, err)
+		return nil, fmt.Errorf("failed to parse picture url %s: %w", path, err)
 	}
 
 	return pictureURL, nil

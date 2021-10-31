@@ -11,6 +11,7 @@ import (
 	"github.com/stripe/stripe-go/v72/webhook"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/stripe"
+	"go.uber.org/zap"
 )
 
 const stripeHeader = "Stripe-Signature"
@@ -58,18 +59,18 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 		// confirm subscription has payment went through
 		user, err := h.userService.ConfirmSubscription(checkoutSession.CustomerDetails.Email, checkoutSession.Customer.ID)
 		if err != nil {
-			errorMsg := fmt.Errorf("error while processing payment")
-			h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+			errorMsg := "error while processing payment"
+			h.logger.Error(errorMsg, zap.Error(err))
+			render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 			return
 		}
 
 		// send payment confirmation email
 		if err := h.emailService.SendThankYou(user); err != nil {
-			h.logger.Sugar().Error(err)
+			h.logger.Error("failed to send email", zap.Error(err))
 		}
 
-		h.logger.Sugar().Infof("🎉🎉🎉 New customer %s subscribed 🎉🎉🎉", user.Email)
+		h.logger.Info("🎉🎉🎉 New customer subscribed 🎉🎉🎉", zap.String("email", user.Email))
 
 	// user keeps paying
 	case stripe.InvoicePaid:
@@ -81,7 +82,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if err := h.userService.UpdateSubscriptionStatus(invoice.Customer.ID, true); err != nil {
-			h.logger.Sugar().Error(err)
+			h.logger.Error("failed to update subscription status", zap.Error(err))
 		}
 
 	// user didn't pay, mark subscription as unpaid
@@ -94,7 +95,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if err := h.userService.UpdateSubscriptionStatus(invoice.Customer.ID, false); err != nil {
-			h.logger.Sugar().Error(err)
+			h.logger.Error("failed to update subscription status", zap.Error(err))
 		}
 
 		// stripe notifies the user of the failed payment

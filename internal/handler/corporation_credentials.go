@@ -13,6 +13,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
+	"go.uber.org/zap"
 )
 
 type corporationCredentialsRequest struct {
@@ -51,9 +52,9 @@ func (h *handler) GetCorporationCredentials(w http.ResponseWriter, r *http.Reque
 
 	corporations, err := h.userService.GetHousingPreferencesMatchingCorporation(userFromJWT.ID)
 	if err != nil {
-		errorMsg := fmt.Errorf("failed getting housing corporation relevant for you")
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		errorMsg := "failed getting housing corporation relevant for you"
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 
@@ -114,17 +115,17 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 
 	hasCorproationCredentials, err := h.userService.HasCorporationCredentials(user.ID)
 	if err != nil {
-		h.logger.Sugar().Errorf("failed to get corproation credentials count: %w", err)
+		h.logger.Error("failed to get corproation credentials count", zap.Error(err))
 	}
 
 	if err := h.userService.CreateCorporationCredentials(user.ID, corporationCredentials); err != nil {
-		errorMsg := fmt.Errorf("failed creating corporation credentials")
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
+		errorMsg := "failed creating corporation credentials"
+		h.logger.Error(errorMsg, zap.Error(err))
 
 		if strings.Contains(err.Error(), userService.ErrValidationCorporationCredentials) {
 			render.Render(w, r, handlerErrors.ErrUnauthorized)
 		} else {
-			render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+			render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		}
 
 		return
@@ -133,7 +134,7 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 	// first time adding corporation credentials: send welcome email
 	if !hasCorproationCredentials {
 		if err := h.emailService.SendCorporationCredentialsFirstTimeAdded(user); err != nil {
-			h.logger.Sugar().Error(err)
+			h.logger.Error("failed to send email", zap.Error(err))
 		}
 	}
 

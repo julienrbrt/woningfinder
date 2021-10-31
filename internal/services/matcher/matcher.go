@@ -10,6 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/customer"
+	"go.uber.org/zap"
 )
 
 // MatcherOffer matcher a corporation offer with customer housing preferences
@@ -46,7 +47,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			// enrinch housing preferences
 			user.HousingPreferences, err = s.userService.GetHousingPreferences(user.ID)
 			if err != nil {
-				s.logger.Sugar().Errorf("failed to get users preferences from %s: %w", user.Email, err)
+				s.logger.Error("failed to get users preferences", zap.String("email", user.Email), zap.Error(err))
 				return
 			}
 
@@ -54,39 +55,39 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 			// this is done before login in order to do not spam login to the housing corporation and reacting to nothing
 			uncheckedOffers, ok := s.hasNonReactedOffers(user, offers)
 			if !ok {
-				s.logger.Sugar().Debugf("no new offers from %s for %s...", offers.Corporation.Name, user.Email)
+				s.logger.Info("no new offers", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email))
 				return
 			}
 
 			newCreds, err := s.userService.DecryptCredentials(user.CorporationCredentials[0])
 			if err != nil {
-				s.logger.Sugar().Errorf("error while decrypting credentials for %s: %w", user.Email, err)
+				s.logger.Error("error while decrypting credentials", zap.String("email", user.Email), zap.Error(err))
 				return
 			}
 
 			// login to housing corporation
 			if err := client.Login(newCreds.Login, newCreds.Password); err != nil {
 				if !errors.Is(err, connector.ErrAuthFailed) {
-					s.logger.Sugar().Errorf("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
+					s.logger.Error("failed to login to corporation", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 					return
 				}
 
 				// user has failed login
-				s.logger.Sugar().Debugf("failed to login to corporation %s for %s: %w", offers.Corporation.Name, user.Email, err)
+				s.logger.Info("failed to login to corporation", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 				if err := s.hasFailedLogin(user, newCreds); err != nil {
-					s.logger.Sugar().Error(err)
+					s.logger.Error("failed to run update corporation credentials", zap.Error(err))
 				}
 
 				return
 			}
 
 			for uuid, offer := range uncheckedOffers {
-				s.logger.Sugar().Debugf("checking match of %s from %s for %s...", offer.Housing.Address, offers.Corporation.Name, user.Email)
+				s.logger.Debug("checking match", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email))
 
 				if s.matcher.MatchOffer(*user, offer) {
 					// react to offer
 					if err := client.React(offer); err != nil {
-						s.logger.Sugar().Errorf("failed to react to %s from %s with user %s: %w", offer.Housing.Address, offers.Corporation.Name, user.Email, err)
+						s.logger.Error("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 						continue
 					}
 
@@ -95,10 +96,10 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 
 					// save match to database
 					if err := s.userService.CreateHousingPreferencesMatch(user.ID, offer, user.CorporationCredentials[0].CorporationName, pictureURL); err != nil {
-						s.logger.Sugar().Errorf("failed to add %s from %s match to user %s: %w", offer.Housing.Address, offers.Corporation.Name, user.Email, err)
+						s.logger.Error("failed to add housing preferences match", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 					}
 
-					s.logger.Sugar().Infof("🎉🎉🎉 WoningFinder has successfully reacted to %s from %s on behalf of %s. 🎉🎉🎉\n", offer.Housing.Address, offers.Corporation.Name, user.Email)
+					s.logger.Info("🎉🎉🎉 WoningFinder has successfully reacted to a house", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 				}
 
 				// save that we've checked the offer for the user
@@ -155,7 +156,7 @@ func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Of
 func (s *service) uploadHousingPicture(offer corporation.Offer) string {
 	fileName, err := s.spacesClient.UploadPicture("offers", offer.Housing.Address, offer.RawPictureURL)
 	if err != nil {
-		s.logger.Sugar().Errorf("failed to upload picture: %w", err)
+		s.logger.Error("failed to upload picture", zap.Error(err))
 	}
 
 	return fileName

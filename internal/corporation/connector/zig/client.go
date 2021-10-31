@@ -9,7 +9,10 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 	"github.com/woningfinder/woningfinder/pkg/networking"
+	"go.uber.org/zap"
 )
+
+var logConnector = zap.String("connector", "zig")
 
 type client struct {
 	logger           *logging.Logger
@@ -53,7 +56,7 @@ func (c *client) Send(req networking.Request) (json.RawMessage, error) {
 			return nil, fmt.Errorf("error unmarshaling zig response %v: %w", resp, err)
 		}
 
-		return nil, fmt.Errorf("zig connector: error reponse: %v", response.Err)
+		return nil, fmt.Errorf("error reponse: %v", response.Err)
 	}
 
 	return rawResponse, nil
