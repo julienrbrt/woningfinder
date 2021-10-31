@@ -8,6 +8,7 @@ import (
 
 	"github.com/woningfinder/woningfinder/pkg/networking"
 	"github.com/woningfinder/woningfinder/pkg/networking/query"
+	"go.uber.org/zap"
 )
 
 // response from a Mapbox geocoding request
@@ -42,7 +43,7 @@ func (c *client) CityDistrictFromAddress(address string) (string, error) {
 
 	// cache district
 	if err := c.redisClient.Set(uuid, district); err != nil {
-		c.logger.Sugar().Errorf("failed saving address %s district in redis: %w", address, err)
+		c.logger.Error("failed saving address district in redis", zap.String("address", address), zap.Error(err))
 	}
 
 	return district, nil

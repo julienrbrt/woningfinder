@@ -10,6 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
+	"go.uber.org/zap"
 )
 
 // GetOffering gets the offering of WoningFinder (plans, cities and housing type)
@@ -25,9 +26,9 @@ func (h *handler) GetOffering(w http.ResponseWriter, r *http.Request) {
 	// get cities
 	cities, err := h.corporationService.GetCities()
 	if err != nil {
-		errorMsg := fmt.Errorf("error while getting offering")
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		errorMsg := "error while getting offering"
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 	offering.SupportedCities = cities

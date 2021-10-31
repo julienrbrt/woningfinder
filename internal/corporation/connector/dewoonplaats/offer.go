@@ -11,6 +11,7 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/pkg/networking"
+	"go.uber.org/zap"
 )
 
 const methodOffer = "ZoekWoningen"
@@ -19,45 +20,30 @@ type offer struct {
 	ID          string   `json:"id"`
 	HousingType []string `json:"soort"`
 	Criteria    struct {
-		KinderenValid    bool   `json:"kinderen_valid"`
-		MaxGezinsgrootte int    `json:"max_gezinsgrootte"`
-		MaxInkomen       int    `json:"max_inkomen"`
-		MaxLeeftijd      int    `json:"max_leeftijd"`
-		MinGezinsgrootte int    `json:"min_gezinsgrootte"`
-		MinInkomen       int    `json:"min_inkomen"`
-		MinLeeftijd      int    `json:"min_leeftijd"`
-		Omschrijving     string `json:"omschrijving"`
+		KinderenValid    bool `json:"kinderen_valid"`
+		MaxGezinsgrootte int  `json:"max_gezinsgrootte"`
+		MaxInkomen       int  `json:"max_inkomen"`
+		MaxLeeftijd      int  `json:"max_leeftijd"`
+		MinGezinsgrootte int  `json:"min_gezinsgrootte"`
+		MinInkomen       int  `json:"min_inkomen"`
+		MinLeeftijd      int  `json:"min_leeftijd"`
 	} `json:"criteria"`
-	Latitude              float64 `json:"lat"`
-	Longitude             float64 `json:"lng"`
-	Address               string  `json:"adres"`
-	District              string  `json:"wijk"`
-	CityName              string  `json:"plaats"`
-	Postcode              string  `json:"postcode"`
-	RentPrice             float64 `json:"relevante_huurprijs,omitempty"`
-	RentPriceForAllowance string  `json:"toeslagprijs"`
-	RentLuxe              bool    `json:"tehuur_luxehuur,omitempty"`
-	MapsURL               string  `json:"mapslink"`
-	BuildingYear          int     `json:"bouwjaar"`
-	EnergieLabel          string  `json:"energielabel"`
-	NumberBedroom         int     `json:"slaapkamers"`
-	CV                    bool    `json:"cv"`
-	Balcony               bool    `json:"balkon"`
-	Garage                bool    `json:"garage"`
-	Historic              bool    `json:"historic"`
-	ForRent               bool    `json:"ishuur"`
-	HasLowRentPrice       bool    `json:"ishuurlaag"`
-	Lift                  bool    `json:"lift"`
-	Garden                string  `json:"tuin"`
-	SelectionDate         string  `json:"lotingsdatum"`
-	IsSelectionRandom     bool    `json:"loting"`
-	Size                  string  `json:"woonoppervlak"`
-	Accessible            bool    `json:"rolstoeltoegankelijk"`
-	Thumbnail             string  `json:"thumbnail"`
-	RoomSize              []struct {
-		Name string `json:"titel"`
-		Size string `json:"oppervlak"`
-	} `json:"vertrekken"`
+	Address         string  `json:"adres"`
+	District        string  `json:"wijk"`
+	CityName        string  `json:"plaats"`
+	Postcode        string  `json:"postcode"`
+	RentPrice       float64 `json:"relevante_huurprijs,omitempty"`
+	NumberBedroom   int     `json:"slaapkamers"`
+	CV              bool    `json:"cv"`
+	Balcony         bool    `json:"balkon"`
+	Garage          bool    `json:"garage"`
+	ForRent         bool    `json:"ishuur"`
+	HasLowRentPrice bool    `json:"ishuurlaag"`
+	Lift            bool    `json:"lift"`
+	Garden          string  `json:"tuin"`
+	Size            string  `json:"woonoppervlak"`
+	Accessible      bool    `json:"rolstoeltoegankelijk"`
+	Thumbnail       string  `json:"thumbnail"`
 }
 
 func offerRequest() (networking.Request, error) {
@@ -142,24 +128,25 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 	house.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(house.Address)
 	if err != nil {
 		house.CityDistrict = offer.District
-		c.logger.Sugar().Infof("de woonplaats connector: could not get city district of %s: %w", house.Address, err)
+		c.logger.Info("could not get city district", zap.String("address", house.Address), zap.Error(err), logConnector)
 	}
 
 	rawPictureURL, err := c.parsePictureURL(offer.Thumbnail)
 	if err != nil {
-		c.logger.Sugar().Info(err)
+		c.logger.Info("failed parsing picture url", zap.Error(err), logConnector)
 	}
 
 	return corporation.Offer{
-		ExternalID:      offer.ID,
-		Housing:         house,
-		URL:             fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", offer.ID),
-		RawPictureURL:   rawPictureURL,
-		SelectionMethod: c.parseSelectionMethod(offer.IsSelectionRandom),
-		MinFamilySize:   offer.Criteria.MinGezinsgrootte,
-		MaxFamilySize:   offer.Criteria.MaxGezinsgrootte,
-		MinAge:          offer.Criteria.MinLeeftijd,
-		MaxAge:          offer.Criteria.MaxLeeftijd,
+		ExternalID:    offer.ID,
+		Housing:       house,
+		URL:           fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", offer.ID),
+		RawPictureURL: rawPictureURL,
+		MinFamilySize: offer.Criteria.MinGezinsgrootte,
+		MaxFamilySize: offer.Criteria.MaxGezinsgrootte,
+		MinAge:        offer.Criteria.MinLeeftijd,
+		MaxAge:        offer.Criteria.MaxLeeftijd,
+		MinimumIncome: offer.Criteria.MinInkomen,
+		MaximumIncome: offer.Criteria.MaxInkomen,
 	}
 }
 
@@ -186,14 +173,6 @@ func (c *client) parseHouseSize(houseSize string) float64 {
 	return size
 }
 
-func (c *client) parseSelectionMethod(random bool) corporation.SelectionMethod {
-	if random {
-		return corporation.SelectionRandom
-	}
-
-	return corporation.SelectionFirstComeFirstServed
-}
-
 func (c *client) parsePictureURL(path string) (*url.URL, error) {
 	if path == "" {
 		return nil, nil
@@ -201,7 +180,7 @@ func (c *client) parsePictureURL(path string) (*url.URL, error) {
 
 	pictureURL, err := url.Parse(c.corporation.URL + path)
 	if err != nil {
-		return nil, fmt.Errorf("dewoonplaats connector: failed to parse picture url %s: %w", path, err)
+		return nil, fmt.Errorf("failed to parse picture url %s: %w", path, err)
 	}
 
 	return pictureURL, nil

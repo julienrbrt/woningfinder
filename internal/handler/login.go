@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/render"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"github.com/woningfinder/woningfinder/pkg/util"
+	"go.uber.org/zap"
 )
 
 type loginRequest struct {
@@ -44,9 +45,9 @@ func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	// send login email
 	if err := h.emailService.SendLogin(user); err != nil {
-		errorMsg := fmt.Errorf("error while sending login email")
-		h.logger.Sugar().Errorf("%w: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		errorMsg := "error while sending login email"
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 	}
 
 	// returns 200 by default

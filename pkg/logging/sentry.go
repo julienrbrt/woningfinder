@@ -16,7 +16,7 @@ func mapLoggerToSentry(logger *zap.Logger, DSN string) *zap.Logger {
 	core, err := zapsentry.NewCore(cfg, zapsentry.NewSentryClientFromDSN(DSN))
 	// in case of err it will return noop core. so we can safely attach it
 	if err != nil {
-		logger.Sugar().Errorf("failed to init zap", zap.Error(err))
+		logger.Error("failed to init zap", zap.Error(err))
 	}
 
 	return zapsentry.AttachCoreToLogger(core, logger)

@@ -10,6 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
+	"go.uber.org/zap"
 )
 
 type registerRequest struct {
@@ -38,21 +39,20 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 	user.Email = strings.ToLower(user.Email)
 
 	if err := h.userService.CreateUser(user.User); err != nil {
-		errorMsg := fmt.Errorf("error while creating user")
+		errorMsg := "error while creating user"
 
 		if errors.Is(err, userService.ErrUserAlreadyExist) {
-			render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("%s: %s", errorMsg, err.Error())))
+			render.Render(w, r, handlerErrors.BadRequestErrorRenderer(fmt.Errorf("%s: %w", errorMsg, err)))
 			return
 		}
 
-		h.logger.Sugar().Errorf("%s: %w", errorMsg, err)
-		render.Render(w, r, handlerErrors.ServerErrorRenderer(errorMsg))
+		h.logger.Error(errorMsg, zap.Error(err))
+		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
 	}
 
 	// send activation email
 	if err := h.emailService.SendActivationEmail(user.User); err != nil {
-		// just logging error
-		h.logger.Sugar().Errorf("error while sending activation email: %w", err)
+		h.logger.Error("error while sending activation email", zap.Error(err))
 	}
 }

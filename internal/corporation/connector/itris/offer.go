@@ -8,6 +8,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"go.uber.org/zap"
 )
 
 const detailsHousingChildAttr = "li.link a"
@@ -24,9 +25,6 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			var offer corporation.Offer
 			var err error
 
-			// add selection method
-			offer.SelectionMethod = corporation.SelectionRandom // TODO to fix - all houses from onshuis are random
-
 			// get offer url
 			offer.URL = c.corporation.APIEndpoint.String() + e.ChildAttr(detailsHousingChildAttr, "href")
 			offer.ExternalID = e.Attr("data-aanbod-id")
@@ -34,7 +32,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			// get picture url
 			offer.RawPictureURL, err = c.parsePictureURL(e.ChildAttr("div.image-wrapper", "style"))
 			if err != nil {
-				c.logger.Sugar().Info(err)
+				c.logger.Info("failed parsing picture url", zap.Error(err), logConnector)
 			}
 
 			// get housing type
@@ -48,18 +46,17 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			offer.Housing.CityName = strings.Title(strings.ToLower(e.Attr("data-plaats")))
 			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 			if err != nil {
-				c.logger.Sugar().Infof("itris connector: could not get city district of %s: %w", offer.Housing.Address, err)
+				c.logger.Info("could not get city district", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 			}
 
 			offer.Housing.Price, err = strconv.ParseFloat(e.Attr("data-prijs"), 32)
 			if err != nil {
-				c.logger.Sugar().Infof("itris connector: error while parsing price of %s: %w", offer.Housing.Address, err)
-				return
+				c.logger.Info("error while parsing price", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 			}
 
 			offer.Housing.NumberBedroom, err = strconv.Atoi(e.Attr("data-kamers"))
 			if err != nil {
-				c.logger.Sugar().Infof("itris connector: error while parsing number bedroom of %s: %w", offer.Housing.Address, err)
+				c.logger.Info("error while parsing number bedroom", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 			}
 
 			// create new offer
@@ -67,7 +64,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			// visit offer url
 			if err := detailCollector.Visit(offer.URL); err != nil {
-				c.logger.Sugar().Warnf("itris connector: error while checking offer details %s: %w", offer.Housing.Address, err)
+				c.logger.Warn("error while checking offer details", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 			}
 		})
 	})
@@ -125,7 +122,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	// part of housing details can be found in housing description (accessibility)
 	dom, err := e.DOM.Html()
 	if err != nil {
-		c.logger.Sugar().Warnf("unable to get details for %s on %s", offer.Housing.Address, offer.URL)
+		c.logger.Warn("unable to get details", zap.String("address", offer.Housing.Address), zap.String("url", offer.URL), zap.Error(err), logConnector)
 		return
 	}
 	// add accessible
@@ -175,7 +172,7 @@ func (c *client) parsePictureURL(path string) (*url.URL, error) {
 
 	pictureURL, err := url.Parse(c.corporation.APIEndpoint.String() + path)
 	if err != nil {
-		return nil, fmt.Errorf("itris connector: failed to parse picture url %s: %w", path, err)
+		return nil, fmt.Errorf("failed to parse picture url %s: %w", path, err)
 	}
 
 	return pictureURL, nil

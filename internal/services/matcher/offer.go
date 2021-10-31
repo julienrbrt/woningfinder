@@ -7,6 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
+	"go.uber.org/zap"
 )
 
 // PushOffers pushes the offers of a housing corporation to redis queue
@@ -18,11 +19,11 @@ func (s *service) PushOffers(client connector.Client, corp corporation.Corporati
 
 	// log number of offers found
 	if len(offers) == 0 {
-		s.logger.Sugar().Infof("no offers found for %s", corp.Name)
+		s.logger.Info("no offers found", zap.String("corporation", corp.Name))
 		return nil
 	}
 
-	s.logger.Sugar().Infof("%d offers found for %s", len(offers), corp.Name)
+	s.logger.Info(fmt.Sprintf("%d offers found", len(offers)), zap.String("corporation", corp.Name))
 
 	// build offers list
 	result, err := json.Marshal(corporation.Offers{
@@ -77,7 +78,7 @@ func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corpo
 		return fmt.Errorf("failing adding cities to corporation: %w", err)
 	}
 
-	s.logger.Sugar().Warnf("%d cities (%+v) added for %s: please update housing corporation informations", len(notFound), notFound, corp.Name)
+	s.logger.Warn("update the corporation required new cities added", zap.Int("count", len(notFound)), zap.Any("cities", notFound), zap.String("corporation", corp.Name))
 
 	return nil
 }
@@ -94,7 +95,7 @@ func (s *service) SubscribeOffers(ch chan<- corporation.Offers) error {
 			var offers corporation.Offers
 			err := json.Unmarshal([]byte(o), &offers)
 			if err != nil {
-				s.logger.Sugar().Errorf("error while unmarshaling offers: %w", err)
+				s.logger.Error("error while unmarshaling offers", zap.Error(err))
 				continue
 			}
 

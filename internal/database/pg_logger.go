@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-pg/pg/v10"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"go.uber.org/zap"
 )
 
 type dbLogger struct {
@@ -21,6 +22,6 @@ func (db dbLogger) AfterQuery(ctx context.Context, q *pg.QueryEvent) error {
 		return err
 	}
 
-	db.logger.Sugar().Debugf("go-pg query log: %s", string(query))
+	db.logger.Debug("go-pg query log", zap.String("query", string(query)))
 	return nil
 }

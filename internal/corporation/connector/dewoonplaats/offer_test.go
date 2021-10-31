@@ -29,12 +29,16 @@ func Test_FetchOffer(t *testing.T) {
 		a.NotEmpty(offer.Housing.CityName)
 		a.NotEmpty(offer.Housing.CityDistrict)
 		a.True(offer.Housing.Price > 0)
-		// a.True(offer.Housing.Size > 0)
+		a.True(offer.Housing.Size >= 0)
 		a.True(offer.Housing.NumberBedroom > 0)
 
-		a.NotEmpty(offer.SelectionMethod)
 		a.NotEmpty(offer.URL)
 		a.NotEmpty(offer.RawPictureURL)
 		a.NotEmpty(offer.ExternalID)
+
+		// if passes stop test
+		if !t.Failed() {
+			return
+		}
 	}
 }
