@@ -4,19 +4,17 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/ikwilhuren"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
 func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
-	mockMapbox := mapbox.NewClientMock(nil, "district")
 
 	// note for testing mapbox city parsing please use the bootstrap client instead of the mock
-	client, err := ikwilhuren.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox)
-	a.NoError(err)
+	client := bootstrapCorporation.CreateIkWilHurenClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"))
 
 	offers, err := client.GetOffers()
 	a.NoError(err)

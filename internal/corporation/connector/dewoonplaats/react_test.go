@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_ReactToOfferRequest(t *testing.T) {
+func Test_ReactRequest(t *testing.T) {
 	a := assert.New(t)
 	expected := `{"id":1,"method":"ReageerOpWoning","params":["testID"]}`
 	req, err := reactRequest("testID")

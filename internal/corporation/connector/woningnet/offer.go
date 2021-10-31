@@ -106,8 +106,13 @@ type offer struct {
 	ToonSlaagkans                   bool   `json:"ToonSlaagkans"`
 }
 
+// offerRequest builds a WoningNet request
 func offerRequest(commandURL, command string) (networking.Request, error) {
-	req := request{
+	req := struct {
+		URL       string `json:"url"`
+		Command   string `json:"command"`
+		Hideunits string `json:"hideunits"`
+	}{
 		URL:       commandURL,
 		Command:   command,
 		Hideunits: "hideunits[]",

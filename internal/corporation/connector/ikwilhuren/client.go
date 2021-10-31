@@ -1,6 +1,7 @@
 package ikwilhuren
 
 import (
+	"encoding/json"
 	"net"
 	"net/http"
 	"net/http/cookiejar"
@@ -12,20 +13,35 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
+	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
 type client struct {
-	collector    *colly.Collector
-	logger       *logging.Logger
-	mapboxClient mapbox.Client
-	corporation  corporation.Corporation
+	logger           *logging.Logger
+	networkingClient networking.Client
+	collector        *colly.Collector
+	mapboxClient     mapbox.Client
+	corporation      corporation.Corporation
+}
+
+func NewClient(logger *logging.Logger, c networking.Client, mapboxClient mapbox.Client) connector.Client {
+	collector, err := getCollector(logger)
+	if err != nil {
+		panic(err)
+	}
+
+	return &client{
+		logger:           logger,
+		networkingClient: c,
+		collector:        collector,
+		mapboxClient:     mapboxClient,
+		corporation:      Info,
+	}
 }
 
 // Note, if we start to get blocked investigate in proxy switcher
 // https://github.com/gocolly/colly/blob/v2.1.0/_examples/proxy_switcher/proxy_switcher.go
-
-// NewClient allows to connect to ikwilhuren.nu
-func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Client, error) {
+func getCollector(logger *logging.Logger) (*colly.Collector, error) {
 	c := colly.NewCollector(
 		// allow revisiting url between jobs and ignore robot txt
 		colly.AllowURLRevisit(),
@@ -69,10 +85,21 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Cl
 		logger.Sugar().Infof("ikwilhuren.nu connector: visiting %s", r.URL.String())
 	})
 
-	return &client{
-		collector:    c,
-		logger:       logger,
-		mapboxClient: mapboxClient,
-		corporation:  Info,
-	}, nil
+	return c, nil
+}
+
+func (c *client) Send(req networking.Request) (json.RawMessage, error) {
+	// send request to networking client
+	resp, err := c.networkingClient.Send(&req)
+	if err != nil {
+		return nil, err
+	}
+
+	var response json.RawMessage
+	err = resp.ReadJSONBody(&response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
 }
