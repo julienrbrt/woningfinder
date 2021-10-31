@@ -106,8 +106,13 @@ type offer struct {
 	ToonSlaagkans                   bool   `json:"ToonSlaagkans"`
 }
 
+// offerRequest builds a WoningNet request
 func offerRequest(commandURL, command string) (networking.Request, error) {
-	req := request{
+	req := struct {
+		URL       string `json:"url"`
+		Command   string `json:"command"`
+		Hideunits string `json:"hideunits"`
+	}{
 		URL:       commandURL,
 		Command:   command,
 		Hideunits: "hideunits[]",
@@ -247,17 +252,8 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		c.logger.Sugar().Info(err)
 	}
 
-	// TODO
-	// c.collector.OnHTML("#Overzicht", func(e *colly.HTMLElement) {
-	// 	// minFamilySize, maxFamilySize, minAge, maxAge int
-	// 	// fmt.Println(e)
-	// })
-
 	c.collector.OnHTML("#Kenmerken", func(e *colly.HTMLElement) {
 		table := e.DOM.ChildrenFiltered(".contentBlock")
-
-		// energy label
-		house.EnergyLabel = c.getContentValue("Energielabel", table)
 
 		// building year
 		house.BuildingYear, err = strconv.Atoi(c.getContentValue("Bouwjaar", table))
@@ -271,9 +267,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 			c.logger.Sugar().Infof("woningnet connector: error parsing number bedroom of %s: %w", house.Address, err)
 		}
 
-		// attic
-		house.Attic = len(c.getContentValue("Zolder", table)) > 0
-
 		// outside
 		outside := c.getContentValue("Buitenruimte", table)
 		house.Balcony = strings.Contains(outside, "balkon") || strings.Contains(outside, "terras")
@@ -281,7 +274,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType, selectionMe
 		house.Garage = strings.Contains(outside, "garage") || strings.Contains(outside, "parkeer")
 
 		// TODO add lift parsing
-
 	})
 
 	if err = c.collector.Visit(offerURL); err != nil {

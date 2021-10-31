@@ -66,7 +66,7 @@ func (s *service) CreateHousingPreferences(userID uint, preferences *customer.Ho
 	return nil
 }
 
-// TODO refractor in one request
+// TODO eventually use a prepare function to create it in one query only
 func (s *service) GetHousingPreferences(userID uint) (customer.HousingPreferences, error) {
 	db := s.dbClient.Conn()
 	var housingPreferences customer.HousingPreferences

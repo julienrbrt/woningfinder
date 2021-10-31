@@ -17,4 +17,5 @@ type Offer struct {
 	ExternalID                   string // identifier of the house at the housing coporation in order to react
 	MinFamilySize, MaxFamilySize int
 	MinAge, MaxAge               int
+	MinimumIncome                int
 }

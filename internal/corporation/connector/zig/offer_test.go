@@ -36,7 +36,6 @@ func Test_FetchOffer(t *testing.T) {
 			a.NotEmpty(offer.Housing.Address)
 			a.NotEmpty(offer.Housing.CityName)
 			a.NotEmpty(offer.Housing.CityDistrict)
-			// a.NotEmpty(offer.Housing.EnergyLabel)
 			a.True(offer.Housing.Price > 0)
 			a.True(offer.Housing.Size >= 0)
 			a.True(offer.Housing.NumberBedroom >= 0)

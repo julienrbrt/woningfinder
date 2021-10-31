@@ -20,7 +20,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	// check paginating
 	c.collector.OnHTML("ol[aria-labelledby=ARIA-Label-paging]", func(el *colly.HTMLElement) {
 		el.ForEach("li", func(_ int, e *colly.HTMLElement) {
-			// visit other page
+			// visit other pages
 			paginatedURL := e.ChildAttr("a", "href")
 			if paginatedURL == "" { // first page
 				return
@@ -123,8 +123,6 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 		property := strings.TrimSpace(el.ChildText("strong"))
 
 		switch property {
-		case "Energielabel":
-			offer.Housing.EnergyLabel = el.ChildText("span.c-energylabel")
 		case "Slaapkamers":
 			offer.Housing.NumberBedroom, err = strconv.Atoi(cleanProperty(el.Text, property))
 			if err != nil {
@@ -153,7 +151,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 
 		// logic for minimum family size https://www.domijn.nl/ik-zoek/huurwoningen/huren-grote-eengezinswoning/
 		if offer.Housing.NumberBedroom >= 4 {
-			offer.MinFamilySize = 4
+			offer.MinFamilySize = 3
 		}
 	})
 }
@@ -165,7 +163,8 @@ func (c *client) parseHousingType(houseType string) corporation.HousingType {
 		return corporation.HousingTypeAppartement
 	}
 
-	if strings.Contains(houseType, "woning") || strings.Contains(houseType, "duplex") {
+	if strings.Contains(houseType, "woning") ||
+		strings.Contains(houseType, "duplex") {
 		return corporation.HousingTypeHouse
 	}
 

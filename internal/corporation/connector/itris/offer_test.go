@@ -38,10 +38,9 @@ func Test_FetchOffer(t *testing.T) {
 			a.NotEmpty(offer.Housing.Address)
 			a.NotEmpty(offer.Housing.CityName)
 			a.NotEmpty(offer.Housing.CityDistrict)
-			a.NotEmpty(offer.Housing.EnergyLabel)
 			a.True(offer.Housing.Price > 0)
 			a.True(offer.Housing.Size > 0)
-			a.True(offer.Housing.NumberBedroom > 0) // might fail randomly if there is only studios available
+			a.True(offer.Housing.NumberBedroom > 0)
 			a.True(offer.Housing.BuildingYear > 0)
 
 			a.NotEmpty(offer.SelectionMethod)

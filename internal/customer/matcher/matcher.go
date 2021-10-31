@@ -37,9 +37,14 @@ func (m *matcher) matchCriteria(user customer.User, offer corporation.Offer) boo
 		return false
 	}
 
-	// checks if offer incomes is set and check boundaries
+	// checks if offer incomes based on social housing requirement
 	min, max := m.passendToewijzen(user)
 	if offer.Housing.Price < min || offer.Housing.Price > max {
+		return false
+	}
+
+	// check incomes boundaries based on offer requirement
+	if offer.MinimumIncome > user.YearlyIncome {
 		return false
 	}
 
@@ -79,8 +84,7 @@ func (m *matcher) matchPreferences(preferences customer.HousingPreferences, offe
 
 	// house specific
 	if offer.Housing.Type == corporation.HousingTypeHouse &&
-		(preferences.HasGarden && !offer.Housing.Garden) ||
-		(preferences.HasAttic && !offer.Housing.Attic) {
+		(preferences.HasGarden && !offer.Housing.Garden) {
 		return false
 	}
 
