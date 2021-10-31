@@ -130,7 +130,6 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 		NumberBedroom: offer.NumberBedroom,
 		Size:          c.parseHouseSize(offer.Size),
 		Price:         offer.RentPrice,
-		BuildingYear:  offer.BuildingYear,
 		Garden:        len(offer.Garden) > 0,
 		Garage:        offer.Garage,
 		Elevator:      offer.Lift,

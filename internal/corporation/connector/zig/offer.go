@@ -495,7 +495,6 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 		NumberBedroom: numberBedroom,
 		Size:          offer.Areadwelling,
 		Price:         offer.Totalrent,
-		BuildingYear:  offer.Constructionyear,
 		Garden:        offer.Garden,
 		Garage:        false,
 		Elevator:      true,
