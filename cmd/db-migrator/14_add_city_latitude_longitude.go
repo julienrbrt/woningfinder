@@ -17,7 +17,7 @@ func init() {
 	}
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {
-		fmt.Println("adding longitude and latitude columbs column...")
+		fmt.Println("adding longitude and latitude columns...")
 		_, err := db.Exec(`ALTER TABLE cities ADD IF NOT EXISTS latitude float8`)
 		if err != nil {
 			return err

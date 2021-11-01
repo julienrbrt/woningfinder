@@ -392,3 +392,21 @@ var Cothen = City{
 	Latitude:  51.995363,
 	Longitude: 5.310461,
 }
+
+var Soest = City{
+	Name:      "Soest",
+	Latitude:  52.175035,
+	Longitude: 5.291844,
+}
+
+var Amersfoort = City{
+	Name:      "Amersfoort",
+	Latitude:  52.155581,
+	Longitude: 5.389371,
+}
+
+var Leerbroek = City{
+	Name:      "Leerbroek",
+	Latitude:  51.916492,
+	Longitude: 5.038154,
+}
