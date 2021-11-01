@@ -15,9 +15,3 @@ func TestCity_Merge(t *testing.T) {
 	expected := &city.City{Name: "a city"}
 	a.Equal(*expected, expected.Merge())
 }
-
-func TestCity_GetCoordinates(t *testing.T) {
-	a := assert.New(t)
-
-	a.Equal(city.Hengelo.Coordinates, city.GetCoordinates(city.Hengelo.Name))
-}

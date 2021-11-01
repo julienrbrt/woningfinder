@@ -1,8 +1,9 @@
 package city
 
 var Amsterdam = City{
-	Name:        "Amsterdam",
-	Coordinates: []float64{4.900112, 52.371009},
+	Name:      "Amsterdam",
+	Latitude:  52.371009,
+	Longitude: 4.900112,
 	SuggestedDistrict: map[string][]string{
 		"Centrum": {
 			"Burgwallen-Oude Zijde",
@@ -100,171 +101,205 @@ var Amsterdam = City{
 }
 
 var Aalsmeer = City{
-	Name:        "Aalsmeer",
-	Coordinates: []float64{4.761114, 52.265986},
+	Name:      "Aalsmeer",
+	Latitude:  52.265986,
+	Longitude: 4.761114,
 }
 
 var Diemen = City{
-	Name:        "Diemen",
-	Coordinates: []float64{4.960929, 52.342095},
+	Name:      "Diemen",
+	Latitude:  52.342095,
+	Longitude: 4.960929,
 }
 
 var Hoofddorp = City{
-	Name:        "Hoofddorp",
-	Coordinates: []float64{4.667389, 52.302815},
+	Name:      "Hoofddorp",
+	Latitude:  52.302815,
+	Longitude: 4.667389,
 }
 
 var Krommenie = City{
-	Name:        "Krommenie",
-	Coordinates: []float64{4.76612, 52.49528},
+	Name:      "Krommenie",
+	Latitude:  52.49528,
+	Longitude: 4.76612,
 }
 
 var Kudelstaart = City{
-	Name:        "Kudelstaart",
-	Coordinates: []float64{4.750673, 52.233007},
+	Name:      "Kudelstaart",
+	Latitude:  52.233007,
+	Longitude: 4.750673,
 }
 
 var Landsmeer = City{
-	Name:        "Landsmeer",
-	Coordinates: []float64{4.916186, 52.430915},
+	Name:      "Landsmeer",
+	Latitude:  52.430915,
+	Longitude: 4.916186,
 }
 
 var Marken = City{
-	Name:        "Marken",
-	Coordinates: []float64{5.106826, 52.457875},
+	Name:      "Marken",
+	Latitude:  52.457875,
+	Longitude: 5.106826,
 }
 
 var NieuwVennep = City{
-	Name:        "Nieuw-Vennep",
-	Coordinates: []float64{4.621429, 52.26898},
+	Name:      "Nieuw-Vennep",
+	Latitude:  52.26898,
+	Longitude: 4.621429,
 }
 
 var Oostzaan = City{
-	Name:        "Oostzaan",
-	Coordinates: []float64{4.873038, 52.438192},
+	Name:      "Oostzaan",
+	Latitude:  52.438192,
+	Longitude: 4.873038,
 }
 
 var OuderkerkAanDeAmstel = City{
-	Name:        "Ouderkerk aan de Amstel",
-	Coordinates: []float64{4.916469, 52.294668},
+	Name:      "Ouderkerk aan de Amstel",
+	Latitude:  52.294668,
+	Longitude: 4.916469,
 }
 
 var Purmerend = City{
-	Name:        "Purmerend",
-	Coordinates: []float64{4.961483, 52.502479},
+	Name:      "Purmerend",
+	Latitude:  52.502479,
+	Longitude: 4.961483,
 }
 
 var Uithoorn = City{
-	Name:        "Uithoorn",
-	Coordinates: []float64{4.82511, 52.241141},
+	Name:      "Uithoorn",
+	Latitude:  52.241141,
+	Longitude: 4.82511,
 }
 
 var Vijfhuizen = City{
-	Name:        "Vijfhuizen",
-	Coordinates: []float64{4.67818, 52.35085},
+	Name:      "Vijfhuizen",
+	Latitude:  52.35085,
+	Longitude: 4.67818,
 }
 
 var Wormer = City{
-	Name:        "Wormer",
-	Coordinates: []float64{4.859343, 52.505552},
+	Name:      "Wormer",
+	Latitude:  52.505552,
+	Longitude: 4.859343,
 }
 
 var Zwanenburg = City{
-	Name:        "Zwanenburg",
-	Coordinates: []float64{4.743744, 52.377864},
+	Name:      "Zwanenburg",
+	Latitude:  52.377864,
+	Longitude: 4.743744,
 }
 
 var Amstelveen = City{
-	Name:        "Amstelveen",
-	Coordinates: []float64{4.856535, 52.303398},
+	Name:      "Amstelveen",
+	Latitude:  52.303398,
+	Longitude: 4.856535,
 }
 
 var Bussum = City{
-	Name:        "Bussum",
-	Coordinates: []float64{5.162747, 52.277421},
+	Name:      "Bussum",
+	Latitude:  52.277421,
+	Longitude: 5.162747,
 }
 
 var Zaandam = City{
-	Name:        "Zaandam",
-	Coordinates: []float64{4.829861, 52.442493},
+	Name:      "Zaandam",
+	Latitude:  52.442493,
+	Longitude: 4.829861,
 }
 
 var Badhoevedorp = City{
-	Name:        "Badhoevedorp",
-	Coordinates: []float64{4.78447, 52.33888},
+	Name:      "Badhoevedorp",
+	Latitude:  52.33888,
+	Longitude: 4.78447,
 }
 
 var Zaandijk = City{
-	Name:        "Zaandijk",
-	Coordinates: []float64{4.808028, 52.474415},
+	Name:      "Zaandijk",
+	Latitude:  52.474415,
+	Longitude: 4.808028,
 }
 
 var Zuidoostbeemster = City{
-	Name:        "Zuidoostbeemster",
-	Coordinates: []float64{4.942899, 52.515353},
+	Name:      "Zuidoostbeemster",
+	Latitude:  52.515353,
+	Longitude: 4.942899,
 }
 
 var DeKwakel = City{
-	Name:        "De Kwakel",
-	Coordinates: []float64{4.790833, 52.240833},
+	Name:      "De Kwakel",
+	Latitude:  52.240833,
+	Longitude: 4.790833,
 }
 
 var Lisserbroek = City{
-	Name:        "Lisserbroek",
-	Coordinates: []float64{4.566667, 52.25},
+	Name:      "Lisserbroek",
+	Latitude:  52.25,
+	Longitude: 4.566667,
 }
 
 var Purmerland = City{
-	Name:        "Purmerland",
-	Coordinates: []float64{4.926380, 52.481470},
+	Name:      "Purmerland",
+	Latitude:  52.481470,
+	Longitude: 4.926380,
 }
 
 var KoogaandeZaan = City{
-	Name:        "Koog aan de Zaan",
-	Coordinates: []float64{4.802778, 52.458889},
+	Name:      "Koog aan de Zaan",
+	Latitude:  52.458889,
+	Longitude: 4.802778,
 }
 
 var Assendelft = City{
-	Name:        "Assendelft",
-	Coordinates: []float64{4.752192, 52.488680},
+	Name:      "Assendelft",
+	Latitude:  52.488680,
+	Longitude: 4.752192,
 }
 
 var Wormerveer = City{
-	Name:        "Wormerveer",
-	Coordinates: []float64{4.786674, 52.494728},
+	Name:      "Wormerveer",
+	Latitude:  52.494728,
+	Longitude: 4.786674,
 }
 
 var Jisp = City{
-	Name:        "Jisp",
-	Coordinates: []float64{4.859545, 52.511382},
+	Name:      "Jisp",
+	Latitude:  52.511382,
+	Longitude: 4.859545,
 }
 
 var Rijsenhout = City{
-	Name:        "Rijsenhout",
-	Coordinates: []float64{4.687844, 52.258205},
+	Name:      "Rijsenhout",
+	Latitude:  52.258205,
+	Longitude: 4.687844,
 }
 
 var Middenbeemster = City{
-	Name:        "Middenbeemster",
-	Coordinates: []float64{4.909276, 52.549300},
+	Name:      "Middenbeemster",
+	Latitude:  52.549300,
+	Longitude: 4.909276,
 }
 
 var Monnickendam = City{
-	Name:        "Monnickendam",
-	Coordinates: []float64{5.038278, 52.451878},
+	Name:      "Monnickendam",
+	Latitude:  52.451878,
+	Longitude: 5.038278,
 }
 
 var Westzaan = City{
-	Name:        "Westzaan",
-	Coordinates: []float64{4.770612, 52.464256},
+	Name:      "Westzaan",
+	Latitude:  52.464256,
+	Longitude: 4.770612,
 }
 
 var Beinsdorp = City{
-	Name:        "Beinsdorp",
-	Coordinates: []float64{4.593097, 52.286690},
+	Name:      "Beinsdorp",
+	Latitude:  52.286690,
+	Longitude: 4.593097,
 }
 
 var Cruquius = City{
-	Name:        "Cruquius",
-	Coordinates: []float64{4.630087, 52.333317},
+	Name:      "Cruquius",
+	Latitude:  52.333317,
+	Longitude: 4.630087,
 }

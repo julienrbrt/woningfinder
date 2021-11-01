@@ -125,9 +125,10 @@ var cityTable = map[string]City{
 type City struct {
 	CreatedAt         time.Time           `pg:"default:now()" json:"-"`
 	Name              string              `pg:",pk" json:"name"`
+	Latitude          float64             `json:"latitude,omitempty"`
+	Longitude         float64             `json:"longitude,omitempty"`
 	District          []string            `pg:"-" json:"district,omitempty"`
 	SuggestedDistrict map[string][]string `pg:"-" json:"suggested_district,omitempty"`
-	Coordinates       []float64           `pg:"-" json:"coordinates,omitempty"` // as longitude latitude for mapbox
 }
 
 // Merge cities that are supposed to be the same but that housing corporation name differently
@@ -143,21 +144,11 @@ func (c *City) Merge() City {
 		return Heerenberg
 	case strings.Contains(c.Name, "IJsselstein"):
 		return IJsselstein
-	case strings.EqualFold(c.Name, "s-Hertogenbosch"):
+	case strings.EqualFold(c.Name, "Hertogenbosch"):
 		return Hertogenbosch
 	}
 
 	return *c
-}
-
-// GetCoordinates gets the city coordinates
-func GetCoordinates(name string) []float64 {
-	city, ok := cityTable[name]
-	if !ok {
-		return nil
-	}
-
-	return city.Coordinates
 }
 
 // SuggestedCityDistrict permit to get city suggested districts
