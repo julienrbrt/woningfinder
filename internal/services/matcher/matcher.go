@@ -75,7 +75,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 				// user has failed login
 				s.logger.Info("failed to login to corporation", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 				if err := s.hasFailedLogin(user, newCreds); err != nil {
-					s.logger.Error("failed to run update corporation credentials", zap.Error(err))
+					s.logger.Error("failed to update corporation credentials", zap.Error(err))
 				}
 
 				return
@@ -131,7 +131,7 @@ func (s *service) hasFailedLogin(user *customer.User, credentials *customer.Corp
 
 	// update failure count
 	if err := s.userService.UpdateCorporationCredentialsFailureCount(credentials.UserID, credentials.CorporationName, failureCount); err != nil {
-		return fmt.Errorf("failed to updating user %s %s corporation credentials login failure count: %w", user.Email, credentials.CorporationName, err)
+		return fmt.Errorf("failed updating user %s %s corporation credentials login failure count: %w", user.Email, credentials.CorporationName, err)
 	}
 
 	return nil

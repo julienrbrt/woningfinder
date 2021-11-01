@@ -209,10 +209,6 @@ func (c *client) parseExternalID(rawMessage string) (string, error) {
 func (c *client) parseCity(rawCity string) (string, error) {
 	rawCity = strings.TrimSpace(rawCity)
 
-	if len(rawCity) < 2 {
-		return "", fmt.Errorf("a city cannot have less than 2 charaters: got %s", rawCity)
-	}
-
 	// clean city data
 	if strings.Contains(rawCity, " - ") {
 		rawCity = strings.Split(rawCity, " - ")[0]
@@ -224,6 +220,10 @@ func (c *client) parseCity(rawCity string) (string, error) {
 
 	// split city and postcode
 	resultArray := strings.Split(rawCity, " ")
+	rawCity = resultArray[len(resultArray)-1]
+	if len(rawCity) < 2 {
+		return "", fmt.Errorf("a city cannot have less than 2 charaters: got %s", rawCity)
+	}
 
-	return resultArray[len(resultArray)-1], nil
+	return rawCity, nil
 }
