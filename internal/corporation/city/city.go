@@ -144,7 +144,7 @@ func (c *City) Merge() City {
 		return Heerenberg
 	case strings.Contains(c.Name, "IJsselstein"):
 		return IJsselstein
-	case strings.EqualFold(c.Name, "Hertogenbosch"):
+	case strings.Contains(c.Name, "Hertogenbosch"):
 		return Hertogenbosch
 	}
 
