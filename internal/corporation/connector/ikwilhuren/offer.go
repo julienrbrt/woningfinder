@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -207,8 +208,6 @@ func (c *client) parseExternalID(rawMessage string) (string, error) {
 }
 
 func (c *client) parseCity(rawCity string) (string, error) {
-	rawCity = strings.TrimSpace(rawCity)
-
 	// clean city data
 	if strings.Contains(rawCity, " - ") {
 		rawCity = strings.Split(rawCity, " - ")[0]
@@ -218,11 +217,13 @@ func (c *client) parseCity(rawCity string) (string, error) {
 		rawCity = strings.Split(rawCity, " (")[0]
 	}
 
-	// split city and postcode
-	resultArray := strings.Split(rawCity, " ")
-	rawCity = resultArray[len(resultArray)-1]
+	// remove postcode
+	reg := regexp.MustCompile("[0-9]{4}[A-z]{2}")
+	rawCity = reg.ReplaceAllString(rawCity, "")
+	rawCity = strings.TrimSpace(rawCity)
+
 	if len(rawCity) < 2 {
-		return "", fmt.Errorf("a city cannot have less than 2 charaters: got %s", rawCity)
+		return "", fmt.Errorf("city too short, skipping: got %s", rawCity)
 	}
 
 	return rawCity, nil
