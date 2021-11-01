@@ -184,6 +184,7 @@ var CityTable = map[string]City{
 	Hulst.Name:                Hulst,
 	Voorst.Name:               Voorst,
 	Haarlem.Name:              Haarlem,
+	Wijchen.Name:              Wijchen,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

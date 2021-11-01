@@ -111,6 +111,7 @@ var Info = corporation.Corporation{
 		city.Hulst,
 		city.Voorst,
 		city.Haarlem,
+		city.Wijchen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

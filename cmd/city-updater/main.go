@@ -24,6 +24,6 @@ func main() {
 	dbClient := bootstrap.CreateDBClient(logger)
 	for _, city := range city.CityTable {
 		logger.Info("updating city", zap.String("city", city.Name))
-		dbClient.Conn().Model(&city).OnConflict("(name) DO UPDATE").Insert()
+		dbClient.Conn().Model(&city).OnConflict("(name) DO NOTHING").Insert()
 	}
 }

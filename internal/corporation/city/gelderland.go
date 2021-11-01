@@ -125,3 +125,9 @@ var Borculo = City{
 	Latitude:  52.115817,
 	Longitude: 6.524369,
 }
+
+var Wijchen = City{
+	Name:      "Wijchen",
+	Latitude:  51.807085,
+	Longitude: 5.726866,
+}
