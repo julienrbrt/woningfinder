@@ -303,3 +303,51 @@ var Cruquius = City{
 	Latitude:  52.333317,
 	Longitude: 4.630087,
 }
+
+var Loosdrecht = City{
+	Name:      "Loosdrecht",
+	Latitude:  52.206911,
+	Longitude: 5.082358,
+}
+
+var Kortenhoef = City{
+	Name:      "Kortenhoef",
+	Latitude:  52.229263,
+	Longitude: 5.091087,
+}
+
+var Haarlem = City{
+	Name:      "Haarlem",
+	Latitude:  52.379610,
+	Longitude: 4.636226,
+}
+
+var Heemstede = City{
+	Name:      "Heemstede",
+	Latitude:  52.352665,
+	Longitude: 4.621640,
+}
+
+var Hilversum = City{
+	Name:      "Hilversum",
+	Latitude:  52.225530,
+	Longitude: 5.176103,
+}
+
+var Alkmaar = City{
+	Name:      "Alkmaar",
+	Latitude:  52.631853,
+	Longitude: 4.746311,
+}
+
+var Blaricum = City{
+	Name:      "Blaricum",
+	Latitude:  52.272650,
+	Longitude: 5.244662,
+}
+
+var Heerhugowaard = City{
+	Name:      "Heerhugowaard",
+	Latitude:  52.663374,
+	Longitude: 4.828262,
+}

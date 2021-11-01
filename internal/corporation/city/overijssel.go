@@ -220,3 +220,21 @@ var Giethoorn = City{
 	Latitude:  52.721939,
 	Longitude: 6.074150,
 }
+
+var Deventer = City{
+	Name:      "Deventer",
+	Latitude:  52.247498,
+	Longitude: 6.195906,
+}
+
+var Hardenberg = City{
+	Name:      "Hardenberg",
+	Latitude:  52.575136,
+	Longitude: 6.618641,
+}
+
+var Oldenzaal = City{
+	Name:      "Oldenzaal",
+	Latitude:  52.313578,
+	Longitude: 6.927197,
+}
