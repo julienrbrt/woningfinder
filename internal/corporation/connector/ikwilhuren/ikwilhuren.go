@@ -44,6 +44,8 @@ var Info = corporation.Corporation{
 		city.Bilthoven,
 		city.Badhoevedorp,
 		city.Aalsmeer,
+		city.Wierden,
+		city.Hertogenbosch,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
