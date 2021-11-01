@@ -39,13 +39,9 @@ func (s *service) GetCity(name string) (*city.City, error) {
 	}
 
 	// enrich city with suggested city districts and coordinates
-	var districts []string
 	for district := range city.SuggestedCityDistrict(c.Name) {
-		districts = append(districts, district)
+		c.District = append(c.District, district)
 	}
-
-	c.District = districts
-	c.Coordinates = city.GetCoordinates(c.Name)
 
 	return &c, nil
 }
@@ -58,13 +54,9 @@ func (s *service) GetCities() ([]*city.City, error) {
 
 	// enrich cities with suggested city districts and coordinates
 	for i, c := range cities {
-		var districts []string
 		for district := range city.SuggestedCityDistrict(c.Name) {
-			districts = append(districts, district)
+			cities[i].District = append(cities[i].District, district)
 		}
-
-		cities[i].District = districts
-		cities[i].Coordinates = city.GetCoordinates(c.Name)
 	}
 
 	return cities, nil

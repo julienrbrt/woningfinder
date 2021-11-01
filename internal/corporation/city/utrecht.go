@@ -2,8 +2,9 @@ package city
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Utrecht
 var Utrecht = City{
-	Name:        "Utrecht",
-	Coordinates: []float64{5.110414, 52.095942},
+	Name:      "Utrecht",
+	Latitude:  52.095942,
+	Longitude: 5.110414,
 	SuggestedDistrict: map[string][]string{
 		"West": {
 			"Welgelegen",
@@ -118,8 +119,9 @@ var Utrecht = City{
 
 // https://nl.wikipedia.org/wiki/Wijken_en_buurten_in_Zeist
 var Zeist = City{
-	Name:        "Zeist",
-	Coordinates: []float64{5.22785, 52.08944},
+	Name:      "Zeist",
+	Latitude:  52.08944,
+	Longitude: 5.22785,
 	SuggestedDistrict: map[string][]string{
 		"Centrum": {
 			"Carre",
@@ -158,196 +160,235 @@ var Zeist = City{
 }
 
 var Bilthoven = City{
-	Name:        "Bilthoven",
-	Coordinates: []float64{5.20454, 52.129141},
+	Name:      "Bilthoven",
+	Latitude:  52.129141,
+	Longitude: 5.20454,
 }
 
 var Bunnik = City{
-	Name:        "Bunnik",
-	Coordinates: []float64{5.194111, 52.066344},
+	Name:      "Bunnik",
+	Latitude:  52.066344,
+	Longitude: 5.194111,
 }
 
 var Nieuwegein = City{
-	Name:        "Nieuwegein",
-	Coordinates: []float64{5.083612, 52.036715},
+	Name:      "Nieuwegein",
+	Latitude:  52.036715,
+	Longitude: 5.083612,
 }
 
 var Maarssen = City{
-	Name:        "Maarssen",
-	Coordinates: []float64{5.040082, 52.138485},
+	Name:      "Maarssen",
+	Latitude:  52.138485,
+	Longitude: 5.040082,
 }
 
 var WijkBijDuurstede = City{
-	Name:        "Wijk bij Duurstede",
-	Coordinates: []float64{5.33743, 51.97516},
+	Name:      "Wijk bij Duurstede",
+	Latitude:  51.97516,
+	Longitude: 5.33743,
 }
 
 var DenDoler = City{
-	Name:        "Den Dolder",
-	Coordinates: []float64{4.36658, 51.633405},
+	Name:      "Den Dolder",
+	Latitude:  51.633405,
+	Longitude: 4.36658,
 }
 
 var Maartensdijk = City{
-	Name:        "Maartensdijk",
-	Coordinates: []float64{5.17294, 52.15842},
+	Name:      "Maartensdijk",
+	Latitude:  52.15842,
+	Longitude: 5.17294,
 }
 
 var Baambrugge = City{
-	Name:        "Baambrugge",
-	Coordinates: []float64{4.990842, 52.247595},
+	Name:      "Baambrugge",
+	Latitude:  52.247595,
+	Longitude: 4.990842,
 }
 
 var Wilnis = City{
-	Name:        "Wilnis",
-	Coordinates: []float64{4.899067, 52.195378},
+	Name:      "Wilnis",
+	Latitude:  52.195378,
+	Longitude: 4.899067,
 }
 
 var Woerden = City{
-	Name:        "Woerden",
-	Coordinates: []float64{4.891356, 52.086757},
+	Name:      "Woerden",
+	Latitude:  52.086757,
+	Longitude: 4.891356,
 }
 
 var Vianen = City{
-	Name:        "Vianen",
-	Coordinates: []float64{5.09372, 51.989039},
+	Name:      "Vianen",
+	Latitude:  51.989039,
+	Longitude: 5.09372,
 }
 
 var DeMeern = City{
-	Name:        "De Meern",
-	Coordinates: []float64{5.03658, 52.080582},
+	Name:      "De Meern",
+	Latitude:  52.080582,
+	Longitude: 5.03658,
 }
 
 var Papekop = City{
-	Name:        "Papekop",
-	Coordinates: []float64{4.853489, 52.044843},
+	Name:      "Papekop",
+	Latitude:  52.044843,
+	Longitude: 4.853489,
 }
 
 var Breukelen = City{
-	Name:        "Breukelen",
-	Coordinates: []float64{5.002549, 52.172152},
+	Name:      "Breukelen",
+	Latitude:  52.172152,
+	Longitude: 5.002549,
 }
 
 var DeBilt = City{
-	Name:        "De Bilt",
-	Coordinates: []float64{5.178706, 52.109701},
+	Name:      "De Bilt",
+	Latitude:  52.109701,
+	Longitude: 5.178706,
 }
 
 var DriebergenRijsenburg = City{
-	Name:        "Driebergen-Rijsenburg",
-	Coordinates: []float64{5.28267, 52.051922},
+	Name:      "Driebergen-Rijsenburg",
+	Latitude:  52.051922,
+	Longitude: 5.28267,
 }
 
 var IJsselstein = City{
-	Name:        "IJsselstein",
-	Coordinates: []float64{5.045879, 52.024638},
+	Name:      "IJsselstein",
+	Latitude:  52.024638,
+	Longitude: 5.045879,
 }
 
 var Vleuten = City{
-	Name:        "Vleuten",
-	Coordinates: []float64{5.011092, 52.106979},
+	Name:      "Vleuten",
+	Latitude:  52.106979,
+	Longitude: 5.011092,
 }
 
 var Mijdrecht = City{
-	Name:        "Mijdrecht",
-	Coordinates: []float64{4.864817, 52.206018},
+	Name:      "Mijdrecht",
+	Latitude:  52.206018,
+	Longitude: 4.864817,
 }
 
 var Linschoten = City{
-	Name:        "Linschoten",
-	Coordinates: []float64{4.91286, 52.06433},
+	Name:      "Linschoten",
+	Latitude:  52.06433,
+	Longitude: 4.91286,
 }
 
 var Odijk = City{
-	Name:        "Odijk",
-	Coordinates: []float64{5.23439, 52.04947},
+	Name:      "Odijk",
+	Latitude:  52.04947,
+	Longitude: 5.23439,
 }
 
 var Doorn = City{
-	Name:        "Doorn",
-	Coordinates: []float64{5.345864, 52.033299},
+	Name:      "Doorn",
+	Latitude:  52.033299,
+	Longitude: 5.345864,
 }
 
 var Oudewater = City{
-	Name:        "Oudewater",
-	Coordinates: []float64{4.866287, 52.024527},
+	Name:      "Oudewater",
+	Latitude:  52.024527,
+	Longitude: 4.866287,
 }
 
 var Vreeland = City{
-	Name:        "Vreeland",
-	Coordinates: []float64{5.021718, 52.209893},
+	Name:      "Vreeland",
+	Latitude:  52.209893,
+	Longitude: 5.021718,
 }
 
 var Houten = City{
-	Name:        "Houten",
-	Coordinates: []float64{5.167245, 52.035909},
+	Name:      "Houten",
+	Latitude:  52.035909,
+	Longitude: 5.167245,
 }
 
 var Vinkeveen = City{
-	Name:        "Vinkeveen",
-	Coordinates: []float64{4.932163, 52.214764},
+	Name:      "Vinkeveen",
+	Latitude:  52.214764,
+	Longitude: 4.932163,
 }
 
 var Harmelen = City{
-	Name:        "Harmelen",
-	Coordinates: []float64{4.963882, 52.091534},
+	Name:      "Harmelen",
+	Latitude:  52.091534,
+	Longitude: 4.963882,
 }
 
 var Langbroek = City{
-	Name:        "Langbroek",
-	Coordinates: []float64{5.32597, 52.01114},
+	Name:      "Langbroek",
+	Latitude:  52.01114,
+	Longitude: 5.32597,
 }
 
 var Lopik = City{
-	Name:        "Lopik",
-	Coordinates: []float64{4.94915, 51.97528},
+	Name:      "Lopik",
+	Latitude:  51.97528,
+	Longitude: 4.94915,
 }
 
 var Kockengen = City{
-	Name:        "Kockengen",
-	Coordinates: []float64{4.952222, 52.151667},
+	Name:      "Kockengen",
+	Latitude:  52.151667,
+	Longitude: 4.952222,
 }
 
 var Polsbroek = City{
-	Name:        "Polsbroek",
-	Coordinates: []float64{4.851944, 51.978056},
+	Name:      "Polsbroek",
+	Latitude:  51.978056,
+	Longitude: 4.851944,
 }
 
 var Hagestein = City{
-	Name:        "Hagestein",
-	Coordinates: []float64{5.120556, 51.979722},
+	Name:      "Hagestein",
+	Latitude:  51.979722,
+	Longitude: 5.120556,
 }
 
 var Leersum = City{
-	Name:        "Leersum",
-	Coordinates: []float64{5.432013, 52.010658},
+	Name:      "Leersum",
+	Latitude:  52.010658,
+	Longitude: 5.432013,
 }
 
 var Abcoude = City{
-	Name:        "Abcoude",
-	Coordinates: []float64{4.974134, 52.271248},
+	Name:      "Abcoude",
+	Latitude:  52.271248,
+	Longitude: 4.974134,
 }
 
 var Maarn = City{
-	Name:        "Maarn",
-	Coordinates: []float64{5.370910, 52.064015},
+	Name:      "Maarn",
+	Latitude:  52.064015,
+	Longitude: 5.370910,
 }
 
 var Leerdam = City{
-	Name:        "Leerdam",
-	Coordinates: []float64{5.093719, 51.891664},
+	Name:      "Leerdam",
+	Latitude:  51.891664,
+	Longitude: 5.093719,
 }
 
 var Kamerik = City{
-	Name:        "Kamerik",
-	Coordinates: []float64{4.894307, 52.111790},
+	Name:      "Kamerik",
+	Latitude:  52.111790,
+	Longitude: 4.894307,
 }
 
 var Zegveld = City{
-	Name:        "Zegveld",
-	Coordinates: []float64{4.837293, 52.115317},
+	Name:      "Zegveld",
+	Latitude:  52.115317,
+	Longitude: 4.837293,
 }
 
 var Cothen = City{
-	Name:        "Cothen",
-	Coordinates: []float64{5.310461, 51.995363},
+	Name:      "Cothen",
+	Latitude:  51.995363,
+	Longitude: 5.310461,
 }
