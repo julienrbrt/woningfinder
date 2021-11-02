@@ -125,3 +125,123 @@ var Borculo = City{
 	Latitude:  52.115817,
 	Longitude: 6.524369,
 }
+
+var Wijchen = City{
+	Name:      "Wijchen",
+	Latitude:  51.807085,
+	Longitude: 5.726866,
+}
+
+var Nijkerk = City{
+	Name:      "Nijkerk",
+	Latitude:  52.223458,
+	Longitude: 5.485739,
+}
+
+var Nijkerkerveen = City{
+	Name:      "Nijkerkerveen",
+	Latitude:  52.195787,
+	Longitude: 5.465970,
+}
+
+var Barneveld = City{
+	Name:      "Barneveld",
+	Latitude:  52.139371,
+	Longitude: 5.586564,
+}
+
+var Bennekom = City{
+	Name:      "Bennekom",
+	Latitude:  51.998832,
+	Longitude: 5.675970,
+}
+
+var Lunteren = City{
+	Name:      "Lunteren",
+	Latitude:  52.085807,
+	Longitude: 5.619579,
+}
+
+var Scherpenzeel = City{
+	Name:      "Scherpenzeel",
+	Latitude:  52.080084,
+	Longitude: 5.490160,
+}
+
+var Terschuur = City{
+	Name:      "Terschuur",
+	Latitude:  52.164325,
+	Longitude: 5.518422,
+}
+
+var Wageningen = City{
+	Name:      "Wageningen",
+	Latitude:  51.966732,
+	Longitude: 5.663810,
+}
+
+var Wekerom = City{
+	Name:      "Wekerom",
+	Latitude:  52.113900,
+	Longitude: 5.715368,
+}
+
+var BenedenLeeuwen = City{
+	Name:      "Beneden-Leeuwen",
+	Latitude:  51.881976,
+	Longitude: 5.514966,
+}
+
+var Culemborg = City{
+	Name:      "Culemborg",
+	Latitude:  51.956255,
+	Longitude: 5.225603,
+}
+
+var Est = City{
+	Name:      "Est",
+	Latitude:  51.850890,
+	Longitude: 5.317038,
+}
+
+var Geldermalsen = City{
+	Name:      "Geldermalsen",
+	Latitude:  51.883381,
+	Longitude: 5.290201,
+}
+
+var Hedel = City{
+	Name:      "Hedel",
+	Latitude:  51.745031,
+	Longitude: 5.262527,
+}
+
+var Maurik = City{
+	Name:      "Maurik",
+	Latitude:  51.960702,
+	Longitude: 5.423778,
+}
+
+var Opheusden = City{
+	Name:      "Opheusden",
+	Latitude:  51.933622,
+	Longitude: 5.632617,
+}
+
+var Rossum = City{
+	Name:      "Rossum",
+	Latitude:  51.800861,
+	Longitude: 5.335276,
+}
+
+var Tiel = City{
+	Name:      "Tiel",
+	Latitude:  51.887239,
+	Longitude: 5.436690,
+}
+
+var Zaltbommel = City{
+	Name:      "Zaltbommel",
+	Latitude:  51.813746,
+	Longitude: 5.248102,
+}
