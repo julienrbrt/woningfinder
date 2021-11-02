@@ -399,6 +399,12 @@ var Soest = City{
 	Longitude: 5.291844,
 }
 
+var Soesterberg = City{
+	Name:      "Soesterberg",
+	Latitude:  52.119543,
+	Longitude: 5.304264,
+}
+
 var Amersfoort = City{
 	Name:      "Amersfoort",
 	Latitude:  52.155581,
@@ -409,4 +415,34 @@ var Leerbroek = City{
 	Name:      "Leerbroek",
 	Latitude:  51.916492,
 	Longitude: 5.038154,
+}
+
+var Achterveld = City{
+	Name:      "Achterveld",
+	Latitude:  52.136229,
+	Longitude: 5.497583,
+}
+
+var Elst = City{
+	Name:      "Elst",
+	Latitude:  51.985794,
+	Longitude: 5.498410,
+}
+
+var Rhenen = City{
+	Name:      "Rhenen",
+	Latitude:  51.965837,
+	Longitude: 5.571089,
+}
+
+var Veenendaal = City{
+	Name:      "Veenendaal",
+	Latitude:  52.026185,
+	Longitude: 5.556038,
+}
+
+var Meerkerk = City{
+	Name:      "Meerkerk",
+	Latitude:  51.918506,
+	Longitude: 4.993374,
 }

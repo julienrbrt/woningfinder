@@ -101,3 +101,57 @@ var Schiedam = City{
 	Latitude:  51.917806,
 	Longitude: 4.399935,
 }
+
+var Dordrecht = City{
+	Name:      "Dordrecht",
+	Latitude:  51.813784,
+	Longitude: 4.666267,
+}
+
+var Alblasserdam = City{
+	Name:      "Alblasserdam",
+	Latitude:  51.861974,
+	Longitude: 4.659016,
+}
+
+var Zwijndrecht = City{
+	Name:      "Zwijndrecht",
+	Latitude:  51.812408,
+	Longitude: 4.626308,
+}
+
+var Bodegraven = City{
+	Name:      "Bodegraven",
+	Latitude:  52.085862,
+	Longitude: 4.747785,
+}
+
+var Gouda = City{
+	Name:      "Gouda",
+	Latitude:  52.011533,
+	Longitude: 4.712404,
+}
+
+var Waddinxveen = City{
+	Name:      "Waddinxveen",
+	Latitude:  52.040763,
+	Longitude: 4.651915,
+}
+
+var Zevenhuizen = City{
+	Name:      "Zevenhuizen",
+	Latitude:  52.013125,
+	Longitude: 4.580502,
+}
+
+var Arkel = City{
+	Name:      "Arkel",
+	Latitude:  51.865068,
+	Longitude: 4.996332,
+}
+
+var HardinxveldGiessendam = City{
+	Name:      "Hardinxveld-Giessendam",
+	Latitude:  51.826633,
+	Longitude: 4.833307,
+}

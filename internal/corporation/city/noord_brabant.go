@@ -71,3 +71,15 @@ var Best = City{
 	Latitude:  51.511473,
 	Longitude: 5.393913,
 }
+
+var Veen = City{
+	Name:      "Veen",
+	Latitude:  51.776107,
+	Longitude: 5.104138,
+}
+
+var WijkEnAalburg = City{
+	Name:      "Wijk en Aalburg",
+	Latitude:  51.758642,
+	Longitude: 5.103840,
+}

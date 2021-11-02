@@ -328,6 +328,12 @@ var Heemstede = City{
 	Longitude: 4.621640,
 }
 
+var Beverwijk = City{
+	Name:      "Beverwijk",
+	Latitude:  52.481127,
+	Longitude: 4.657607,
+}
+
 var Hilversum = City{
 	Name:      "Hilversum",
 	Latitude:  52.225530,
@@ -350,4 +356,28 @@ var Heerhugowaard = City{
 	Name:      "Heerhugowaard",
 	Latitude:  52.663374,
 	Longitude: 4.828262,
+}
+
+var Graveland = City{
+	Name:      "'s-Graveland",
+	Latitude:  52.243623,
+	Longitude: 5.130789,
+}
+
+var Ankeveen = City{
+	Name:      "Ankeveen",
+	Latitude:  52.266108,
+	Longitude: 5.099327,
+}
+
+var Huizen = City{
+	Name:      "Huizen",
+	Latitude:  52.298370,
+	Longitude: 5.235146,
+}
+
+var Muiden = City{
+	Name:      "Muiden",
+	Latitude:  52.330078,
+	Longitude: 5.070490,
 }
