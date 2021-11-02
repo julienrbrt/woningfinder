@@ -22,8 +22,19 @@ func init() {
 func main() {
 	logger := logging.NewZapLoggerWithoutSentry()
 	dbClient := bootstrap.CreateDBClient(logger)
-	for _, city := range city.CityTable {
+
+	var cities []city.City
+	if err := dbClient.Conn().Model(&cities).Where("latitude IS NULL OR longitude IS NULL").Select(); err != nil {
+		logger.Fatal("error while getting cities without location", zap.Error(err))
+	}
+
+	if len(cities) == 0 {
+		logger.Info("nothing to do")
+		return
+	}
+
+	for _, city := range cities {
 		logger.Info("updating city", zap.String("city", city.Name))
-		dbClient.Conn().Model(&city).OnConflict("(name) DO NOTHING").Insert()
+		dbClient.Conn().Model(&city).OnConflict("(name) DO UPDATE").Insert()
 	}
 }
