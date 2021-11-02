@@ -262,6 +262,7 @@ var GooiVechtstreekInfo = corporation.Corporation{
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
+		corporation.SelectionRandom,
 	},
 }
 
