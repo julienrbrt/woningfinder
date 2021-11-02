@@ -3,7 +3,6 @@ package user
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	pg "github.com/go-pg/pg/v10"
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -22,7 +21,7 @@ func (s *service) CreateHousingPreferences(userID uint, preferences *customer.Ho
 
 	// set and verify housing preferences city
 	for i, city := range preferences.City {
-		newCity, err := s.corporationService.GetCity(strings.Title(city.Name))
+		newCity, err := s.corporationService.GetCity(city.Name)
 		if err != nil {
 			return fmt.Errorf("error the given city %s is not supported: %w", city.Name, err)
 		}
