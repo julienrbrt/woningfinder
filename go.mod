@@ -24,7 +24,7 @@ require (
 	github.com/minio/minio-go/v7 v7.0.15
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/stretchr/testify v1.7.0
-	github.com/stripe/stripe-go/v72 v72.72.0
+	github.com/stripe/stripe-go/v72 v72.73.0
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
