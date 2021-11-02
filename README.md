@@ -15,7 +15,7 @@ WoningFinder is split in multiple components:
 - _[impersonate](../cmd/impersonate)_ permits to get a JWT token for an user in order to impersonate it.
 - _[customer-delete](../cmd/customer-delete)_ permits to delete customers given their email.
 - _[db-migrator](../cmd/db-migrator)_ permits to initialize the database with default values (housing corporations, cities, housing types, selection methods...) and run the databases migrations. It is run as a job before every deploy.
-- _[city-updater](../cmd/city-updater)_ permits to update the city location in the datavase
+- _[city-location-updater](../cmd/city-location-updater)_ permits to update the city location in the database.
 
 ## Issue names
 
