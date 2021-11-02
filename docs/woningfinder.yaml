@@ -98,6 +98,17 @@ jobs:
     kind: PRE_DEPLOY
     name: woningfinder-db-migration
     run_command: bin/db-migrator
+  - environment_slug: go
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: WoningFinder/woningfinder
+    instance_count: 1
+    instance_size_slug: basic-xs
+    kind: POST_DEPLOY
+    name: woningfinder-city-updater
+    run_command: bin/city-location-updater
+    source_dir: /
 name: woningfinder
 region: ams
 services:
