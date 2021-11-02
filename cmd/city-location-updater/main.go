@@ -28,13 +28,10 @@ func main() {
 		logger.Fatal("error while getting cities without location", zap.Error(err))
 	}
 
-	if len(cities) == 0 {
-		logger.Info("nothing to do")
-		return
-	}
-
 	for _, city := range cities {
 		logger.Info("updating city", zap.String("city", city.Name))
-		dbClient.Conn().Model(&city).OnConflict("(name) DO UPDATE").Insert()
+		if _, err := dbClient.Conn().Model(&city).OnConflict("(name) DO UPDATE").Insert(); err != nil {
+			logger.Error("failed updating city", zap.String("city", city.Name), zap.Error(err))
+		}
 	}
 }

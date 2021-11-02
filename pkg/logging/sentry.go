@@ -10,7 +10,7 @@ func mapLoggerToSentry(logger *zap.Logger, DSN string) *zap.Logger {
 	cfg := zapsentry.Configuration{
 		Level:             zapcore.WarnLevel,
 		EnableBreadcrumbs: true,
-		BreadcrumbLevel:   zapcore.ErrorLevel,
+		BreadcrumbLevel:   zapcore.InfoLevel,
 		Tags: map[string]string{
 			"component": "system",
 		},
