@@ -11,13 +11,13 @@ func (s *service) GetHousingPreferencesMatchingCorporation(userID uint) ([]*corp
 	matchingCities := s.dbClient.Conn().
 		Model((*customer.HousingPreferencesCity)(nil)).
 		Where("user_id = ?", userID).
-		ColumnExpr("city_name")
+		ColumnExpr("lower(city_name)") // compare cities lowercase
 
 	// get corporation relevant to user housing preferences
 	var corporationsMatch []corporation.CorporationCity
 	if err := s.dbClient.Conn().
 		Model(&corporationsMatch).
-		Where("city_name IN (?)", matchingCities).
+		Where("lower(city_name) IN (?)", matchingCities).
 		DistinctOn("corporation_name").
 		Select(); err != nil {
 		return nil, fmt.Errorf("error when getting matching corporations: %w", err)
