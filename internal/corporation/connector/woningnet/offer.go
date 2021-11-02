@@ -158,6 +158,11 @@ func (c *client) getPaginatedOffers(commandURL string, resp response) ([]offer, 
 func (c *client) Map(offer offer, houseType corporation.HousingType) (corporation.Offer, error) {
 	var err error
 	var offerURL = c.corporation.URL + offer.AdvertentieURL
+	if strings.Contains(offer.CityAndDistrict, "%") { // escaprd character in city name
+		if offer.CityAndDistrict, err = url.QueryUnescape(offer.CityAndDistrict); err != nil {
+			c.logger.Warn("failed unescaping city", zap.String("address", offer.Address), zap.Error(err), logConnector)
+		}
+	}
 	var cityName = strings.Split(offer.CityAndDistrict, " - ")
 
 	// fill in already known housing characteristics
