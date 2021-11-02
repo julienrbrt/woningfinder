@@ -157,7 +157,6 @@ func (c *client) getPaginatedOffers(commandURL string, resp response) ([]offer, 
 
 func (c *client) Map(offer offer, houseType corporation.HousingType) (corporation.Offer, error) {
 	var err error
-	var minFamilySize, maxFamilySize, minAge, maxAge int
 	var offerURL = c.corporation.URL + offer.AdvertentieURL
 	var cityName = strings.Split(offer.CityAndDistrict, " - ")
 
@@ -209,6 +208,14 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) (corporatio
 		house.Elevator = strings.Contains(e.Text, "lift")
 	})
 
+	// parse offer conditions
+	var minAge int
+	c.collector.OnHTML("div.publicationContainer", func(e *colly.HTMLElement) {
+		if strings.Contains(e.Text, "Senioren") {
+			minAge = 55
+		}
+	})
+
 	if err = c.collector.Visit(offerURL); err != nil {
 		return corporation.Offer{}, fmt.Errorf("error visiting %s: %w", offerURL, err)
 	}
@@ -218,10 +225,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) (corporatio
 		Housing:       house,
 		URL:           offerURL,
 		RawPictureURL: rawPictureURL,
-		MinFamilySize: minFamilySize,
-		MaxFamilySize: maxFamilySize,
 		MinAge:        minAge,
-		MaxAge:        maxAge,
 	}, nil
 }
 

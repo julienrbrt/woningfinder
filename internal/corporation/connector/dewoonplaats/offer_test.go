@@ -36,9 +36,9 @@ func Test_FetchOffer(t *testing.T) {
 		a.NotEmpty(offer.RawPictureURL)
 		a.NotEmpty(offer.ExternalID)
 
-		// if passes stop test
+		// if passes stop test for the corporation
 		if !t.Failed() {
-			return
+			break
 		}
 	}
 }

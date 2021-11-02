@@ -18,6 +18,17 @@ func Test_FetchOffer(t *testing.T) {
 		woningnet.UtrechtInfo,
 		woningnet.HengeloBorneInfo,
 		woningnet.AmsterdamInfo,
+		woningnet.AlmereInfo,
+		woningnet.WoonkeusInfo,
+		woningnet.EemvalleiInfo,
+		woningnet.WoonserviceInfo,
+		woningnet.MercatusInfo,
+		woningnet.MiddenHollandInfo,
+		woningnet.BovenGroningenInfo,
+		woningnet.GooiVechtstreekInfo,
+		woningnet.GroningenInfo,
+		woningnet.HuiswaartsInfo,
+		woningnet.WoongaardInfo,
 	}
 
 	for _, c := range corporations {
@@ -46,9 +57,9 @@ func Test_FetchOffer(t *testing.T) {
 			a.NotEmpty(offer.RawPictureURL)
 			a.NotEmpty(offer.ExternalID)
 
-			// if passes stop test
+			// if passes stop test for a corporation
 			if !t.Failed() {
-				return
+				break
 			}
 		}
 	}

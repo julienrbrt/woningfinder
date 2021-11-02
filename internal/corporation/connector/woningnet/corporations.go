@@ -124,3 +124,198 @@ var AmsterdamInfo = corporation.Corporation{
 		corporation.SelectionRegistrationDate,
 	},
 }
+
+var AlmereInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetalmere.nl", Path: "/webapi"},
+	Name:        "WoningNet Almere",
+	URL:         "https://www.woningnetalmere.nl",
+	Cities: []city.City{
+		city.Almere,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+	},
+}
+
+var WoonkeusInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woonkeus.nl", Path: "/webapi"},
+	Name:        "WoningNet Woonkeus Drechtsteden",
+	URL:         "https://www.woonkeus.nl",
+	Cities: []city.City{
+		city.Alblasserdam,
+		city.Dordrecht,
+		city.Papendrecht,
+		city.Sliedrecht,
+		city.Zwijndrecht,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+	},
+}
+
+var EemvalleiInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningneteemvallei.nl", Path: "/webapi"},
+	Name:        "WoningNet Eemvallei",
+	URL:         "https://www.woningneteemvallei.nl",
+	Cities: []city.City{
+		city.Achterveld,
+		city.Amersfoort,
+		city.Nijkerk,
+		city.Nijkerkerveen,
+		city.Soest,
+		city.Soesterberg,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+		corporation.SelectionFirstComeFirstServed,
+	},
+}
+
+var WoonserviceInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.mijnwoonservice.nl", Path: "/webapi"},
+	Name:        "WoningNet Woonservice",
+	URL:         "https://www.mijnwoonservice.nl",
+	Cities: []city.City{
+		city.Beverwijk,
+		city.Haarlem,
+		city.Heemstede,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRegistrationDate,
+		corporation.SelectionFirstComeFirstServed,
+	},
+}
+
+var MercatusInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.mercatuswoningaanbod.nl", Path: "/webapi"},
+	Name:        "WoningNet Mercatus",
+	URL:         "https://www.mercatuswoningaanbod.nl",
+	Cities: []city.City{
+		city.Bant,
+		city.Emmeloord,
+		city.Nagele,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRegistrationDate,
+	},
+}
+
+var MiddenHollandInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregiomiddenholland.nl", Path: "/webapi"},
+	Name:        "WoningNet Midden-Holland",
+	URL:         "https://www.woningnetregiomiddenholland.nl",
+	Cities: []city.City{
+		city.Bodegraven,
+		city.Gouda,
+		city.Waddinxveen,
+		city.Zevenhuizen,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRegistrationDate,
+	},
+}
+
+var GroningenInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetgroningen.nl", Path: "/webapi"},
+	Name:        "WoningNet Groningen",
+	URL:         "https://www.woningnetgroningen.nl",
+	Cities: []city.City{
+		city.Groningen,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRegistrationDate,
+		corporation.SelectionRandom,
+	},
+}
+
+var BovenGroningenInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetbovengroningen.nl", Path: "/webapi"},
+	Name:        "WoningNet Boven Groningen",
+	URL:         "https://www.woningnetbovengroningen.nl",
+	Cities: []city.City{
+		city.Eenrum,
+		city.Ezinge,
+		city.Kloosterburen,
+		city.Winsum,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRegistrationDate,
+	},
+}
+
+var GooiVechtstreekInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetgooienvechtstreek.nl", Path: "/webapi"},
+	Name:        "WoningNet Gooi en Vechtstreek",
+	URL:         "https://www.woningnetgooienvechtstreek.nl",
+	Cities: []city.City{
+		city.Graveland,
+		city.Ankeveen,
+		city.Blaricum,
+		city.Bussum,
+		city.Hilversum,
+		city.Huizen,
+		city.Kortenhoef,
+		city.Muiden,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRegistrationDate,
+	},
+}
+
+var HuiswaartsInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.huiswaarts.nu", Path: "/webapi"},
+	Name:        "WoningNet Huiswaarts",
+	URL:         "https://www.huiswaarts.nu",
+	Cities: []city.City{
+		city.Barneveld,
+		city.Bennekom,
+		city.Ede,
+		city.Elst,
+		city.Lunteren,
+		city.Rhenen,
+		city.Scherpenzeel,
+		city.Terschuur,
+		city.Veenendaal,
+		city.Wageningen,
+		city.Wekerom,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+		corporation.SelectionFirstComeFirstServed,
+	},
+}
+
+var WoongaardInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woongaard.com", Path: "/webapi"},
+	Name:        "WoningNet Woongaard",
+	URL:         "https://www.woongaard.com",
+	Cities: []city.City{
+		city.Arkel,
+		city.BenedenLeeuwen,
+		city.Culemborg,
+		city.Est,
+		city.Geldermalsen,
+		city.Gorinchem,
+		city.HardinxveldGiessendam,
+		city.Hedel,
+		city.Leerbroek,
+		city.Leerdam,
+		city.Maurik,
+		city.Meerkerk,
+		city.Opheusden,
+		city.Rossum,
+		city.Tiel,
+		city.Veen,
+		city.WijkEnAalburg,
+		city.Zaltbommel,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+		corporation.SelectionFirstComeFirstServed,
+	},
+}

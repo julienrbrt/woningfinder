@@ -51,6 +51,72 @@ func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) co
 			},
 		},
 		{
+			Corporation: woningnet.AlmereInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.AlmereInfo)
+			},
+		},
+		{
+			Corporation: woningnet.WoonkeusInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.WoonkeusInfo)
+			},
+		},
+		{
+			Corporation: woningnet.EemvalleiInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.EemvalleiInfo)
+			},
+		},
+		{
+			Corporation: woningnet.WoonserviceInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.WoonserviceInfo)
+			},
+		},
+		{
+			Corporation: woningnet.MercatusInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.MercatusInfo)
+			},
+		},
+		{
+			Corporation: woningnet.MiddenHollandInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.MiddenHollandInfo)
+			},
+		},
+		{
+			Corporation: woningnet.BovenGroningenInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.BovenGroningenInfo)
+			},
+		},
+		{
+			Corporation: woningnet.GooiVechtstreekInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.GooiVechtstreekInfo)
+			},
+		},
+		{
+			Corporation: woningnet.GroningenInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.GroningenInfo)
+			},
+		},
+		{
+			Corporation: woningnet.HuiswaartsInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.HuiswaartsInfo)
+			},
+		},
+		{
+			Corporation: woningnet.WoongaardInfo,
+			ClientFunc: func() connector.Client {
+				return CreateWoningNetClient(logger, mapboxClient, woningnet.WoongaardInfo)
+			},
+		},
+		{
 			Corporation: zig.DeWoningZoekerInfo,
 			ClientFunc:  func() connector.Client { return CreateZigClient(logger, mapboxClient, zig.DeWoningZoekerInfo) },
 		},
