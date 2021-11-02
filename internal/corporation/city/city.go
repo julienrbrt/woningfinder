@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-// cityTable defines the city name and it's corresponding struct
-var cityTable = map[string]City{
+// CityTable defines the city name and it's corresponding struct
+var CityTable = map[string]City{
 	Aalten.Name:                Aalten,
 	Dinxperlo.Name:             Dinxperlo,
 	Bredevoort.Name:            Bredevoort,
@@ -280,7 +280,7 @@ func (c *City) Merge() City {
 
 // SuggestedCityDistrict permit to get city suggested districts
 func SuggestedCityDistrict(name string) map[string][]string {
-	city, ok := cityTable[name]
+	city, ok := CityTable[name]
 	if !ok || len(city.SuggestedDistrict) == 0 {
 		return nil
 	}

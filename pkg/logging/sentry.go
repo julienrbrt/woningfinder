@@ -2,6 +2,7 @@ package logging
 
 import (
 	"github.com/TheZeroSlave/zapsentry"
+	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -10,13 +11,18 @@ func mapLoggerToSentry(logger *zap.Logger, DSN string) *zap.Logger {
 	cfg := zapsentry.Configuration{
 		Level:             zapcore.WarnLevel,
 		EnableBreadcrumbs: true,
-		BreadcrumbLevel:   zapcore.ErrorLevel,
+		BreadcrumbLevel:   zapcore.WarnLevel,
 		Tags: map[string]string{
 			"component": "system",
 		},
 	}
 
-	core, err := zapsentry.NewCore(cfg, zapsentry.NewSentryClientFromDSN(DSN))
+	core, err := zapsentry.NewCore(cfg, func() (*sentry.Client, error) {
+		return sentry.NewClient(sentry.ClientOptions{
+			Dsn:   DSN,
+			Debug: true,
+		})
+	})
 
 	// needed for breadcrumbs feature
 	logger = logger.With(zapsentry.NewScope())
