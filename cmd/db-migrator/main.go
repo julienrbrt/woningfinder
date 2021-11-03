@@ -8,6 +8,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"go.uber.org/zap"
 )
 
 // init is invoked before main()
@@ -27,19 +28,19 @@ func main() {
 	if len(os.Args) > 1 && os.Args[1] == "init" {
 		// initialize database
 		if _, _, err := migrations.Run(dbClient.Conn(), "init"); err != nil {
-			logger.Sugar().Fatalf("error while initializing database: %w", err)
+			logger.Fatal("error while initializing database", zap.Error(err))
 		}
 	}
 
 	// run migrations
 	oldVersion, newVersion, err := migrations.Run(dbClient.Conn())
 	if err != nil {
-		logger.Sugar().Fatalf("error while migrating database: %w", err)
+		logger.Fatal("error while migrating database", zap.Error(err))
 	}
 
 	if newVersion != oldVersion {
-		logger.Sugar().Infof("database schema migrated from version %d to %d\n", oldVersion, newVersion)
+		logger.Info("database schema migrated", zap.Int64("old_version", oldVersion), zap.Int64("new_version", newVersion))
 	} else {
-		logger.Sugar().Infof("database schema not updated: version stays %d\n", oldVersion)
+		logger.Info("database schema not updated", zap.Int64("version", oldVersion))
 	}
 }

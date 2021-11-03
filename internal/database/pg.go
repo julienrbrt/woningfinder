@@ -20,8 +20,10 @@ type dbClient struct {
 
 // NewDBClient create a connection to postgresql database
 func NewDBClient(logger *logging.Logger, debug bool, host, port, name, user, password string) (DBClient, error) {
+	dbLogger := &dbLogger{logger}
+
 	// set logger
-	pg.SetLogger(logger)
+	pg.SetLogger(dbLogger)
 
 	// in debug mode ssl is not required (debug mode should only be ran locally)
 	sslmode := "require"
@@ -38,7 +40,7 @@ func NewDBClient(logger *logging.Logger, debug bool, host, port, name, user, pas
 
 	// log each query on debug mode
 	if debug {
-		db.AddQueryHook(dbLogger{logger: logger})
+		db.AddQueryHook(dbLogger)
 	}
 
 	// check connection

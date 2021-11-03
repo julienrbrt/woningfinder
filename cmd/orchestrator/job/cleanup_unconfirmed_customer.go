@@ -9,6 +9,7 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/customer"
+	"go.uber.org/zap"
 )
 
 const (
@@ -25,7 +26,7 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 
 	// populate cron
 	c.AddJob(spec, cron.FuncJob(func() {
-		j.logger.Sugar().Info("cleanup-unconfirmed-customer job started")
+		j.logger.Info("cleanup-unconfirmed-customer job started")
 
 		var users []*customer.User
 		// delete unconfirmed account
@@ -36,7 +37,7 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 			Where("up.activated_at IS NULL").
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
-			j.logger.Sugar().Errorf("failed getting unconfirmed users: %w", err)
+			j.logger.Error("failed getting unconfirmed users", zap.Error(err))
 		}
 
 		for _, user := range users {
@@ -52,7 +53,7 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 			// delete only unsubcribed user that did confirm their email since 30 days
 			if !user.Plan.IsSubscribed() && time.Until(user.CreatedAt.Add(maxUnconfirmedTime)) <= 0 {
 				if err := j.userService.DeleteUser(user.Email); err != nil {
-					j.logger.Sugar().Errorf("failed deleting user %s: %w", user.Email, err)
+					j.logger.Error("failed deleting user", zap.String("email", user.Email), zap.Error(err))
 				}
 			}
 		}
@@ -68,7 +69,7 @@ func (j *Jobs) sendEmailReminder(user *customer.User, count int) {
 
 	// send reminder
 	if err := j.emailService.SendEmailConfirmationReminder(user); err != nil {
-		j.logger.Sugar().Error("error sending %s email confirmation reminder: %w", user.Email, err)
+		j.logger.Error("error sending email confirmation reminder", zap.String("email", user.Email), zap.Error(err))
 	}
 
 	// set reminder as sent

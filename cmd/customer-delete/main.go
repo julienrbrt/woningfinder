@@ -11,6 +11,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/util"
+	"go.uber.org/zap"
 )
 
 // init is invoked before main()
@@ -24,16 +25,16 @@ func init() {
 }
 
 func main() {
-	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
+	logger := logging.NewZapLoggerWithoutSentry()
 
 	// read email to delete from arguments
 	if len(os.Args) != 2 {
-		logger.Sugar().Fatal("customer-delete must have an user email as (only) argument\n")
+		logger.Fatal("usage: customer-delete email")
 	}
 
 	email := os.Args[1]
 	if !util.IsEmailValid(email) {
-		logger.Sugar().Fatal("incorrect argument for user to delete: expects a valid email")
+		logger.Fatal("incorrect argument: expects a valid email")
 	}
 
 	dbClient := bootstrap.CreateDBClient(logger)
@@ -43,8 +44,8 @@ func main() {
 
 	// delete user
 	if err := userService.DeleteUser(email); err != nil {
-		logger.Sugar().Fatal(err)
+		logger.Fatal("error when deleting user", zap.Error(err))
 	}
 
-	logger.Sugar().Infof("customer %s successfully deleted 😢\n", email)
+	logger.Info("customer successfully deleted 😢", zap.String("email", email))
 }

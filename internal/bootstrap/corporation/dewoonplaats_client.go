@@ -12,6 +12,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking"
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 	"github.com/woningfinder/woningfinder/pkg/networking/retry"
+	"go.uber.org/zap"
 )
 
 // CreateDeWoonplaatsClient creates a client for De Woonplaats
@@ -19,7 +20,7 @@ func CreateDeWoonplaatsClient(logger *logging.Logger, mapboxClient mapbox.Client
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
 	if err != nil {
-		logger.Sugar().Fatal(err)
+		logger.Fatal("error when creating cookie-jar", zap.Error(err))
 	}
 
 	client := &http.Client{

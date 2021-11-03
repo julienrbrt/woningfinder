@@ -18,6 +18,7 @@ import (
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"go.uber.org/zap"
 )
 
 // init is invoked before main()
@@ -49,7 +50,7 @@ func main() {
 	// set location to the netherlands
 	nl, err := time.LoadLocation("Europe/Amsterdam")
 	if err != nil {
-		logger.Sugar().Fatal(err)
+		logger.Fatal("error when loading location", zap.Error(err))
 	}
 
 	// instantiate job and cron
