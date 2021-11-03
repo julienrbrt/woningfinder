@@ -3,12 +3,13 @@ package logging
 import (
 	"github.com/TheZeroSlave/zapsentry"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 func mapLoggerToSentry(log *zap.Logger, sentryDSN string) *zap.Logger {
 	cfg := zapsentry.Configuration{
-		Level: zapcore.WarnLevel,
+		Level:             zap.WarnLevel,
+		EnableBreadcrumbs: true,
+		BreadcrumbLevel:   zap.WarnLevel,
 		Tags: map[string]string{
 			"component": "system",
 		},
@@ -18,6 +19,9 @@ func mapLoggerToSentry(log *zap.Logger, sentryDSN string) *zap.Logger {
 	if err != nil {
 		log.Fatal("failed to init zapsentry", zap.Error(err))
 	}
+
+	// to use breadcrumbs feature - create new scope explicitly
+	log = log.With(zapsentry.NewScope())
 
 	return zapsentry.AttachCoreToLogger(core, log)
 }
