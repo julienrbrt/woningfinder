@@ -245,3 +245,9 @@ var Zaltbommel = City{
 	Latitude:  51.813746,
 	Longitude: 5.248102,
 }
+
+var Asperen = City{
+	Name:      "Asperen",
+	Latitude:  51.881539,
+	Longitude: 5.108896,
+}
