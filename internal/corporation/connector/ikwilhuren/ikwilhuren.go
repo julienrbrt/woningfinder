@@ -112,6 +112,7 @@ var Info = corporation.Corporation{
 		city.Voorst,
 		city.Haarlem,
 		city.Wijchen,
+		city.Veenendaal,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

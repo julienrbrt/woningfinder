@@ -381,3 +381,15 @@ var Muiden = City{
 	Latitude:  52.330078,
 	Longitude: 5.070490,
 }
+
+var IJmuiden = City{
+	Name:      "IJmuiden",
+	Latitude:  52.458665,
+	Longitude: 4.616454,
+}
+
+var Velserbroek = City{
+	Name:      "Velserbroek",
+	Latitude:  52.433587,
+	Longitude: 4.659507,
+}
