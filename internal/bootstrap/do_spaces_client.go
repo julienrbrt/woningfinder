@@ -10,6 +10,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking"
 	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 	"github.com/woningfinder/woningfinder/pkg/networking/retry"
+	"go.uber.org/zap"
 )
 
 // CreateDOSpacesClient creates the DigitalOcean spaces client
@@ -28,7 +29,7 @@ func CreateDOSpacesClient(logger *logging.Logger) spaces.Client {
 	httpClient := networking.NewClient(&http.Client{Timeout: retry.DefaultTimeout}, defaultMiddleWare...)
 	client, err := spaces.NewClient(logger, httpClient, endpoint, bucketName, accessKey, secretKey)
 	if err != nil {
-		logger.Sugar().Fatal(err)
+		logger.Fatal("error when creating digitalocean spaces client", zap.Error(err))
 	}
 
 	return client

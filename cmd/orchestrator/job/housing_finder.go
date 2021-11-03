@@ -4,6 +4,7 @@ import (
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
+	"go.uber.org/zap"
 )
 
 // HousingFinder populates the housing-finder cron jobs
@@ -15,7 +16,7 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 		// get corporation client
 		client, err := clientProvider.Get(corp.Name)
 		if err != nil {
-			j.logger.Sugar().Error(err)
+			j.logger.Error("error while getting corporation client", zap.Error(err))
 			continue
 		}
 
@@ -23,10 +24,10 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 		schedule := scheduler.CorporationScheduler(corp)
 		for _, s := range schedule {
 			c.Schedule(s, cron.FuncJob(func() {
-				j.logger.Sugar().Infof("housing-finder '%s' job started", corp.Name)
+				j.logger.Info("housing-finder job started", zap.String("corporation", corp.Name))
 
 				if err := j.matcherService.PushOffers(client(), corp); err != nil {
-					j.logger.Sugar().Error(err)
+					j.logger.Error("error while fetching and pushing offers", zap.Error(err))
 				}
 			}))
 		}

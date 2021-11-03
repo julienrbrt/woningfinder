@@ -9,19 +9,24 @@ import (
 )
 
 type dbLogger struct {
-	logger *logging.Logger
+	*logging.Logger
 }
 
-func (db dbLogger) BeforeQuery(ctx context.Context, q *pg.QueryEvent) (context.Context, error) {
+// Printf prints a log as info
+func (l *dbLogger) Printf(_ context.Context, template string, args ...interface{}) {
+	l.Sugar().Infof(template, args)
+}
+
+func (*dbLogger) BeforeQuery(ctx context.Context, q *pg.QueryEvent) (context.Context, error) {
 	return ctx, nil
 }
 
-func (db dbLogger) AfterQuery(ctx context.Context, q *pg.QueryEvent) error {
+func (l *dbLogger) AfterQuery(ctx context.Context, q *pg.QueryEvent) error {
 	query, err := q.FormattedQuery()
 	if err != nil {
 		return err
 	}
 
-	db.logger.Debug("go-pg query log", zap.String("query", string(query)))
+	l.Debug("go-pg query log", zap.String("query", string(query)))
 	return nil
 }

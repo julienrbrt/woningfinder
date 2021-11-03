@@ -13,6 +13,7 @@ import (
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"go.uber.org/zap"
 )
 
 // init is invoked before main()
@@ -39,6 +40,6 @@ func main() {
 	router := handler.NewHandler(logger, jwtAuth, corporationService, userService, emailService, stripeClient)
 
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
-		logger.Sugar().Fatalf("failed to start server: %w", err)
+		logger.Fatal("failed to start server", zap.Error(err))
 	}
 }

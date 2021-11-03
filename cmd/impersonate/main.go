@@ -11,6 +11,7 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/util"
+	"go.uber.org/zap"
 )
 
 // init is invoked before main()
@@ -24,20 +25,20 @@ func init() {
 }
 
 func main() {
-	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
+	logger := logging.NewZapLoggerWithoutSentry()
 
 	if len(os.Args) != 3 {
-		logger.Sugar().Fatal("usage impersonate userID email")
+		logger.Fatal("usage impersonate userID email")
 	}
 
 	userID, err := strconv.ParseUint(os.Args[1], 10, 64)
 	if err != nil {
-		logger.Sugar().Fatal("userID must be an interger")
+		logger.Fatal("userID must be an interger")
 	}
 
 	email := os.Args[2]
 	if !util.IsEmailValid(email) {
-		logger.Sugar().Fatalf("email %s invalid", email)
+		logger.Fatal("email invalid", zap.String("got", email))
 	}
 
 	_, token, _ := auth.CreateJWTUserToken(auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET")), &customer.User{

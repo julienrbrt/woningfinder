@@ -15,6 +15,7 @@ import (
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
+	"go.uber.org/zap"
 )
 
 // init is invoked before main()
@@ -46,14 +47,14 @@ func main() {
 	ch := make(chan corporation.Offers)
 	go func(ch chan corporation.Offers) {
 		if err := matcherService.SubscribeOffers(ch); err != nil {
-			logger.Sugar().Fatal(err)
+			logger.Fatal("failed subscribing to offers", zap.Error(err))
 		}
 	}(ch)
 
 	// match offer
 	for offers := range ch {
 		if err := matcherService.MatchOffer(context.Background(), offers); err != nil {
-			logger.Sugar().Errorf("error while maching offers for corporation %s: %w", offers.Corporation.Name, err)
+			logger.Error("error while maching offers", zap.String("corporation", offers.Corporation.Name), zap.Error(err))
 		}
 	}
 }
