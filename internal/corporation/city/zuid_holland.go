@@ -155,3 +155,9 @@ var HardinxveldGiessendam = City{
 	Latitude:  51.826633,
 	Longitude: 4.833307,
 }
+
+var NieuwerkerkAanDenIJssel = City{
+	Name:      "Nieuwerkerk aan den IJssel",
+	Latitude:  51.977659,
+	Longitude: 4.618028,
+}

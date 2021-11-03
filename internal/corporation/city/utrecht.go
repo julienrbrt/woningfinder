@@ -446,3 +446,39 @@ var Meerkerk = City{
 	Latitude:  51.918506,
 	Longitude: 4.993374,
 }
+
+var BunschotenSpakenburg = City{
+	Name:      "Bunschoten-Spakenburg",
+	Latitude:  52.253175,
+	Longitude: 5.378218,
+}
+
+var Baarn = City{
+	Name:      "Baarn",
+	Latitude:  52.211752,
+	Longitude: 5.285710,
+}
+
+var Woudenberg = City{
+	Name:      "Woudenberg",
+	Latitude:  52.082388,
+	Longitude: 5.415486,
+}
+
+var Eemnes = City{
+	Name:      "Eemnes",
+	Latitude:  52.253196,
+	Longitude: 5.259328,
+}
+
+var Hoogland = City{
+	Name:      "Hoogland",
+	Latitude:  52.188959,
+	Longitude: 5.376644,
+}
+
+var HuisTerHeide = City{
+	Name:      "Huis ter Heide",
+	Latitude:  52.113034,
+	Longitude: 5.261371,
+}

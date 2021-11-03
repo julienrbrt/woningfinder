@@ -70,6 +70,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.Kamerik,
 		city.Zegveld,
 		city.Cothen,
+		city.HuisTerHeide,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
@@ -166,6 +167,11 @@ var EemvalleiInfo = corporation.Corporation{
 		city.Nijkerkerveen,
 		city.Soest,
 		city.Soesterberg,
+		city.BunschotenSpakenburg,
+		city.Baarn,
+		city.Woudenberg,
+		city.Eemnes,
+		city.Hoogland,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -182,6 +188,8 @@ var WoonserviceInfo = corporation.Corporation{
 		city.Beverwijk,
 		city.Haarlem,
 		city.Heemstede,
+		city.IJmuiden,
+		city.Velserbroek,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -212,6 +220,7 @@ var MiddenHollandInfo = corporation.Corporation{
 		city.Gouda,
 		city.Waddinxveen,
 		city.Zevenhuizen,
+		city.NieuwerkerkAanDenIJssel,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -313,6 +322,7 @@ var WoongaardInfo = corporation.Corporation{
 		city.Veen,
 		city.WijkEnAalburg,
 		city.Zaltbommel,
+		city.Asperen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
