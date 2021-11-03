@@ -8,7 +8,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 // CreateZapMiddleware logs requests
@@ -29,7 +28,7 @@ func (m routerLogger) middleware(next http.Handler) http.Handler {
 
 		latency := time.Since(start)
 
-		fields := []zapcore.Field{
+		fields := []zap.Field{
 			zap.String("url", r.URL.String()),
 			zap.String("uri", r.RequestURI),
 			zap.Duration("took", latency),
