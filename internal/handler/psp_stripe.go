@@ -121,7 +121,7 @@ func (h *handler) createStripeCheckoutSession(customer *stripe.Customer, priceID
 	params := &stripe.CheckoutSessionParams{
 		Customer: stripe.String(customer.ID),
 		PaymentMethodTypes: stripe.StringSlice([]string{
-			"card", "ideal", "sepa_debit",
+			"card",
 		}),
 		LineItems: []*stripe.CheckoutSessionLineItemParams{
 			{
