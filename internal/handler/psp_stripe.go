@@ -77,6 +77,11 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// assign stripe customer id to user
+	if err := h.userService.SetStripeCustomerID(user, customer.ID); err != nil {
+		h.logger.Error("failed to attach stripe customer id to user", zap.Error(err))
+	}
+
 	// creating a stripe checkout session
 	session, err := h.createStripeCheckoutSession(customer, plan.StripeProductID)
 	if err != nil {
@@ -116,7 +121,7 @@ func (h *handler) createStripeCheckoutSession(customer *stripe.Customer, priceID
 	params := &stripe.CheckoutSessionParams{
 		Customer: stripe.String(customer.ID),
 		PaymentMethodTypes: stripe.StringSlice([]string{
-			"card",
+			"card", "ideal", "sepa_debit",
 		}),
 		LineItems: []*stripe.CheckoutSessionLineItemParams{
 			{
