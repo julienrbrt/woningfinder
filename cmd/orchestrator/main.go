@@ -61,6 +61,7 @@ func main() {
 	job.CleanupUnconfirmedCustomer(c)
 	job.HousingFinder(c, clientProvider)
 	job.SendWeeklyUpdate(c)
+	job.SendCorporationCredentialsMissingReminder(c)
 
 	// start cron scheduler
 	c.Run()
