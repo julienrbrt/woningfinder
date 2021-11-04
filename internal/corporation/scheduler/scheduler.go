@@ -29,7 +29,7 @@ func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
 
 	// add specific selection time
 	for _, t := range corporation.SelectionTime {
-		schedules = append(schedules, buildSchedule(parser, t.Minute(), t.Hour()))
+		schedules = append(schedules, buildSchedule(parser, t.Hour(), t.Minute()))
 	}
 	schedules = append(schedules, buildSchedule(parser, 18, 00)) // check at 18:00 for every corporation (that arent's first come first served)
 
