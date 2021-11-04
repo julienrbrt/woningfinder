@@ -72,12 +72,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			// parse price
 			priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("div.huurprijs span.page-price"), ".", ""), "€", ""))
-			if offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32); offer.Housing.Price < 100 {
-				// skip all "houses" with a price lower than 100€
-				return
-			}
-
-			if err != nil {
+			if offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32); err != nil {
 				c.logger.Info("error while parsing price", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 				return
 			}
@@ -85,7 +80,13 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			// get housing type
 			offer.Housing.Type = c.parseHousingType(e.ChildText("ul.search-result-specs > li.soortobject"))
 			if offer.Housing.Type == corporation.HousingTypeUndefined {
-				return
+				// skip all undefined "houses" with a price lower than 200€
+				if offer.Housing.Price < 200 {
+					return
+				}
+
+				// we are rewriting everything to appartement as ikwilhuren.nu does not always contains the correct housing type
+				offer.Housing.Type = corporation.HousingTypeAppartement
 			}
 
 			// create new offer
