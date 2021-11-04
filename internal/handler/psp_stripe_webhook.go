@@ -67,7 +67,7 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 
 		// this should NEVER happen
 		if checkoutSession.Customer.ID != user.Plan.StripeCustomerID {
-			render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf("failed to match stripe customer id")))
+			h.logger.Error("failed to match stripe customer id", zap.Error(err))
 			return
 		}
 

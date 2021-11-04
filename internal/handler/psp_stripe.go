@@ -68,18 +68,13 @@ func (h *handler) PaymentProcessor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// create customer in stripe for subscription
+	// create or get customer in stripe for subscription
 	customer, err := h.createStripeCustomer(user)
 	if err != nil {
 		errorMsg := "failed creating stripe customer"
 		h.logger.Error(errorMsg, zap.Error(err))
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
-	}
-
-	// assign stripe customer id to user
-	if err := h.userService.SetStripeCustomerID(user, customer.ID); err != nil {
-		h.logger.Error("failed to attach stripe customer id to user", zap.Error(err))
 	}
 
 	// creating a stripe checkout session
@@ -114,7 +109,17 @@ func (h *handler) createStripeCustomer(user *customer.User) (*stripe.Customer, e
 	params.AddMetadata("user_id", fmt.Sprint(user.ID))
 
 	// create new stripe customer
-	return stripeCustomer.New(params)
+	customer, err := stripeCustomer.New(params)
+	if err != nil {
+		return nil, err
+	}
+
+	// assign stripe customer id to user
+	if err := h.userService.SetStripeCustomerID(user, customer.ID); err != nil {
+		h.logger.Error("failed to set stripe customer id to user", zap.Error(err))
+	}
+
+	return customer, nil
 }
 
 func (h *handler) createStripeCheckoutSession(customer *stripe.Customer, priceID string) (*stripe.CheckoutSession, error) {
