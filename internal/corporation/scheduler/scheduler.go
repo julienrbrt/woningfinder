@@ -2,7 +2,6 @@ package scheduler
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -10,34 +9,29 @@ import (
 
 var parser = cron.NewParser(cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor)
 
-// CorporationScheduler creates schedules (when to fetch their offer) given a selection time for a housing corporation
+// CorporationScheduler creates schedules (when to fetch the offers) for a housing corporation
 func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
 	schedules := []cron.Schedule{
-		// always check at 00:15 for every corporation
-		buildSchedule(parser, 0, 15),
+		buildSchedule(parser, 0, 00), // check at 00:00 for every corporation
 	}
 
-	// for corporation that has first come first served
+	// for corporation that has first come first served we only need to check often
 	if hasFirstComeFirstServed(corporation) {
 		// check by default every 30 minutes from 9-21 hours
-		crontab := "*/30 9-21 * * *"
-
-		// check every 2 minutes for a 20 minutes range if selection time defined
-		if corporation.SelectionTime != (time.Time{}) {
-			crontab = fmt.Sprintf("%d-20/2 %d * * *", corporation.SelectionTime.Minute(), corporation.SelectionTime.Hour())
-		}
-
-		schedule, err := parser.Parse(crontab)
+		schedule, err := parser.Parse("*/30 9-21 * * *")
 		if err != nil {
 			// should never happens
 			panic(err)
 		}
 
-		schedules = append(schedules, schedule)
-	} else {
-		// always check at 18:15 for random
-		schedules = append(schedules, buildSchedule(parser, 18, 15))
+		return append(schedules, schedule)
 	}
+
+	// add specific selection time
+	for _, t := range corporation.SelectionTime {
+		schedules = append(schedules, buildSchedule(parser, t.Minute(), t.Hour()))
+	}
+	schedules = append(schedules, buildSchedule(parser, 18, 00)) // check at 18:00 for every corporation (that arent's first come first served)
 
 	return schedules
 }
