@@ -20,10 +20,10 @@ func Test_CorporationScheduler_Random(t *testing.T) {
 	now := time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)
 	schedules := scheduler.CorporationScheduler(corporation)
 	a.Len(schedules, 2)
-	a.Equal(schedules[0].Next(now).Hour(), 0)
-	a.Equal(schedules[0].Next(now).Minute(), 15)
-	a.Equal(schedules[1].Next(now).Hour(), 18)
-	a.Equal(schedules[1].Next(now).Minute(), 15)
+	a.Equal(0, schedules[0].Next(now).Hour())
+	a.Equal(0, schedules[0].Next(now).Minute())
+	a.Equal(18, schedules[1].Next(now).Hour())
+	a.Equal(0, schedules[1].Next(now).Minute())
 }
 
 func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
@@ -38,29 +38,32 @@ func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 	now := time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)
 	schedules := scheduler.CorporationScheduler(corporation)
 	a.Len(schedules, 2)
-	a.Equal(schedules[0].Next(now).Hour(), 0)
-	a.Equal(schedules[0].Next(now).Minute(), 15)
-	a.Equal(schedules[1].Next(now).Hour(), 9)
-	a.Equal(schedules[1].Next(now).Minute(), 0)
+	a.Equal(0, schedules[0].Next(now).Hour())
+	a.Equal(0, schedules[0].Next(now).Minute())
+	a.Equal(9, schedules[1].Next(now).Hour())
+	a.Equal(0, schedules[1].Next(now).Minute())
 }
 
-func Test_CorporationScheduler_FirstComeFirstServed_SelectionTime(t *testing.T) {
+func Test_CorporationScheduler_SelectionTime(t *testing.T) {
 	a := assert.New(t)
 
 	corporation := corporation.Corporation{
 		SelectionMethod: []corporation.SelectionMethod{
-			corporation.SelectionFirstComeFirstServed,
+			corporation.SelectionRandom,
 		},
 		SelectionTime: []time.Time{
-			scheduler.CreateSelectionTime(18, 00),
+			scheduler.CreateSelectionTime(16, 00),
+			scheduler.CreateSelectionTime(21, 00),
 		},
 	}
 
 	now := time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)
 	schedules := scheduler.CorporationScheduler(corporation)
-	a.Len(schedules, 2)
-	a.Equal(schedules[0].Next(now).Hour(), 0)
-	a.Equal(schedules[0].Next(now).Minute(), 15)
-	a.Equal(schedules[1].Next(now).Hour(), 18)
-	a.Equal(schedules[1].Next(now).Minute(), 00)
+	a.Len(schedules, 4)
+	a.Equal(0, schedules[0].Next(now).Hour())
+	a.Equal(0, schedules[0].Next(now).Minute())
+	a.Equal(16, schedules[1].Next(now).Hour())
+	a.Equal(0, schedules[1].Next(now).Minute())
+	a.Equal(21, schedules[2].Next(now).Hour())
+	a.Equal(0, schedules[2].Next(now).Minute())
 }
