@@ -119,3 +119,9 @@ var Valkenswaard = City{
 	Latitude:  51.352117,
 	Longitude: 5.460120,
 }
+
+var Hank = City{
+	Name:      "Hank",
+	Latitude:  51.734284,
+	Longitude: 4.900993,
+}

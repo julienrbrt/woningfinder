@@ -255,6 +255,11 @@ var CityTable = map[string]City{
 	Valkenswaard.Name:            Valkenswaard,
 	Hoevelaken.Name:              Hoevelaken,
 	Zandvoort.Name:               Zandvoort,
+	Hank.Name:                    Hank,
+	Meteren.Name:                 Meteren,
+	Barendrecht.Name:             Barendrecht,
+	Weesp.Name:                   Weesp,
+	Blokzijl.Name:                Blokzijl,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

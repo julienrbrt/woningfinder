@@ -238,3 +238,9 @@ var Oldenzaal = City{
 	Latitude:  52.313578,
 	Longitude: 6.927197,
 }
+
+var Blokzijl = City{
+	Name:      "Blokzijl",
+	Latitude:  52.726943,
+	Longitude: 5.960919,
+}
