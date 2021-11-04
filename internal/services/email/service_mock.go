@@ -50,3 +50,7 @@ func (s *serviceMock) SendBye(_ *customer.User) error {
 func (s *serviceMock) ContactFormSubmission(name, email, message string) error {
 	return s.err
 }
+
+func (s *serviceMock) SendWaitingListConfirmation(email, city string) error {
+	return s.err
+}

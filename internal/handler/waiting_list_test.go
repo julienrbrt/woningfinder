@@ -139,6 +139,34 @@ func Test_WaitingListForm_ErrUSerService(t *testing.T) {
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
 
+func Test_WaitingListForm_ErrEmailService(t *testing.T) {
+	a := assert.New(t)
+	logger := logging.NewZapLoggerWithoutSentry()
+
+	corporationServiceMock := corporationService.NewServiceMock(nil)
+	userServiceMock := userService.NewServiceMock(nil)
+	emailServiceMock := emailService.NewServiceMock(errors.New("foo"))
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+
+	// create request
+	data, err := ioutil.ReadFile("testdata/waitinglist-request.json")
+	a.NoError(err)
+
+	req, err := http.NewRequest(http.MethodPost, "/waitinglist", strings.NewReader(string(data)))
+	req.Header.Set("Content-Type", "application/json")
+	a.NoError(err)
+
+	// record response
+	rr := httptest.NewRecorder()
+	h := http.HandlerFunc(handler.WaitingListForm)
+
+	// server request
+	h.ServeHTTP(rr, req)
+
+	// verify status code
+	a.Equal(http.StatusOK, rr.Code)
+}
+
 func Test_WaitingListForm_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()

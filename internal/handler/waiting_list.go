@@ -64,5 +64,10 @@ func (h *handler) WaitingListForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// send waiting list confirmation
+	if err := h.emailService.SendWaitingListConfirmation(waitingListRequest.Email, waitingListRequest.CityName); err != nil {
+		h.logger.Error("error while sending waiting list confirmation email", zap.Error(err))
+	}
+
 	// returns 200 by default
 }

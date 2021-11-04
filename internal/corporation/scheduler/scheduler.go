@@ -17,8 +17,8 @@ func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
 
 	// for corporation that has first come first served we only need to check often
 	if hasFirstComeFirstServed(corporation) {
-		// check by default every 30 minutes from 9-21 hours
-		schedule, err := parser.Parse("*/30 9-21 * * *")
+		// check by default every 30 minutes from 8-21 hours
+		schedule, err := parser.Parse("*/30 8-21 * * *")
 		if err != nil {
 			// should never happens
 			panic(err)
