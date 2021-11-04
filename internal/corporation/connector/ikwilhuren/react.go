@@ -25,7 +25,7 @@ func (c *client) React(offer corporation.Offer) error {
 
 	var response reactResponse
 	if err := json.Unmarshal(resp, &response); err != nil {
-		return fmt.Errorf("ikwilhuren connector: error parsing react result %v: %w", resp, err)
+		return fmt.Errorf("error parsing react result %v: %w", resp, err)
 	}
 
 	if !response.Success {

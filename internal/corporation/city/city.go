@@ -260,6 +260,7 @@ var CityTable = map[string]City{
 	Barendrecht.Name:             Barendrecht,
 	Weesp.Name:                   Weesp,
 	Blokzijl.Name:                Blokzijl,
+	Hasselt.Name:                 Hasselt,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

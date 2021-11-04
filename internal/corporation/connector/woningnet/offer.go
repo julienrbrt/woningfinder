@@ -317,7 +317,7 @@ func (c *client) parsePictureURL(path string) (*url.URL, error) {
 
 	pictureURL, err := url.Parse(path)
 	if err != nil {
-		return nil, fmt.Errorf("woningnet connector: failed to parse picture url %s: %w", path, err)
+		return nil, fmt.Errorf("failed to parse picture url %s: %w", path, err)
 	}
 
 	return pictureURL, nil
