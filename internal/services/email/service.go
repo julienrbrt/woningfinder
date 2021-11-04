@@ -24,6 +24,7 @@ type Service interface {
 	SendCorporationCredentialsError(user *customer.User, corporationName string) error
 	SendBye(user *customer.User) error
 
+	SendWaitingListConfirmation(email, city string) error
 	ContactFormSubmission(name, email, message string) error
 }
 
