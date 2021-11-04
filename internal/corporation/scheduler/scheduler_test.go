@@ -51,7 +51,9 @@ func Test_CorporationScheduler_FirstComeFirstServed_SelectionTime(t *testing.T) 
 		SelectionMethod: []corporation.SelectionMethod{
 			corporation.SelectionFirstComeFirstServed,
 		},
-		SelectionTime: scheduler.CreateSelectionTime(18, 00),
+		SelectionTime: []time.Time{
+			scheduler.CreateSelectionTime(18, 00),
+		},
 	}
 
 	now := time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)

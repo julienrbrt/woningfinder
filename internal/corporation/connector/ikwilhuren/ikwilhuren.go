@@ -2,9 +2,11 @@ package ikwilhuren
 
 import (
 	"net/url"
+	"time"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 )
 
 var Info = corporation.Corporation{
@@ -116,6 +118,12 @@ var Info = corporation.Corporation{
 		city.Valkenswaard,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
-		corporation.SelectionFirstComeFirstServed,
+		corporation.SelectionRandom,
+	},
+	SelectionTime: []time.Time{
+		scheduler.CreateSelectionTime(8, 30),
+		scheduler.CreateSelectionTime(12, 30),
+		scheduler.CreateSelectionTime(18, 0),
+		scheduler.CreateSelectionTime(21, 0),
 	},
 }
