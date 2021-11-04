@@ -12,11 +12,12 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	firstUnconfirmedReminderTime  = 24 * time.Hour
-	secondUnconfirmedReminderTime = 72 * time.Hour
-	maxUnconfirmedTime            = 30 * 24 * time.Hour
-)
+const maxUnconfirmedTime = 30 * 24 * time.Hour
+
+var unconfirmedReminderTime = map[int]time.Duration{
+	1: 24 * time.Hour, // 1 day
+	2: 72 * time.Hour, // 3 days
+}
 
 // CleanupUnconfirmedCustomer reminds a unconfirmed customers to confirm their account
 // and deletes the customers that have an unconfirmed email for more than maxUnconfirmedTime
@@ -42,12 +43,10 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 
 		for _, user := range users {
 			// send reminder to users that didn't confirm their email
-			if time.Until(user.CreatedAt.Add(firstUnconfirmedReminderTime)) <= 0 {
-				j.sendEmailReminder(user, 1)
-			}
-
-			if time.Until(user.CreatedAt.Add(secondUnconfirmedReminderTime)) <= 0 {
-				j.sendEmailReminder(user, 2)
+			for count, duration := range unconfirmedReminderTime {
+				if time.Until(user.CreatedAt.Add(duration)) <= 0 {
+					j.sendEmailConfirmationReminder(user, count)
+				}
 			}
 
 			// delete only unsubcribed user that did confirm their email since 30 days
@@ -60,7 +59,7 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 	}))
 }
 
-func (j *Jobs) sendEmailReminder(user *customer.User, count int) {
+func (j *Jobs) sendEmailConfirmationReminder(user *customer.User, count int) {
 	// check if reminder already sent
 	uuid := base64.StdEncoding.EncodeToString([]byte(user.Email + fmt.Sprintf("customer confirmation email reminder %d sent", count)))
 	if j.redisClient.HasUUID(uuid) {
@@ -70,6 +69,7 @@ func (j *Jobs) sendEmailReminder(user *customer.User, count int) {
 	// send reminder
 	if err := j.emailService.SendEmailConfirmationReminder(user); err != nil {
 		j.logger.Error("error sending email confirmation reminder", zap.String("email", user.Email), zap.Error(err))
+		return
 	}
 
 	// set reminder as sent
