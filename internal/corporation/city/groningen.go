@@ -35,3 +35,21 @@ var Winsum = City{
 	Latitude:  53.332758,
 	Longitude: 6.514356,
 }
+
+var TenBoer = City{
+	Name:      "Ten Boer",
+	Latitude:  53.277081,
+	Longitude: 6.697841,
+}
+
+var Loppersum = City{
+	Name:      "Loppersum",
+	Latitude:  53.331643,
+	Longitude: 6.746854,
+}
+
+var Middelstum = City{
+	Name:      "Middelstum",
+	Latitude:  53.346539,
+	Longitude: 6.641384,
+}

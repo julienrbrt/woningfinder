@@ -482,3 +482,9 @@ var HuisTerHeide = City{
 	Latitude:  52.113034,
 	Longitude: 5.261371,
 }
+
+var Waverveen = City{
+	Name:      "Waverveen",
+	Latitude:  52.220197,
+	Longitude: 4.896233,
+}

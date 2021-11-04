@@ -261,6 +261,13 @@ var CityTable = map[string]City{
 	Weesp.Name:                   Weesp,
 	Blokzijl.Name:                Blokzijl,
 	Hasselt.Name:                 Hasselt,
+	Kerkdriel.Name:               Kerkdriel,
+	Waverveen.Name:               Waverveen,
+	TenBoer.Name:                 TenBoer,
+	Naarden.Name:                 Naarden,
+	Loppersum.Name:               Loppersum,
+	Middelstum.Name:              Middelstum,
+	Zwartsluis.Name:              Zwartsluis,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
