@@ -268,6 +268,14 @@ var CityTable = map[string]City{
 	Loppersum.Name:               Loppersum,
 	Middelstum.Name:              Middelstum,
 	Zwartsluis.Name:              Zwartsluis,
+	Oisterwijk.Name:              Oisterwijk,
+	AlphenAanDenRijn.Name:        AlphenAanDenRijn,
+	Lelystad.Name:                Lelystad,
+	Zeewolde.Name:                Zeewolde,
+	Schoonebeek.Name:             Schoonebeek,
+	BerkelEnschot.Name:           BerkelEnschot,
+	Veldhoven.Name:               Veldhoven,
+	Vught.Name:                   Vught,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
