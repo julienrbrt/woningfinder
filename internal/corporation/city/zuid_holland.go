@@ -161,3 +161,9 @@ var NieuwerkerkAanDenIJssel = City{
 	Latitude:  51.977659,
 	Longitude: 4.618028,
 }
+
+var Barendrecht = City{
+	Name:      "Barendrecht",
+	Latitude:  51.855353,
+	Longitude: 4.539342,
+}

@@ -32,6 +32,7 @@ func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 	corporation := corporation.Corporation{
 		SelectionMethod: []corporation.SelectionMethod{
 			corporation.SelectionFirstComeFirstServed,
+			corporation.SelectionRegistrationDate,
 		},
 	}
 
@@ -50,6 +51,7 @@ func Test_CorporationScheduler_SelectionTime(t *testing.T) {
 	corporation := corporation.Corporation{
 		SelectionMethod: []corporation.SelectionMethod{
 			corporation.SelectionRandom,
+			corporation.SelectionRegistrationDate,
 		},
 		SelectionTime: []time.Time{
 			scheduler.CreateSelectionTime(16, 00),

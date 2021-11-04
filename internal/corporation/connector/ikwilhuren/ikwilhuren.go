@@ -116,6 +116,7 @@ var Info = corporation.Corporation{
 		city.Wijchen,
 		city.Veenendaal,
 		city.Valkenswaard,
+		city.Barendrecht,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
