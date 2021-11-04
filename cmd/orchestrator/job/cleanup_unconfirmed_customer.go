@@ -42,12 +42,7 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 		}
 
 		for _, user := range users {
-			// send reminder to users that didn't confirm their email
-			for count, duration := range unconfirmedReminderTime {
-				if time.Until(user.CreatedAt.Add(duration)) <= 0 {
-					j.sendEmailConfirmationReminder(user, count)
-				}
-			}
+			j.sendEmailConfirmationReminder(user)
 
 			// delete only unsubcribed user that did confirm their email since 30 days
 			if !user.Plan.IsSubscribed() && time.Until(user.CreatedAt.Add(maxUnconfirmedTime)) <= 0 {
@@ -59,19 +54,24 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 	}))
 }
 
-func (j *Jobs) sendEmailConfirmationReminder(user *customer.User, count int) {
-	// check if reminder already sent
-	uuid := base64.StdEncoding.EncodeToString([]byte(user.Email + fmt.Sprintf("customer confirmation email reminder %d sent", count)))
-	if j.redisClient.HasUUID(uuid) {
-		return
-	}
+// send reminder to users that didn't confirm their email
+func (j *Jobs) sendEmailConfirmationReminder(user *customer.User) {
+	for count, duration := range unconfirmedReminderTime {
+		// check if reminder already sent
+		uuid := base64.StdEncoding.EncodeToString([]byte(user.Email + fmt.Sprintf("customer confirmation email reminder %d sent", count)))
+		if j.redisClient.HasUUID(uuid) {
+			continue
+		}
 
-	// send reminder
-	if err := j.emailService.SendEmailConfirmationReminder(user); err != nil {
-		j.logger.Error("error sending email confirmation reminder", zap.String("email", user.Email), zap.Error(err))
-		return
-	}
+		if time.Until(user.CreatedAt.Add(duration)) <= 0 {
+			// send reminder
+			if err := j.emailService.SendEmailConfirmationReminder(user); err != nil {
+				j.logger.Error("error sending email confirmation reminder", zap.String("email", user.Email), zap.Error(err))
+				return
+			}
 
-	// set reminder as sent
-	j.redisClient.SetUUID(uuid)
+			j.redisClient.SetUUID(uuid)
+			return
+		}
+	}
 }

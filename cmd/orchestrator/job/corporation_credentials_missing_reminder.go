@@ -37,29 +37,29 @@ func (j *Jobs) SendCorporationCredentialsMissingReminder(c *cron.Cron) {
 				continue
 			}
 
-			// send reminder to users that still does not have corporation credentials
-			for count, duration := range corporationCredentialsMissingReminderTime {
-				if time.Until(user.CreatedAt.Add(duration)) <= 0 {
-					j.sendEmailCorporationCredentialsMissingReminder(user, count)
-				}
-			}
+			j.sendEmailCorporationCredentialsMissingReminder(user)
 		}
 	}))
 }
 
-func (j *Jobs) sendEmailCorporationCredentialsMissingReminder(user *customer.User, count int) {
-	// check if reminder already sent
-	uuid := base64.StdEncoding.EncodeToString([]byte(user.Email + fmt.Sprintf("customer corporation credentials missing reminder %d sent", count)))
-	if j.redisClient.HasUUID(uuid) {
-		return
-	}
+// send reminder to users that still does not have corporation credentials
+func (j *Jobs) sendEmailCorporationCredentialsMissingReminder(user *customer.User) {
+	for count, duration := range corporationCredentialsMissingReminderTime {
+		// check if reminder already sent
+		uuid := base64.StdEncoding.EncodeToString([]byte(user.Email + fmt.Sprintf("customer corporation credentials missing reminder %d sent", count)))
+		if j.redisClient.HasUUID(uuid) {
+			continue
+		}
 
-	// send reminder
-	if err := j.emailService.SendCorporationCredentialsMissing(user); err != nil {
-		j.logger.Error("error while sending credentials missing reminder", zap.Error(err))
-		return
-	}
+		if time.Until(user.CreatedAt.Add(duration)) <= 0 {
+			// send reminder
+			if err := j.emailService.SendCorporationCredentialsMissing(user); err != nil {
+				j.logger.Error("error while sending credentials missing reminder", zap.Error(err))
+				return
+			}
 
-	// set reminder as sent
-	j.redisClient.SetUUID(uuid)
+			j.redisClient.SetUUID(uuid)
+			return
+		}
+	}
 }
