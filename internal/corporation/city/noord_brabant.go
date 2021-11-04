@@ -83,3 +83,39 @@ var WijkEnAalburg = City{
 	Latitude:  51.758642,
 	Longitude: 5.103840,
 }
+
+var Werkendam = City{
+	Name:      "Werkendam",
+	Latitude:  51.813868,
+	Longitude: 4.893017,
+}
+
+var Sleeuwijk = City{
+	Name:      "Sleeuwijk",
+	Latitude:  51.815661,
+	Longitude: 4.951988,
+}
+
+var Nieuwendijk = City{
+	Name:      "Nieuwendijk",
+	Latitude:  51.775081,
+	Longitude: 4.922141,
+}
+
+var Woudrichem = City{
+	Name:      "Woudrichem",
+	Latitude:  51.812233,
+	Longitude: 4.996781,
+}
+
+var Eethen = City{
+	Name:      "Eethen",
+	Latitude:  51.731242,
+	Longitude: 5.054366,
+}
+
+var Valkenswaard = City{
+	Name:      "Valkenswaard",
+	Latitude:  51.352117,
+	Longitude: 5.460120,
+}
