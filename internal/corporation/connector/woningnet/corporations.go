@@ -71,6 +71,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.Zegveld,
 		city.Cothen,
 		city.HuisTerHeide,
+		city.Waverveen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
@@ -235,6 +236,7 @@ var GroningenInfo = corporation.Corporation{
 	URL:         "https://www.woningnetgroningen.nl",
 	Cities: []city.City{
 		city.Groningen,
+		city.TenBoer,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -251,6 +253,8 @@ var BovenGroningenInfo = corporation.Corporation{
 		city.Ezinge,
 		city.Kloosterburen,
 		city.Winsum,
+		city.Loppersum,
+		city.Middelstum,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -271,10 +275,12 @@ var GooiVechtstreekInfo = corporation.Corporation{
 		city.Kortenhoef,
 		city.Muiden,
 		city.Weesp,
+		city.Naarden,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
-		corporation.SelectionRegistrationDate,
 		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+		corporation.SelectionFirstComeFirstServed,
 	},
 }
 
@@ -336,6 +342,7 @@ var WoongaardInfo = corporation.Corporation{
 		city.Eethen,
 		city.Hank,
 		city.Meteren,
+		city.Kerkdriel,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

@@ -250,3 +250,9 @@ var Hasselt = City{
 	Latitude:  52.590816,
 	Longitude: 6.088767,
 }
+
+var Zwartsluis = City{
+	Name:      "Zwartsluis",
+	Latitude:  52.640046,
+	Longitude: 6.070890,
+}

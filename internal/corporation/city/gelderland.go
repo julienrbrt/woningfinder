@@ -281,3 +281,9 @@ var Meteren = City{
 	Latitude:  51.866610,
 	Longitude: 5.287489,
 }
+
+var Kerkdriel = City{
+	Name:      "Kerkdriel",
+	Latitude:  51.772554,
+	Longitude: 5.340632,
+}

@@ -405,3 +405,9 @@ var Weesp = City{
 	Latitude:  52.307585,
 	Longitude: 5.041324,
 }
+
+var Naarden = City{
+	Name:      "Naarden",
+	Latitude:  52.295823,
+	Longitude: 5.163106,
+}
