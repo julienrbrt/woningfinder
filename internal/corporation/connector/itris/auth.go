@@ -9,7 +9,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 )
 
-var errItrisBlocked = errors.New("itris connector: error authentication: woningfinder blocked")
+var errItrisBlocked = errors.New("error itris authentication: woningfinder blocked")
 
 func (c *client) Login(username, password string) error {
 	loginURL := c.corporation.APIEndpoint.String() + "/inloggen/index.xml"
@@ -57,7 +57,7 @@ func (c *client) Login(username, password string) error {
 
 	// visit login page
 	if err := c.collector.Visit(loginURL); err != nil {
-		return fmt.Errorf("itris connector: error visiting login page: %w", err)
+		return fmt.Errorf("error visiting login page: %w", err)
 	}
 
 	return hasErrLogin

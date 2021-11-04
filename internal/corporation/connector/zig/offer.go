@@ -234,7 +234,7 @@ func (c *client) parsePictureURL(offer *offerDetails) (*url.URL, error) {
 	path := c.corporation.URL + offer.Pictures[0].URI
 	pictureURL, err := url.Parse(path)
 	if err != nil {
-		return nil, fmt.Errorf("zig connector: failed to parse picture url %s: %w", path, err)
+		return nil, fmt.Errorf("failed to parse picture url %s: %w", path, err)
 	}
 
 	return pictureURL, nil

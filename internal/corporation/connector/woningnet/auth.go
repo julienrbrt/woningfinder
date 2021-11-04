@@ -48,7 +48,7 @@ func (c *client) Login(username, password string) error {
 
 	// visit login page
 	if err := c.collector.Visit(loginURL); err != nil {
-		return fmt.Errorf("woningnet connector: error visiting login page: %w", err)
+		return fmt.Errorf("error visiting login page: %w", err)
 	}
 
 	return hasErrLogin

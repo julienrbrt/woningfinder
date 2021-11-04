@@ -244,3 +244,9 @@ var Blokzijl = City{
 	Latitude:  52.726943,
 	Longitude: 5.960919,
 }
+
+var Hasselt = City{
+	Name:      "Hasselt",
+	Latitude:  52.590816,
+	Longitude: 6.088767,
+}

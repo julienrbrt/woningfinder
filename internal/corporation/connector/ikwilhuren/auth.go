@@ -24,7 +24,7 @@ func (c *client) Login(username, password string) error {
 		// login failed if returns 403
 		if netErr, ok := networking.AsNetworkingError(err); ok {
 			if netErr.Response().StatusCode == http.StatusForbidden {
-				return fmt.Errorf("ikwilhuren connector: error authentication: %w", connector.ErrAuthFailed)
+				return fmt.Errorf("error authentication: %w", connector.ErrAuthFailed)
 			}
 		}
 
@@ -33,7 +33,7 @@ func (c *client) Login(username, password string) error {
 
 	var response loginResponse
 	if err := json.Unmarshal(resp, &response); err != nil {
-		return fmt.Errorf("ikwilhuren connector: error parsing login result %v: %w", resp, err)
+		return fmt.Errorf("error parsing login result %v: %w", resp, err)
 	}
 
 	return nil

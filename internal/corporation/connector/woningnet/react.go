@@ -46,7 +46,7 @@ func (c *client) React(offer corporation.Offer) error {
 
 	// visit login page
 	if err := c.collector.Visit(reactURL); err != nil {
-		return fmt.Errorf("woningnet connector: error visiting react page: %w", err)
+		return fmt.Errorf("error visiting react page: %w", err)
 	}
 
 	return hasReacted

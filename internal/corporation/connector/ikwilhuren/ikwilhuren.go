@@ -124,7 +124,7 @@ var Info = corporation.Corporation{
 	SelectionTime: []time.Time{
 		scheduler.CreateSelectionTime(8, 30),
 		scheduler.CreateSelectionTime(12, 30),
-		scheduler.CreateSelectionTime(18, 0),
-		scheduler.CreateSelectionTime(21, 0),
+		scheduler.CreateSelectionTime(16, 30),
+		scheduler.CreateSelectionTime(20, 0),
 	},
 }
