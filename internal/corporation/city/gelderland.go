@@ -275,3 +275,9 @@ var Hoevelaken = City{
 	Latitude:  52.176022,
 	Longitude: 5.456106,
 }
+
+var Meteren = City{
+	Name:      "Meteren",
+	Latitude:  51.866610,
+	Longitude: 5.287489,
+}

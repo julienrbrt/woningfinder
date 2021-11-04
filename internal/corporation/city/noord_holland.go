@@ -399,3 +399,9 @@ var Zandvoort = City{
 	Latitude:  52.374148,
 	Longitude: 4.531213,
 }
+
+var Weesp = City{
+	Name:      "Weesp",
+	Latitude:  52.307585,
+	Longitude: 5.041324,
+}

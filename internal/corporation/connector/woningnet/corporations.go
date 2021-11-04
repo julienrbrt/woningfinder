@@ -270,6 +270,7 @@ var GooiVechtstreekInfo = corporation.Corporation{
 		city.Huizen,
 		city.Kortenhoef,
 		city.Muiden,
+		city.Weesp,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -333,6 +334,8 @@ var WoongaardInfo = corporation.Corporation{
 		city.Nieuwendijk,
 		city.Woudrichem,
 		city.Eethen,
+		city.Hank,
+		city.Meteren,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
