@@ -56,9 +56,23 @@ func (h *handler) StripeWebhook(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// confirm subscription has payment went through
-		user, err := h.userService.ConfirmSubscription(checkoutSession.CustomerDetails.Email, checkoutSession.Customer.ID)
+		// get user
+		user, err := h.userService.GetUser(checkoutSession.CustomerDetails.Email)
 		if err != nil {
+			errorMsg := "error while getting user"
+			h.logger.Error(errorMsg, zap.Error(err))
+			render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
+			return
+		}
+
+		// this should NEVER happen
+		if checkoutSession.Customer.ID != user.Plan.StripeCustomerID {
+			render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf("failed to match stripe customer id")))
+			return
+		}
+
+		// confirm subscription has payment went through
+		if err := h.userService.ConfirmSubscription(checkoutSession.Customer.ID); err != nil {
 			errorMsg := "error while processing payment"
 			h.logger.Error(errorMsg, zap.Error(err))
 			render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
