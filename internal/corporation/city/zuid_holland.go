@@ -167,3 +167,9 @@ var Barendrecht = City{
 	Latitude:  51.855353,
 	Longitude: 4.539342,
 }
+
+var AlphenAanDenRijn = City{
+	Name:      "Alphen aan den Rijn",
+	Latitude:  52.129273,
+	Longitude: 4.664528,
+}

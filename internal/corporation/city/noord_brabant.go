@@ -125,3 +125,27 @@ var Hank = City{
 	Latitude:  51.734284,
 	Longitude: 4.900993,
 }
+
+var Oisterwijk = City{
+	Name:      "Oisterwijk",
+	Latitude:  51.581608,
+	Longitude: 5.196483,
+}
+
+var BerkelEnschot = City{
+	Name:      "Berkel-Enschot",
+	Latitude:  51.588924,
+	Longitude: 5.145352,
+}
+
+var Veldhoven = City{
+	Name:      "Veldhoven",
+	Latitude:  51.420408,
+	Longitude: 5.407273,
+}
+
+var Vught = City{
+	Name:      "Vught",
+	Latitude:  51.657704,
+	Longitude: 5.299830,
+}

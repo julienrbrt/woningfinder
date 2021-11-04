@@ -23,3 +23,15 @@ var Nagele = City{
 	Latitude:  52.643742,
 	Longitude: 5.722968,
 }
+
+var Lelystad = City{
+	Name:      "Lelystad",
+	Latitude:  52.512806,
+	Longitude: 5.470546,
+}
+
+var Zeewolde = City{
+	Name:      "Zeewolde",
+	Latitude:  52.331396,
+	Longitude: 5.542167,
+}
