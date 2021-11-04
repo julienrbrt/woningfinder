@@ -172,6 +172,7 @@ var EemvalleiInfo = corporation.Corporation{
 		city.Woudenberg,
 		city.Eemnes,
 		city.Hoogland,
+		city.Hoevelaken,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -190,6 +191,7 @@ var WoonserviceInfo = corporation.Corporation{
 		city.Heemstede,
 		city.IJmuiden,
 		city.Velserbroek,
+		city.Zandvoort,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -323,6 +325,14 @@ var WoongaardInfo = corporation.Corporation{
 		city.WijkEnAalburg,
 		city.Zaltbommel,
 		city.Asperen,
+		city.Herwijnen,
+		city.Hernen,
+		city.Werkendam,
+		city.Ingen,
+		city.Sleeuwijk,
+		city.Nieuwendijk,
+		city.Woudrichem,
+		city.Eethen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
