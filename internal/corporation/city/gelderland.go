@@ -251,3 +251,27 @@ var Asperen = City{
 	Latitude:  51.881539,
 	Longitude: 5.108896,
 }
+
+var Herwijnen = City{
+	Name:      "Herwijnen",
+	Latitude:  51.829249,
+	Longitude: 5.128016,
+}
+
+var Hernen = City{
+	Name:      "Hernen",
+	Latitude:  51.833749,
+	Longitude: 5.682282,
+}
+
+var Ingen = City{
+	Name:      "Ingen",
+	Latitude:  51.959028,
+	Longitude: 5.485576,
+}
+
+var Hoevelaken = City{
+	Name:      "Hoevelaken",
+	Latitude:  52.176022,
+	Longitude: 5.456106,
+}

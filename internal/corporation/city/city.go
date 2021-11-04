@@ -244,6 +244,17 @@ var CityTable = map[string]City{
 	Velserbroek.Name:             Velserbroek,
 	HuisTerHeide.Name:            HuisTerHeide,
 	NieuwerkerkAanDenIJssel.Name: NieuwerkerkAanDenIJssel,
+	Herwijnen.Name:               Herwijnen,
+	Hernen.Name:                  Hernen,
+	Werkendam.Name:               Werkendam,
+	Ingen.Name:                   Ingen,
+	Sleeuwijk.Name:               Sleeuwijk,
+	Nieuwendijk.Name:             Nieuwendijk,
+	Woudrichem.Name:              Woudrichem,
+	Eethen.Name:                  Eethen,
+	Valkenswaard.Name:            Valkenswaard,
+	Hoevelaken.Name:              Hoevelaken,
+	Zandvoort.Name:               Zandvoort,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

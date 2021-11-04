@@ -393,3 +393,9 @@ var Velserbroek = City{
 	Latitude:  52.433587,
 	Longitude: 4.659507,
 }
+
+var Zandvoort = City{
+	Name:      "Zandvoort",
+	Latitude:  52.374148,
+	Longitude: 4.531213,
+}
