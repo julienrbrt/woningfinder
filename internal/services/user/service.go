@@ -16,7 +16,8 @@ type Service interface {
 	GetUser(email string) (*customer.User, error)
 	DeleteUser(email string) error
 	ConfirmUser(email string) error
-	ConfirmSubscription(email string, stripeID string) (*customer.User, error)
+	SetStripeCustomerID(user *customer.User, stripeID string) error
+	ConfirmSubscription(stripeID string) error
 	UpdateSubscriptionStatus(stripeID string, status bool) error
 
 	GetUsersWithGivenCorporationCredentials(corporationName string) ([]*customer.User, error)

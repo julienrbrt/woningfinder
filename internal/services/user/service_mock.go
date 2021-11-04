@@ -26,10 +26,6 @@ func (s *serviceMock) ConfirmUser(_ string) error {
 	return s.err
 }
 
-func (s *serviceMock) ConfirmSubscription(email string, _ string) (*customer.User, error) {
-	return s.GetUser(email)
-}
-
 func (s *serviceMock) GetUser(email string) (*customer.User, error) {
 	return &customer.User{
 		ID:           42,
@@ -92,6 +88,14 @@ func (s *serviceMock) GetCorporationCredentials(_ uint, _ string) (*customer.Cor
 }
 
 func (s *serviceMock) CreateWaitingList(_ *customer.WaitingList) error {
+	return s.err
+}
+
+func (s *serviceMock) ConfirmSubscription(_ string) error {
+	return s.err
+}
+
+func (s *serviceMock) SetStripeCustomerID(user *customer.User, stripeID string) error {
 	return s.err
 }
 

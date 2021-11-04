@@ -102,26 +102,32 @@ func (s *service) ConfirmUser(email string) error {
 	return nil
 }
 
-// ConfirmSubscription set that the user has starting its paid subscription
-func (s *service) ConfirmSubscription(email string, stripeID string) (*customer.User, error) {
-	// get user
-	var user customer.User
-	if err := s.dbClient.Conn().Model(&user).Where("email ILIKE ?", email).Select(); err != nil {
-		return nil, fmt.Errorf("failed getting user %s: %w", email, err)
+// SetStripeCustomerID adds a stripe customer id to the user
+func (s *service) SetStripeCustomerID(user *customer.User, stripeID string) error {
+	if _, err := s.dbClient.Conn().
+		Model((*customer.UserPlan)(nil)).
+		Set("stripe_customer_id = ?", stripeID).
+		Where("user_id = ?", user.ID).
+		Update(); err != nil {
+		return fmt.Errorf("error when adding stripe customer id in user plan: %w", err)
 	}
 
+	return nil
+}
+
+// ConfirmSubscription set that the user has starting its paid subscription
+func (s *service) ConfirmSubscription(stripeID string) error {
 	// set that user is subscribed
 	if _, err := s.dbClient.Conn().
 		Model((*customer.UserPlan)(nil)).
 		Set("subscription_started_at = now()").
-		Set("stripe_customer_id = ?", stripeID).
 		Set("last_payment_succeeded = ?", true).
-		Where("user_id = ?", user.ID).
+		Where("stripe_customer_id = ?", stripeID).
 		Update(); err != nil {
-		return nil, fmt.Errorf("error when confirming subscription in user plan: %w", err)
+		return fmt.Errorf("error when confirming subscription in user plan: %w", err)
 	}
 
-	return &user, nil
+	return nil
 }
 
 // UpdateSubscriptionStatus update the subcription last payment status
