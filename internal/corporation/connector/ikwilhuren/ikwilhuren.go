@@ -124,6 +124,12 @@ var Info = corporation.Corporation{
 		city.Veldhoven,
 		city.Vught,
 		city.Montfoort,
+		city.Oosterhout,
+		city.Bleiswijk,
+		city.HoekVanHolland,
+		city.Emmen,
+		city.Nuenen,
+		city.Pijnacker,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

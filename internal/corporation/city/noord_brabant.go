@@ -149,3 +149,9 @@ var Vught = City{
 	Latitude:  51.657704,
 	Longitude: 5.299830,
 }
+
+var Nuenen = City{
+	Name:      "Nuenen",
+	Latitude:  51.473271,
+	Longitude: 5.546724,
+}

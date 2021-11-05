@@ -21,10 +21,9 @@ type offerList struct {
 		Categorie     string `json:"categorie"`
 		Localizedname string `json:"localizedName"`
 	} `json:"dwellingType"`
-	TotalRent     float64 `json:"totalRent"`
-	Rentbuy       string  `json:"rentBuy"`
-	Iszelfstandig bool    `json:"isZelfstandig"`
-	ID            string  `json:"id"`
+	TotalRent float64 `json:"totalRent"`
+	Rentbuy   string  `json:"rentBuy"`
+	ID        string  `json:"id"`
 }
 
 type offerDetails struct {
@@ -209,13 +208,15 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 }
 
 func (c *client) parseHousingType(offer offerList) corporation.HousingType {
-	if offer.Dwellingtype.Categorie != "woning" || !offer.Iszelfstandig {
+	name := strings.ToLower(offer.Dwellingtype.Localizedname)
+
+	if offer.Dwellingtype.Categorie != "woning" || strings.Contains(name, "kamer") {
 		return corporation.HousingTypeUndefined
 	}
 
-	name := strings.ToLower(offer.Dwellingtype.Localizedname)
 	if strings.Contains(name, "appartement") ||
-		strings.Contains(name, "studio") {
+		strings.Contains(name, "studio") ||
+		strings.Contains(name, "flat") {
 		return corporation.HousingTypeAppartement
 	}
 

@@ -44,3 +44,30 @@ var DeWoningZoekerInfo = corporation.Corporation{
 		corporation.SelectionRegistrationDate,
 	},
 }
+
+var WoonnetHaaglanden = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woonnet-haaglanden.nl"},
+	Name:        "Woonnet Haaglanden",
+	URL:         "https://www.woonnet-haaglanden.nl",
+	Cities: []city.City{
+		city.Delft,
+		city.DenHaag,
+		city.Voorburg,
+		city.Rijswijk,
+		city.Zoetermeer,
+		city.Maasland,
+		city.Naaldwijk,
+		city.Monster,
+		city.Wassenaar,
+		city.DeLier,
+		city.Wateringen,
+		city.Leidschendam,
+		city.Gravenzande,
+		city.Pijnacker,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
+		corporation.SelectionFirstComeFirstServed,
+	},
+}
