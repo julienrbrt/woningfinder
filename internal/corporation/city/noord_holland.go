@@ -411,3 +411,9 @@ var Naarden = City{
 	Latitude:  52.295823,
 	Longitude: 5.163106,
 }
+
+var Laren = City{
+	Name:      "Laren",
+	Latitude:  52.255980,
+	Longitude: 5.224396,
+}

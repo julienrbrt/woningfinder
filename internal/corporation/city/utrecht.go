@@ -488,3 +488,9 @@ var Waverveen = City{
 	Latitude:  52.220197,
 	Longitude: 4.896233,
 }
+
+var Montfoort = City{
+	Name:      "Montfoort",
+	Latitude:  52.044785,
+	Longitude: 4.951738,
+}

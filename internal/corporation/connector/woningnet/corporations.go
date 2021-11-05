@@ -276,6 +276,7 @@ var GooiVechtstreekInfo = corporation.Corporation{
 		city.Muiden,
 		city.Weesp,
 		city.Naarden,
+		city.Laren,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -300,6 +301,7 @@ var HuiswaartsInfo = corporation.Corporation{
 		city.Veenendaal,
 		city.Wageningen,
 		city.Wekerom,
+		city.Stroe,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -343,6 +345,7 @@ var WoongaardInfo = corporation.Corporation{
 		city.Hank,
 		city.Meteren,
 		city.Kerkdriel,
+		city.Dreumel,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
