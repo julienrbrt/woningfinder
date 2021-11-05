@@ -276,6 +276,10 @@ var CityTable = map[string]City{
 	BerkelEnschot.Name:           BerkelEnschot,
 	Veldhoven.Name:               Veldhoven,
 	Vught.Name:                   Vught,
+	Dreumel.Name:                 Dreumel,
+	Stroe.Name:                   Stroe,
+	Laren.Name:                   Laren,
+	Montfoort.Name:               Montfoort,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

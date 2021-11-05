@@ -123,6 +123,7 @@ var Info = corporation.Corporation{
 		city.BerkelEnschot,
 		city.Veldhoven,
 		city.Vught,
+		city.Montfoort,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
