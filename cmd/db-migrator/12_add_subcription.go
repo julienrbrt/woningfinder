@@ -3,9 +3,7 @@ package main
 import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/joho/godotenv"
-	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 func init() {
@@ -15,9 +13,6 @@ func init() {
 	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
-
-	logger := logging.NewZapLoggerWithoutSentry()
-	_ = bootstrap.CreateDBClient(logger)
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {
 		_, err := db.Exec(`ALTER TABLE user_plans RENAME COLUMN purchased_at TO subscription_started_at`)
