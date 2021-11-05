@@ -50,14 +50,6 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user *customer.User, offers corporation.Offers) {
 	defer wg.Done()
 
-	// enrich housing preferences
-	var err error
-	user.HousingPreferences, err = s.userService.GetHousingPreferences(user.ID)
-	if err != nil {
-		s.logger.Error("failed to get users preferences", zap.String("email", user.Email), zap.Error(err))
-		return
-	}
-
 	// check if we already checked all offers
 	// this is done before login in order to do not spam login to the housing corporation and reacting to nothing
 	uncheckedOffers, ok := s.hasNonReactedOffers(user, offers)
@@ -66,6 +58,15 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 		return
 	}
 
+	// enrich housing preferences
+	var err error
+	user.HousingPreferences, err = s.userService.GetHousingPreferences(user.ID)
+	if err != nil {
+		s.logger.Error("failed to get users preferences", zap.String("email", user.Email), zap.Error(err))
+		return
+	}
+
+	// decrypt credentials
 	newCreds, err := s.userService.DecryptCredentials(user.CorporationCredentials[0])
 	if err != nil {
 		s.logger.Error("error while decrypting credentials", zap.String("email", user.Email), zap.Error(err))
@@ -94,7 +95,7 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 		if s.matcher.MatchOffer(*user, offer) {
 			// react to offer
 			if err := client.React(offer); err != nil {
-				s.logger.Error("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+				s.logger.Warn("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 				continue
 			}
 
