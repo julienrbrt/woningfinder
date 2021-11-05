@@ -6,10 +6,16 @@ import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	"github.com/woningfinder/woningfinder/internal/database"
+	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/pkg/config"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"go.uber.org/zap"
 )
+
+var logger *logging.Logger
+var dbClient database.DBClient
+var corporationService corporation.Service
 
 // init is invoked before main()
 func init() {
@@ -19,12 +25,13 @@ func init() {
 	if err := godotenv.Load("../../.env"); err != nil {
 		_ = config.MustGetString("APP_NAME")
 	}
+
+	logger = logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
+	dbClient = bootstrap.CreateDBClient(logger)
+	corporationService = corporation.NewService(logger, dbClient)
 }
 
 func main() {
-	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
-	dbClient := bootstrap.CreateDBClient(logger)
-
 	if len(os.Args) > 1 && os.Args[1] == "init" {
 		// initialize database
 		if _, _, err := migrations.Run(dbClient.Conn(), "init"); err != nil {
