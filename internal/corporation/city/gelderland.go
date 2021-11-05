@@ -287,3 +287,15 @@ var Kerkdriel = City{
 	Latitude:  51.772554,
 	Longitude: 5.340632,
 }
+
+var Dreumel = City{
+	Name:      "Dreumel",
+	Latitude:  51.849507,
+	Longitude: 5.434536,
+}
+
+var Stroe = City{
+	Name:      "Stroe",
+	Latitude:  52.185795,
+	Longitude: 5.693257,
+}
