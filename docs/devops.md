@@ -25,5 +25,5 @@ Find cities to add in WoningFinder
 ```sql
 select *
 from corporation_cities cc 
-where lower(cc.city_name) in (select lower(name) from cities where cities.latitude is NULL )
+where lower(cc.city_name) in (select lower(name) from cities where cities.latitude is NULL)
 ```
