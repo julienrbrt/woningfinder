@@ -17,6 +17,7 @@ func Test_FetchOffer(t *testing.T) {
 	corporations := []corporation.Corporation{
 		zig.RoomspotInfo,
 		zig.DeWoningZoekerInfo,
+		zig.WoonnetHaaglanden,
 	}
 
 	for _, c := range corporations {

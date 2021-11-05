@@ -18,3 +18,12 @@ The environment variables are loaded from the `.env` first. If not present, it w
 
 - Fill in the `.env` variables with random data
 - **Redis** and **PostgreSQL** must be used via locally environement.
+
+### Useful queries
+
+Find cities to add in WoningFinder
+```sql
+select *
+from corporation_cities cc 
+where lower(cc.city_name) in (select lower(name) from cities where cities.latitude is NULL )
+```

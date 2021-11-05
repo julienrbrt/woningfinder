@@ -53,3 +53,15 @@ var Middelstum = City{
 	Latitude:  53.346539,
 	Longitude: 6.641384,
 }
+
+var Ulrum = City{
+	Name:      "Ulrum",
+	Latitude:  53.358468,
+	Longitude: 6.333908,
+}
+
+var Zoutkamp = City{
+	Name:      "Zoutkamp",
+	Latitude:  53.337664,
+	Longitude: 6.299494,
+}

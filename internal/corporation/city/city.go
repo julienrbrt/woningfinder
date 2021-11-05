@@ -280,6 +280,23 @@ var CityTable = map[string]City{
 	Stroe.Name:                   Stroe,
 	Laren.Name:                   Laren,
 	Montfoort.Name:               Montfoort,
+	Rijswijk.Name:                Rijswijk,
+	Maasland.Name:                Maasland,
+	Monster.Name:                 Monster,
+	Wassenaar.Name:               Wassenaar,
+	DeLier.Name:                  DeLier,
+	Wateringen.Name:              Wateringen,
+	Leidschendam.Name:            Leidschendam,
+	Gravenzande.Name:             Gravenzande,
+	Pijnacker.Name:               Pijnacker,
+	Oosterhout.Name:              Oosterhout,
+	Bleiswijk.Name:               Bleiswijk,
+	HoekVanHolland.Name:          HoekVanHolland,
+	Emmen.Name:                   Emmen,
+	Nuenen.Name:                  Nuenen,
+	Ulrum.Name:                   Ulrum,
+	Zoutkamp.Name:                Zoutkamp,
+	VelsenNoord.Name:             VelsenNoord,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
@@ -321,6 +338,10 @@ func (c *City) Merge() City {
 		return Elst
 	case strings.Contains(c.Name, "Nieuwerkerk a/d"):
 		return NieuwerkerkAanDenIJssel
+	case strings.Contains(c.Name, "Rijswijk"):
+		return Rijswijk
+	case strings.Contains(c.Name, "Gravenzande"):
+		return Gravenzande
 	}
 
 	return *c

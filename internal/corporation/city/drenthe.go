@@ -11,3 +11,9 @@ var Schoonebeek = City{
 	Latitude:  52.662778,
 	Longitude: 6.882649,
 }
+
+var Emmen = City{
+	Name:      "Emmen",
+	Latitude:  52.784021,
+	Longitude: 6.894715,
+}
