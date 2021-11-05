@@ -193,6 +193,7 @@ var WoonserviceInfo = corporation.Corporation{
 		city.IJmuiden,
 		city.Velserbroek,
 		city.Zandvoort,
+		city.VelsenNoord,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -255,6 +256,8 @@ var BovenGroningenInfo = corporation.Corporation{
 		city.Winsum,
 		city.Loppersum,
 		city.Middelstum,
+		city.Ulrum,
+		city.Zoutkamp,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,

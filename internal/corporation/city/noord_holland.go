@@ -417,3 +417,9 @@ var Laren = City{
 	Latitude:  52.255980,
 	Longitude: 5.224396,
 }
+
+var VelsenNoord = City{
+	Name:      "Velsen-Noord",
+	Latitude:  52.474384,
+	Longitude: 4.641474,
+}

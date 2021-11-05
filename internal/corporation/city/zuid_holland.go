@@ -173,3 +173,75 @@ var AlphenAanDenRijn = City{
 	Latitude:  52.129273,
 	Longitude: 4.664528,
 }
+
+var Rijswijk = City{
+	Name:      "Rijswijk",
+	Latitude:  52.037253,
+	Longitude: 4.321862,
+}
+
+var Maasland = City{
+	Name:      "Maasland",
+	Latitude:  51.934879,
+	Longitude: 4.273353,
+}
+
+var Monster = City{
+	Name:      "Monster",
+	Latitude:  52.022987,
+	Longitude: 4.169929,
+}
+
+var Wassenaar = City{
+	Name:      "Wassenaar",
+	Latitude:  52.143727,
+	Longitude: 4.394002,
+}
+
+var DeLier = City{
+	Name:      "De Lier",
+	Latitude:  51.973852,
+	Longitude: 4.250245,
+}
+
+var Wateringen = City{
+	Name:      "Wateringen",
+	Latitude:  52.024027,
+	Longitude: 4.276373,
+}
+
+var Leidschendam = City{
+	Name:      "Leidschendam",
+	Latitude:  52.088203,
+	Longitude: 4.384732,
+}
+
+var Gravenzande = City{
+	Name:      "'s-Gravenzande",
+	Latitude:  52.002066,
+	Longitude: 4.161938,
+}
+
+var Pijnacker = City{
+	Name:      "Pijnacker",
+	Latitude:  52.018654,
+	Longitude: 4.431142,
+}
+
+var Oosterhout = City{
+	Name:      "Oosterhout",
+	Latitude:  51.644842,
+	Longitude: 4.860024,
+}
+
+var Bleiswijk = City{
+	Name:      "Bleiswijk",
+	Latitude:  52.009912,
+	Longitude: 4.530368,
+}
+
+var HoekVanHolland = City{
+	Name:      "Hoek van Holland",
+	Latitude:  51.977697,
+	Longitude: 4.128817,
+}
