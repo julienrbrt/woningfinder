@@ -34,7 +34,7 @@
           Het kan zijn dat het is door het maximaal aantal reacties dat je mag tegelijk hebben bij {{ .CorporationName }}.
           <br /> <br />
 
-          Wil je geen notificatie meer hierover? Je kunt deze alerts uitschakelen via je zoekopdracht.
+          Wil je hier geen e-mail meer over ontvangen? Je kunt deze alerts uitschakelen via je zoekopdracht.
         </mj-text>
       </mj-column>
       <mj-column width="200px">
