@@ -4,6 +4,7 @@ import (
 	"embed"
 
 	jwtauth "github.com/go-chi/jwtauth/v5"
+	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/pkg/email"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -22,6 +23,7 @@ type Service interface {
 	SendCorporationCredentialsFirstTimeAdded(user *customer.User) error
 	SendCorporationCredentialsMissing(user *customer.User) error
 	SendCorporationCredentialsError(user *customer.User, corporationName string) error
+	SendReactionFailure(user *customer.User, corporationName string, offer corporation.Offer) error
 	SendBye(user *customer.User) error
 
 	SendWaitingListConfirmation(email, city string) error

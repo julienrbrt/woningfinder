@@ -1,6 +1,9 @@
 package email
 
-import "github.com/woningfinder/woningfinder/internal/customer"
+import (
+	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/customer"
+)
 
 type serviceMock struct {
 	err error
@@ -52,5 +55,9 @@ func (s *serviceMock) ContactFormSubmission(name, email, message string) error {
 }
 
 func (s *serviceMock) SendWaitingListConfirmation(email, city string) error {
+	return s.err
+}
+
+func (s *serviceMock) SendReactionFailure(user *customer.User, corporationName string, offer corporation.Offer) error {
 	return s.err
 }

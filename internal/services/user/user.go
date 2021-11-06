@@ -27,6 +27,9 @@ func (s *service) CreateUser(user *customer.User) error {
 	user.Plan.ActivatedAt = (time.Time{})
 	user.Plan.SubscriptionStartedAt = (time.Time{})
 
+	// enable email alerts
+	user.HasAlertsEnabled = true
+
 	// create user - if exist throw error
 	if _, err := db.Model(user).Insert(); err != nil {
 		if strings.Contains(err.Error(), "duplicate key value violates unique constraint \"users_email_key\"") {
