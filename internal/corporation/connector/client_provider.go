@@ -9,13 +9,13 @@ import (
 // Provider provides a client to an housing corporation
 type Provider struct {
 	Corporation corporation.Corporation
-	ClientFunc  func() Client
+	Connector   Client
 }
 
 // ClientProvider permits to get the corporation's client
 type ClientProvider interface {
 	List() []corporation.Corporation
-	Get(name string) (func() Client, error)
+	Get(name string) (Client, error)
 }
 
 type clientProvider struct {
@@ -40,13 +40,13 @@ func (c *clientProvider) List() []corporation.Corporation {
 }
 
 // Get gives the client used to query a corporation
-func (c *clientProvider) Get(name string) (func() Client, error) {
+func (c *clientProvider) Get(name string) (Client, error) {
 	for _, c := range c.providers {
 		if c.Corporation.Name != name {
 			continue
 		}
 
-		return c.ClientFunc, nil
+		return c.Connector, nil
 	}
 
 	return nil, fmt.Errorf("cannot find client for corporation: %s", name)

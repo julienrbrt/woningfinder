@@ -19,6 +19,7 @@ type User struct {
 	FamilySize   int       `json:"family_size"`
 	// only used when the user is less than 23, housing allowance depends on age
 	HasChildrenSameHousing  bool                       `json:"has_children_same_housing"`
+	HasAlertsEnabled        bool                       `json:"has_alerts_enabled"`
 	Plan                    UserPlan                   `pg:"rel:has-one,fk:id,join_fk:user_id" json:"plan,omitempty"`
 	HousingPreferences      HousingPreferences         `pg:"rel:has-one,fk:id,join_fk:user_id" json:"housing_preferences,omitempty"`
 	HousingPreferencesMatch []*HousingPreferencesMatch `pg:"rel:has-many,join_fk:user_id" json:"housing_preferences_match,omitempty"`

@@ -26,7 +26,7 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 			c.Schedule(s, cron.FuncJob(func() {
 				j.logger.Info("housing-finder job started", zap.String("corporation", corp.Name))
 
-				if err := j.matcherService.PushOffers(client(), corp); err != nil {
+				if err := j.matcherService.PushOffers(client, corp); err != nil {
 					j.logger.Error("error while fetching and pushing offers", zap.Error(err))
 				}
 			}))

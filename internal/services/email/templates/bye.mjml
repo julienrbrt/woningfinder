@@ -25,17 +25,17 @@
     <mj-section background-color="#FFFFFF">
       <mj-column width="360px">
         <mj-text align="left" padding="0 20px 30px 20px">
-          Hoi,
+          Hoi {{ . }},
           <br /><br />
 
-          We hebben gezien dat je een huis hebt gevonden. <strong>Van harte gefeliciteerd!</strong>
+          We hebben gezien dat je een huis hebt gevonden. <strong>Van harte gefeliciteerd 🎉</strong>
 
           <br /><br />
           Omdat je ons niet meer nodig hebt, zijn al je gegevens van ons systeem verwijderd.
 
           <br /><br />
 
-          Bedankt voor je vertrouwen in ons en geniet van jouw nieuwe woning.
+          Bedankt voor je vertrouwen in ons en geniet van jouw nieuwe woning! Je kunt ons altijd vinden op <a data-pm-no-track href="https://www.instagram.com/woningfinder">Instagram</a> 😊
         </mj-text>
 
         <mj-text align="left" padding="0 20px 0 20px">
