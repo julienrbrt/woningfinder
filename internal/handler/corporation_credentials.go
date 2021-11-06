@@ -5,14 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 
 	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
 	"github.com/woningfinder/woningfinder/internal/auth"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
-	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"go.uber.org/zap"
 )
 
@@ -119,12 +118,11 @@ func (h *handler) UpdateCorporationCredentials(w http.ResponseWriter, r *http.Re
 	}
 
 	if err := h.userService.CreateCorporationCredentials(user.ID, corporationCredentials); err != nil {
-		errorMsg := "failed creating corporation credentials"
-		h.logger.Error(errorMsg, zap.Error(err))
-
-		if strings.Contains(err.Error(), userService.ErrValidationCorporationCredentials) {
+		if errors.Is(err, connector.ErrAuthFailed) {
 			render.Render(w, r, handlerErrors.ErrUnauthorized)
 		} else {
+			errorMsg := "failed creating corporation credentials"
+			h.logger.Error(errorMsg, zap.Error(err))
 			render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		}
 

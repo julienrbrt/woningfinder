@@ -8,8 +8,6 @@ import (
 	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
-const ErrValidationCorporationCredentials = "error when validating corporation credentials"
-
 func (s *service) CreateCorporationCredentials(userID uint, credentials *customer.CorporationCredentials) error {
 	if credentials.CorporationName == "" {
 		return errors.New("error when creating corporation credentials: corporation invalid")
@@ -21,7 +19,7 @@ func (s *service) CreateCorporationCredentials(userID uint, credentials *custome
 
 	// check credentials validity
 	if err := s.validateCredentials(credentials); err != nil {
-		return fmt.Errorf("%s: %w", ErrValidationCorporationCredentials, err)
+		return fmt.Errorf("error when validating corporation credentials: %w", err)
 	}
 
 	// encrypt credentials
