@@ -28,10 +28,10 @@
           Hi {{ .Name }},
           <br /><br />
 
-          We hebben drie keer geprobeerd je automatisch te laten reageren op <strong>{{ .Address }}</strong> van <strong>{{ .CorporationName }}</strong>, maar er iets misgegaan... 😮
+          We hebben drie keer geprobeerd je automatisch te laten reageren op <strong>{{ .Address }}</strong> van <strong>{{ .CorporationName }}</strong>, maar er is iets misgegaan... 😮
           <br /><br />
 
-          Het kan zijn dat het is door het maximaal aantal reacties dat je mag tegelijk hebben bij {{ .CorporationName }}.
+          Het kan zijn doordat je het maximaal aantal reacties dat je tegelijk mag hebben hebt bereikt bij {{ .CorporationName }}.
           <br /> <br />
 
           Wil je hier geen e-mail meer over ontvangen? Je kunt deze alerts uitschakelen via je zoekopdracht.
