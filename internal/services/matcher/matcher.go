@@ -5,11 +5,13 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"strconv"
 	"sync"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/woningfinder/woningfinder/internal/database"
 	"go.uber.org/zap"
 )
 
@@ -41,7 +43,6 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 		go s.matchOffers(&wg, client, user, offers)
 	}
 
-	// wait for all match
 	wg.Wait()
 	return nil
 }
@@ -62,7 +63,7 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	var err error
 	user.HousingPreferences, err = s.userService.GetHousingPreferences(user.ID)
 	if err != nil {
-		s.logger.Error("failed to get users preferences", zap.String("email", user.Email), zap.Error(err))
+		s.logger.Error("error getting user preferences", zap.String("email", user.Email), zap.Error(err))
 		return
 	}
 
@@ -95,7 +96,12 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 		if s.matcher.MatchOffer(*user, offer) {
 			// react to offer
 			if err := client.React(offer); err != nil {
-				s.logger.Warn("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+				// check if we retry next time or mark the offer as checked
+				if ok := s.retryReactNextTime(uuid); !ok {
+					s.logger.Warn("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+					s.redisClient.SetUUID(uuid)
+				}
+
 				continue
 			}
 
@@ -162,6 +168,38 @@ func (s *service) uploadHousingPicture(offer corporation.Offer) string {
 	}
 
 	return fileName
+}
+
+// retryReactNextTime checks if a offer can still be retried in a next check
+// after 3 retries it returns false as the maximum of retries if 3
+func (s *service) retryReactNextTime(uuid string) bool {
+	maxRetry := 3
+	failedUUID := "failed" + uuid
+
+	failureCount, err := s.redisClient.Get(failedUUID)
+	if err != nil {
+		if !errors.Is(err, database.ErrRedisKeyNotFound) {
+			s.logger.Error("error when getting reaction failure count from redis", zap.Error(err))
+			return true
+		}
+
+		s.redisClient.Set(failedUUID, 1)
+		return true
+	}
+
+	failureCountInt, err := strconv.Atoi(failureCount)
+	if err != nil {
+		s.logger.Error("error when converting reaction failure count to int", zap.Error(err))
+		return true
+	}
+
+	// stop reacting to house after 3 failures
+	if failureCountInt < maxRetry {
+		s.redisClient.Set(failedUUID, failureCountInt+1)
+		return true
+	}
+
+	return false
 }
 
 func buildReactionUUID(user *customer.User, offer corporation.Offer) string {
