@@ -1,0 +1,85 @@
+<mjml>
+  <mj-head>
+    <mj-title>Er is iets misgegaan met een reactie</mj-title>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css?family=Inter:400,700"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Inter, Helvetica, Arial, sans-serif" padding="0px"></mj-all>
+      <mj-text font-weight="400" font-size="14px" color="#000000" line-height="21px"></mj-text>
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#eeeeee">
+    <mj-spacer height="20px" />
+
+    <mj-section padding-top="40px" background-color="#FFFFFF">
+      <mj-column width="570px">
+        <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
+
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Er is iets misgegaan met een reactie
+        </mj-text>
+        <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#FFFFFF">
+      <mj-column width="360px">
+        <mj-text align="left" padding="0 20px 30px 20px">
+          Hi {{ .Name }},
+          <br /><br />
+
+          We hebben drie keer geprobeerd om jou te laten automatisch reageren op <strong>{{ .Address }}</strong> van <strong>{{ .CorporationName }}</strong>, maar er iets misgegaan... 😮
+          <br /><br />
+
+          Het kan zijn dat het is door het maximaal aantal reacties dat je mag tegelijk hebben bij {{ .CorporationName }}.
+          <br /> <br />
+
+          Wil je geen notificatie meer hierover? Je kunt deze alerts uitschakelen via je zoekopdracht.
+        </mj-text>
+      </mj-column>
+      <mj-column width="200px">
+        <mj-image src="https://static.woningfinder.nl/email/icon-1.png" alt="" padding-bottom="30px" width="200px" align="center" border="none"></mj-image>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="0 20px" background-color="#FFFFFF">
+      <mj-column>
+        <mj-button href="{{ .OfferURL }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Zelf reageren</mj-button>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="20px" background-color="#FFFFFF">
+      <mj-column width="100%">
+        <mj-image src="https://static.woningfinder.nl/email/symbol-1.png" alt="" width="213px" align="right" border="none"></mj-image>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="0 30px 30px" background-color="#FFFFFF">
+      <mj-column background-color="#FFFFFF">
+        <mj-text align="left" padding="0 40px">
+          Hulp nodig of vragen? Beantwoord deze e-mail, we helpen je graag.
+        </mj-text>
+        <mj-image src="https://static.woningfinder.nl/email/icon-2.png" alt="" padding="30px 0 10px 0" width="50px" align="center" border="none"></mj-image>
+        <mj-text align="left" padding="0 20px 0 20px">
+          Groetjes,
+          <br />
+          Team WoningFinder
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="20px 20px" background-color="#FFFFFF">
+      <mj-column width="100%">
+        <mj-image src="https://static.woningfinder.nl/logo-black.png" alt="" width="130px" align="center" border="none"></mj-image>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="10px 0 20px 0">
+      <mj-column>
+        <mj-text align="center" color="#9B9B9B" font-size="11px">
+          © 2021 WoningFinder <br />
+          <a data-pm-no-track href="https://woningfinder.nl" style="color: #9b9b9b; text-decoration: none">woningfinder.nl</a></mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

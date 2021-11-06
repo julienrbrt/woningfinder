@@ -96,10 +96,18 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 		if s.matcher.MatchOffer(*user, offer) {
 			// react to offer
 			if err := client.React(offer); err != nil {
+				s.logger.Debug("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+
 				// check if we retry next time or mark the offer as checked
 				if ok := s.retryReactNextTime(uuid); !ok {
-					s.logger.Warn("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 					s.redisClient.SetUUID(uuid)
+
+					// alert user
+					if user.HasAlertsEnabled {
+						if err := s.emailService.SendReactionFailure(user, offers.Corporation.Name, offer); err != nil {
+							s.logger.Error("failed to send email", zap.Error(err))
+						}
+					}
 				}
 
 				continue
