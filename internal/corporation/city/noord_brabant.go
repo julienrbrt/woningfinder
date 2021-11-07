@@ -155,3 +155,15 @@ var Nuenen = City{
 	Latitude:  51.473271,
 	Longitude: 5.546724,
 }
+
+var Goirle = City{
+	Name:      "Goirle",
+	Latitude:  51.520460,
+	Longitude: 5.067852,
+}
+
+var Rosmalen = City{
+	Name:      "Rosmalen",
+	Latitude:  51.716914,
+	Longitude: 5.363343,
+}

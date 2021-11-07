@@ -297,6 +297,12 @@ var CityTable = map[string]City{
 	Ulrum.Name:                   Ulrum,
 	Zoutkamp.Name:                Zoutkamp,
 	VelsenNoord.Name:             VelsenNoord,
+	Maassluis.Name:               Maassluis,
+	Moerkapelle.Name:             Moerkapelle,
+	Rhoon.Name:                   Rhoon,
+	Dongen.Name:                  Dongen,
+	Nijmegen.Name:                Nijmegen,
+	Goirle.Name:                  Goirle,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

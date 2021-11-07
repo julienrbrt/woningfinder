@@ -299,3 +299,9 @@ var Stroe = City{
 	Latitude:  52.185795,
 	Longitude: 5.693257,
 }
+
+var Nijmegen = City{
+	Name:      "Nijmegen",
+	Latitude:  51.844160,
+	Longitude: 5.863769,
+}
