@@ -23,10 +23,10 @@ func CreateDOSpacesClient(logger *logging.Logger) spaces.Client {
 	defaultMiddleWare := []networking.ClientMiddleware{
 		middleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
-		middleware.CreateTimeoutMiddleware(retry.DefaultTimeout),
+		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
 	}
 
-	httpClient := networking.NewClient(&http.Client{Timeout: retry.DefaultTimeout}, defaultMiddleWare...)
+	httpClient := networking.NewClient(http.DefaultClient, defaultMiddleWare...)
 	client, err := spaces.NewClient(logger, httpClient, endpoint, bucketName, accessKey, secretKey)
 	if err != nil {
 		logger.Fatal("error when creating digitalocean spaces client", zap.Error(err))

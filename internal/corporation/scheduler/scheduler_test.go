@@ -36,13 +36,11 @@ func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 		},
 	}
 
-	now := time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)
+	now := time.Date(0, 0, 0, 9, 45, 0, 0, time.UTC)
 	schedules := scheduler.CorporationScheduler(corporation)
-	a.Len(schedules, 2)
-	a.Equal(0, schedules[0].Next(now).Hour())
+	a.Len(schedules, 1)
+	a.Equal(10, schedules[0].Next(now).Hour())
 	a.Equal(0, schedules[0].Next(now).Minute())
-	a.Equal(8, schedules[1].Next(now).Hour())
-	a.Equal(0, schedules[1].Next(now).Minute())
 }
 
 func Test_CorporationScheduler_SelectionTime(t *testing.T) {
@@ -64,8 +62,10 @@ func Test_CorporationScheduler_SelectionTime(t *testing.T) {
 	a.Len(schedules, 4)
 	a.Equal(0, schedules[0].Next(now).Hour())
 	a.Equal(0, schedules[0].Next(now).Minute())
-	a.Equal(16, schedules[1].Next(now).Hour())
+	a.Equal(18, schedules[1].Next(now).Hour())
 	a.Equal(0, schedules[1].Next(now).Minute())
-	a.Equal(21, schedules[2].Next(now).Hour())
+	a.Equal(16, schedules[2].Next(now).Hour())
 	a.Equal(0, schedules[2].Next(now).Minute())
+	a.Equal(21, schedules[3].Next(now).Hour())
+	a.Equal(0, schedules[3].Next(now).Minute())
 }

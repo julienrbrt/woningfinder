@@ -9,6 +9,8 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
+const DefaultTimeout = 45 * time.Second
+
 // CreateTimeoutMiddleware sets a timeout to a request
 func CreateTimeoutMiddleware(defaultTimeout time.Duration) networking.ClientMiddleware {
 	return func(base networking.Client) networking.Client {
