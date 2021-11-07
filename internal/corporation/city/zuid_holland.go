@@ -245,3 +245,27 @@ var HoekVanHolland = City{
 	Latitude:  51.977697,
 	Longitude: 4.128817,
 }
+
+var Maassluis = City{
+	Name:      "Maassluis",
+	Latitude:  51.922382,
+	Longitude: 4.254758,
+}
+
+var Moerkapelle = City{
+	Name:      "Moerkapelle",
+	Latitude:  52.044463,
+	Longitude: 4.575751,
+}
+
+var Rhoon = City{
+	Name:      "Rhoon",
+	Latitude:  51.856445,
+	Longitude: 4.420495,
+}
+
+var Dongen = City{
+	Name:      "Dongen",
+	Latitude:  51.626011,
+	Longitude: 4.943987,
+}
