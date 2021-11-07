@@ -21,6 +21,7 @@ var DefaultCollyHTTPTransport = &http.Transport{
 		Timeout:   10 * time.Second,
 		KeepAlive: 30 * time.Second,
 	}).DialContext,
+	MaxConnsPerHost:       50, // https://stackoverflow.com/questions/37774624/go-http-get-concurrency-and-connection-reset-by-peer
 	MaxIdleConns:          100,
 	IdleConnTimeout:       90 * time.Second,
 	TLSHandshakeTimeout:   10 * time.Second,
