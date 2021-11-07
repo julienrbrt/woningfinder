@@ -15,17 +15,14 @@ import (
 
 // CreateMapboxClient creates a Mapbox client
 func CreateMapboxClient(logger *logging.Logger, redisClient database.RedisClient) mapbox.Client {
-	client := &http.Client{
-		Timeout: retry.DefaultTimeout,
-	}
 	defaultMiddleWare := []networking.ClientMiddleware{
 		middleware.CreateHostMiddleware(&mapbox.APIEndpoint),
 		middleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
-		middleware.CreateTimeoutMiddleware(retry.DefaultTimeout),
+		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
 	}
 
-	httpClient := networking.NewClient(client, defaultMiddleWare...)
+	httpClient := networking.NewClient(&http.Client{}, defaultMiddleWare...)
 
 	return mapbox.NewClient(logger, httpClient, redisClient, config.MustGetString("MAPBOX_API_KEY"))
 }
