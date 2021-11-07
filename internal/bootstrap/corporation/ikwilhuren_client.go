@@ -24,8 +24,7 @@ func CreateIkWilHurenClient(logger *logging.Logger, mapboxClient mapbox.Client) 
 	}
 
 	client := &http.Client{
-		Timeout: retry.DefaultTimeout,
-		Jar:     jar,
+		Jar: jar,
 	}
 	defaultMiddleWare := []networking.ClientMiddleware{
 		middleware.CreateHostMiddleware(ikwilhuren.Info.APIEndpoint),
@@ -35,7 +34,7 @@ func CreateIkWilHurenClient(logger *logging.Logger, mapboxClient mapbox.Client) 
 			"Content-Type": "application/x-www-form-urlencoded",
 		}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
-		middleware.CreateTimeoutMiddleware(retry.DefaultTimeout),
+		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
 	}
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)

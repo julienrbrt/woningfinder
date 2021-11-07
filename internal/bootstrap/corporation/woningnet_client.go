@@ -25,8 +25,7 @@ func CreateWoningNetClient(logger *logging.Logger, mapboxClient mapbox.Client, c
 	}
 
 	client := &http.Client{
-		Timeout: retry.DefaultTimeout,
-		Jar:     jar,
+		Jar: jar,
 	}
 	defaultMiddleWare := []networking.ClientMiddleware{
 		middleware.CreateHostMiddleware(corporation.APIEndpoint),
@@ -36,7 +35,7 @@ func CreateWoningNetClient(logger *logging.Logger, mapboxClient mapbox.Client, c
 			"Content-Type": "application/json",
 		}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
-		middleware.CreateTimeoutMiddleware(retry.DefaultTimeout),
+		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
 	}
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
