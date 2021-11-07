@@ -22,7 +22,7 @@ func CreateMapboxClient(logger *logging.Logger, redisClient database.RedisClient
 		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
 	}
 
-	httpClient := networking.NewClient(&http.Client{}, defaultMiddleWare...)
+	httpClient := networking.NewClient(http.DefaultClient, defaultMiddleWare...)
 
 	return mapbox.NewClient(logger, httpClient, redisClient, config.MustGetString("MAPBOX_API_KEY"))
 }

@@ -26,7 +26,7 @@ func CreateDOSpacesClient(logger *logging.Logger) spaces.Client {
 		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
 	}
 
-	httpClient := networking.NewClient(&http.Client{}, defaultMiddleWare...)
+	httpClient := networking.NewClient(http.DefaultClient, defaultMiddleWare...)
 	client, err := spaces.NewClient(logger, httpClient, endpoint, bucketName, accessKey, secretKey)
 	if err != nil {
 		logger.Fatal("error when creating digitalocean spaces client", zap.Error(err))

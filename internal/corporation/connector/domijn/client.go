@@ -1,8 +1,6 @@
 package domijn
 
 import (
-	"net"
-	"net/http"
 	"net/http/cookiejar"
 	"time"
 
@@ -36,18 +34,7 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Cl
 	)
 
 	// tweak default http client
-	c.WithTransport(&http.Transport{
-		Proxy: http.ProxyFromEnvironment,
-		DialContext: (&net.Dialer{
-			Timeout:   5 * time.Second,
-			KeepAlive: 30 * time.Second,
-			DualStack: true,
-		}).DialContext,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-	})
+	c.WithTransport(connector.DefaultCollyHTTPTransport)
 
 	// add cookie jar
 	jar, err := cookiejar.New(nil)

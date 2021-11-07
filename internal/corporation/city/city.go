@@ -303,6 +303,7 @@ var CityTable = map[string]City{
 	Dongen.Name:                  Dongen,
 	Nijmegen.Name:                Nijmegen,
 	Goirle.Name:                  Goirle,
+	Rosmalen.Name:                Rosmalen,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

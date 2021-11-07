@@ -9,23 +9,31 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/networking/retry"
 )
 
-const (
-	// RetryPolicyContextKey is the key used for a RetryPolicy
-	RetryPolicyContextKey = "retry_policy"
-	// RetryCounterContextKey is the key used for a RetryCounter
-	RetryCounterContextKey = "retry_counter"
+const MaxBackOffCount = 100
 
-	MaxBackOffCount = 100
-)
+type policyContextKey struct{}
 
 // ContextWithRetryPolicy adds a retryPolicy and its value to the given context
 func ContextWithRetryPolicy(ctx context.Context, retryPolicy retry.Policy) context.Context {
-	return context.WithValue(ctx, RetryPolicyContextKey, retryPolicy)
+	return context.WithValue(ctx, policyContextKey{}, retryPolicy)
+}
+
+// RetryCounterFromContext gets the number of request retries from a context
+func RetryPolicyFromContext(ctx context.Context) (retry.Policy, bool) {
+	v, ok := ctx.Value(policyContextKey{}).(retry.Policy)
+	return v, ok
+}
+
+type counterContextKey struct{}
+
+// ContextWithRetryCounter adds a retry counter value to the given context
+func ContextWithRetryCounter(ctx context.Context, counter int) context.Context {
+	return context.WithValue(ctx, counterContextKey{}, counter)
 }
 
 // RetryCounterFromContext gets the number of request retries from a context
 func RetryCounterFromContext(ctx context.Context) int {
-	if v, ok := ctx.Value(RetryCounterContextKey).(int); ok {
+	if v, ok := ctx.Value(counterContextKey{}).(int); ok {
 		return v
 	}
 	return 0
@@ -67,7 +75,7 @@ func isDeadlineBeforeBackOff(ctx context.Context, backOff time.Duration) bool {
 }
 
 func getRetryPolicy(ctx context.Context, def retry.Policy) retry.Policy {
-	if p, ok := ctx.Value(RetryPolicyContextKey).(retry.Policy); ok {
+	if p, ok := RetryPolicyFromContext(ctx); ok {
 		return p
 	}
 	return def
@@ -86,5 +94,5 @@ func getRequest(req *networking.Request, retryEnabled bool) (*networking.Request
 }
 
 func incrementRetryCounter(ctx context.Context) context.Context {
-	return context.WithValue(ctx, RetryCounterContextKey, RetryCounterFromContext(ctx)+1)
+	return ContextWithRetryCounter(ctx, RetryCounterFromContext(ctx)+1)
 }
