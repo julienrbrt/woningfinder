@@ -15,6 +15,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const maxRetry = 3
+
 // MatcherOffer matcher a corporation offer with customer housing preferences
 func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) error {
 	// create housing corporation client
@@ -55,7 +57,7 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	// this is done before login in order to do not spam login to the housing corporation and reacting to nothing
 	uncheckedOffers, ok := s.hasNonReactedOffers(user, offers)
 	if !ok {
-		s.logger.Info("no new offers", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email))
+		s.logger.Debug("no new offers", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email))
 		return
 	}
 
@@ -83,7 +85,7 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 
 		// user has failed login
 		s.logger.Info("failed to login to corporation", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
-		if err := s.hasFailedLogin(user, newCreds); err != nil {
+		if err := s.updateFailedLogin(user, newCreds); err != nil {
 			s.logger.Error("failed to update corporation credentials", zap.Error(err))
 		}
 
@@ -129,13 +131,13 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	}
 }
 
-// hasFailedLogin increased the failed login count of a corporation
+// updateFailedLogin increased the failed login count of a corporation
 // after 3 failure the login credentials of that user are deleted and the user get notified
-func (s *service) hasFailedLogin(user *customer.User, credentials *customer.CorporationCredentials) error {
+func (s *service) updateFailedLogin(user *customer.User, credentials *customer.CorporationCredentials) error {
 	// update failure count
 	failureCount := credentials.FailureCount + 1
 
-	if failureCount > 3 {
+	if failureCount > maxRetry {
 		if err := s.userService.DeleteCorporationCredentials(credentials.UserID, credentials.CorporationName); err != nil {
 			return fmt.Errorf("failed to delete %s corporation credentials of user %s: %w", credentials.CorporationName, user.Email, err)
 		}
@@ -181,7 +183,6 @@ func (s *service) uploadHousingPicture(offer corporation.Offer) string {
 // retryReactNextTime checks if a offer can still be retried in a next check
 // after 3 retries it returns false as the maximum of retries if 3
 func (s *service) retryReactNextTime(uuid string) bool {
-	maxRetry := 3
 	failedUUID := "failed" + uuid
 
 	failureCount, err := s.redisClient.Get(failedUUID)

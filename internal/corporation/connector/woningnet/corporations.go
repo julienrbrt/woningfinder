@@ -150,6 +150,7 @@ var WoonkeusInfo = corporation.Corporation{
 		city.Papendrecht,
 		city.Sliedrecht,
 		city.Zwijndrecht,
+		city.HendrikIdoAmbacht,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -225,6 +226,7 @@ var MiddenHollandInfo = corporation.Corporation{
 		city.Waddinxveen,
 		city.Zevenhuizen,
 		city.NieuwerkerkAanDenIJssel,
+		city.Moerkapelle,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
