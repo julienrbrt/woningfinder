@@ -11,10 +11,6 @@ var parser = cron.NewParser(cron.Minute | cron.Hour | cron.Dom | cron.Month | cr
 
 // CorporationScheduler creates schedules (when to fetch the offers) for a housing corporation
 func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
-	schedules := []cron.Schedule{
-		buildSchedule(parser, 0, 00), // check at 00:00 for every corporation
-	}
-
 	// for corporation that has first come first served we only need to check often
 	if hasFirstComeFirstServed(corporation) {
 		// checks every 30 minutes
@@ -24,14 +20,18 @@ func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
 			panic(err)
 		}
 
-		return append(schedules, schedule)
+		return []cron.Schedule{schedule}
+	}
+
+	schedules := []cron.Schedule{
+		buildSchedule(parser, 0, 0),  // check at 00:00 for every corporation (that are not first come first served)
+		buildSchedule(parser, 18, 0), // check at 18:00 for every corporation (that are not first come first served)
 	}
 
 	// add specific selection time
 	for _, t := range corporation.SelectionTime {
 		schedules = append(schedules, buildSchedule(parser, t.Hour(), t.Minute()))
 	}
-	schedules = append(schedules, buildSchedule(parser, 18, 00)) // check at 18:00 for every corporation (that arent's first come first served)
 
 	return schedules
 }
