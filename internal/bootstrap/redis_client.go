@@ -9,7 +9,7 @@ import (
 
 // CreateRedisClient creates a connection to redis and provides its client
 func CreateRedisClient(logger *logging.Logger) database.RedisClient {
-	client, err := database.NewRedisClient(logger, config.MustGetString("REDIS_HOST"), config.MustGetString("REDIS_PORT"), config.MustGetString("REDIS_PASSWORD"))
+	client, err := database.NewRedisClient(logger, config.MustGetString("REDIS_URL"))
 	if err != nil {
 		logger.Fatal("error when creating redis client", zap.Error(err))
 	}

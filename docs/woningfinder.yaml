@@ -3,6 +3,17 @@ alerts:
   - rule: DOMAIN_LIVE
   - rule: DEPLOYMENT_LIVE
   - rule: DOMAIN_FAILED
+databases:
+  - cluster_name: woningfinder-db
+    engine: PG
+    name: woningfinder-db
+    production: true
+    version: "13"
+  - cluster_name: woningfinder-redis
+    engine: REDIS
+    name: woningfinder-redis
+    production: true
+    version: "6"
 domains:
   - domain: woningfinder.nl
     type: PRIMARY
@@ -26,33 +37,6 @@ envs:
   - key: AES_SECRET
     scope: RUN_AND_BUILD_TIME
     value: 3b01eb9846cc2136be82c0b9d736a5f8cb5ed19bcd733815013b428f9cc90c5e
-  - key: PSQL_HOST
-    scope: RUN_AND_BUILD_TIME
-    value: db-postgresql-ams3-super-quick-snail-do-user-8168724-0.b.db.ondigitalocean.com
-  - key: PSQL_PORT
-    scope: RUN_AND_BUILD_TIME
-    value: "25060"
-  - key: PSQL_NAME
-    scope: RUN_AND_BUILD_TIME
-    value: woningfinder
-  - key: PSQL_USERNAME
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:RM2dEJyBrwFObe0rJkxqo9BdHSwtynFW:iKhZhhvnkb9fVgKiYKge3xIwFL2i7Yc=]
-  - key: PSQL_PASSWORD
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:qbcJCave5JmWYsjyQ/sjX/AL4WCA5yI+:yM1joxFILvybJm+gZ5CWJI/Y3MuSWUzF9+vm1ZRBT3c=]
-  - key: REDIS_HOST
-    scope: RUN_AND_BUILD_TIME
-    value: db-redis-ams3-dynamic-giraffe-do-user-8168724-0.b.db.ondigitalocean.com
-  - key: REDIS_PORT
-    scope: RUN_AND_BUILD_TIME
-    value: "25061"
-  - key: REDIS_PASSWORD
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:8fHdlIItxhJJnY0wQaNXrs/thOTeYZwr:6z56ZeAO4R+Rrwp8hLes/TnnUowcYXksJUTNXy9obqA=]
   - key: SENTRY_DSN
     scope: RUN_AND_BUILD_TIME
     value: https://5e1d3d3280b8462bb170b8cb04227c6a@o496598.ingest.sentry.io/5571559
@@ -94,7 +78,7 @@ jobs:
       deploy_on_push: true
       repo: WoningFinder/woningfinder
     instance_count: 1
-    instance_size_slug: basic-xs
+    instance_size_slug: professional-xs
     kind: PRE_DEPLOY
     name: woningfinder-db-migration
     run_command: bin/db-migrator
@@ -104,7 +88,7 @@ jobs:
       deploy_on_push: true
       repo: WoningFinder/woningfinder
     instance_count: 1
-    instance_size_slug: basic-xs
+    instance_size_slug: professional-xs
     kind: POST_DEPLOY
     name: woningfinder-city-updater
     run_command: bin/city-location-updater
@@ -118,13 +102,17 @@ services:
         value: 75
         window: TEN_MINUTES
     environment_slug: go
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${woningfinder-db.DATABASE_URL}
     github:
       branch: main
       deploy_on_push: true
       repo: WoningFinder/woningfinder
     http_port: 8080
     instance_count: 1
-    instance_size_slug: basic-xs
+    instance_size_slug: professional-xs
     name: woningfinder
     routes:
       - path: /api
@@ -132,6 +120,10 @@ services:
 static_sites:
   - build_command: npm run generate
     environment_slug: node-js
+    envs:
+      - key: SENTRY_DSN
+        scope: BUILD_TIME
+        value: https://77b9fd4657304ec49bf0ecc49f742e64@o496598.ingest.sentry.io/6050841
     github:
       branch: main
       deploy_on_push: true
@@ -147,12 +139,16 @@ workers:
         value: 75
         window: TEN_MINUTES
     environment_slug: go
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${woningfinder-db.DATABASE_URL}
     github:
       branch: main
       deploy_on_push: true
       repo: WoningFinder/woningfinder
     instance_count: 1
-    instance_size_slug: basic-xs
+    instance_size_slug: professional-xs
     name: woningfinder-housing-matcher
     run_command: bin/housing-matcher
   - alerts:
@@ -161,11 +157,15 @@ workers:
         value: 75
         window: TEN_MINUTES
     environment_slug: go
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${woningfinder-db.DATABASE_URL}
     github:
       branch: main
       deploy_on_push: true
       repo: WoningFinder/woningfinder
     instance_count: 1
-    instance_size_slug: basic-xs
+    instance_size_slug: professional-xs
     name: woningfinder-orchestrator
     run_command: bin/orchestrator

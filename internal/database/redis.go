@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	redis "github.com/go-redis/redis/v8"
 	"github.com/woningfinder/woningfinder/pkg/logging"
@@ -19,10 +19,10 @@ type redisClient struct {
 }
 
 // NewRedisClient creates a connection to WoningFinder Redis storage
-func NewRedisClient(logger *logging.Logger, host, port, password string) (RedisClient, error) {
-	options, err := redis.ParseURL(fmt.Sprintf("rediss://default:%s@%s:%s/0", password, host, port))
+func NewRedisClient(logger *logging.Logger, redisURL string) (RedisClient, error) {
+	options, err := redis.ParseURL(redisURL)
 	if err != nil {
-		return nil, fmt.Errorf("error connecting to redis with host: %s", host)
+		return nil, errors.New("error connecting to redis with host")
 	}
 
 	// retry query 3 times (instead of not)
@@ -32,7 +32,7 @@ func NewRedisClient(logger *logging.Logger, host, port, password string) (RedisC
 
 	_, err = rdb.Ping(context.Background()).Result()
 	if err != nil {
-		return nil, fmt.Errorf("error connecting to redis with host: %s", host)
+		return nil, errors.New("error connecting to redis")
 	}
 
 	if rdb != nil {
