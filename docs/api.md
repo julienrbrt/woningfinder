@@ -10,6 +10,7 @@ Following is a list of endpoint supported the WoningFinder API. The API works ex
 | /stripe-webhook             | POST       | Endpoint where Stripe sends its webhook events (used for validating user payment)        |
 | /login                      | POST       | Sends a link to the user in order to log him. The link is valid 6h                       |
 | /me                         | GET + POST | Get and update all the user information. Confirms user account the first time requested. |
+| /me/housing-preferences     | POST       | Update the user husing preferences                                                       |
 | /me/corporation-credentials | GET + POST | Manages the user the different housing credentials for the supported corporation.        |
 | /me/delete                  | POST       | Let user delete its account                                                              |
 | /contact                    | POST       | Handles the contact form to send an email to _contact@woningfinder.nl_                   |

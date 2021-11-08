@@ -196,6 +196,7 @@ var WoonserviceInfo = corporation.Corporation{
 		city.Velserbroek,
 		city.Zandvoort,
 		city.VelsenNoord,
+		city.Bloemendaal,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,

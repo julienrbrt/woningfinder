@@ -149,6 +149,8 @@ var Info = corporation.Corporation{
 		city.Bergschenhoek,
 		city.Veghel,
 		city.Beilen,
+		city.Ridderkerk,
+		city.Schijndel,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
