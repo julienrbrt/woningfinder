@@ -1,17 +1,4 @@
 {
-  "type": [
-    "appartement",
-    "house"
-  ],
-  "city": [
-    {
-      "name": "enschede",
-      "district": [
-        "Centrum",
-        "Roombeek"
-      ]
-    }
-  ],
-  "maximum_price": 0,
-  "number_bedroom": 2
+  "name": "John",
+  "family_size": 2
 }

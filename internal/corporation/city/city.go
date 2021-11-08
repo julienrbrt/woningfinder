@@ -312,6 +312,11 @@ var CityTable = map[string]City{
 	Bergschenhoek.Name:           Bergschenhoek,
 	Veghel.Name:                  Veghel,
 	Beilen.Name:                  Beilen,
+	Poeldijk.Name:                Poeldijk,
+	DenHoorn.Name:                DenHoorn,
+	Bloemendaal.Name:             Bloemendaal,
+	Ridderkerk.Name:              Ridderkerk,
+	Schijndel.Name:               Schijndel,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

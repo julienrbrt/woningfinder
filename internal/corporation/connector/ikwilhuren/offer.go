@@ -219,8 +219,13 @@ func (c *client) parseCity(rawCity string) (string, error) {
 	}
 
 	// remove postcode
-	reg := regexp.MustCompile("[0-9]{4}[A-z]{2}")
-	rawCity = reg.ReplaceAllString(rawCity, "")
+	for _, reg := range []*regexp.Regexp{
+		regexp.MustCompile("[0-9]{4}[A-z]{2}"),
+		regexp.MustCompile("[0-9]{4}"),
+	} {
+		rawCity = reg.ReplaceAllString(rawCity, "")
+	}
+
 	rawCity = strings.TrimSpace(rawCity)
 
 	if len(rawCity) < 2 {

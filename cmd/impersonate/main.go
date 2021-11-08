@@ -24,11 +24,21 @@ func init() {
 	}
 }
 
+const (
+	baseURL    = "https://woningfinder.nl"
+	baseDEVURL = "http://localhost:3000"
+)
+
 func main() {
 	logger := logging.NewZapLoggerWithoutSentry()
 
-	if len(os.Args) != 3 {
+	if len(os.Args) < 3 {
 		logger.Fatal("usage impersonate userID email")
+	}
+
+	baseURL := baseURL
+	if len(os.Args) > 3 {
+		baseURL = baseDEVURL
 	}
 
 	userID, err := strconv.ParseUint(os.Args[1], 10, 64)
@@ -46,5 +56,5 @@ func main() {
 		Email: email,
 	})
 
-	fmt.Printf("Authenticated with %s: https://woningfinder.nl/mijn-zoekopdracht?jwt=%s\n", email, token)
+	fmt.Printf("Authenticated with %s: %s/mijn-zoekopdracht?jwt=%s\n", email, baseURL, token)
 }

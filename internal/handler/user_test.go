@@ -160,7 +160,7 @@ func Test_UpdateUserInfo_ErrUserService(t *testing.T) {
 	a.Equal(http.StatusInternalServerError, rr.Code)
 
 	// verify expected value
-	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("failed to update housing information")))
+	expected, err := json.Marshal(handlerErrors.ServerErrorRenderer(errors.New("failed to update user information")))
 	a.NoError(err)
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }

@@ -275,3 +275,21 @@ var Bergschenhoek = City{
 	Latitude:  51.989022,
 	Longitude: 4.501580,
 }
+
+var Poeldijk = City{
+	Name:      "Poeldijk",
+	Latitude:  52.022390,
+	Longitude: 4.219018,
+}
+
+var DenHoorn = City{
+	Name:      "Den Hoorn",
+	Latitude:  52.003931,
+	Longitude: 4.317875,
+}
+
+var Ridderkerk = City{
+	Name:      "Ridderkerk",
+	Latitude:  51.869614,
+	Longitude: 4.600020,
+}

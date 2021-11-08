@@ -27,9 +27,6 @@ func (s *service) CreateUser(user *customer.User) error {
 	user.Plan.ActivatedAt = (time.Time{})
 	user.Plan.SubscriptionStartedAt = (time.Time{})
 
-	// enable email alerts
-	user.HasAlertsEnabled = true
-
 	// create user - if exist throw error
 	if _, err := db.Model(user).Insert(); err != nil {
 		if strings.Contains(err.Error(), "duplicate key value violates unique constraint \"users_email_key\"") {
@@ -128,6 +125,22 @@ func (s *service) ConfirmSubscription(stripeID string) error {
 		Where("stripe_customer_id = ?", stripeID).
 		Update(); err != nil {
 		return fmt.Errorf("error when confirming subscription in user plan: %w", err)
+	}
+
+	return nil
+}
+
+// UpdateUser update the user basics info (name, revenues and family size)
+func (s *service) UpdateUser(user *customer.User) error {
+	if _, err := s.dbClient.Conn().
+		Model((*customer.User)(nil)).
+		Set("name = ?", user.Name).
+		Set("family_size = ?", user.FamilySize).
+		Set("yearly_income = ?", user.YearlyIncome).
+		Set("has_alerts_enabled = ?", user.HasAlertsEnabled).
+		Where("id = ?", user.ID).
+		Update(); err != nil {
+		return fmt.Errorf("error when updating user informaion: %w", err)
 	}
 
 	return nil

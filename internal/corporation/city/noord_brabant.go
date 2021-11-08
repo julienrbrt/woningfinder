@@ -173,3 +173,9 @@ var Veghel = City{
 	Latitude:  51.617104,
 	Longitude: 5.545108,
 }
+
+var Schijndel = City{
+	Name:      "Schijndel",
+	Latitude:  51.619387,
+	Longitude: 5.434099,
+}
