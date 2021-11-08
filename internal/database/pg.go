@@ -2,11 +2,9 @@ package database
 
 import (
 	"context"
-	"fmt"
-
-	"github.com/woningfinder/woningfinder/pkg/logging"
 
 	"github.com/go-pg/pg/v10"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 type DBClient interface {
@@ -19,14 +17,14 @@ type dbClient struct {
 }
 
 // NewDBClient create a connection to postgresql database
-func NewDBClient(logger *logging.Logger, debug bool, host, port, name, user, password string) (DBClient, error) {
+func NewDBClient(logger *logging.Logger, debug bool, databaseURL string) (DBClient, error) {
 	dbLogger := &dbLogger{logger}
 
 	// set logger
 	pg.SetLogger(dbLogger)
 
 	// connect to database
-	opt, err := pg.ParseURL(fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=require&", user, password, host, port, name))
+	opt, err := pg.ParseURL(databaseURL)
 	if err != nil {
 		return nil, err
 	}
