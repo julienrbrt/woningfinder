@@ -3,7 +3,6 @@ package ikwilhuren
 import (
 	"encoding/json"
 	"net/http/cookiejar"
-	"time"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/extensions"
@@ -63,9 +62,7 @@ func getCollector(logger *logging.Logger) (*colly.Collector, error) {
 	extensions.RandomUserAgent(c)
 
 	// set limit rules
-	c.Limit(&colly.LimitRule{
-		RandomDelay: 2 * time.Second, // add a random delay of maximum two seconds between requests
-	})
+	c.Limit(connector.DefaultCollyLimitRules)
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {
