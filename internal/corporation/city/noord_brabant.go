@@ -167,3 +167,9 @@ var Rosmalen = City{
 	Latitude:  51.716914,
 	Longitude: 5.363343,
 }
+
+var Veghel = City{
+	Name:      "Veghel",
+	Latitude:  51.617104,
+	Longitude: 5.545108,
+}

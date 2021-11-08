@@ -304,6 +304,14 @@ var CityTable = map[string]City{
 	Nijmegen.Name:                Nijmegen,
 	Goirle.Name:                  Goirle,
 	Rosmalen.Name:                Rosmalen,
+	Hooglanderveen.Name:          Hooglanderveen,
+	Gorredijk.Name:               Gorredijk,
+	Haren.Name:                   Haren,
+	Leusden.Name:                 Leusden,
+	Westervoort.Name:             Westervoort,
+	Bergschenhoek.Name:           Bergschenhoek,
+	Veghel.Name:                  Veghel,
+	Beilen.Name:                  Beilen,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

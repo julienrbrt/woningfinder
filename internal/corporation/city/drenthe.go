@@ -17,3 +17,9 @@ var Emmen = City{
 	Latitude:  52.784021,
 	Longitude: 6.894715,
 }
+
+var Beilen = City{
+	Name:      "Beilen",
+	Latitude:  52.859039,
+	Longitude: 6.514363,
+}
