@@ -175,6 +175,7 @@ var EemvalleiInfo = corporation.Corporation{
 		city.Eemnes,
 		city.Hoogland,
 		city.Hoevelaken,
+		city.Hooglanderveen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

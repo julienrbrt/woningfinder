@@ -269,3 +269,9 @@ var Dongen = City{
 	Latitude:  51.626011,
 	Longitude: 4.943987,
 }
+
+var Bergschenhoek = City{
+	Name:      "Bergschenhoek",
+	Latitude:  51.989022,
+	Longitude: 4.501580,
+}

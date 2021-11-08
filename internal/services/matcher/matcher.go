@@ -57,7 +57,6 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	// this is done before login in order to do not spam login to the housing corporation and reacting to nothing
 	uncheckedOffers, ok := s.hasNonReactedOffers(user, offers)
 	if !ok {
-		s.logger.Debug("no new offers", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email))
 		return
 	}
 
@@ -93,12 +92,12 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	}
 
 	for uuid, offer := range uncheckedOffers {
-		s.logger.Debug("checking match", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email))
+		s.logger.Info("checking match", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email))
 
 		if s.matcher.MatchOffer(*user, offer) {
 			// react to offer
 			if err := client.React(offer); err != nil {
-				s.logger.Debug("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+				s.logger.Info("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 
 				// check if we retry next time or mark the offer as checked
 				if ok := s.retryReactNextTime(uuid); !ok {
