@@ -133,6 +133,22 @@ func (s *service) ConfirmSubscription(stripeID string) error {
 	return nil
 }
 
+// UpdateUser update the user basics info (name, revenues and family size)
+func (s *service) UpdateUser(user *customer.User) error {
+	if _, err := s.dbClient.Conn().
+		Model((*customer.User)(nil)).
+		Set("name = ?", user.Name).
+		Set("family_size = ?", user.FamilySize).
+		Set("yearly_income = ?", user.YearlyIncome).
+		Set("has_alerts_enabled = ?", user.HasAlertsEnabled).
+		Where("id = ?", user.ID).
+		Update(); err != nil {
+		return fmt.Errorf("error when updating user informaion: %w", err)
+	}
+
+	return nil
+}
+
 // UpdateSubscriptionStatus update the subcription last payment status
 func (s *service) UpdateSubscriptionStatus(stripeID string, status bool) error {
 	// set that user is subscribed

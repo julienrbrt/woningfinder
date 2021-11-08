@@ -4,16 +4,16 @@ alerts:
   - rule: DEPLOYMENT_LIVE
   - rule: DOMAIN_FAILED
 databases:
-  - cluster_name: woningfinder-db
-    engine: PG
-    name: woningfinder-db
-    production: true
-    version: "13"
   - cluster_name: woningfinder-redis
     engine: REDIS
     name: woningfinder-redis
     production: true
     version: "6"
+  - cluster_name: woningfinder-db
+    engine: PG
+    name: woningfinder-db
+    production: true
+    version: "12"
 domains:
   - domain: woningfinder.nl
     type: PRIMARY
@@ -46,7 +46,8 @@ envs:
     value: EV[1:5UOPhoYyocEPlDtXzKaRQGiSd8Hhs8Io:84zgfM9uH+yB/rWQpqgG6K5/4zgwkJBN8OGtqM7XYUblZCce/I+jPluN9t4a6MBoeLip7HjA6l3977pC5IKOH17PLBQFz41vuTdJLqbbca5tOQRLjRrh9WmcVsqMuAXue/DlVIBqmwMcAqynaQ==]
   - key: STRIPE_PUBLISHABLE_KEY
     scope: RUN_AND_BUILD_TIME
-    value: pk_live_51HkWn4HWufZqidI1Z4GzL62vF8bmW3mCxRQxyLU45Mk04jaSoSXer3AV8LsNnivKp0LZmy9Jr4s7o65z1qoSjHzz00ZCs4FbMu
+    type: SECRET
+    value: EV[1:B3lkVYAojJHVT/dbd+kWTvOTSVPQQrZE:U5LsybKprgoTAWWEzXYMGCryoygpMW7rbKoCLbkM66eKUbPRXFGbo2s2OMimv9MH5S5iKbPJGHUc569P6pc3By6P12IMSyskt0pF+M/zSu2usTfRU3a8lSv7gaMAefwtQSTWf3NkCPz2c7xZcLDOAuHXi0RXQeG9DOHL]
   - key: STRIPE_API_KEY
     scope: RUN_AND_BUILD_TIME
     type: SECRET
@@ -66,6 +67,12 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:JXgqgjIsGuinhdZilO0bl32ZYOu1G5hx:4scP3dByJvVm1OjjPdnXPn8vabqFtorzdKc1aMNaZWi8BidbjbLsVRwaQEKx2UUNXAVjvw==]
+  - key: DATABASE_URL
+    scope: RUN_AND_BUILD_TIME
+    value: postgres://${woningfinder-db.USERNAME}:${woningfinder-db.PASSWORD}@${woningfinder-db.HOSTNAME}:${woningfinder-db.PORT}/woningfinder?sslmode=require
+  - key: REDIS_URL
+    scope: RUN_AND_BUILD_TIME
+    value: ${woningfinder-redis.DATABASE_URL}
 jobs:
   - alerts:
       - operator: GREATER_THAN
@@ -102,10 +109,6 @@ services:
         value: 75
         window: TEN_MINUTES
     environment_slug: go
-    envs:
-      - key: DATABASE_URL
-        scope: RUN_TIME
-        value: ${woningfinder-db.DATABASE_URL}
     github:
       branch: main
       deploy_on_push: true
@@ -139,10 +142,6 @@ workers:
         value: 75
         window: TEN_MINUTES
     environment_slug: go
-    envs:
-      - key: DATABASE_URL
-        scope: RUN_TIME
-        value: ${woningfinder-db.DATABASE_URL}
     github:
       branch: main
       deploy_on_push: true
@@ -157,10 +156,6 @@ workers:
         value: 75
         window: TEN_MINUTES
     environment_slug: go
-    envs:
-      - key: DATABASE_URL
-        scope: RUN_TIME
-        value: ${woningfinder-db.DATABASE_URL}
     github:
       branch: main
       deploy_on_push: true

@@ -95,10 +95,14 @@ func (s *serviceMock) ConfirmSubscription(_ string) error {
 	return s.err
 }
 
-func (s *serviceMock) SetStripeCustomerID(user *customer.User, stripeID string) error {
+func (s *serviceMock) SetStripeCustomerID(_ *customer.User, _ string) error {
 	return s.err
 }
 
 func (s *serviceMock) UpdateSubscriptionStatus(_ string, _ bool) error {
+	return s.err
+}
+
+func (s *serviceMock) UpdateUser(_ *customer.User) error {
 	return s.err
 }

@@ -70,12 +70,19 @@ func (h *handler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 type updateUserInfoRequest struct {
-	*customer.HousingPreferences
+	Name             string `json:"name"`
+	YearlyIncome     int    `json:"yearly_income"`
+	FamilySize       int    `json:"family_size"`
+	HasAlertsEnabled bool   `json:"has_alerts_enabled"`
 }
 
 // Bind permits go-chi router to verify the user input and marshal it
 func (u *updateUserInfoRequest) Bind(r *http.Request) error {
-	return u.HasMinimal()
+	if u.Name == "" {
+		return fmt.Errorf("name is required")
+	}
+
+	return nil
 }
 
 // Render permits go-chi router to render the user
@@ -83,8 +90,7 @@ func (*updateUserInfoRequest) Render(w http.ResponseWriter, r *http.Request) err
 	return nil
 }
 
-// UpdateUserInfo updates the user and/or its housing preferences
-// TODO update all well user user (right now only update housing preferences)
+// UpdateUserInfo updates the user basic information
 func (h *handler) UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 	// extract jwt
 	_, claims, err := jwtauth.FromContext(r.Context())
@@ -100,15 +106,20 @@ func (h *handler) UpdateUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userInfoRequest := &updateUserInfoRequest{}
-	if err := render.Bind(r, userInfoRequest); err != nil {
+	request := &updateUserInfoRequest{}
+	if err := render.Bind(r, request); err != nil {
 		render.Render(w, r, handlerErrors.BadRequestErrorRenderer(err))
 		return
 	}
 
-	// update housing preferences
-	if err := h.userService.UpdateHousingPreferences(userFromJWT.ID, userInfoRequest.HousingPreferences); err != nil {
-		errorMsg := "failed to update housing information"
+	// update user
+	userFromJWT.Name = request.Name
+	userFromJWT.YearlyIncome = request.YearlyIncome
+	userFromJWT.FamilySize = request.FamilySize
+	userFromJWT.HasAlertsEnabled = request.HasAlertsEnabled
+
+	if err := h.userService.UpdateUser(userFromJWT); err != nil {
+		errorMsg := "failed to update user information"
 		h.logger.Error(errorMsg, zap.Error(err))
 		render.Render(w, r, handlerErrors.ServerErrorRenderer(fmt.Errorf(errorMsg)))
 		return
