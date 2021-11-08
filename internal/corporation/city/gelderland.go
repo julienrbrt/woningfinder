@@ -305,3 +305,9 @@ var Nijmegen = City{
 	Latitude:  51.844160,
 	Longitude: 5.863769,
 }
+
+var Westervoort = City{
+	Name:      "Westervoort",
+	Latitude:  51.958238,
+	Longitude: 5.971272,
+}

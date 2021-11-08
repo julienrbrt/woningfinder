@@ -494,3 +494,15 @@ var Montfoort = City{
 	Latitude:  52.044785,
 	Longitude: 4.951738,
 }
+
+var Hooglanderveen = City{
+	Name:      "Hooglanderveen",
+	Latitude:  52.187044,
+	Longitude: 5.430094,
+}
+
+var Leusden = City{
+	Name:      "Leusden",
+	Latitude:  52.129832,
+	Longitude: 5.427711,
+}
