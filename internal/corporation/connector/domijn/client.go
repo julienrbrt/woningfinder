@@ -2,7 +2,6 @@ package domijn
 
 import (
 	"net/http/cookiejar"
-	"time"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/extensions"
@@ -47,9 +46,7 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Cl
 	extensions.RandomUserAgent(c)
 
 	// set limit rules
-	c.Limit(&colly.LimitRule{
-		RandomDelay: 2 * time.Second, // add a random delay of maximum two seconds between requests
-	})
+	c.Limit(connector.DefaultCollyLimitRules)
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {

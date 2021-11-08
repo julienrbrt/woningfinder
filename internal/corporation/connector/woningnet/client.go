@@ -3,7 +3,6 @@ package woningnet
 import (
 	"encoding/json"
 	"net/http/cookiejar"
-	"time"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/extensions"
@@ -44,39 +43,37 @@ func NewClient(logger *logging.Logger, c networking.Client, mapboxClient mapbox.
 // Note, if we start to get blocked investigate in proxy switcher
 // https://github.com/gocolly/colly/blob/v2.1.0/_examples/proxy_switcher/proxy_switcher.go
 func getCollector(logger *logging.Logger) (*colly.Collector, error) {
-	collector := colly.NewCollector(
+	c := colly.NewCollector(
 		// allow revisiting url between jobs and ignore robot txt
 		colly.AllowURLRevisit(),
 		colly.IgnoreRobotsTxt(),
 	)
 
 	// tweak default http client
-	collector.WithTransport(connector.DefaultCollyHTTPTransport)
+	c.WithTransport(connector.DefaultCollyHTTPTransport)
 
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, err
 	}
-	collector.SetCookieJar(jar)
+	c.SetCookieJar(jar)
 
 	// set random desktop user agent
-	extensions.RandomUserAgent(collector)
+	extensions.RandomUserAgent(c)
 
 	// set limit rules
-	collector.Limit(&colly.LimitRule{
-		RandomDelay: 2 * time.Second, // add a random delay of maximum two seconds between requests
-	})
+	c.Limit(connector.DefaultCollyLimitRules)
 
 	// before making a request print the following
-	collector.OnRequest(func(r *colly.Request) {
+	c.OnRequest(func(r *colly.Request) {
 		// set accept header
 		r.Headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
 
 		logger.Info("visiting", zap.String("url", r.URL.String()), logConnector)
 	})
 
-	return collector, nil
+	return c, nil
 }
 
 func (c *client) Send(req networking.Request) (json.RawMessage, error) {
