@@ -423,3 +423,9 @@ var VelsenNoord = City{
 	Latitude:  52.474384,
 	Longitude: 4.641474,
 }
+
+var Bloemendaal = City{
+	Name:      "Bloemendaal",
+	Latitude:  52.404656,
+	Longitude: 4.620556,
+}

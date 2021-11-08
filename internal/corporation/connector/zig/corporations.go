@@ -64,6 +64,8 @@ var WoonnetHaaglanden = corporation.Corporation{
 		city.Leidschendam,
 		city.Gravenzande,
 		city.Pijnacker,
+		city.Poeldijk,
+		city.DenHoorn,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
