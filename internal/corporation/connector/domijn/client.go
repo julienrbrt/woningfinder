@@ -29,7 +29,6 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Cl
 	c := colly.NewCollector(
 		colly.AllowURLRevisit(), // allow revisiting url between jobs
 		colly.IgnoreRobotsTxt(), // ignore robots.txt
-		colly.Async(true),
 	)
 
 	// tweak default http client

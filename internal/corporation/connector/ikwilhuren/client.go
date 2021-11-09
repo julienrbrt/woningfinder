@@ -45,7 +45,6 @@ func getCollector(logger *logging.Logger) (*colly.Collector, error) {
 	c := colly.NewCollector(
 		colly.AllowURLRevisit(), // allow revisiting url between jobs
 		colly.IgnoreRobotsTxt(), // ignore robots.txt
-		colly.Async(true),
 	)
 
 	// tweak default http client
