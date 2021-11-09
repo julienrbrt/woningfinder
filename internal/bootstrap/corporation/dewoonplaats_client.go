@@ -34,7 +34,7 @@ func CreateDeWoonplaatsClient(logger *logging.Logger, mapboxClient mapbox.Client
 			"Content-Type": "application/json",
 		}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
-		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
+		middleware.CreateTimeoutMiddleware(middleware.DefaultRequestTimeout),
 	}
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)

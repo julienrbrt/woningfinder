@@ -1,13 +1,11 @@
 package connector
 
 import (
-	"net"
 	"net/http"
 	"time"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 )
 
 // Client defines a housing corporation client
@@ -18,15 +16,8 @@ type Client interface {
 }
 
 var DefaultCollyHTTPTransport = &http.Transport{
-	Proxy: http.ProxyFromEnvironment,
-	DialContext: (&net.Dialer{
-		Timeout:   middleware.DefaultTimeout,
-		KeepAlive: 30 * time.Second,
-	}).DialContext,
-	MaxConnsPerHost:       50, // https://stackoverflow.com/questions/37774624/go-http-get-concurrency-and-connection-reset-by-peer
-	IdleConnTimeout:       90 * time.Second,
-	TLSHandshakeTimeout:   10 * time.Second,
-	ExpectContinueTimeout: 1 * time.Second,
+	Proxy:           http.ProxyFromEnvironment,
+	MaxConnsPerHost: 50, // https://stackoverflow.com/questions/37774624/go-http-get-concurrency-and-connection-reset-by-peer
 }
 
 var DefaultCollyLimitRules = &colly.LimitRule{

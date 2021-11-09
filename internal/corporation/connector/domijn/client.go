@@ -9,6 +9,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/pkg/logging"
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
+	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 	"go.uber.org/zap"
 )
 
@@ -36,6 +37,9 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client) (connector.Cl
 
 	// set limit rules
 	c.Limit(connector.DefaultCollyLimitRules)
+
+	// set request timeout
+	c.SetRequestTimeout(middleware.DefaultRequestTimeout)
 
 	// add cookie jar
 	jar, err := cookiejar.New(nil)

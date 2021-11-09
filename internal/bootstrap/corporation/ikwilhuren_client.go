@@ -34,7 +34,7 @@ func CreateIkWilHurenClient(logger *logging.Logger, mapboxClient mapbox.Client) 
 			"Content-Type": "application/x-www-form-urlencoded",
 		}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
-		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
+		middleware.CreateTimeoutMiddleware(middleware.DefaultRequestTimeout),
 	}
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
