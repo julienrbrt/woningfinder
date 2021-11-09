@@ -90,6 +90,9 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 				offer.Housing.Type = corporation.HousingTypeAppartement
 			}
 
+			// set minimum income (4x rent)
+			offer.MinimumIncome = 12 * 4 * int(offer.Housing.Price)
+
 			// create new offer
 			offers[offer.URL] = &offer
 
@@ -159,9 +162,6 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	rawText := strings.ToLower(e.Text)
 	offer.Housing.Elevator = strings.Contains(rawText, "lift")
 	offer.Housing.Garage = strings.Contains(rawText, "Parkeerplaats")
-
-	// set minimum income (4x rent)
-	offer.MinimumIncome = 12 * 4 * int(offer.Housing.Price)
 }
 
 func (c *client) parseHousingType(houseType string) corporation.HousingType {

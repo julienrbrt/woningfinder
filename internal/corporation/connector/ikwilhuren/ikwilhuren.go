@@ -151,6 +151,9 @@ var Info = corporation.Corporation{
 		city.Beilen,
 		city.Ridderkerk,
 		city.Schijndel,
+		city.Raalte,
+		city.Brielle,
+		city.Meerkerk,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
