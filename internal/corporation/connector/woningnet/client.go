@@ -44,13 +44,16 @@ func NewClient(logger *logging.Logger, c networking.Client, mapboxClient mapbox.
 // https://github.com/gocolly/colly/blob/v2.1.0/_examples/proxy_switcher/proxy_switcher.go
 func getCollector(logger *logging.Logger) (*colly.Collector, error) {
 	c := colly.NewCollector(
-		// allow revisiting url between jobs and ignore robot txt
-		colly.AllowURLRevisit(),
-		colly.IgnoreRobotsTxt(),
+		colly.AllowURLRevisit(), // allow revisiting url between jobs
+		colly.IgnoreRobotsTxt(), // ignore robots.txt
+		colly.Async(true),
 	)
 
 	// tweak default http client
 	c.WithTransport(connector.DefaultCollyHTTPTransport)
+
+	// set limit rules
+	c.Limit(connector.DefaultCollyLimitRules)
 
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
@@ -61,9 +64,6 @@ func getCollector(logger *logging.Logger) (*colly.Collector, error) {
 
 	// set random desktop user agent
 	extensions.RandomUserAgent(c)
-
-	// set limit rules
-	c.Limit(connector.DefaultCollyLimitRules)
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {

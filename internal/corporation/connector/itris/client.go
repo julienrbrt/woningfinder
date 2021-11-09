@@ -28,13 +28,16 @@ type client struct {
 // NewClient allows to connect to itris ERP
 func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, corporation corporation.Corporation) (connector.Client, error) {
 	c := colly.NewCollector(
-		// allow revisiting url between jobs and ignore robot txt
-		colly.AllowURLRevisit(),
-		colly.IgnoreRobotsTxt(),
+		colly.AllowURLRevisit(), // allow revisiting url between jobs
+		colly.IgnoreRobotsTxt(), // ignore robots.txt
+		colly.Async(true),
 	)
 
 	// tweak default http client
 	c.WithTransport(connector.DefaultCollyHTTPTransport)
+
+	// set limit rules
+	c.Limit(connector.DefaultCollyLimitRules)
 
 	// add cookie jar
 	jar, err := cookiejar.New(nil)
@@ -45,9 +48,6 @@ func NewClient(logger *logging.Logger, mapboxClient mapbox.Client, corporation c
 
 	// set random desktop user agent
 	extensions.RandomUserAgent(c)
-
-	// set limit rules
-	c.Limit(connector.DefaultCollyLimitRules)
 
 	// before making a request print the following
 	c.OnRequest(func(r *colly.Request) {
