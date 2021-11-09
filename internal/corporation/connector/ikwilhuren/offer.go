@@ -30,9 +30,10 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			c.logger.Warn("error while parsing pagination", zap.Error(err), logConnector)
 		}
 
-		for i := 1; i < pageMax; i++ {
+		// starts from page 2
+		for i := 2; i < pageMax; i++ {
 			// visit other pages
-			paginatedURL := fmt.Sprintf("%s/huurwoningen/pagina/%d", c.corporation.URL, i)
+			paginatedURL := fmt.Sprintf("%s/pagina/%d?action=epl_search&post_type=rental", c.corporation.URL, i)
 			if err := paginationCollector.Visit(paginatedURL); err != nil {
 				c.logger.Warn("error while checking pagination", zap.String("url", paginatedURL), zap.Error(err), logConnector)
 			}
@@ -116,7 +117,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	paginationCollector.OnHTML("#main", offerParser)
 
 	// parse offers
-	offerURL := c.corporation.URL + "/huurwoningen"
+	offerURL := fmt.Sprintf("%s/?action=epl_search&post_type=rental", c.corporation.URL)
 	if err := c.collector.Visit(offerURL); err != nil {
 		return nil, err
 	}
@@ -125,6 +126,10 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	var offerList []corporation.Offer
 	for _, offer := range offers {
 		offerList = append(offerList, *offer)
+	}
+
+	if len(offerList) == 0 {
+		c.logger.Warn("offers list is empty", logConnector)
 	}
 
 	return offerList, nil
@@ -155,7 +160,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	offer.Housing.Elevator = strings.Contains(rawText, "lift")
 	offer.Housing.Garage = strings.Contains(rawText, "Parkeerplaats")
 
-	// set minimum income (4 times rent)
+	// set minimum income (4x rent)
 	offer.MinimumIncome = 12 * 4 * int(offer.Housing.Price)
 }
 
