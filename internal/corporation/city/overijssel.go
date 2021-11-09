@@ -256,3 +256,9 @@ var Zwartsluis = City{
 	Latitude:  52.640046,
 	Longitude: 6.070890,
 }
+
+var Raalte = City{
+	Name:      "Raalte",
+	Latitude:  52.384625,
+	Longitude: 6.276044,
+}

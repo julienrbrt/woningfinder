@@ -28,7 +28,7 @@
           Hi {{ .Name }},
           <br /><br />
 
-          We hebben drie keer geprobeerd je automatisch te laten reageren op <strong>{{ .Address }}</strong> van <strong>{{ .CorporationName }}</strong>, maar er is iets misgegaan... 😮
+          We hebben 8 keer geprobeerd je automatisch te laten reageren op <strong>{{ .Address }}</strong> van <strong>{{ .CorporationName }}</strong>, maar er is iets misgegaan... 😮
           <br /><br />
 
           Het kan zijn doordat je het maximaal aantal reacties dat je tegelijk mag hebben hebt bereikt bij {{ .CorporationName }}.

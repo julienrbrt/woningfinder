@@ -197,6 +197,7 @@ var WoonserviceInfo = corporation.Corporation{
 		city.Zandvoort,
 		city.VelsenNoord,
 		city.Bloemendaal,
+		city.Vogelenzang,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -262,6 +263,7 @@ var BovenGroningenInfo = corporation.Corporation{
 		city.Middelstum,
 		city.Ulrum,
 		city.Zoutkamp,
+		city.WeheDenHoorn,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -284,6 +286,7 @@ var GooiVechtstreekInfo = corporation.Corporation{
 		city.Weesp,
 		city.Naarden,
 		city.Laren,
+		city.Loosdrecht,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -353,6 +356,9 @@ var WoongaardInfo = corporation.Corporation{
 		city.Meteren,
 		city.Kerkdriel,
 		city.Dreumel,
+		city.Noordeloos,
+		city.BovenLeeuwen,
+		city.KerkAvezaath,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

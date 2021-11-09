@@ -15,8 +15,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const maxRetry = 3
-
 // MatcherOffer matcher a corporation offer with customer housing preferences
 func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) error {
 	// create housing corporation client
@@ -138,7 +136,7 @@ func (s *service) updateFailedLogin(user *customer.User, credentials *customer.C
 	// update failure count
 	failureCount := credentials.FailureCount + 1
 
-	if failureCount > maxRetry {
+	if failureCount > 3 {
 		if err := s.userService.DeleteCorporationCredentials(credentials.UserID, credentials.CorporationName); err != nil {
 			return fmt.Errorf("failed to delete %s corporation credentials of user %s: %w", credentials.CorporationName, user.Email, err)
 		}
@@ -195,7 +193,7 @@ func (s *service) uploadHousingPicture(offer corporation.Offer) string {
 }
 
 // retryReactNextTime checks if a offer can still be retried in a next check
-// after 3 retries it returns false as the maximum of retries if 3
+// after 3 retries it returns false as the maximum of retries reaches 8
 func (s *service) retryReactNextTime(uuid string) bool {
 	failedUUID := "failed" + uuid
 
@@ -216,8 +214,8 @@ func (s *service) retryReactNextTime(uuid string) bool {
 		return true
 	}
 
-	// stop reacting to house after 3 failures
-	if failureCountInt < maxRetry {
+	// stop reacting to house after 8 failures
+	if failureCountInt < 8 {
 		s.redisClient.Set(failedUUID, failureCountInt+1)
 		return true
 	}

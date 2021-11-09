@@ -317,6 +317,14 @@ var CityTable = map[string]City{
 	Bloemendaal.Name:             Bloemendaal,
 	Ridderkerk.Name:              Ridderkerk,
 	Schijndel.Name:               Schijndel,
+	Noordeloos.Name:              Noordeloos,
+	BovenLeeuwen.Name:            BovenLeeuwen,
+	KerkAvezaath.Name:            KerkAvezaath,
+	Vogelenzang.Name:             Vogelenzang,
+	WeheDenHoorn.Name:            WeheDenHoorn,
+	Schipluiden.Name:             Schipluiden,
+	Raalte.Name:                  Raalte,
+	Brielle.Name:                 Brielle,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

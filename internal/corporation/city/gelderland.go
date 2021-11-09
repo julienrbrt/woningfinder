@@ -311,3 +311,15 @@ var Westervoort = City{
 	Latitude:  51.958238,
 	Longitude: 5.971272,
 }
+
+var BovenLeeuwen = City{
+	Name:      "Boven-Leeuwen",
+	Latitude:  51.884789,
+	Longitude: 5.552166,
+}
+
+var KerkAvezaath = City{
+	Name:      "Kerk-Avezaath",
+	Latitude:  51.896529,
+	Longitude: 5.379507,
+}
