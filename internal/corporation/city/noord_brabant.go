@@ -179,3 +179,9 @@ var Schijndel = City{
 	Latitude:  51.619387,
 	Longitude: 5.434099,
 }
+
+var Vogelenzang = City{
+	Name:      "Vogelenzang",
+	Latitude:  52.319147,
+	Longitude: 4.577507,
+}

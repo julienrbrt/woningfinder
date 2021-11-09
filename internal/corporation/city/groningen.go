@@ -65,3 +65,9 @@ var Zoutkamp = City{
 	Latitude:  53.337664,
 	Longitude: 6.299494,
 }
+
+var WeheDenHoorn = City{
+	Name:      "Wehe-den Hoorn",
+	Latitude:  53.359877,
+	Longitude: 6.417475,
+}

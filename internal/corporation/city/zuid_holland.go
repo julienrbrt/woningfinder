@@ -293,3 +293,21 @@ var Ridderkerk = City{
 	Latitude:  51.869614,
 	Longitude: 4.600020,
 }
+
+var Noordeloos = City{
+	Name:      "Noordeloos",
+	Latitude:  51.905283,
+	Longitude: 4.942307,
+}
+
+var Schipluiden = City{
+	Name:      "Schipluiden",
+	Latitude:  51.974971,
+	Longitude: 4.317580,
+}
+
+var Brielle = City{
+	Name:      "Brielle",
+	Latitude:  51.900516,
+	Longitude: 4.163789,
+}
