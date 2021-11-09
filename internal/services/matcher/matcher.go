@@ -53,9 +53,9 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user *customer.User, offers corporation.Offers) {
 	defer wg.Done()
 
-	// check if we already checked all offers
-	// this is done before login in order to do not spam login to the housing corporation and reacting to nothing
-	uncheckedOffers, ok := s.hasNonReactedOffers(user, offers)
+	// only gets the new offers
+	// done before any query in order to do not spam login and database when no new offers are available
+	newOffers, ok := s.getNewOffers(user, offers)
 	if !ok {
 		return
 	}
@@ -65,6 +65,12 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	user.HousingPreferences, err = s.userService.GetHousingPreferences(user.ID)
 	if err != nil {
 		s.logger.Error("error getting user preferences", zap.String("email", user.Email), zap.Error(err))
+		return
+	}
+
+	// gets the user matching offers
+	matchingOffers, ok := s.getMatchingOffers(user, newOffers)
+	if !ok {
 		return
 	}
 
@@ -91,41 +97,37 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 		return
 	}
 
-	for uuid, offer := range uncheckedOffers {
-		s.logger.Info("checking match", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email))
+	for uuid, offer := range matchingOffers {
+		// react to offer
+		if err := client.React(offer); err != nil {
+			s.logger.Info("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 
-		if s.matcher.MatchOffer(*user, offer) {
-			// react to offer
-			if err := client.React(offer); err != nil {
-				s.logger.Info("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+			// check if we retry next time or mark the offer as checked
+			if ok := s.retryReactNextTime(uuid); !ok {
+				s.redisClient.SetUUID(uuid)
 
-				// check if we retry next time or mark the offer as checked
-				if ok := s.retryReactNextTime(uuid); !ok {
-					s.redisClient.SetUUID(uuid)
-
-					// alert user
-					if user.HasAlertsEnabled {
-						if err := s.emailService.SendReactionFailure(user, offers.Corporation.Name, offer); err != nil {
-							s.logger.Error("failed to send email", zap.Error(err))
-						}
+				// alert user
+				if user.HasAlertsEnabled {
+					if err := s.emailService.SendReactionFailure(user, offers.Corporation.Name, offer); err != nil {
+						s.logger.Error("failed to send email", zap.Error(err))
 					}
 				}
-
-				continue
 			}
 
-			// get and upload housing picture
-			pictureURL := s.uploadHousingPicture(offer)
-
-			// save match to database
-			if err := s.userService.CreateHousingPreferencesMatch(user.ID, offer, user.CorporationCredentials[0].CorporationName, pictureURL); err != nil {
-				s.logger.Error("failed to add housing preferences match", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
-			}
-
-			s.logger.Info("🎉🎉🎉 WoningFinder has successfully reacted to a house", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+			continue
 		}
 
-		// save that we've checked the offer for the user
+		s.logger.Info("🎉🎉🎉 WoningFinder has successfully reacted to a house", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+
+		// get and upload housing picture
+		pictureURL := s.uploadHousingPicture(offer)
+
+		// save match to database
+		if err := s.userService.CreateHousingPreferencesMatch(user.ID, offer, user.CorporationCredentials[0].CorporationName, pictureURL); err != nil {
+			s.logger.Error("failed to add housing preferences match", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+		}
+
+		// mark the offer as checked
 		s.redisClient.SetUUID(uuid)
 	}
 }
@@ -154,9 +156,9 @@ func (s *service) updateFailedLogin(user *customer.User, credentials *customer.C
 	return nil
 }
 
-// hasNonReactedOffers returns the offers that has not been already reacted to
-func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Offers) (map[string]corporation.Offer, bool) {
-	uncheckedOffers := make(map[string]corporation.Offer)
+// getNewOffers returns the offers the users has not reacted to
+func (s *service) getNewOffers(user *customer.User, offers corporation.Offers) (map[string]corporation.Offer, bool) {
+	newOffers := make(map[string]corporation.Offer)
 
 	for _, offer := range offers.Offer {
 		uuid := buildReactionUUID(user, offer)
@@ -164,10 +166,23 @@ func (s *service) hasNonReactedOffers(user *customer.User, offers corporation.Of
 			continue
 		}
 
-		uncheckedOffers[uuid] = offer
+		newOffers[uuid] = offer
 	}
 
-	return uncheckedOffers, len(uncheckedOffers) > 0
+	return newOffers, len(newOffers) > 0
+}
+
+// getMatchingOffers returns the offers that the users match to and has not yet reacted to
+func (s *service) getMatchingOffers(user *customer.User, offers map[string]corporation.Offer) (map[string]corporation.Offer, bool) {
+	for uuid, offer := range offers {
+		if !s.matcher.MatchOffer(*user, offer) {
+			delete(offers, uuid)
+			// mark the offer as checked
+			s.redisClient.SetUUID(uuid)
+		}
+	}
+
+	return offers, len(offers) > 0
 }
 
 func (s *service) uploadHousingPicture(offer corporation.Offer) string {
