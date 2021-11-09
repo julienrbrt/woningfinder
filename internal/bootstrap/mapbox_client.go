@@ -19,7 +19,7 @@ func CreateMapboxClient(logger *logging.Logger, redisClient database.RedisClient
 		middleware.CreateHostMiddleware(&mapbox.APIEndpoint),
 		middleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
-		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
+		middleware.CreateTimeoutMiddleware(middleware.DefaultRequestTimeout),
 	}
 
 	httpClient := networking.NewClient(http.DefaultClient, defaultMiddleWare...)

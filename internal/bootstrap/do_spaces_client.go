@@ -23,7 +23,7 @@ func CreateDOSpacesClient(logger *logging.Logger) spaces.Client {
 	defaultMiddleWare := []networking.ClientMiddleware{
 		middleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
-		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
+		middleware.CreateTimeoutMiddleware(middleware.DefaultRequestTimeout),
 	}
 
 	httpClient := networking.NewClient(http.DefaultClient, defaultMiddleWare...)

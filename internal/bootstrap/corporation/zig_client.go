@@ -35,7 +35,7 @@ func CreateZigClient(logger *logging.Logger, mapboxClient mapbox.Client, corpora
 			"Content-Type": "application/json",
 		}),
 		middleware.CreateRetryMiddleware(retry.DefaultRetryPolicy(), time.Sleep),
-		middleware.CreateTimeoutMiddleware(middleware.DefaultTimeout),
+		middleware.CreateTimeoutMiddleware(middleware.DefaultRequestTimeout),
 	}
 
 	httpClient := networking.NewClient(client, defaultMiddleWare...)
