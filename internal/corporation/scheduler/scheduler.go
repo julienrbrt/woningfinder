@@ -2,6 +2,7 @@ package scheduler
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -23,23 +24,36 @@ func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
 		return []cron.Schedule{schedule}
 	}
 
-	schedules := []cron.Schedule{
-		buildSchedule(parser, 0, 0),  // check at 00:00 for every corporation (that are not first come first served)
-		buildSchedule(parser, 18, 0), // check at 18:00 for every corporation (that are not first come first served)
+	// check at 0h, 12h, 18h for every corporation (that are not first come first served)
+	// a map permits to de-duplicate schedules
+	schedules := map[int]cron.Schedule{
+		0:    buildSchedule(parser, 0, 0),
+		1230: buildSchedule(parser, 12, 30),
+		180:  buildSchedule(parser, 18, 0),
 	}
 
 	// add specific selection time
 	for _, t := range corporation.SelectionTime {
-		schedules = append(schedules, buildSchedule(parser, t.Hour(), t.Minute()))
+		result, err := strconv.Atoi(fmt.Sprintf("%d%d", t.Hour(), t.Minute()))
+		if err != nil {
+			// should never happen
+			panic(err)
+		}
+		schedules[result] = buildSchedule(parser, t.Hour(), t.Minute())
 	}
 
-	return schedules
+	list := make([]cron.Schedule, 0, len(schedules))
+	for _, schedule := range schedules {
+		list = append(list, schedule)
+	}
+
+	return list
 }
 
 func buildSchedule(parser cron.Parser, hour, minute int) cron.Schedule {
 	schedule, err := parser.Parse(fmt.Sprintf("%d %d * * *", minute, hour))
 	if err != nil {
-		// should never happens
+		// should never happen
 		panic(err)
 	}
 
