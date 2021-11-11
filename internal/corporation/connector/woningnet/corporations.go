@@ -364,6 +364,7 @@ var WoongaardInfo = corporation.Corporation{
 		city.BovenLeeuwen,
 		city.KerkAvezaath,
 		city.Brandwijk,
+		city.HeiEnBoeicop,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

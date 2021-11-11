@@ -82,7 +82,7 @@ func (u *updateUserInfoRequest) Bind(r *http.Request) error {
 		return fmt.Errorf("name is required")
 	}
 
-	if u.YearlyIncome < -1 {
+	if u.YearlyIncome < 0 {
 		return fmt.Errorf("user yearly income invalid")
 	}
 

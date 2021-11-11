@@ -329,6 +329,7 @@ var CityTable = map[string]City{
 	Brandwijk.Name:               Brandwijk,
 	Bennebroek.Name:              Bennebroek,
 	BergenOpZoom.Name:            BergenOpZoom,
+	HeiEnBoeicop.Name:            HeiEnBoeicop,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
