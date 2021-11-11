@@ -15,13 +15,11 @@ func (r *redisClient) SetUUID(uuid string) {
 
 // HasUUID check if an UUID is aleady stored in redis
 func (r *redisClient) HasUUID(uuid string) bool {
-	_, err := r.Get(uuid)
-	if err != nil {
+	if _, err := r.Get(uuid); err != nil {
 		if !errors.Is(err, ErrRedisKeyNotFound) {
 			r.logger.Error("error when getting uuid state from redis", zap.Error(err))
 		}
 
-		// does not have UUID
 		return false
 	}
 

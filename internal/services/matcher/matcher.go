@@ -115,8 +115,6 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 			continue
 		}
 
-		s.logger.Info("🎉🎉🎉 WoningFinder has successfully reacted to a house", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
-
 		// get and upload housing picture
 		pictureURL := s.uploadHousingPicture(offer)
 
@@ -127,6 +125,8 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 
 		// mark the offer as checked
 		s.redisClient.SetUUID(uuid)
+
+		s.logger.Info("🎉🎉🎉 WoningFinder has successfully reacted to a house", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
 	}
 }
 
@@ -170,7 +170,7 @@ func (s *service) getNewOffers(user *customer.User, offers corporation.Offers) (
 	return newOffers, len(newOffers) > 0
 }
 
-// getMatchingOffers returns the offers that the users match to and has not yet reacted to
+// getMatchingOffers returns the user matching offers
 func (s *service) getMatchingOffers(user *customer.User, offers map[string]corporation.Offer) (map[string]corporation.Offer, bool) {
 	for uuid, offer := range offers {
 		if !s.matcher.MatchOffer(*user, offer) {

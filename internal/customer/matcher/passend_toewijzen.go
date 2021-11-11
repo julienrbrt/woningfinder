@@ -28,11 +28,6 @@ const (
 func (m *matcher) passendToewijzen(user customer.User) (float64, float64) {
 	age := time.Now().Year() - user.BirthYear
 
-	// bypass passend toewijzen
-	if user.YearlyIncome == -1 {
-		return 0, math.MaxInt32
-	}
-
 	// if too rich free sector only allowed
 	if user.YearlyIncome > customer.MaximumIncomeSocialHouse {
 		return Maximalehuurgrens, math.MaxInt32

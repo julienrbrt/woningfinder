@@ -40,7 +40,7 @@ func (u *User) HasMinimal() error {
 		return fmt.Errorf("user birth year invalid")
 	}
 
-	if u.YearlyIncome < -1 {
+	if u.YearlyIncome < 0 {
 		return fmt.Errorf("user yearly income invalid")
 	}
 

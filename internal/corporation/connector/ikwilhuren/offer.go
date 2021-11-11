@@ -35,7 +35,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			// visit other pages
 			paginatedURL := fmt.Sprintf("%s/pagina/%d?action=epl_search&post_type=rental", c.corporation.URL, i)
 			if err := paginationCollector.Visit(paginatedURL); err != nil {
-				c.logger.Warn("error while checking pagination", zap.String("url", paginatedURL), zap.Error(err), logConnector)
+				c.logger.Info("error while checking pagination", zap.String("url", paginatedURL), zap.Error(err), logConnector)
 			}
 		}
 	})
@@ -132,7 +132,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	}
 
 	if len(offerList) == 0 {
-		c.logger.Warn("offers list is empty", logConnector)
+		c.logger.Warn("offers list should not be empty", logConnector)
 	}
 
 	return offerList, nil

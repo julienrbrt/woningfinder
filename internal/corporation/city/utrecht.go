@@ -506,3 +506,9 @@ var Leusden = City{
 	Latitude:  52.129832,
 	Longitude: 5.427711,
 }
+
+var HeiEnBoeicop = City{
+	Name:      "Hei- en Boeicop",
+	Latitude:  51.946578,
+	Longitude: 5.073753,
+}
