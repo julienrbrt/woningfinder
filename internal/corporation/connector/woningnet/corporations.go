@@ -119,6 +119,7 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Beinsdorp,
 		city.Westzaan,
 		city.Cruquius,
+		city.Weteringbrug,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
@@ -176,6 +177,7 @@ var EemvalleiInfo = corporation.Corporation{
 		city.Hoogland,
 		city.Hoevelaken,
 		city.Hooglanderveen,
+		city.Leusden,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -198,6 +200,7 @@ var WoonserviceInfo = corporation.Corporation{
 		city.VelsenNoord,
 		city.Bloemendaal,
 		city.Vogelenzang,
+		city.Bennebroek,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -243,6 +246,7 @@ var GroningenInfo = corporation.Corporation{
 	Cities: []city.City{
 		city.Groningen,
 		city.TenBoer,
+		city.HarenGn,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -359,6 +363,7 @@ var WoongaardInfo = corporation.Corporation{
 		city.Noordeloos,
 		city.BovenLeeuwen,
 		city.KerkAvezaath,
+		city.Brandwijk,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

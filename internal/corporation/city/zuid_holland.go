@@ -311,3 +311,15 @@ var Brielle = City{
 	Latitude:  51.900516,
 	Longitude: 4.163789,
 }
+
+var Brandwijk = City{
+	Name:      "Brandwijk",
+	Latitude:  51.889237,
+	Longitude: 4.812827,
+}
+
+var BergenOpZoom = City{
+	Name:      "Bergen op Zoom",
+	Latitude:  51.495183,
+	Longitude: 4.289532,
+}

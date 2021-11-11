@@ -154,6 +154,7 @@ var Info = corporation.Corporation{
 		city.Raalte,
 		city.Brielle,
 		city.Meerkerk,
+		city.BergenOpZoom,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

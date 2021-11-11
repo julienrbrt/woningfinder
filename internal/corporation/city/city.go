@@ -325,6 +325,11 @@ var CityTable = map[string]City{
 	Schipluiden.Name:             Schipluiden,
 	Raalte.Name:                  Raalte,
 	Brielle.Name:                 Brielle,
+	Weteringbrug.Name:            Weteringbrug,
+	Brandwijk.Name:               Brandwijk,
+	HarenGn.Name:                 HarenGn,
+	Bennebroek.Name:              Bennebroek,
+	BergenOpZoom.Name:            BergenOpZoom,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
@@ -370,6 +375,8 @@ func (c *City) Merge() City {
 		return Rijswijk
 	case strings.Contains(c.Name, "Gravenzande"):
 		return Gravenzande
+	case strings.EqualFold(c.Name, "Haren Gn"):
+		return Haren
 	}
 
 	return *c
