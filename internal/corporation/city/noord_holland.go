@@ -429,3 +429,15 @@ var Bloemendaal = City{
 	Latitude:  52.404656,
 	Longitude: 4.620556,
 }
+
+var Weteringbrug = City{
+	Name:      "Weteringbrug",
+	Latitude:  52.222768,
+	Longitude: 4.645419,
+}
+
+var Bennebroek = City{
+	Name:      "Bennebroek",
+	Latitude:  52.321687,
+	Longitude: 4.598233,
+}

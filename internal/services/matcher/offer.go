@@ -78,7 +78,7 @@ func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corpo
 		return fmt.Errorf("failing adding cities to corporation: %w", err)
 	}
 
-	s.logger.Warn("update the corporation required new cities added", zap.Int("count", len(notFound)), zap.Any("cities", notFound), zap.String("corporation", corp.Name))
+	s.logger.Warn(fmt.Sprintf("new cities added in %s corporation", corp.Name), zap.Int("count", len(notFound)), zap.Any("cities", notFound), zap.String("corporation", corp.Name))
 
 	return nil
 }
