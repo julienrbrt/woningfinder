@@ -72,8 +72,8 @@ var WeheDenHoorn = City{
 	Longitude: 6.417475,
 }
 
-var HarenGn = City{
-	Name:      "Haren Gn",
+var Haren = City{
+	Name:      "Haren",
 	Latitude:  53.172956,
 	Longitude: 6.604601,
 }

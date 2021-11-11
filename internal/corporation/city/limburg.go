@@ -23,9 +23,3 @@ var Roermond = City{
 	Latitude:  51.192865,
 	Longitude: 5.988687,
 }
-
-var Haren = City{
-	Name:      "Haren",
-	Latitude:  53.172685,
-	Longitude: 6.604465,
-}

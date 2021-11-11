@@ -327,7 +327,6 @@ var CityTable = map[string]City{
 	Brielle.Name:                 Brielle,
 	Weteringbrug.Name:            Weteringbrug,
 	Brandwijk.Name:               Brandwijk,
-	HarenGn.Name:                 HarenGn,
 	Bennebroek.Name:              Bennebroek,
 	BergenOpZoom.Name:            BergenOpZoom,
 }

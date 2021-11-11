@@ -246,7 +246,7 @@ var GroningenInfo = corporation.Corporation{
 	Cities: []city.City{
 		city.Groningen,
 		city.TenBoer,
-		city.HarenGn,
+		city.Haren,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,

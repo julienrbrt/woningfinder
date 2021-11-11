@@ -40,7 +40,7 @@ func Test_CorporationScheduler_SelectionTime_Skipped(t *testing.T) {
 	now := time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)
 	schedules := scheduler.CorporationScheduler(corporation)
 	a.Len(schedules, 1)
-	a.Equal(12, schedules[0].Next(now).Hour())
+	a.Equal(0, schedules[0].Next(now).Hour())
 	a.Equal(30, schedules[0].Next(now).Minute())
 }
 
