@@ -2,7 +2,6 @@ package scheduler
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/corporation"
@@ -12,42 +11,23 @@ var parser = cron.NewParser(cron.Minute | cron.Hour | cron.Dom | cron.Month | cr
 
 // CorporationScheduler creates schedules (when to fetch the offers) for a housing corporation
 func CorporationScheduler(corporation corporation.Corporation) []cron.Schedule {
-	// for corporation that has first come first served we only need to check often
-	if hasFirstComeFirstServed(corporation) {
-		// checks every 30 minutes
-		schedule, err := parser.Parse("*/30 * * * *")
-		if err != nil {
-			// should never happens
-			panic(err)
-		}
+	var schedules []cron.Schedule
 
-		return []cron.Schedule{schedule}
+	// checks every 30 minutes
+	schedule, err := parser.Parse("*/30 * * * *")
+	if err != nil {
+		// should never happens
+		panic(err)
 	}
 
-	// check at 0h, 12h, 18h for every corporation (that are not first come first served)
-	// a map permits to de-duplicate schedules
-	schedules := map[int]cron.Schedule{
-		0:    buildSchedule(parser, 0, 0),
-		1230: buildSchedule(parser, 12, 30),
-		180:  buildSchedule(parser, 18, 0),
+	schedules = append(schedules, schedule)
+
+	// as we check every 30 minutes, every hours, we only need to add a selection if the minutes aren't 0 or 30
+	if corporation.SelectionTime.Minute() != 0 && corporation.SelectionTime.Minute() != 30 {
+		schedules = append(schedules, buildSchedule(parser, corporation.SelectionTime.Hour(), corporation.SelectionTime.Minute()))
 	}
 
-	// add specific selection time
-	for _, t := range corporation.SelectionTime {
-		result, err := strconv.Atoi(fmt.Sprintf("%d%d", t.Hour(), t.Minute()))
-		if err != nil {
-			// should never happen
-			panic(err)
-		}
-		schedules[result] = buildSchedule(parser, t.Hour(), t.Minute())
-	}
-
-	list := make([]cron.Schedule, 0, len(schedules))
-	for _, schedule := range schedules {
-		list = append(list, schedule)
-	}
-
-	return list
+	return schedules
 }
 
 func buildSchedule(parser cron.Parser, hour, minute int) cron.Schedule {
@@ -58,15 +38,4 @@ func buildSchedule(parser cron.Parser, hour, minute int) cron.Schedule {
 	}
 
 	return schedule
-}
-
-// hasFirstComeFirstServed returns true if a housing corporation select by first come first served
-func hasFirstComeFirstServed(corp corporation.Corporation) bool {
-	for _, s := range corp.SelectionMethod {
-		if s == corporation.SelectionFirstComeFirstServed {
-			return true
-		}
-	}
-
-	return false
 }

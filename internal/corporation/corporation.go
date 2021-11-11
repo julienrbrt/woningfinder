@@ -18,7 +18,7 @@ type Corporation struct {
 	URL             string
 	Cities          []city.City       `pg:"-"` // linked to CorporationCity
 	SelectionMethod []SelectionMethod `pg:"-"`
-	SelectionTime   []time.Time       `pg:"-" json:"-"`
+	SelectionTime   time.Time         `pg:"-" json:"-"`
 }
 
 // HasMinimal ensure that the corporation contains the minimal required data

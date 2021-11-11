@@ -9,24 +9,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 )
 
-func Test_CorporationScheduler_Random(t *testing.T) {
-	a := assert.New(t)
-	corporation := corporation.Corporation{
-		SelectionMethod: []corporation.SelectionMethod{
-			corporation.SelectionRandom,
-		},
-	}
-
-	now := time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)
-	schedules := scheduler.CorporationScheduler(corporation)
-	a.Len(schedules, 3)
-	a.Equal(0, schedules[0].Next(now).Hour())
-	a.Equal(0, schedules[0].Next(now).Minute())
-	a.Equal(12, schedules[1].Next(now).Hour())
-	a.Equal(30, schedules[1].Next(now).Minute())
-}
-
-func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
+func Test_CorporationScheduler(t *testing.T) {
 	a := assert.New(t)
 
 	corporation := corporation.Corporation{
@@ -43,6 +26,24 @@ func Test_CorporationScheduler_FirstComeFirstServed(t *testing.T) {
 	a.Equal(0, schedules[0].Next(now).Minute())
 }
 
+func Test_CorporationScheduler_SelectionTime_Skipped(t *testing.T) {
+	a := assert.New(t)
+
+	corporation := corporation.Corporation{
+		SelectionMethod: []corporation.SelectionMethod{
+			corporation.SelectionRandom,
+			corporation.SelectionRegistrationDate,
+		},
+		SelectionTime: scheduler.CreateSelectionTime(12, 00),
+	}
+
+	now := time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)
+	schedules := scheduler.CorporationScheduler(corporation)
+	a.Len(schedules, 1)
+	a.Equal(12, schedules[0].Next(now).Hour())
+	a.Equal(30, schedules[0].Next(now).Minute())
+}
+
 func Test_CorporationScheduler_SelectionTime(t *testing.T) {
 	a := assert.New(t)
 
@@ -51,22 +52,14 @@ func Test_CorporationScheduler_SelectionTime(t *testing.T) {
 			corporation.SelectionRandom,
 			corporation.SelectionRegistrationDate,
 		},
-		SelectionTime: []time.Time{
-			scheduler.CreateSelectionTime(12, 30),
-			scheduler.CreateSelectionTime(18, 00),
-			scheduler.CreateSelectionTime(21, 00),
-		},
+		SelectionTime: scheduler.CreateSelectionTime(21, 18),
 	}
 
 	now := time.Date(0, 0, 0, 0, 0, 0, 0, time.UTC)
 	schedules := scheduler.CorporationScheduler(corporation)
-	a.Len(schedules, 4)
+	a.Len(schedules, 2)
 	a.Equal(0, schedules[0].Next(now).Hour())
-	a.Equal(0, schedules[0].Next(now).Minute())
-	a.Equal(12, schedules[1].Next(now).Hour())
-	a.Equal(30, schedules[1].Next(now).Minute())
-	a.Equal(18, schedules[2].Next(now).Hour())
-	a.Equal(0, schedules[2].Next(now).Minute())
-	a.Equal(21, schedules[3].Next(now).Hour())
-	a.Equal(0, schedules[3].Next(now).Minute())
+	a.Equal(30, schedules[0].Next(now).Minute())
+	a.Equal(21, schedules[1].Next(now).Hour())
+	a.Equal(18, schedules[1].Next(now).Minute())
 }
