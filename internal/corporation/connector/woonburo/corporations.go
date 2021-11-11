@@ -2,7 +2,6 @@ package woonburo
 
 import (
 	"net/url"
-	"time"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
@@ -25,7 +24,5 @@ var AlmeloInfo = corporation.Corporation{
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
 	},
-	SelectionTime: []time.Time{
-		scheduler.CreateSelectionTime(19, 0),
-	},
+	SelectionTime: scheduler.CreateSelectionTime(19, 0),
 }
