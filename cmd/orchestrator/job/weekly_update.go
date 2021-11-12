@@ -28,9 +28,6 @@ func (j *Jobs) SendWeeklyUpdate(c *cron.Cron) {
 
 			// user has no corporation credentials and no match didn't react for them be we cannot send weekly update
 			if len(user.HousingPreferencesMatch) == 0 && len(user.CorporationCredentials) == 0 {
-				if err := j.emailService.SendCorporationCredentialsMissing(user); err != nil {
-					j.logger.Error("error while sending weekly update (credentials missing)", zap.Error(err))
-				}
 				continue
 			}
 
