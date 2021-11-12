@@ -51,13 +51,6 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user *customer.User, offers corporation.Offers) {
 	defer wg.Done()
 
-	// only gets the new offers
-	// done before any query in order to do not spam login and database when no new offers are available
-	newOffers, ok := s.getNewOffers(user, offers)
-	if !ok {
-		return
-	}
-
 	// enrich housing preferences
 	var err error
 	user.HousingPreferences, err = s.userService.GetHousingPreferences(user.ID)
@@ -67,7 +60,8 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	}
 
 	// gets the user matching offers
-	matchingOffers, ok := s.getMatchingOffers(user, newOffers)
+	// done before any query in order to do not spam login
+	matchingOffers, ok := s.getMatchingOffers(user, offers)
 	if !ok {
 		return
 	}
@@ -154,33 +148,20 @@ func (s *service) updateFailedLogin(user *customer.User, credentials *customer.C
 	return nil
 }
 
-// getNewOffers returns the offers the users has not reacted to
-func (s *service) getNewOffers(user *customer.User, offers corporation.Offers) (map[string]corporation.Offer, bool) {
-	newOffers := make(map[string]corporation.Offer)
+// getMatchingOffers returns the user matching offers
+func (s *service) getMatchingOffers(user *customer.User, offers corporation.Offers) (map[string]corporation.Offer, bool) {
+	matchingOffers := make(map[string]corporation.Offer)
 
 	for _, offer := range offers.Offer {
 		uuid := buildReactionUUID(user, offer)
-		if s.redisClient.HasUUID(uuid) {
+		if !s.matcher.MatchOffer(*user, offer) {
 			continue
 		}
 
-		newOffers[uuid] = offer
+		matchingOffers[uuid] = offer
 	}
 
-	return newOffers, len(newOffers) > 0
-}
-
-// getMatchingOffers returns the user matching offers
-func (s *service) getMatchingOffers(user *customer.User, offers map[string]corporation.Offer) (map[string]corporation.Offer, bool) {
-	for uuid, offer := range offers {
-		if !s.matcher.MatchOffer(*user, offer) {
-			delete(offers, uuid)
-			// mark the offer as checked
-			s.redisClient.SetUUID(uuid)
-		}
-	}
-
-	return offers, len(offers) > 0
+	return matchingOffers, len(matchingOffers) > 0
 }
 
 func (s *service) uploadHousingPicture(offer corporation.Offer) string {
