@@ -158,6 +158,10 @@ func (s *service) getMatchingOffers(user *customer.User, offers corporation.Offe
 			continue
 		}
 
+		if s.redisClient.HasUUID(uuid) {
+			continue
+		}
+
 		matchingOffers[uuid] = offer
 	}
 
