@@ -323,3 +323,15 @@ var BergenOpZoom = City{
 	Latitude:  51.495183,
 	Longitude: 4.289532,
 }
+
+var GrootAmmers = City{
+	Name:      "Groot-Ammers",
+	Latitude:  51.923991,
+	Longitude: 4.821060,
+}
+
+var Honselersdijk = City{
+	Name:      "Honselersdijk",
+	Latitude:  52.007712,
+	Longitude: 4.227948,
+}

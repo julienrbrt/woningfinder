@@ -72,6 +72,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.Cothen,
 		city.HuisTerHeide,
 		city.Waverveen,
+		city.Werkhoven,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
@@ -216,6 +217,7 @@ var MercatusInfo = corporation.Corporation{
 		city.Bant,
 		city.Emmeloord,
 		city.Nagele,
+		city.Kraggenburg,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -247,6 +249,7 @@ var GroningenInfo = corporation.Corporation{
 		city.Groningen,
 		city.TenBoer,
 		city.Haren,
+		city.TenPost,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -268,6 +271,8 @@ var BovenGroningenInfo = corporation.Corporation{
 		city.Ulrum,
 		city.Zoutkamp,
 		city.WeheDenHoorn,
+		city.Uithuizermeeden,
+		city.Bedum,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -316,6 +321,7 @@ var HuiswaartsInfo = corporation.Corporation{
 		city.Wageningen,
 		city.Wekerom,
 		city.Stroe,
+		city.Voorthuizen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -365,6 +371,11 @@ var WoongaardInfo = corporation.Corporation{
 		city.KerkAvezaath,
 		city.Brandwijk,
 		city.HeiEnBoeicop,
+		city.Bruchem,
+		city.GrootAmmers,
+		city.Nieuwland,
+		city.Aalst,
+		city.Ochten,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

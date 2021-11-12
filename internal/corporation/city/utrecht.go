@@ -512,3 +512,15 @@ var HeiEnBoeicop = City{
 	Latitude:  51.946578,
 	Longitude: 5.073753,
 }
+
+var Nieuwland = City{
+	Name:      "Nieuwland",
+	Latitude:  51.890633,
+	Longitude: 5.013206,
+}
+
+var Werkhoven = City{
+	Name:      "Werkhoven",
+	Latitude:  52.024825,
+	Longitude: 5.243993,
+}

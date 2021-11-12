@@ -112,7 +112,7 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 			result, err := c.Map(offer, houseType)
 			if err != nil {
-				c.logger.Warn("error parsing", zap.String("address", offer.Address), zap.Error(err), logConnector)
+				c.logger.Warn("error mapping woningnet offer", zap.String("address", offer.Address), zap.Error(err), logConnector)
 				continue
 			}
 
