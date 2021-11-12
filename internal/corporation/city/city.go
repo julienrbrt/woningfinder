@@ -330,6 +330,18 @@ var CityTable = map[string]City{
 	Bennebroek.Name:              Bennebroek,
 	BergenOpZoom.Name:            BergenOpZoom,
 	HeiEnBoeicop.Name:            HeiEnBoeicop,
+	TenPost.Name:                 TenPost,
+	Bruchem.Name:                 Bruchem,
+	GrootAmmers.Name:             GrootAmmers,
+	Nieuwland.Name:               Nieuwland,
+	Aalst.Name:                   Aalst,
+	Ochten.Name:                  Ochten,
+	Werkhoven.Name:               Werkhoven,
+	Voorthuizen.Name:             Voorthuizen,
+	Uithuizermeeden.Name:         Uithuizermeeden,
+	Bedum.Name:                   Bedum,
+	Kraggenburg.Name:             Kraggenburg,
+	Honselersdijk.Name:           Honselersdijk,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
