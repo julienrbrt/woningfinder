@@ -12,9 +12,9 @@ import (
 
 var corporationCredentialsMissingReminderTime = map[int]time.Duration{
 	1: 24 * time.Hour,  // 1 day
-	2: 72 * time.Hour,  // 3 days
-	3: 168 * time.Hour, // 7 days
-	4: 240 * time.Hour, // 10 days
+	2: 96 * time.Hour,  // 4 days
+	3: 216 * time.Hour, // 9 days
+	4: 336 * time.Hour, // 14 days
 }
 
 func (j *Jobs) SendCorporationCredentialsMissingReminder(c *cron.Cron) {
