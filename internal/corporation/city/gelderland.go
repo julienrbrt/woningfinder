@@ -323,3 +323,27 @@ var KerkAvezaath = City{
 	Latitude:  51.896529,
 	Longitude: 5.379507,
 }
+
+var Bruchem = City{
+	Name:      "Bruchem",
+	Latitude:  51.786259,
+	Longitude: 5.237905,
+}
+
+var Aalst = City{
+	Name:      "Aalst",
+	Latitude:  51.783074,
+	Longitude: 5.126683,
+}
+
+var Ochten = City{
+	Name:      "Ochten",
+	Latitude:  51.907742,
+	Longitude: 5.568053,
+}
+
+var Voorthuizen = City{
+	Name:      "Voorthuizen",
+	Latitude:  52.187297,
+	Longitude: 5.607513,
+}

@@ -77,3 +77,21 @@ var Haren = City{
 	Latitude:  53.172956,
 	Longitude: 6.604601,
 }
+
+var TenPost = City{
+	Name:      "Ten Post",
+	Latitude:  53.296545,
+	Longitude: 6.731125,
+}
+
+var Uithuizermeeden = City{
+	Name:      "Uithuizermeeden",
+	Latitude:  53.414072,
+	Longitude: 6.725096,
+}
+
+var Bedum = City{
+	Name:      "Bedum",
+	Latitude:  53.300765,
+	Longitude: 6.602251,
+}

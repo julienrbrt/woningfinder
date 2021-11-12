@@ -35,3 +35,9 @@ var Zeewolde = City{
 	Latitude:  52.331396,
 	Longitude: 5.542167,
 }
+
+var Kraggenburg = City{
+	Name:      "Kraggenburg",
+	Latitude:  52.662889,
+	Longitude: 5.899414,
+}
