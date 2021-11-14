@@ -31,13 +31,11 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 
 				ch := make(chan corporation.Offer)
 				go func(ch chan corporation.Offer) {
-
+					if err := client.FetchOffers(ch); err != nil {
+						j.logger.Error("error while fetching offers", zap.String("corporation", corp.Name), zap.Error(err))
+					}
 					close(ch)
 				}(ch)
-
-				if err := client.FetchOffers(ch); err != nil {
-					j.logger.Error("error while fetching offers", zap.String("corporation", corp.Name), zap.Error(err))
-				}
 
 				offers := corporation.Offers{
 					CorporationName: corp.Name,
