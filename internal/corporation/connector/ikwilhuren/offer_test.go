@@ -10,17 +10,17 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
-func Test_FetchOffer(t *testing.T) {
+func Test_FetchOffers(t *testing.T) {
 	a := assert.New(t)
 
 	// note for testing mapbox city parsing please use the bootstrap client instead of the mock
 	client := bootstrapCorporation.CreateIkWilHurenClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"))
 
-	offers, err := client.GetOffers()
-	a.NoError(err)
-	a.True(len(offers) > 0)
+	ch := make(chan corporation.Offer, 1000)
+	a.NoError(client.FetchOffers(ch))
+	for offer := range ch {
+		a.NotEmpty(offer.CorporationName)
 
-	for _, offer := range offers {
 		// verify housing validity
 		a.NotEmpty(offer.Housing.Type)
 		if offer.Housing.Type == corporation.HousingTypeUndefined {

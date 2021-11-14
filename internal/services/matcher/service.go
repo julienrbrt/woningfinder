@@ -19,8 +19,8 @@ const offersQueue = "queue:offers"
 
 // Service permits to handle the persistence of matcher
 type Service interface {
-	PushOffers(client connector.Client, corporation corporation.Corporation) error
-	SubscribeOffers(ch chan<- corporation.Offers) error
+	SendOffers(offers corporation.Offers) error
+	RetrieveOffers(ch chan<- corporation.Offers) error
 
 	MatchOffer(ctx context.Context, offers corporation.Offers) error
 }

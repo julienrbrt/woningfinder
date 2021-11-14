@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 )
 
 type serviceMock struct {
@@ -20,10 +19,10 @@ func (s *serviceMock) MatchOffer(_ context.Context, _ corporation.Offers) error 
 	return s.err
 }
 
-func (s *serviceMock) PushOffers(client connector.Client, corp corporation.Corporation) error {
+func (s *serviceMock) SendOffers(offers corporation.Offers) error {
 	return s.err
 }
 
-func (s *serviceMock) SubscribeOffers(ch chan<- corporation.Offers) error {
+func (s *serviceMock) RetrieveOffers(ch chan<- corporation.Offers) error {
 	return s.err
 }

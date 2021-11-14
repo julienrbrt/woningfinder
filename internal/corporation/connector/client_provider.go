@@ -16,6 +16,7 @@ type Provider struct {
 type ClientProvider interface {
 	List() []corporation.Corporation
 	Get(name string) (Client, error)
+	GetCorporation(name string) (corporation.Corporation, error)
 }
 
 type clientProvider struct {
@@ -50,4 +51,16 @@ func (c *clientProvider) Get(name string) (Client, error) {
 	}
 
 	return nil, fmt.Errorf("cannot find client for corporation: %s", name)
+}
+
+func (c *clientProvider) GetCorporation(name string) (corporation.Corporation, error) {
+	for _, c := range c.providers {
+		if c.Corporation.Name != name {
+			continue
+		}
+
+		return c.Corporation, nil
+	}
+
+	return corporation.Corporation{}, fmt.Errorf("cannot find corporation: %s", name)
 }

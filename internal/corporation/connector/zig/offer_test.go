@@ -24,10 +24,11 @@ func Test_FetchOffer(t *testing.T) {
 		// note for testing mapbox city parsing please use the bootstrap client instead of the mock
 		client := bootstrapCorporation.CreateZigClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"), c)
 
-		offers, err := client.GetOffers()
-		a.NoError(err)
-		a.True(len(offers) > 0)
-		for _, offer := range offers {
+		ch := make(chan corporation.Offer, 1000)
+		a.NoError(client.FetchOffers(ch))
+		for offer := range ch {
+			a.NotEmpty(offer.CorporationName)
+
 			// verify housing validity
 			a.NotEmpty(offer.Housing.Type)
 			if offer.Housing.Type == corporation.HousingTypeUndefined {

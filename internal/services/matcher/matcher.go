@@ -18,13 +18,13 @@ import (
 // MatcherOffer matcher a corporation offer with customer housing preferences
 func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) error {
 	// create housing corporation client
-	client, err := s.clientProvider.Get(offers.Corporation.Name)
+	client, err := s.clientProvider.Get(offers.CorporationName)
 	if err != nil {
-		return fmt.Errorf("error while getting corporation client %s: %w", offers.Corporation.Name, err)
+		return fmt.Errorf("error while getting corporation client %s: %w", offers.CorporationName, err)
 	}
 
 	// find users corporation credentials for this offers
-	users, err := s.userService.GetUsersWithGivenCorporationCredentials(offers.Corporation.Name)
+	users, err := s.userService.GetUsersWithGivenCorporationCredentials(offers.CorporationName)
 	if err != nil {
 		return fmt.Errorf("error while matching offer: %w", err)
 	}
@@ -76,12 +76,12 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	// login to housing corporation
 	if err := client.Login(newCreds.Login, newCreds.Password); err != nil {
 		if !errors.Is(err, connector.ErrAuthFailed) {
-			s.logger.Error("failed to login to corporation", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+			s.logger.Error("failed to login to corporation", zap.String("corporation", offers.CorporationName), zap.String("email", user.Email), zap.Error(err))
 			return
 		}
 
 		// user has failed login
-		s.logger.Info("failed to login to corporation", zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+		s.logger.Info("failed to login to corporation", zap.String("corporation", offers.CorporationName), zap.String("email", user.Email), zap.Error(err))
 		if err := s.updateFailedLogin(user, newCreds); err != nil {
 			s.logger.Error("failed to update corporation credentials", zap.Error(err))
 		}
@@ -92,7 +92,7 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	for uuid, offer := range matchingOffers {
 		// react to offer
 		if err := client.React(offer); err != nil {
-			s.logger.Info("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+			s.logger.Info("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.CorporationName), zap.String("email", user.Email), zap.Error(err))
 
 			// check if we retry next time or mark the offer as checked
 			if ok := s.retryReactNextTime(uuid); !ok {
@@ -100,7 +100,7 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 
 				// alert user
 				if user.HasAlertsEnabled {
-					if err := s.emailService.SendReactionFailure(user, offers.Corporation.Name, offer); err != nil {
+					if err := s.emailService.SendReactionFailure(user, offers.CorporationName, offer); err != nil {
 						s.logger.Error("failed to send email", zap.Error(err))
 					}
 				}
@@ -114,13 +114,13 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 
 		// save match to database
 		if err := s.userService.CreateHousingPreferencesMatch(user.ID, offer, user.CorporationCredentials[0].CorporationName, pictureURL); err != nil {
-			s.logger.Error("failed to add housing preferences match", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+			s.logger.Error("failed to add housing preferences match", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.CorporationName), zap.String("email", user.Email), zap.Error(err))
 		}
 
 		// mark the offer as checked
 		s.redisClient.SetUUID(uuid)
 
-		s.logger.Info("🎉🎉🎉 WoningFinder has successfully reacted to a house", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.Corporation.Name), zap.String("email", user.Email), zap.Error(err))
+		s.logger.Info("🎉🎉🎉 WoningFinder has successfully reacted to a house", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.CorporationName), zap.String("email", user.Email), zap.Error(err))
 	}
 }
 

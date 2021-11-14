@@ -6,52 +6,38 @@ import (
 
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"go.uber.org/zap"
 )
 
-// PushOffers pushes the offers of a housing corporation to redis queue
-func (s *service) PushOffers(client connector.Client, corp corporation.Corporation) error {
-	offers, err := client.GetOffers()
+// SendOffers sends an offer of a housing corporation to the redis queue
+func (s *service) SendOffers(offers corporation.Offers) error {
+	result, err := json.Marshal(offers)
 	if err != nil {
-		return fmt.Errorf("error while fetching offers for %s: %w", corp.Name, err)
+		return fmt.Errorf("error while marshaling %s offers: %w", offers.CorporationName, err)
 	}
 
-	// log number of offers found
-	if len(offers) == 0 {
-		s.logger.Info("no offers found", zap.String("corporation", corp.Name))
-		return nil
-	}
-
-	s.logger.Info(fmt.Sprintf("%d offers found", len(offers)), zap.String("corporation", corp.Name))
-
-	// build offers list
-	result, err := json.Marshal(corporation.Offers{
-		Corporation: corp,
-		Offer:       offers,
-	})
-	if err != nil {
-		return fmt.Errorf("error while marshaling offers for %s: %w", corp.Name, err)
-	}
-
-	// add to redis queue
 	if err := s.redisClient.Push(offersQueue, result); err != nil {
-		return fmt.Errorf("error pushing %d offers to queue: %w", len(offers), err)
+		return fmt.Errorf("error pushing %s offers to queue: %w", offers.CorporationName, err)
 	}
 
-	// verify supported cities
-	if err := s.verifyCorporationCities(offers, corp); err != nil {
-		return fmt.Errorf("error verifying corporation %s cities: %w", corp.Name, err)
+	if err := s.verifyCorporationCities(offers); err != nil {
+		return fmt.Errorf("error verifying %s cities: %w", offers.CorporationName, err)
 	}
 
 	return nil
 }
 
 // gets and verify if all cities from the offers are present the supported cities by the corporation
-func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corporation.Corporation) error {
+func (s *service) verifyCorporationCities(offers corporation.Offers) error {
+	corp, err := s.clientProvider.GetCorporation(offers.CorporationName)
+	if err != nil {
+		return err
+	}
+
 	cities := make(map[string]city.City)
+
 	// get cities from offers
-	for _, offer := range offers {
+	for _, offer := range offers.Offer {
 		// merge city names
 		city := (&city.City{Name: offer.Housing.CityName}).Merge()
 		cities[city.Name] = city
@@ -83,7 +69,7 @@ func (s *service) verifyCorporationCities(offers []corporation.Offer, corp corpo
 	return nil
 }
 
-func (s *service) SubscribeOffers(ch chan<- corporation.Offers) error {
+func (s *service) RetrieveOffers(ch chan<- corporation.Offers) error {
 	for {
 		offers, err := s.redisClient.BPop(offersQueue)
 		if err != nil {

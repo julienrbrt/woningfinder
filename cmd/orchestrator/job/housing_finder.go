@@ -1,7 +1,10 @@
 package job
 
 import (
+	"time"
+
 	"github.com/robfig/cron/v3"
+	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 	"go.uber.org/zap"
@@ -26,9 +29,34 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 			c.Schedule(s, cron.FuncJob(func() {
 				j.logger.Info("housing-finder job started", zap.String("corporation", corp.Name))
 
-				if err := j.matcherService.PushOffers(client, corp); err != nil {
-					j.logger.Error("error while fetching and pushing offers", zap.Error(err))
+				ch := make(chan corporation.Offer, 50)
+				go func(ch chan corporation.Offer) {
+					if err := client.FetchOffers(ch); err != nil {
+						j.logger.Error("error while fetching offers", zap.String("corporation", corp.Name), zap.Error(err))
+					}
+					close(ch)
+				}(ch)
+
+				offers := corporation.Offers{
+					CorporationName: corp.Name,
+					Offer:           []corporation.Offer{},
 				}
+
+				// batch send offers
+				ticker := time.NewTicker(5 * time.Second)
+				for offer := range ch {
+					offers.Offer = append(offers.Offer, offer)
+
+					for range ticker.C {
+						if err := j.matcherService.SendOffers(offers); err != nil {
+							j.logger.Error("error while sending offer to redis queue", zap.String("corporation", offer.CorporationName), zap.Error(err))
+						}
+						offers.Offer = []corporation.Offer{}
+					}
+				}
+
+				// stop ticket
+				ticker.Stop()
 			}))
 		}
 	}
