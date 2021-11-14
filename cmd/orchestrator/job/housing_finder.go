@@ -54,6 +54,9 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 						offers.Offer = []corporation.Offer{}
 					}
 				}
+
+				// stop ticket
+				ticker.Stop()
 			}))
 		}
 	}
