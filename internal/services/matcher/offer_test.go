@@ -3,7 +3,6 @@ package matcher_test
 import (
 	"encoding/json"
 	"errors"
-	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -26,9 +25,8 @@ func (m *mockCorporationService) LinkCities(cities []city.City, corporation ...c
 }
 
 var corporationInfo = corporation.Corporation{
-	APIEndpoint: &url.URL{Scheme: "https", Host: "example.com"},
-	Name:        "OnsHuis",
-	URL:         "https://example.com",
+	Name: "OnsHuis",
+	URL:  "https://example.com",
 	Cities: []city.City{
 		city.Enschede,
 		city.Hengelo,
@@ -38,18 +36,7 @@ var corporationInfo = corporation.Corporation{
 	},
 }
 
-func Test_PushOffers_CorporationClientError(t *testing.T) {
-	a := assert.New(t)
-
-	err := errors.New("foo")
-	logger := logging.NewZapLoggerWithoutSentry()
-	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
-
-	a.Error(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{}, err), corporationInfo))
-}
-
-func Test_PushOffers_RedisClientError(t *testing.T) {
+func Test_SendOffers_RedisClientError(t *testing.T) {
 	a := assert.New(t)
 
 	err := errors.New("foo")
@@ -57,28 +44,28 @@ func Test_PushOffers_RedisClientError(t *testing.T) {
 	redisMock := database.NewRedisClientMock("", nil, err)
 	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
 
-	a.Error(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{{}}, nil), corporationInfo))
+	a.Error(matcherService.SendOffers(corporation.Offers{CorporationName: corporationInfo.Name}))
 }
 
-func Test_PushOffers_Success_NoOffers(t *testing.T) {
+func Test_SendOffers_Success_EmptyOffer(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), connector.NewClientProvider([]connector.Provider{{Corporation: corporationInfo}}))
 
-	a.Nil(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{}, nil), corporationInfo))
+	a.Error(matcherService.SendOffers(corporation.Offers{}))
 }
 
-func Test_PushOffers_Success(t *testing.T) {
+func Test_SendOffers_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, &mockCorporationService{}, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, &mockCorporationService{}, nil, matcher.NewMatcher(), connector.NewClientProvider([]connector.Provider{{Corporation: corporationInfo}}))
 
-	a.Nil(matcherService.PushOffers(connector.NewClientMock([]corporation.Offer{{}}, nil), corporationInfo))
+	a.Nil(matcherService.SendOffers(corporation.Offers{CorporationName: corporationInfo.Name}))
 }
 
-func Test_SubscribeOffers_RedisClientError(t *testing.T) {
+func Test_RetrieveOffers_RedisClientError(t *testing.T) {
 	a := assert.New(t)
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
@@ -86,13 +73,13 @@ func Test_SubscribeOffers_RedisClientError(t *testing.T) {
 	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
 
 	c := make(chan corporation.Offers)
-	a.Error(matcherService.SubscribeOffers(c))
+	a.Error(matcherService.RetrieveOffers(c))
 }
 
-func Test_SubscribeOffers_Success(t *testing.T) {
+func Test_RetrieveOffers_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
-	corpInfo, err := json.Marshal(corporation.Offers{Corporation: corporationInfo})
+	corpInfo, err := json.Marshal(corporation.Offer{CorporationName: corporationInfo.Name})
 	a.NoError(err)
 
 	redisMock := database.NewRedisClientMock("", []string{string(corpInfo)}, err)
@@ -100,11 +87,10 @@ func Test_SubscribeOffers_Success(t *testing.T) {
 
 	c := make(chan corporation.Offers)
 	go func(c chan corporation.Offers) {
-		err := matcherService.SubscribeOffers(c)
+		err := matcherService.RetrieveOffers(c)
 		a.NoError(err)
 	}(c)
 
 	resultInfo := <-c
-	a.Equal(corporationInfo.Name, resultInfo.Corporation.Name)
-	a.Equal(corporationInfo.Cities, resultInfo.Corporation.Cities)
+	a.Equal(corporationInfo.Name, resultInfo.CorporationName)
 }

@@ -20,12 +20,16 @@ func (c *clientMock) Login(_, _ string) error {
 	return c.err
 }
 
-func (c *clientMock) GetOffers() ([]corporation.Offer, error) {
+func (c *clientMock) FetchOffers(ch chan<- corporation.Offer) error {
 	if c.err != nil {
-		return nil, c.err
+		return c.err
 	}
 
-	return c.offers, nil
+	for _, offer := range c.offers {
+		ch <- offer
+	}
+
+	return nil
 }
 
 func (c *clientMock) React(_ corporation.Offer) error {

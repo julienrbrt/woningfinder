@@ -75,15 +75,15 @@ func offerRequest() (networking.Request, error) {
 	return request, nil
 }
 
-func (c *client) GetOffers() ([]corporation.Offer, error) {
+func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 	req, err := offerRequest()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	resp, err := c.Send(req)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	var result struct {
@@ -91,10 +91,9 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	}
 
 	if err := json.Unmarshal(resp.Result, &result); err != nil {
-		return nil, fmt.Errorf("error parsing offer result %v: %w", string(resp.Result), err)
+		return fmt.Errorf("error parsing offer result %v: %w", string(resp.Result), err)
 	}
 
-	var offers []corporation.Offer
 	for _, offer := range result.Offer {
 		houseType := c.parseHousingType(offer.HousingType)
 
@@ -102,10 +101,11 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			continue
 		}
 
-		offers = append(offers, c.Map(offer, houseType))
+		// add offer to channel
+		ch <- c.Map(offer, houseType)
 	}
 
-	return offers, nil
+	return nil
 }
 
 func (c *client) Map(offer offer, houseType corporation.HousingType) corporation.Offer {
@@ -137,16 +137,17 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) corporation
 	}
 
 	return corporation.Offer{
-		ExternalID:    offer.ID,
-		Housing:       house,
-		URL:           fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", offer.ID),
-		RawPictureURL: rawPictureURL,
-		MinFamilySize: offer.Criteria.MinGezinsgrootte,
-		MaxFamilySize: offer.Criteria.MaxGezinsgrootte,
-		MinAge:        offer.Criteria.MinLeeftijd,
-		MaxAge:        offer.Criteria.MaxLeeftijd,
-		MinimumIncome: offer.Criteria.MinInkomen,
-		MaximumIncome: offer.Criteria.MaxInkomen,
+		CorporationName: c.corporation.Name,
+		ExternalID:      offer.ID,
+		Housing:         house,
+		URL:             fmt.Sprintf("https://www.dewoonplaats.nl/ik-zoek-woonruimte/!/woning/%s/", offer.ID),
+		RawPictureURL:   rawPictureURL,
+		MinFamilySize:   offer.Criteria.MinGezinsgrootte,
+		MaxFamilySize:   offer.Criteria.MaxGezinsgrootte,
+		MinAge:          offer.Criteria.MinLeeftijd,
+		MaxAge:          offer.Criteria.MaxLeeftijd,
+		MinimumIncome:   offer.Criteria.MinInkomen,
+		MaximumIncome:   offer.Criteria.MaxInkomen,
 	}
 }
 

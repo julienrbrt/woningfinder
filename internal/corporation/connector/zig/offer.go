@@ -92,22 +92,20 @@ func offerDetailRequest(offerID string) networking.Request {
 	return request
 }
 
-func (c *client) GetOffers() ([]corporation.Offer, error) {
+func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 	resp, err := c.Send(offerRequest())
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	var result struct {
 		Result []offerList `json:"result"`
 	}
 	if err := json.Unmarshal(resp, &result); err != nil {
-		return nil, fmt.Errorf("error parsing offer result %v: %w", string(resp), err)
+		return fmt.Errorf("error parsing offer result %v: %w", string(resp), err)
 	}
 
-	var offers []corporation.Offer
 	var wg sync.WaitGroup
-
 	for _, offer := range result.Result {
 		houseType := c.parseHousingType(offer)
 		if houseType == corporation.HousingTypeUndefined {
@@ -116,7 +114,6 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 
 		// enrich offer concurrently
 		wg.Add(1)
-
 		go func(offer offerList, houseType corporation.HousingType) {
 			defer wg.Done()
 
@@ -126,13 +123,14 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 				return
 			}
 
-			offers = append(offers, c.Map(offerDetails, houseType))
+			// add offer to channel
+			ch <- c.Map(offerDetails, houseType)
 		}(offer, houseType)
 	}
 
 	// wait for all offers
 	wg.Wait()
-	return offers, nil
+	return nil
 }
 
 // getOfferDetails info about specific offer housing
@@ -194,16 +192,17 @@ func (c *client) Map(offer *offerDetails, houseType corporation.HousingType) cor
 	}
 
 	return corporation.Offer{
-		ExternalID:    c.getExternalID(offer),
-		Housing:       house,
-		URL:           fmt.Sprintf("%s/aanbod/te-huur/details/%s", c.corporation.URL, offer.Urlkey),
-		RawPictureURL: rawPictureURL,
-		MinFamilySize: offer.Minimumhouseholdsize,
-		MaxFamilySize: offer.Maximumhouseholdsize,
-		MinAge:        offer.Minimumage,
-		MaxAge:        offer.Maximumage,
-		MinimumIncome: offer.Minimumincome,
-		MaximumIncome: offer.Maximumincome,
+		CorporationName: c.corporation.Name,
+		ExternalID:      c.getExternalID(offer),
+		Housing:         house,
+		URL:             fmt.Sprintf("%s/aanbod/te-huur/details/%s", c.corporation.URL, offer.Urlkey),
+		RawPictureURL:   rawPictureURL,
+		MinFamilySize:   offer.Minimumhouseholdsize,
+		MaxFamilySize:   offer.Maximumhouseholdsize,
+		MinAge:          offer.Minimumage,
+		MaxAge:          offer.Maximumage,
+		MinimumIncome:   offer.Minimumincome,
+		MaximumIncome:   offer.Maximumincome,
 	}
 }
 

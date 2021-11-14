@@ -15,7 +15,7 @@ var clientList = []corporation.Corporation{
 	itris.MijandeWonenInfo,
 }
 
-func Test_FetchOffer(t *testing.T) {
+func Test_FetchOffers(t *testing.T) {
 	a := assert.New(t)
 	mockMapbox := mapbox.NewClientMock(nil, "district")
 
@@ -24,11 +24,11 @@ func Test_FetchOffer(t *testing.T) {
 		client, err := itris.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox, clientURL)
 		a.NoError(err)
 
-		offers, err := client.GetOffers()
-		a.NoError(err)
-		a.True(len(offers) > 0)
+		ch := make(chan corporation.Offer, 1000)
+		a.NoError(client.FetchOffers(ch))
+		for offer := range ch {
+			a.NotEmpty(offer.CorporationName)
 
-		for _, offer := range offers {
 			// verify housing validity
 			a.NotEmpty(offer.Housing.Type)
 			if offer.Housing.Type == corporation.HousingTypeUndefined {

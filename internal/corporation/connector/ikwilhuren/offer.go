@@ -16,7 +16,7 @@ import (
 
 const offerReserved = "Onder optie"
 
-func (c *client) GetOffers() ([]corporation.Offer, error) {
+func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 	offers := map[string]*corporation.Offer{}
 
 	// create another collector for housing details
@@ -44,6 +44,9 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 		el.ForEach("#search-results > li", func(_ int, e *colly.HTMLElement) {
 			var offer corporation.Offer
 			var err error
+
+			// set corporation name
+			offer.CorporationName = c.corporation.Name
 
 			// get offer url
 			offer.URL = e.ChildAttr("div.search-result-button a", "href")
@@ -112,7 +115,12 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			return
 		}
 
-		c.getHousingDetails(offers[offerURL], e)
+		if err := c.getHousingDetails(offers[offerURL], e); err != nil {
+			c.logger.Info("error while house details", zap.String("address", offers[offerURL].Housing.Address), zap.Error(err), logConnector)
+			return
+		}
+
+		ch <- *offers[offerURL]
 	})
 
 	// add offer
@@ -120,32 +128,20 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 	paginationCollector.OnHTML("#main", offerParser)
 
 	// parse offers
-	offerURL := fmt.Sprintf("%s/?action=epl_search&post_type=rental", c.corporation.URL)
-	if err := c.collector.Visit(offerURL); err != nil {
-		return nil, err
+	if err := c.collector.Visit(fmt.Sprintf("%s/?action=epl_search&post_type=rental", c.corporation.URL)); err != nil {
+		return err
 	}
 
-	// get all offers as array
-	var offerList []corporation.Offer
-	for _, offer := range offers {
-		offerList = append(offerList, *offer)
-	}
-
-	if len(offerList) == 0 {
-		c.logger.Warn("offers list should not be empty", logConnector)
-	}
-
-	return offerList, nil
+	return nil
 }
 
-func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElement) {
+func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElement) error {
 	var err error
 
 	// parse externalID
 	offer.ExternalID, err = c.parseExternalID(e.ChildText("script.saswp-schema-markup-output"))
 	if err != nil {
-		c.logger.Info("error while parsing external ID", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
-		return
+		return fmt.Errorf("error while parsing external ID: %w", err)
 	}
 
 	// parse housing characteristics
@@ -156,12 +152,14 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 
 	offer.Housing.Size, err = strconv.ParseFloat(strings.ReplaceAll(e.ChildText("#Main_Woonopp > dd.text"), " m²", ""), 32)
 	if err != nil {
-		return
+		return fmt.Errorf("error while parsing size: %w", err)
 	}
 
 	rawText := strings.ToLower(e.Text)
 	offer.Housing.Elevator = strings.Contains(rawText, "lift")
 	offer.Housing.Garage = strings.Contains(rawText, "Parkeerplaats")
+
+	return nil
 }
 
 func (c *client) parseHousingType(houseType string) corporation.HousingType {
