@@ -1,8 +1,6 @@
 package job
 
 import (
-	"time"
-
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
@@ -42,9 +40,7 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 					Offer:           []corporation.Offer{},
 				}
 
-				// batch (50) offers sending
-				ticker := time.NewTicker(5 * time.Second)
-				defer ticker.Stop()
+				// batch send 50 offers
 				for offer := range ch {
 					offers.Offer = append(offers.Offer, offer)
 
