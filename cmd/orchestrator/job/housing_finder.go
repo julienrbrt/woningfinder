@@ -1,6 +1,8 @@
 package job
 
 import (
+	"time"
+
 	"github.com/robfig/cron/v3"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
@@ -29,28 +31,39 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 
 				ch := make(chan corporation.Offer)
 				go func(ch chan corporation.Offer) {
-					if err := client.FetchOffers(ch); err != nil {
-						j.logger.Error("error while fetching offers", zap.String("corporation", corp.Name), zap.Error(err))
-					}
+
 					close(ch)
 				}(ch)
+
+				if err := client.FetchOffers(ch); err != nil {
+					j.logger.Error("error while fetching offers", zap.String("corporation", corp.Name), zap.Error(err))
+				}
 
 				offers := corporation.Offers{
 					CorporationName: corp.Name,
 					Offer:           []corporation.Offer{},
 				}
 
-				// batch send 50 offers
-				for offer := range ch {
-					offers.Offer = append(offers.Offer, offer)
-
-					if len(offers.Offer) == 50 {
+				// batch send offers every 5 seconds
+				ticker := time.NewTicker(5 * time.Second)
+				defer ticker.Stop()
+				for {
+					select {
+					case <-ticker.C:
 						j.logger.Info("housing-finder job sending offers", zap.String("corporation", corp.Name), zap.Int("offers", len(offers.Offer)))
 
 						if err := j.matcherService.SendOffers(offers); err != nil {
-							j.logger.Error("error while sending offer to redis queue", zap.String("corporation", offer.CorporationName), zap.Error(err))
+							j.logger.Error("error while sending offer to redis queue", zap.String("corporation", offers.CorporationName), zap.Error(err))
 						}
+
 						offers.Offer = []corporation.Offer{}
+					case offer, ok := <-ch:
+						offers.Offer = append(offers.Offer, offer)
+
+						// channel closed
+						if !ok {
+							return
+						}
 					}
 				}
 			}))
