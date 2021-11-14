@@ -13,7 +13,7 @@ import (
 
 const detailsHousingChildAttr = "li.link a"
 
-func (c *client) GetOffers() ([]corporation.Offer, error) {
+func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 	offers := map[string]*corporation.Offer{}
 
 	// create another collector for housing details
@@ -24,6 +24,9 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 		el.ForEach("div.woningaanbod", func(_ int, e *colly.HTMLElement) {
 			var offer corporation.Offer
 			var err error
+
+			// set corporation name
+			offer.CorporationName = c.corporation.Name
 
 			// get offer url
 			offer.URL = c.corporation.APIEndpoint.String() + e.ChildAttr(detailsHousingChildAttr, "href")
@@ -69,8 +72,8 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 		})
 	})
 
-	// add housing details (1/2)
-	detailCollector.OnHTML("div.info-container", func(e *colly.HTMLElement) {
+	// add housing details
+	detailCollector.OnHTML("html", func(e *colly.HTMLElement) {
 		// find offer
 		offerURL := e.Request.URL.String()
 		if _, ok := offers[offerURL]; !ok {
@@ -78,39 +81,26 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			return
 		}
 
-		c.getHousingDetails(offers[offerURL], e)
-	})
-
-	// add housing details (2/2)
-	detailCollector.OnHTML("#icons-container ul", func(e *colly.HTMLElement) {
-		// find offer
-		offerURL := e.Request.URL.String()
-		if _, ok := offers[offerURL]; !ok {
-			// no offer matching, no details
+		if err := c.getHousingDetails(offers[offerURL], e); err != nil {
+			c.logger.Info("error while house details", zap.String("address", offers[offerURL].Housing.Address), zap.Error(err), logConnector)
 			return
 		}
 
-		c.getHousingDetailsFeatures(offers[offerURL], e)
+		ch <- *offers[offerURL]
 	})
 
 	// parse offers
 	offerURL := c.corporation.APIEndpoint.String() + "/woningaanbod/"
 	if err := c.collector.Visit(offerURL); err != nil {
-		return nil, err
+		return err
 	}
 
-	// get all offers as array
-	var offerList []corporation.Offer
-	for _, offer := range offers {
-		offerList = append(offerList, *offer)
-	}
-
-	return offerList, nil
+	return nil
 }
 
-func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElement) {
+func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElement) error {
 	// add housing size
-	e.ForEach("#oppervlaktes-page div.infor-wrapper", func(_ int, el *colly.HTMLElement) {
+	e.ForEach("div.info-container > #oppervlaktes-page div.infor-wrapper", func(_ int, el *colly.HTMLElement) {
 		// increase size
 		roomSize, err := strconv.ParseFloat(strings.ReplaceAll(strings.Trim(el.Text, " m2"), ",", "."), 64)
 		if err != nil {
@@ -119,20 +109,8 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 		offer.Housing.Size += roomSize
 	})
 
-	// part of housing details can be found in housing description (accessibility)
-	dom, err := e.DOM.Html()
-	if err != nil {
-		c.logger.Warn("unable to get details", zap.String("address", offer.Housing.Address), zap.String("url", offer.URL), zap.Error(err), logConnector)
-		return
-	}
-	// add accessible
-	offer.Housing.Accessible = strings.Contains(dom, "toegankelijk")
-}
-
-func (c *client) getHousingDetailsFeatures(offer *corporation.Offer, e *colly.HTMLElement) {
-
 	// add housing details
-	e.ForEach("li", func(_ int, el *colly.HTMLElement) {
+	e.ForEach("#icons-container ul > li", func(_ int, el *colly.HTMLElement) {
 		switch el.Text {
 		case "Balkon":
 			offer.Housing.Balcony = el.DOM.HasClass("yes")
@@ -144,6 +122,11 @@ func (c *client) getHousingDetailsFeatures(offer *corporation.Offer, e *colly.HT
 			offer.Housing.Garden = el.DOM.HasClass("yes")
 		}
 	})
+
+	// part of housing details can be found in housing description
+	offer.Housing.Accessible = strings.Contains(e.Text, "toegankelijk")
+
+	return nil
 }
 
 func (c *client) parseHousingType(houseType string) corporation.HousingType {

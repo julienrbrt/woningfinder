@@ -11,7 +11,7 @@ import (
 // Client defines a housing corporation client
 type Client interface {
 	Login(username, password string) error
-	GetOffers() ([]corporation.Offer, error)
+	FetchOffers(chan<- corporation.Offer) error
 	React(offer corporation.Offer) error
 }
 

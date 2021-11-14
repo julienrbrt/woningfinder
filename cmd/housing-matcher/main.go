@@ -46,15 +46,16 @@ func main() {
 	// subscribe to offers queue inside a new go routine
 	ch := make(chan corporation.Offers)
 	go func(ch chan corporation.Offers) {
-		if err := matcherService.SubscribeOffers(ch); err != nil {
+		if err := matcherService.RetrieveOffers(ch); err != nil {
 			logger.Fatal("failed subscribing to offers", zap.Error(err))
 		}
 	}(ch)
 
 	// match offer
 	for offers := range ch {
+
 		if err := matcherService.MatchOffer(context.Background(), offers); err != nil {
-			logger.Error("error while maching offers", zap.String("corporation", offers.Corporation.Name), zap.Error(err))
+			logger.Error("error while maching offers", zap.String("corporation", offers.CorporationName), zap.Error(err))
 		}
 	}
 }

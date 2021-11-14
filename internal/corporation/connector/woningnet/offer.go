@@ -79,23 +79,21 @@ var selectionMethodCommandMap = map[corporation.SelectionMethod]string{
 	corporation.SelectionRandom:               "model[Loting]",
 }
 
-func (c *client) GetOffers() ([]corporation.Offer, error) {
-	var offers []corporation.Offer
-
+func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 	for _, selectionMethod := range c.corporation.SelectionMethod {
 		req, err := offerRequest(selectionMethodCommandMap[selectionMethod], "")
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		resp, err := c.Send(req)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		var response response
 		if err := json.Unmarshal(resp, &response); err != nil {
-			return nil, fmt.Errorf("error parsing offer response %v: %w", string(resp), err)
+			return fmt.Errorf("error parsing offer response %v: %w", string(resp), err)
 		}
 
 		paginatedOffers, err := c.getPaginatedOffers(selectionMethodCommandMap[selectionMethod], response)
@@ -116,11 +114,12 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 				continue
 			}
 
-			offers = append(offers, result)
+			// add offer to channel
+			ch <- result
 		}
 	}
 
-	return offers, nil
+	return nil
 }
 
 // get PaginatedOffers get the wonignnet offers that are paginated
@@ -180,7 +179,7 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) (corporatio
 
 	house.Size, err = c.parseHouseSize(offer.Woonoppervlakte)
 	if err != nil {
-		return corporation.Offer{}, fmt.Errorf("error mapping offer %s: %w", offerURL, err)
+		c.logger.Info("failed parsing house size", zap.String("address", house.Address), zap.Error(err), logConnector)
 	}
 
 	// get address city district
@@ -226,11 +225,12 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) (corporatio
 	}
 
 	return corporation.Offer{
-		ExternalID:    fmt.Sprintf("%s/%s", offer.PublicatieID, offer.CurrentRegioCode),
-		Housing:       house,
-		URL:           offerURL,
-		RawPictureURL: rawPictureURL,
-		MinAge:        minAge,
+		CorporationName: c.corporation.Name,
+		ExternalID:      fmt.Sprintf("%s/%s", offer.PublicatieID, offer.CurrentRegioCode),
+		Housing:         house,
+		URL:             offerURL,
+		RawPictureURL:   rawPictureURL,
+		MinAge:          minAge,
 	}, nil
 }
 

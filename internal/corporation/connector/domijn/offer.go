@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (c *client) GetOffers() ([]corporation.Offer, error) {
+func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 	offers := map[string]*corporation.Offer{}
 
 	// create another collector for housing details
@@ -37,6 +37,9 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 		el.ForEach("article", func(_ int, e *colly.HTMLElement) {
 			var offer corporation.Offer
 			var err error
+
+			// set corporation name
+			offer.CorporationName = c.corporation.Name
 
 			// get offer url
 			offer.URL = c.corporation.APIEndpoint.String() + strings.ReplaceAll(e.ChildAttr("div.image-wrapper a", "href"), " ", "%20") // manual space escaping
@@ -84,25 +87,24 @@ func (c *client) GetOffers() ([]corporation.Offer, error) {
 			return
 		}
 
-		c.getHousingDetails(offers[offerURL], e)
+		if err := c.getHousingDetails(offers[offerURL], e); err != nil {
+			c.logger.Info("error while house details", zap.String("address", offers[offerURL].Housing.Address), zap.Error(err), logConnector)
+			return
+		}
+
+		ch <- *offers[offerURL]
 	})
 
 	// parse offers
 	offerURL := c.corporation.APIEndpoint.String() + "/woningaanbod/?advertisementType=rent"
 	if err := c.collector.Visit(offerURL); err != nil {
-		return nil, err
+		return err
 	}
 
-	// get all offers as array
-	var offerList []corporation.Offer
-	for _, offer := range offers {
-		offerList = append(offerList, *offer)
-	}
-
-	return offerList, nil
+	return nil
 }
 
-func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElement) {
+func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElement) error {
 	var err error
 
 	// parse externalID
@@ -112,8 +114,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("span.price"), ",", "."), "€", ""))
 	offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32)
 	if err != nil {
-		c.logger.Info("error while parsing price", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
-		return
+		return fmt.Errorf("error while parsing price: %w", err)
 	}
 
 	// parse housing characteristics
@@ -147,6 +148,8 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 			offer.MinFamilySize = 3
 		}
 	})
+
+	return nil
 }
 
 func (c *client) parseHousingType(houseType string) corporation.HousingType {
