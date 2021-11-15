@@ -48,6 +48,10 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 				for {
 					select {
 					case <-ticker.C:
+						if len(offers.Offer) == 0 {
+							continue
+						}
+
 						j.logger.Info("housing-finder job sending offers", zap.String("corporation", corp.Name), zap.Int("offers", len(offers.Offer)))
 
 						if err := j.matcherService.SendOffers(offers); err != nil {
