@@ -347,3 +347,15 @@ var Voorthuizen = City{
 	Latitude:  52.187297,
 	Longitude: 5.607513,
 }
+
+var Rhenoy = City{
+	Name:      "Rhenoy",
+	Latitude:  51.880904,
+	Longitude: 5.150730,
+}
+
+var Dodewaard = City{
+	Name:      "Dodewaard",
+	Latitude:  51.912754,
+	Longitude: 5.656597,
+}

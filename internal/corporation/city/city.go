@@ -342,6 +342,12 @@ var CityTable = map[string]City{
 	Bedum.Name:                   Bedum,
 	Kraggenburg.Name:             Kraggenburg,
 	Honselersdijk.Name:           Honselersdijk,
+	Baflo.Name:                   Baflo,
+	Rhenoy.Name:                  Rhenoy,
+	Dodewaard.Name:               Dodewaard,
+	BerkelEnRodenrijs.Name:       BerkelEnRodenrijs,
+	Holten.Name:                  Holten,
+	Rijssen.Name:                 Rijssen,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

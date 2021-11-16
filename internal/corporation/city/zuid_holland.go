@@ -335,3 +335,9 @@ var Honselersdijk = City{
 	Latitude:  52.007712,
 	Longitude: 4.227948,
 }
+
+var BerkelEnRodenrijs = City{
+	Name:      "Berkel en Rodenrijs",
+	Latitude:  51.993281,
+	Longitude: 4.477591,
+}
