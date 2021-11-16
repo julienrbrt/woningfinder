@@ -155,6 +155,10 @@ var Info = corporation.Corporation{
 		city.Brielle,
 		city.Meerkerk,
 		city.BergenOpZoom,
+		city.Wassenaar,
+		city.BerkelEnRodenrijs,
+		city.Holten,
+		city.Rijssen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

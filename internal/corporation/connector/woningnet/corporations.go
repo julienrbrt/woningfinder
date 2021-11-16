@@ -273,6 +273,7 @@ var BovenGroningenInfo = corporation.Corporation{
 		city.WeheDenHoorn,
 		city.Uithuizermeeden,
 		city.Bedum,
+		city.Baflo,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -376,6 +377,8 @@ var WoongaardInfo = corporation.Corporation{
 		city.Nieuwland,
 		city.Aalst,
 		city.Ochten,
+		city.Rhenoy,
+		city.Dodewaard,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
