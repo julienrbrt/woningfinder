@@ -262,3 +262,15 @@ var Raalte = City{
 	Latitude:  52.384625,
 	Longitude: 6.276044,
 }
+
+var Holten = City{
+	Name:      "Holten",
+	Latitude:  52.281697,
+	Longitude: 6.422041,
+}
+
+var Rijssen = City{
+	Name:      "Rijssen",
+	Latitude:  52.307810,
+	Longitude: 6.520715,
+}

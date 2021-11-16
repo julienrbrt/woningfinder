@@ -95,3 +95,9 @@ var Bedum = City{
 	Latitude:  53.300765,
 	Longitude: 6.602251,
 }
+
+var Baflo = City{
+	Name:      "Baflo",
+	Latitude:  53.362958,
+	Longitude: 6.514096,
+}
