@@ -379,6 +379,7 @@ var WoongaardInfo = corporation.Corporation{
 		city.Ochten,
 		city.Rhenoy,
 		city.Dodewaard,
+		city.Dussen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

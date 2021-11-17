@@ -159,6 +159,7 @@ var Info = corporation.Corporation{
 		city.BerkelEnRodenrijs,
 		city.Holten,
 		city.Rijssen,
+		city.Waddinxveen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
