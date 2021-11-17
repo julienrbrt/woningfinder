@@ -116,7 +116,7 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 		}
 
 		if err := c.getHousingDetails(offers[offerURL], e); err != nil {
-			c.logger.Info("error while house details", zap.String("address", offers[offerURL].Housing.Address), zap.Error(err), logConnector)
+			c.logger.Info("error while getting house details", zap.String("address", offers[offerURL].Housing.Address), zap.Error(err), logConnector)
 			return
 		}
 
@@ -152,7 +152,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 
 	offer.Housing.Size, err = strconv.ParseFloat(strings.ReplaceAll(e.ChildText("#Main_Woonopp > dd.text"), " m²", ""), 32)
 	if err != nil {
-		return fmt.Errorf("error while parsing size: %w", err)
+		c.logger.Info("error parsing house size", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
 	}
 
 	rawText := strings.ToLower(e.Text)

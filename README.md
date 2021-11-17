@@ -13,6 +13,7 @@ WoningFinder is split in multiple components:
   - _HousingFinder_ is used to query all the offers of the housing corporation. It connects them all and query them at the right time and sends its data to a redis queue (triggering _HousingMatcher_).
   - _WeeklyUpdate_ generates and send the customer weekly updates. Runs every Friday at 18:00.
   - _CorporationCredentialsMissingReminder_ sends missing corporation credentials reminder to matching customers. Runs everyday at 08:00, 16:00.
+- _[housing-finder](cmd/housing-finder)_ replicates the _HousingFinder_ job for a given corporation. 
 - _[db-migrator](cmd/db-migrator)_ initializes the database with default values (housing corporations, cities, housing types, selection methods...) and run the databases migrations. It is run as a job before every deploy.
 - _[city-location-updater](cmd/city-location-updater)_ updates the city location in the database. It is run as a job before every deploy.
 - _[impersonate](cmd/impersonate)_ gets a JWT token for an user in order to impersonate it.

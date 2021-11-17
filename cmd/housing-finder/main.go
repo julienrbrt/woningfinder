@@ -1,7 +1,8 @@
 package main
 
 import (
-	"context"
+	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/auth"
@@ -34,29 +35,71 @@ func main() {
 
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
-	emailClient := bootstrap.CreateEmailClient()
+	mapboxClient := bootstrap.CreateMapboxClient(logger, redisClient)
 	spacesClient := bootstrap.CreateDOSpacesClient(logger)
+	emailClient := bootstrap.CreateEmailClient()
 
-	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the matcher
+	clientProvider := bootstrapCorporation.CreateClientProvider(logger, mapboxClient)
 	corporationService := corporationService.NewService(logger, dbClient)
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
 	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(), clientProvider)
 
-	// subscribe to offers queue inside a new go routine
-	ch := make(chan corporation.Offers)
-	go func(ch chan corporation.Offers) {
-		if err := matcherService.RetrieveOffers(ch); err != nil {
-			logger.Fatal("failed subscribing to offers", zap.Error(err))
+	if len(os.Args) != 2 {
+		logger.Fatal("usage: housing-finder <corporation-name>")
+	}
+
+	// get corporation client
+	corp, err := clientProvider.GetCorporation(os.Args[1])
+	if err != nil {
+		logger.Fatal("error while getting corporation", zap.String("got", os.Args[1]), zap.Error(err))
+	}
+
+	client, err := clientProvider.Get(os.Args[1])
+	if err != nil {
+		logger.Fatal("error while getting corporation client", zap.String("got", os.Args[1]), zap.Error(err))
+	}
+
+	logger.Info("housing-finder started", zap.String("corporation", corp.Name))
+
+	ch := make(chan corporation.Offer)
+	go func(ch chan corporation.Offer) {
+		if err := client.FetchOffers(ch); err != nil {
+			logger.Error("error while fetching offers", zap.String("corporation", corp.Name), zap.Error(err))
 		}
+		defer close(ch)
 	}(ch)
 
-	// match offer
-	for offers := range ch {
-		logger.Info("received offers", zap.String("corporation", offers.CorporationName), zap.Int("count", len(offers.Offer)))
+	offers := corporation.Offers{
+		CorporationName: corp.Name,
+		Offer:           []corporation.Offer{},
+	}
 
-		if err := matcherService.MatchOffer(context.Background(), offers); err != nil {
-			logger.Error("error while maching offers", zap.String("corporation", offers.CorporationName), zap.Error(err))
+	// batch send offers every 5 seconds
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			if len(offers.Offer) == 0 {
+				continue
+			}
+
+			logger.Info("housing-finder job sending offers", zap.String("corporation", corp.Name), zap.Int("offers", len(offers.Offer)))
+
+			if err := matcherService.SendOffers(offers); err != nil {
+				logger.Error("error while sending offer to redis queue", zap.String("corporation", offers.CorporationName), zap.Error(err))
+			}
+
+			offers.Offer = []corporation.Offer{}
+		case offer, ok := <-ch:
+			if ok {
+				offers.Offer = append(offers.Offer, offer)
+			}
+
+			if !ok && len(offers.Offer) == 0 {
+				return
+			}
 		}
 	}
 }

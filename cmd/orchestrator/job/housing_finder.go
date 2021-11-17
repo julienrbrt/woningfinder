@@ -13,7 +13,7 @@ import (
 // HousingFinder populates the housing-finder cron jobs
 func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvider) {
 	// populate crons
-	for _, corp := range clientProvider.List() {
+	for _, corp := range clientProvider.GetCorporations() {
 		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 
 		// get corporation client
@@ -34,7 +34,7 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 					if err := client.FetchOffers(ch); err != nil {
 						j.logger.Error("error while fetching offers", zap.String("corporation", corp.Name), zap.Error(err))
 					}
-					close(ch)
+					defer close(ch)
 				}(ch)
 
 				offers := corporation.Offers{
@@ -60,10 +60,11 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 
 						offers.Offer = []corporation.Offer{}
 					case offer, ok := <-ch:
-						offers.Offer = append(offers.Offer, offer)
+						if ok {
+							offers.Offer = append(offers.Offer, offer)
+						}
 
-						// channel closed
-						if !ok {
+						if !ok && len(offers.Offer) == 0 {
 							return
 						}
 					}
