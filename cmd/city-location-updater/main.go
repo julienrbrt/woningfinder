@@ -24,7 +24,7 @@ func init() {
 func main() {
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 	dbClient := bootstrap.CreateDBClient(logger)
-	corporations := bootstrapCorporation.CreateClientProvider(logger, nil).List()
+	corporations := bootstrapCorporation.CreateClientProvider(logger, nil).GetAllCorporation()
 	corporationService := corporation.NewService(logger, dbClient)
 
 	var cities []city.City

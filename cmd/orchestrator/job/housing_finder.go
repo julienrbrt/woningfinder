@@ -13,7 +13,7 @@ import (
 // HousingFinder populates the housing-finder cron jobs
 func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvider) {
 	// populate crons
-	for _, corp := range clientProvider.List() {
+	for _, corp := range clientProvider.GetAllCorporation() {
 		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 
 		// get corporation client
@@ -60,12 +60,12 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 
 						offers.Offer = []corporation.Offer{}
 					case offer, ok := <-ch:
-						offers.Offer = append(offers.Offer, offer)
-
 						// channel closed
 						if !ok {
-							return
+							break
 						}
+
+						offers.Offer = append(offers.Offer, offer)
 					}
 				}
 			}))

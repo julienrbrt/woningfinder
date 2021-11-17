@@ -82,7 +82,7 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 		}
 
 		if err := c.getHousingDetails(offers[offerURL], e); err != nil {
-			c.logger.Info("error while house details", zap.String("address", offers[offerURL].Housing.Address), zap.Error(err), logConnector)
+			c.logger.Info("error while getting house details", zap.String("address", offers[offerURL].Housing.Address), zap.Error(err), logConnector)
 			return
 		}
 

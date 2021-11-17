@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	corporations := bootstrapCorporation.CreateClientProvider(logger, nil).List()
+	corporations := bootstrapCorporation.CreateClientProvider(logger, nil).GetAllCorporation()
 	migrations.MustRegisterTx(func(db migrations.DB) error {
 		// add corporations
 		for _, corp := range corporations {

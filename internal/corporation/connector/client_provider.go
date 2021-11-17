@@ -14,8 +14,8 @@ type Provider struct {
 
 // ClientProvider permits to get the corporation's client
 type ClientProvider interface {
-	List() []corporation.Corporation
 	Get(name string) (Client, error)
+	GetAllCorporation() []corporation.Corporation
 	GetCorporation(name string) (corporation.Corporation, error)
 }
 
@@ -30,16 +30,6 @@ func NewClientProvider(providers []Provider) ClientProvider {
 	}
 }
 
-// List all the supported corporations
-func (c *clientProvider) List() []corporation.Corporation {
-	var corporations []corporation.Corporation
-	for _, c := range c.providers {
-		corporations = append(corporations, c.Corporation)
-	}
-
-	return corporations
-}
-
 // Get gives the client used to query a corporation
 func (c *clientProvider) Get(name string) (Client, error) {
 	for _, c := range c.providers {
@@ -51,6 +41,16 @@ func (c *clientProvider) Get(name string) (Client, error) {
 	}
 
 	return nil, fmt.Errorf("cannot find client for corporation: %s", name)
+}
+
+// GetAllCorporation all the supported corporations
+func (c *clientProvider) GetAllCorporation() []corporation.Corporation {
+	var corporations []corporation.Corporation
+	for _, c := range c.providers {
+		corporations = append(corporations, c.Corporation)
+	}
+
+	return corporations
 }
 
 func (c *clientProvider) GetCorporation(name string) (corporation.Corporation, error) {
