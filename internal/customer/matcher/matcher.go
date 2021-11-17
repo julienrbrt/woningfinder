@@ -39,7 +39,7 @@ func (m *matcher) matchCriteria(user customer.User, offer corporation.Offer) boo
 
 	// checks if offer incomes based on social housing requirement
 	min, max := m.passendToewijzen(user)
-	if offer.Housing.Price < min || offer.Housing.Price > max {
+	if (offer.MinimumIncome == 0 && offer.Housing.Price < min) || (offer.MaximumIncome == 0 && offer.Housing.Price > max) {
 		return false
 	}
 
