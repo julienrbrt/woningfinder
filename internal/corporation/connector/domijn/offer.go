@@ -61,7 +61,7 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 			offer.Housing.Address = fmt.Sprintf("%s, %s", e.ChildText("div.info > h1"), offer.Housing.CityName)
 			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 			if err != nil {
-				c.logger.Info("could not get city district", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Info("could not get city district", zap.String("url", offer.URL), zap.Error(err), logConnector)
 			}
 
 			// create new offer
@@ -69,7 +69,7 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 
 			// visit offer url
 			if err := detailCollector.Visit(offer.URL); err != nil {
-				c.logger.Warn("error while checking offer details", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Warn("error while checking offer details", zap.String("url", offer.URL), zap.Error(err), logConnector)
 			}
 		})
 	}
@@ -125,7 +125,7 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 		case "Slaapkamers":
 			offer.Housing.NumberBedroom, err = strconv.Atoi(cleanProperty(el.Text, property))
 			if err != nil {
-				c.logger.Info("error parsing number bedroom", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Info("error parsing number bedroom", zap.String("url", offer.URL), zap.Error(err), logConnector)
 			}
 		case "Tuin / Balkon":
 			switch strings.ToLower(cleanProperty(el.Text, property)) {
