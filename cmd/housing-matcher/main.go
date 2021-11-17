@@ -53,6 +53,8 @@ func main() {
 
 	// match offer
 	for offers := range ch {
+		logger.Info("received offers", zap.String("corporation", offers.CorporationName), zap.Int("count", len(offers.Offer)))
+
 		if err := matcherService.MatchOffer(context.Background(), offers); err != nil {
 			logger.Error("error while maching offers", zap.String("corporation", offers.CorporationName), zap.Error(err))
 		}
