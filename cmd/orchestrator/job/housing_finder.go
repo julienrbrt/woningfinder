@@ -45,6 +45,8 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 				// batch send offers every 5 seconds
 				ticker := time.NewTicker(5 * time.Second)
 				defer ticker.Stop()
+
+				counter := 0
 				for {
 					select {
 					case <-ticker.C:
@@ -58,6 +60,7 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 							j.logger.Error("error while sending offer to redis queue", zap.String("corporation", offers.CorporationName), zap.Error(err))
 						}
 
+						counter += len(offers.Offer)
 						offers.Offer = []corporation.Offer{}
 					case offer, ok := <-ch:
 						if ok {
@@ -65,6 +68,7 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 						}
 
 						if !ok && len(offers.Offer) == 0 {
+							j.logger.Info("housing-finder job finished", zap.Int("offers sent", counter), zap.String("corporation", corp.Name))
 							return
 						}
 					}
