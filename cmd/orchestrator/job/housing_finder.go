@@ -34,7 +34,7 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 					if err := client.FetchOffers(ch); err != nil {
 						j.logger.Error("error while fetching offers", zap.String("corporation", corp.Name), zap.Error(err))
 					}
-					close(ch)
+					defer close(ch)
 				}(ch)
 
 				offers := corporation.Offers{
@@ -60,12 +60,13 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 
 						offers.Offer = []corporation.Offer{}
 					case offer, ok := <-ch:
-						// channel closed
-						if !ok {
-							break
+						if ok {
+							offers.Offer = append(offers.Offer, offer)
 						}
 
-						offers.Offer = append(offers.Offer, offer)
+						if !ok && len(offers.Offer) == 0 {
+							return
+						}
 					}
 				}
 			}))
