@@ -49,17 +49,17 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 			offer.Housing.CityName = strings.Title(strings.ToLower(e.Attr("data-plaats")))
 			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 			if err != nil {
-				c.logger.Info("could not get city district", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Info("could not get city district", zap.String("url", offer.URL), zap.Error(err), logConnector)
 			}
 
 			offer.Housing.Price, err = strconv.ParseFloat(e.Attr("data-prijs"), 32)
 			if err != nil {
-				c.logger.Info("error while parsing price", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Info("error while parsing price", zap.String("url", offer.URL), zap.Error(err), logConnector)
 			}
 
 			offer.Housing.NumberBedroom, err = strconv.Atoi(e.Attr("data-kamers"))
 			if err != nil {
-				c.logger.Info("error while parsing number bedroom", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Info("error while parsing number bedroom", zap.String("url", offer.URL), zap.Error(err), logConnector)
 			}
 
 			// create new offer
@@ -67,7 +67,7 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 
 			// visit offer url
 			if err := detailCollector.Visit(offer.URL); err != nil {
-				c.logger.Warn("error while checking offer details", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Warn("error while checking offer details", zap.String("url", offer.URL), zap.Error(err), logConnector)
 			}
 		})
 	})

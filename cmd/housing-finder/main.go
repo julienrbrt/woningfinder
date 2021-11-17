@@ -78,6 +78,8 @@ func main() {
 	// batch send offers every 5 seconds
 	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
+
+	counter := 0
 	for {
 		select {
 		case <-ticker.C:
@@ -91,13 +93,16 @@ func main() {
 				logger.Error("error while sending offer to redis queue", zap.String("corporation", offers.CorporationName), zap.Error(err))
 			}
 
+			counter += len(offers.Offer)
 			offers.Offer = []corporation.Offer{}
 		case offer, ok := <-ch:
 			if ok {
+				logger.Info("new offer parsed...", zap.Any("offer", offer))
 				offers.Offer = append(offers.Offer, offer)
 			}
 
 			if !ok && len(offers.Offer) == 0 {
+				logger.Info("housing-finder finished", zap.Int("offers sent", counter), zap.String("corporation", corp.Name))
 				return
 			}
 		}

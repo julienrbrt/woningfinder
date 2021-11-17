@@ -71,13 +71,13 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 			offer.Housing.Address = fmt.Sprintf("%s, %s", e.ChildText("h3 > .street-name.straat"), rawCity)
 			offer.Housing.CityDistrict, err = c.mapboxClient.CityDistrictFromAddress(offer.Housing.Address)
 			if err != nil {
-				c.logger.Info("could not get city district", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Info("could not get city district", zap.String("url", offer.URL), zap.Error(err), logConnector)
 			}
 
 			// parse price
 			priceStr := strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(e.ChildText("div.huurprijs span.page-price"), ".", ""), "€", ""))
 			if offer.Housing.Price, err = strconv.ParseFloat(priceStr, 32); err != nil {
-				c.logger.Info("error while parsing price", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Info("error while parsing price", zap.String("url", offer.URL), zap.Error(err), logConnector)
 				return
 			}
 
@@ -101,7 +101,7 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 
 			// visit offer url
 			if err := detailCollector.Visit(offer.URL); err != nil {
-				c.logger.Warn("error while checking offer details", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+				c.logger.Warn("error while checking offer details", zap.String("url", offer.URL), zap.Error(err), logConnector)
 			}
 		})
 	}
@@ -147,12 +147,12 @@ func (c *client) getHousingDetails(offer *corporation.Offer, e *colly.HTMLElemen
 	// parse housing characteristics
 	offer.Housing.NumberBedroom, err = strconv.Atoi(e.ChildText("#Main_Aantal_Slaapkamers > dd.text"))
 	if err != nil {
-		c.logger.Info("error parsing number bedroom", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+		c.logger.Info("error parsing number bedroom", zap.String("url", offer.URL), zap.Error(err), logConnector)
 	}
 
 	offer.Housing.Size, err = strconv.ParseFloat(strings.ReplaceAll(e.ChildText("#Main_Woonopp > dd.text"), " m²", ""), 32)
 	if err != nil {
-		c.logger.Info("error parsing house size", zap.String("address", offer.Housing.Address), zap.Error(err), logConnector)
+		c.logger.Info("error parsing house size", zap.String("url", offer.URL), zap.Error(err), logConnector)
 	}
 
 	rawText := strings.ToLower(e.Text)

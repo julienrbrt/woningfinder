@@ -66,6 +66,8 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 		return
 	}
 
+	s.logger.Info(fmt.Sprintf("users matched with %d offers", len(matchingOffers)), zap.String("email", user.Email))
+
 	// decrypt credentials
 	newCreds, err := s.userService.DecryptCredentials(user.CorporationCredentials[0])
 	if err != nil {
@@ -92,7 +94,7 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 	for uuid, offer := range matchingOffers {
 		// react to offer
 		if err := client.React(offer); err != nil {
-			s.logger.Info("failed to react", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.CorporationName), zap.String("email", user.Email), zap.Error(err))
+			s.logger.Info("failed to react", zap.String("url", offer.URL), zap.String("corporation", offers.CorporationName), zap.String("email", user.Email), zap.Error(err))
 
 			// check if we retry next time or mark the offer as checked
 			if ok := s.retryReactNextTime(uuid); !ok {
