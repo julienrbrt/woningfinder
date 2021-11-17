@@ -15,7 +15,7 @@ type Provider struct {
 // ClientProvider permits to get the corporation's client
 type ClientProvider interface {
 	Get(name string) (Client, error)
-	GetAllCorporation() []corporation.Corporation
+	GetCorporations() []corporation.Corporation
 	GetCorporation(name string) (corporation.Corporation, error)
 }
 
@@ -44,7 +44,7 @@ func (c *clientProvider) Get(name string) (Client, error) {
 }
 
 // GetAllCorporation all the supported corporations
-func (c *clientProvider) GetAllCorporation() []corporation.Corporation {
+func (c *clientProvider) GetCorporations() []corporation.Corporation {
 	var corporations []corporation.Corporation
 	for _, c := range c.providers {
 		corporations = append(corporations, c.Corporation)
