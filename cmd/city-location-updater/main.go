@@ -47,7 +47,7 @@ func main() {
 
 	// update corporations cities
 	for _, corp := range corporations {
-		if err := corporationService.LinkCities(corp.Cities, corp); err != nil {
+		if err := corporationService.LinkCities(corp.Cities, true, corp); err != nil {
 			logger.Error("failed updating corporation", zap.String("corporation", corp.Name), zap.Error(err))
 		}
 	}

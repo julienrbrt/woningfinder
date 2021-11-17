@@ -185,3 +185,9 @@ var Vogelenzang = City{
 	Latitude:  52.319147,
 	Longitude: 4.577507,
 }
+
+var Dussen = City{
+	Name:      "Dussen",
+	Latitude:  51.732150,
+	Longitude: 4.964956,
+}

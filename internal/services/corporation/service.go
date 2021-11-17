@@ -14,7 +14,7 @@ type Service interface {
 	GetCorporation(name string) (*corporation.Corporation, error)
 
 	// Cities
-	LinkCities(cities []city.City, corp ...corporation.Corporation) error
+	LinkCities(cities []city.City, hasLocation bool, corp ...corporation.Corporation) error
 	GetCities() ([]*city.City, error)
 	GetCity(name string) (*city.City, error)
 }
