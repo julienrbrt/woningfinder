@@ -20,7 +20,7 @@ type mockCorporationService struct {
 	corporationService.Service
 }
 
-func (m *mockCorporationService) LinkCities(cities []city.City, corporation ...corporation.Corporation) error {
+func (m *mockCorporationService) LinkCities(cities []city.City, hasLocation bool, corporation ...corporation.Corporation) error {
 	return nil
 }
 

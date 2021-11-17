@@ -348,6 +348,7 @@ var CityTable = map[string]City{
 	BerkelEnRodenrijs.Name:       BerkelEnRodenrijs,
 	Holten.Name:                  Holten,
 	Rijssen.Name:                 Rijssen,
+	Dussen.Name:                  Dussen,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies
