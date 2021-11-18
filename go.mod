@@ -19,7 +19,7 @@ require (
 	github.com/minio/minio-go/v7 v7.0.15
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/stretchr/testify v1.7.0
-	github.com/stripe/stripe-go/v72 v72.75.0
+	github.com/stripe/stripe-go/v72 v72.76.0
 	go.uber.org/zap v1.19.1
 )
 
