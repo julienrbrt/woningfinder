@@ -532,7 +532,7 @@ var Ameide = City{
 }
 
 var HoefEnHaag = City{
-	Name:      "Hoe en Haag",
+	Name:      "Hoef en Haag",
 	Latitude:  51.986566,
 	Longitude: 5.117827,
 }

@@ -359,6 +359,7 @@ var CityTable = map[string]City{
 	Delfgauw.Name:                Delfgauw,
 	HoefEnHaag.Name:              HoefEnHaag,
 	Luttelgeest.Name:             Luttelgeest,
+	SantpoortZuid.Name:           SantpoortZuid,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

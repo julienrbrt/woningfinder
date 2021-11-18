@@ -447,3 +447,9 @@ var Duivendrecht = City{
 	Latitude:  52.331694,
 	Longitude: 4.940315,
 }
+
+var SantpoortZuid = City{
+	Name:      "Santpoort-Zuid",
+	Latitude:  52.421022,
+	Longitude: 4.631235,
+}
