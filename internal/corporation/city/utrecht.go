@@ -524,3 +524,15 @@ var Werkhoven = City{
 	Latitude:  52.024825,
 	Longitude: 5.243993,
 }
+
+var Ameide = City{
+	Name:      "Ameide",
+	Latitude:  51.954687,
+	Longitude: 4.962348,
+}
+
+var HoefEnHaag = City{
+	Name:      "Hoe en Haag",
+	Latitude:  51.986566,
+	Longitude: 5.117827,
+}

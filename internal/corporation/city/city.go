@@ -349,6 +349,16 @@ var CityTable = map[string]City{
 	Holten.Name:                  Holten,
 	Rijssen.Name:                 Rijssen,
 	Dussen.Name:                  Dussen,
+	Didam.Name:                   Didam,
+	Duiven.Name:                  Duiven,
+	Duivendrecht.Name:            Duivendrecht,
+	Zoelen.Name:                  Zoelen,
+	Ameide.Name:                  Ameide,
+	Kwintsheul.Name:              Kwintsheul,
+	Nootdorp.Name:                Nootdorp,
+	Delfgauw.Name:                Delfgauw,
+	HoefEnHaag.Name:              HoefEnHaag,
+	Luttelgeest.Name:             Luttelgeest,
 }
 
 // City defines a city where a housing corporation operates or when an house offer lies

@@ -160,6 +160,8 @@ var Info = corporation.Corporation{
 		city.Holten,
 		city.Rijssen,
 		city.Waddinxveen,
+		city.Didam,
+		city.Duiven,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

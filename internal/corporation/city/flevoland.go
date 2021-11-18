@@ -41,3 +41,9 @@ var Kraggenburg = City{
 	Latitude:  52.662889,
 	Longitude: 5.899414,
 }
+
+var Luttelgeest = City{
+	Name:      "Luttelgeest",
+	Latitude:  52.742980,
+	Longitude: 5.853807,
+}
