@@ -341,3 +341,21 @@ var BerkelEnRodenrijs = City{
 	Latitude:  51.993281,
 	Longitude: 4.477591,
 }
+
+var Kwintsheul = City{
+	Name:      "Kwintsheul",
+	Latitude:  52.014841,
+	Longitude: 4.254318,
+}
+
+var Nootdorp = City{
+	Name:      "Nootdorp",
+	Latitude:  52.042577,
+	Longitude: 4.393893,
+}
+
+var Delfgauw = City{
+	Name:      "Delfgauw",
+	Latitude:  52.001666,
+	Longitude: 4.397057,
+}

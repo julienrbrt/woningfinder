@@ -359,3 +359,21 @@ var Dodewaard = City{
 	Latitude:  51.912754,
 	Longitude: 5.656597,
 }
+
+var Duiven = City{
+	Name:      "Duiven",
+	Latitude:  51.948274,
+	Longitude: 6.021836,
+}
+
+var Didam = City{
+	Name:      "Didam",
+	Latitude:  51.937197,
+	Longitude: 6.128894,
+}
+
+var Zoelen = City{
+	Name:      "Zoelen",
+	Latitude:  51.912557,
+	Longitude: 5.405649,
+}
