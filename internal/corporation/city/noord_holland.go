@@ -441,3 +441,9 @@ var Bennebroek = City{
 	Latitude:  52.321687,
 	Longitude: 4.598233,
 }
+
+var Duivendrecht = City{
+	Name:      "Duivendrecht",
+	Latitude:  52.331694,
+	Longitude: 4.940315,
+}

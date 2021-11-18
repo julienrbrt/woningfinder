@@ -68,6 +68,9 @@ var WoonnetHaaglanden = corporation.Corporation{
 		city.DenHoorn,
 		city.Schipluiden,
 		city.Honselersdijk,
+		city.Kwintsheul,
+		city.Nootdorp,
+		city.Delfgauw,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

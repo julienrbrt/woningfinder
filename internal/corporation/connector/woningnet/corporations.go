@@ -73,6 +73,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.HuisTerHeide,
 		city.Waverveen,
 		city.Werkhoven,
+		city.HoefEnHaag,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
@@ -121,6 +122,7 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Westzaan,
 		city.Cruquius,
 		city.Weteringbrug,
+		city.Duivendrecht,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
@@ -218,6 +220,7 @@ var MercatusInfo = corporation.Corporation{
 		city.Emmeloord,
 		city.Nagele,
 		city.Kraggenburg,
+		city.Luttelgeest,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -380,6 +383,8 @@ var WoongaardInfo = corporation.Corporation{
 		city.Rhenoy,
 		city.Dodewaard,
 		city.Dussen,
+		city.Zoelen,
+		city.Ameide,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
