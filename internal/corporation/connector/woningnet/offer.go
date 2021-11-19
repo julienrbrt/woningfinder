@@ -80,6 +80,8 @@ var selectionMethodCommandMap = map[corporation.SelectionMethod]string{
 }
 
 func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
+	defer close(ch)
+
 	for _, selectionMethod := range c.corporation.SelectionMethod {
 		req, err := offerRequest(selectionMethodCommandMap[selectionMethod], "")
 		if err != nil {
