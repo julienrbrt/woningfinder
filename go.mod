@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/TheZeroSlave/zapsentry v1.8.1
-	github.com/go-chi/chi/v5 v5.0.6
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-chi/httprate v0.5.2
 	github.com/go-chi/jwtauth/v5 v5.0.2
 	github.com/go-chi/render v1.0.1
