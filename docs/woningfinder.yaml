@@ -121,7 +121,7 @@ services:
       - path: /api
     run_command: ./bin/woningfinder-api
 static_sites:
-  - build_command: npm run generate
+  - build_command: npm run generate --fail-on-error
     environment_slug: node-js
     envs:
       - key: SENTRY_DSN
