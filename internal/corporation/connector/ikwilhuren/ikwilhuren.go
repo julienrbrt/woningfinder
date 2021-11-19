@@ -162,6 +162,7 @@ var Info = corporation.Corporation{
 		city.Waddinxveen,
 		city.Didam,
 		city.Duiven,
+		city.Leeuwarden,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
