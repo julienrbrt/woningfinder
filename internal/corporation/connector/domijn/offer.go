@@ -12,6 +12,8 @@ import (
 )
 
 func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
+	defer close(ch)
+
 	offers := map[string]*corporation.Offer{}
 
 	// create another collector for housing details

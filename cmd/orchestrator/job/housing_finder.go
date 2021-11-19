@@ -34,7 +34,6 @@ func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvid
 					if err := client.FetchOffers(ch); err != nil {
 						j.logger.Error("error while fetching offers", zap.String("corporation", corp.Name), zap.Error(err))
 					}
-					defer close(ch)
 				}(ch)
 
 				offers := corporation.Offers{
