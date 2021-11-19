@@ -239,6 +239,7 @@ var MiddenHollandInfo = corporation.Corporation{
 		city.Zevenhuizen,
 		city.NieuwerkerkAanDenIJssel,
 		city.Moerkapelle,
+		city.Reeuwijk,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -301,6 +302,7 @@ var GooiVechtstreekInfo = corporation.Corporation{
 		city.Naarden,
 		city.Laren,
 		city.Loosdrecht,
+		city.NederhorstDenBerg,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -327,6 +329,7 @@ var HuiswaartsInfo = corporation.Corporation{
 		city.Wekerom,
 		city.Stroe,
 		city.Voorthuizen,
+		city.Zwartebroek,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -386,6 +389,7 @@ var WoongaardInfo = corporation.Corporation{
 		city.Dussen,
 		city.Zoelen,
 		city.Ameide,
+		city.Wamel,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
