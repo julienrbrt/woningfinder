@@ -12,16 +12,15 @@ import (
 )
 
 func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
-	defer close(ch)
-
 	offers := map[string]*corporation.Offer{}
 
-	// create another collector for housing details
+	// clones collector to prevent multiple callback assignment
+	collector := c.collector.Clone()
 	paginationCollector := c.collector.Clone()
 	detailCollector := c.collector.Clone()
 
 	// check paginating
-	c.collector.OnHTML("ol[aria-labelledby=ARIA-Label-paging]", func(el *colly.HTMLElement) {
+	collector.OnHTML("ol[aria-labelledby=ARIA-Label-paging]", func(el *colly.HTMLElement) {
 		el.ForEach("li", func(_ int, e *colly.HTMLElement) {
 			// visit other pages
 			paginatedURL := e.ChildAttr("a", "href")
@@ -77,7 +76,7 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 	}
 
 	// add offer
-	c.collector.OnHTML("#housingWrapper", offerParser) // parses first page
+	collector.OnHTML("#housingWrapper", offerParser) // parses first page
 	paginationCollector.OnHTML("#housingWrapper", offerParser)
 
 	// add housing details
@@ -99,7 +98,7 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 
 	// parse offers
 	offerURL := c.corporation.APIEndpoint.String() + "/woningaanbod/?advertisementType=rent"
-	if err := c.collector.Visit(offerURL); err != nil {
+	if err := collector.Visit(offerURL); err != nil {
 		return err
 	}
 

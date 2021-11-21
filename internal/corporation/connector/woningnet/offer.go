@@ -80,8 +80,6 @@ var selectionMethodCommandMap = map[corporation.SelectionMethod]string{
 }
 
 func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
-	defer close(ch)
-
 	for _, selectionMethod := range c.corporation.SelectionMethod {
 		req, err := offerRequest(selectionMethodCommandMap[selectionMethod], "")
 		if err != nil {
@@ -197,7 +195,8 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) (corporatio
 		c.logger.Info("failed parsing picture url", zap.Error(err), logConnector)
 	}
 
-	c.collector.OnHTML("#Kenmerken", func(e *colly.HTMLElement) {
+	collector := c.collector.Clone()
+	collector.OnHTML("#Kenmerken", func(e *colly.HTMLElement) {
 		table := e.DOM.ChildrenFiltered(".contentBlock")
 
 		// number bedroom
@@ -216,13 +215,13 @@ func (c *client) Map(offer offer, houseType corporation.HousingType) (corporatio
 
 	// parse offer conditions
 	var minAge int
-	c.collector.OnHTML("div.publicationContainer", func(e *colly.HTMLElement) {
+	collector.OnHTML("div.publicationContainer", func(e *colly.HTMLElement) {
 		if strings.Contains(e.Text, "Senioren") {
 			minAge = 55
 		}
 	})
 
-	if err = c.collector.Visit(offerURL); err != nil {
+	if err = collector.Visit(offerURL); err != nil {
 		return corporation.Offer{}, fmt.Errorf("error visiting %s: %w", offerURL, err)
 	}
 

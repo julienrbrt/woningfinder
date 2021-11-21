@@ -93,8 +93,6 @@ func offerDetailRequest(offerID string) networking.Request {
 }
 
 func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
-	defer close(ch)
-
 	resp, err := c.Send(offerRequest())
 	if err != nil {
 		return err
