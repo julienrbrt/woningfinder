@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gocolly/colly/v2"
+	colly "github.com/gocolly/colly/v2"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"go.uber.org/zap"
 )
@@ -14,15 +14,14 @@ import (
 const detailsHousingChildAttr = "li.link a"
 
 func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
-	defer close(ch)
-
 	offers := map[string]*corporation.Offer{}
 
-	// create another collector for housing details
+	// clones collector to prevent multiple callback assignment
+	collector := c.collector.Clone()
 	detailCollector := c.collector.Clone()
 
 	// add offer
-	c.collector.OnHTML("div.aanbodListItems", func(el *colly.HTMLElement) {
+	collector.OnHTML("div.aanbodListItems", func(el *colly.HTMLElement) {
 		el.ForEach("div.woningaanbod", func(_ int, e *colly.HTMLElement) {
 			var offer corporation.Offer
 			var err error
@@ -93,7 +92,7 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 
 	// parse offers
 	offerURL := c.corporation.APIEndpoint.String() + "/woningaanbod/"
-	if err := c.collector.Visit(offerURL); err != nil {
+	if err := collector.Visit(offerURL); err != nil {
 		return err
 	}
 

@@ -17,16 +17,15 @@ import (
 const offerReserved = "Onder optie"
 
 func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
-	defer close(ch)
-
 	offers := map[string]*corporation.Offer{}
 
-	// create another collector for housing details
+	// clones collector to prevent multiple callback assignment
+	collector := c.collector.Clone()
 	paginationCollector := c.collector.Clone()
 	detailCollector := c.collector.Clone()
 
 	// check paginating
-	c.collector.OnHTML("ul.pagination", func(el *colly.HTMLElement) {
+	collector.OnHTML("ul.pagination", func(el *colly.HTMLElement) {
 		pageMax, err := strconv.Atoi(el.ChildText("li.page-item > a.page-link > span.sr-only"))
 		if err != nil {
 			c.logger.Warn("error while parsing pagination", zap.Error(err), logConnector)
@@ -126,11 +125,11 @@ func (c *client) FetchOffers(ch chan<- corporation.Offer) error {
 	})
 
 	// add offer
-	c.collector.OnHTML("#main", offerParser) // parses first page
+	collector.OnHTML("#main", offerParser) // parses first page
 	paginationCollector.OnHTML("#main", offerParser)
 
 	// parse offers
-	if err := c.collector.Visit(fmt.Sprintf("%s/?action=epl_search&post_type=rental", c.corporation.URL)); err != nil {
+	if err := collector.Visit(fmt.Sprintf("%s/?action=epl_search&post_type=rental", c.corporation.URL)); err != nil {
 		return err
 	}
 
