@@ -33,11 +33,11 @@ type service struct {
 	corporationService corporationService.Service
 	spacesClient       spaces.Client
 	matcher            matcher.Matcher
-	clientProvider     connector.ClientProvider
+	connectorProvider  connector.ConnectorProvider
 }
 
 // NewService instantiate the matcher service
-func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, emailService emailService.Service, corporationService corporationService.Service, spacesClient spaces.Client, matcher matcher.Matcher, clientProvider connector.ClientProvider) Service {
+func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, emailService emailService.Service, corporationService corporationService.Service, spacesClient spaces.Client, matcher matcher.Matcher, connectorProvider connector.ConnectorProvider) Service {
 	return &service{
 		logger:             logger,
 		redisClient:        redisClient,
@@ -46,6 +46,6 @@ func NewService(logger *logging.Logger, redisClient database.RedisClient, userSe
 		corporationService: corporationService,
 		spacesClient:       spacesClient,
 		matcher:            matcher,
-		clientProvider:     clientProvider,
+		connectorProvider:  connectorProvider,
 	}
 }

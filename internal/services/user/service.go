@@ -48,17 +48,17 @@ type service struct {
 	logger             *logging.Logger
 	dbClient           database.DBClient
 	aesSecret          string
-	clientProvider     connector.ClientProvider
+	connectorProvider  connector.ConnectorProvider
 	corporationService corporationService.Service
 }
 
 // NewService instantiate the user service
-func NewService(logger *logging.Logger, dbClient database.DBClient, aesSecret string, clientProvider connector.ClientProvider, corporationService corporationService.Service) Service {
+func NewService(logger *logging.Logger, dbClient database.DBClient, aesSecret string, connectorProvider connector.ConnectorProvider, corporationService corporationService.Service) Service {
 	return &service{
 		logger:             logger,
 		dbClient:           dbClient,
 		aesSecret:          aesSecret,
-		clientProvider:     clientProvider,
+		connectorProvider:  connectorProvider,
 		corporationService: corporationService,
 	}
 }

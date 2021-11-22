@@ -163,6 +163,11 @@ var Info = corporation.Corporation{
 		city.Didam,
 		city.Duiven,
 		city.Leeuwarden,
+		city.KrimpenAanDenIJssel,
+		city.Lichtenvoorde,
+		city.Elburg,
+		city.Vroomshoop,
+		city.Assen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

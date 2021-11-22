@@ -53,9 +53,21 @@ func (c *City) Merge() City {
 	return *c
 }
 
-// SuggestedCityDistrict permit to get city suggested districts
-func SuggestedCityDistrict(name string) map[string][]string {
-	city, ok := CityTable[name]
+// Suggester permit to get city suggested districts
+type Suggester interface {
+	Suggest(name string) map[string][]string
+}
+
+type suggester struct {
+	cities map[string]City
+}
+
+func NewSuggester(cities map[string]City) Suggester {
+	return &suggester{cities}
+}
+
+func (s *suggester) Suggest(name string) map[string][]string {
+	city, ok := s.cities[name]
 	if !ok || len(city.SuggestedDistrict) == 0 {
 		return nil
 	}

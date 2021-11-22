@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/corporation/connector"
@@ -36,13 +37,18 @@ var corporationInfo = corporation.Corporation{
 	},
 }
 
+var (
+	cities = bootstrapCorporation.CreateConnectorProvider(logging.NewZapLoggerWithoutSentry(), nil).GetCities()
+	m      = matcher.NewMatcher(city.NewSuggester(cities))
+)
+
 func Test_SendOffers_RedisClientError(t *testing.T) {
 	a := assert.New(t)
 
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, err)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, m, nil)
 
 	a.Error(matcherService.SendOffers(corporation.Offers{CorporationName: corporationInfo.Name}))
 }
@@ -51,7 +57,7 @@ func Test_SendOffers_Success_EmptyOffer(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), connector.NewClientProvider([]connector.Provider{{Corporation: corporationInfo}}))
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, m, connector.NewConnectorProvider([]connector.Provider{{Corporation: corporationInfo}}))
 
 	a.Error(matcherService.SendOffers(corporation.Offers{}))
 }
@@ -60,7 +66,7 @@ func Test_SendOffers_Success(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, nil)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, &mockCorporationService{}, nil, matcher.NewMatcher(), connector.NewClientProvider([]connector.Provider{{Corporation: corporationInfo}}))
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, &mockCorporationService{}, nil, m, connector.NewConnectorProvider([]connector.Provider{{Corporation: corporationInfo}}))
 
 	a.Nil(matcherService.SendOffers(corporation.Offers{CorporationName: corporationInfo.Name}))
 }
@@ -70,7 +76,7 @@ func Test_RetrieveOffers_RedisClientError(t *testing.T) {
 	err := errors.New("foo")
 	logger := logging.NewZapLoggerWithoutSentry()
 	redisMock := database.NewRedisClientMock("", nil, err)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, m, nil)
 
 	c := make(chan corporation.Offers)
 	a.Error(matcherService.RetrieveOffers(c))
@@ -83,7 +89,7 @@ func Test_RetrieveOffers_Success(t *testing.T) {
 	a.NoError(err)
 
 	redisMock := database.NewRedisClientMock("", []string{string(corpInfo)}, err)
-	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, matcher.NewMatcher(), nil)
+	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, m, nil)
 
 	c := make(chan corporation.Offers)
 	go func(c chan corporation.Offers) {

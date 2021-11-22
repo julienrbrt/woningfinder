@@ -11,13 +11,13 @@ import (
 )
 
 // HousingFinder populates the housing-finder cron jobs
-func (j *Jobs) HousingFinder(c *cron.Cron, clientProvider connector.ClientProvider) {
+func (j *Jobs) HousingFinder(c *cron.Cron, connectorProvider connector.ConnectorProvider) {
 	// populate crons
-	for _, corp := range clientProvider.GetCorporations() {
+	for _, corp := range connectorProvider.GetCorporations() {
 		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 
 		// get corporation client
-		client, err := clientProvider.Get(corp.Name)
+		client, err := connectorProvider.GetClient(corp.Name)
 		if err != nil {
 			j.logger.Error("error while getting corporation client", zap.Error(err))
 			continue

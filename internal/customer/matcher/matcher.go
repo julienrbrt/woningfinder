@@ -13,10 +13,14 @@ type Matcher interface {
 	MatchOffer(user customer.User, offer corporation.Offer) bool
 }
 
-type matcher struct{}
+type matcher struct {
+	suggester city.Suggester
+}
 
-func NewMatcher() Matcher {
-	return &matcher{}
+func NewMatcher(suggester city.Suggester) Matcher {
+	return &matcher{
+		suggester: suggester,
+	}
 }
 
 func (m *matcher) MatchOffer(user customer.User, offer corporation.Offer) bool {
@@ -131,7 +135,7 @@ func (m *matcher) matchDistrict(cityPreferences city.City, housing corporation.H
 	}
 
 	// check if has suggested districts
-	suggested := city.SuggestedCityDistrict(cityPreferences.Name)
+	suggested := m.suggester.Suggest(cityPreferences.Name)
 	for _, district := range cityPreferences.District {
 		// user has suggested district has preferences
 		if innerDistricts, ok := suggested[district]; ok && hasDistricts(innerDistricts, housing.CityDistrict) {
