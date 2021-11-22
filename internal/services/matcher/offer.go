@@ -29,7 +29,7 @@ func (s *service) SendOffers(offers corporation.Offers) error {
 
 // gets and verify if all cities from the offers are present the supported cities by the corporation
 func (s *service) verifyCorporationCities(offers corporation.Offers) error {
-	corp, err := s.clientProvider.GetCorporation(offers.CorporationName)
+	corp, err := s.connectorProvider.GetCorporation(offers.CorporationName)
 	if err != nil {
 		return err
 	}

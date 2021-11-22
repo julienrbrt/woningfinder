@@ -6,6 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	userService "github.com/woningfinder/woningfinder/internal/services/user"
 	"github.com/woningfinder/woningfinder/pkg/config"
@@ -38,9 +39,9 @@ func main() {
 	}
 
 	dbClient := bootstrap.CreateDBClient(logger)
-	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil)
-	corporationService := corporation.NewService(logger, dbClient)
-	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, nil)
+	corporationService := corporation.NewService(logger, dbClient, city.NewSuggester(connectorProvider.GetCities()))
+	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
 
 	// delete user
 	if err := userService.DeleteUser(email); err != nil {

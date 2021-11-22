@@ -24,8 +24,9 @@ func init() {
 func main() {
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 	dbClient := bootstrap.CreateDBClient(logger)
-	corporations := bootstrapCorporation.CreateClientProvider(logger, nil).GetCorporations()
-	corporationService := corporation.NewService(logger, dbClient)
+	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, nil)
+	cityTable := connectorProvider.GetCities()
+	corporationService := corporation.NewService(logger, dbClient, city.NewSuggester(cityTable))
 
 	var cities []city.City
 	if err := dbClient.Conn().Model(&cities).Where("latitude IS NULL OR longitude IS NULL").Select(); err != nil {
@@ -33,7 +34,7 @@ func main() {
 	}
 
 	for _, c := range cities {
-		city, ok := city.CityTable[c.Name]
+		city, ok := cityTable[c.Name]
 		if !ok {
 			logger.Warn("failed finding city", zap.String("city", c.Name))
 			continue
@@ -46,7 +47,7 @@ func main() {
 	}
 
 	// update corporations cities
-	for _, corp := range corporations {
+	for _, corp := range connectorProvider.GetCorporations() {
 		if err := corporationService.LinkCities(corp.Cities, true, corp); err != nil {
 			logger.Error("failed updating corporation", zap.String("corporation", corp.Name), zap.Error(err))
 		}

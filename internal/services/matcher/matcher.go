@@ -18,7 +18,7 @@ import (
 // MatcherOffer matcher a corporation offer with customer housing preferences
 func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) error {
 	// create housing corporation client
-	client, err := s.clientProvider.Get(offers.CorporationName)
+	client, err := s.connectorProvider.GetClient(offers.CorporationName)
 	if err != nil {
 		return fmt.Errorf("error while getting corporation client %s: %w", offers.CorporationName, err)
 	}

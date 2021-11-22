@@ -20,14 +20,16 @@ type Service interface {
 }
 
 type service struct {
-	logger   *logging.Logger
-	dbClient database.DBClient
+	logger    *logging.Logger
+	dbClient  database.DBClient
+	suggester city.Suggester
 }
 
 // NewService instantiate the corporation service
-func NewService(logger *logging.Logger, dbClient database.DBClient) Service {
+func NewService(logger *logging.Logger, dbClient database.DBClient, suggester city.Suggester) Service {
 	return &service{
-		logger:   logger,
-		dbClient: dbClient,
+		logger:    logger,
+		dbClient:  dbClient,
+		suggester: suggester,
 	}
 }

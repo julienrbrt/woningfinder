@@ -13,8 +13,8 @@ import (
 	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
-// CreateClientProvider provides the client of a corporation
-func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) connector.ClientProvider {
+// CreateConnectorProvider provides the corporations data
+func CreateConnectorProvider(logger *logging.Logger, mapboxClient mapbox.Client) connector.ConnectorProvider {
 	providers := []connector.Provider{
 		{
 			Corporation: dewoonplaats.Info,
@@ -106,5 +106,5 @@ func CreateClientProvider(logger *logging.Logger, mapboxClient mapbox.Client) co
 		},
 	}
 
-	return connector.NewClientProvider(providers)
+	return connector.NewConnectorProvider(providers)
 }

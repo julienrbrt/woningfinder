@@ -7,6 +7,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/handler"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
@@ -33,9 +34,9 @@ func main() {
 	emailClient := bootstrap.CreateEmailClient()
 	stripeClient := bootstrap.CreateSripeClient(logger) // init stripe library
 
-	corporationService := corporation.NewService(logger, dbClient)
-	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the api
-	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, nil) // mapboxClient not required in the api
+	corporationService := corporation.NewService(logger, dbClient, city.NewSuggester(connectorProvider.GetCities()))
+	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
 	router := handler.NewHandler(logger, jwtAuth, corporationService, userService, emailService, stripeClient)
 

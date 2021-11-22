@@ -6,6 +6,9 @@ import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/joho/godotenv"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
+	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/woningfinder/woningfinder/internal/corporation/connector"
 	"github.com/woningfinder/woningfinder/internal/database"
 	"github.com/woningfinder/woningfinder/internal/services/corporation"
 	"github.com/woningfinder/woningfinder/pkg/config"
@@ -16,6 +19,7 @@ import (
 var logger *logging.Logger
 var dbClient database.DBClient
 var corporationService corporation.Service
+var connectorProvider connector.ConnectorProvider
 
 // init is invoked before main()
 func init() {
@@ -28,7 +32,9 @@ func init() {
 
 	logger = logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
 	dbClient = bootstrap.CreateDBClient(logger)
-	corporationService = corporation.NewService(logger, dbClient)
+	connectorProvider = bootstrapCorporation.CreateConnectorProvider(logger, nil)
+	corporationService = corporation.NewService(logger, dbClient, city.NewSuggester(connectorProvider.GetCities()))
+
 }
 
 func main() {

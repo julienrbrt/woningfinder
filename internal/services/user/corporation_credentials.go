@@ -123,7 +123,7 @@ func (s *service) DecryptCredentials(credentials *customer.CorporationCredential
 }
 
 func (s *service) validateCredentials(credentials *customer.CorporationCredentials) error {
-	client, err := s.clientProvider.Get(credentials.CorporationName)
+	client, err := s.connectorProvider.GetClient(credentials.CorporationName)
 	if err != nil {
 		return err
 	}
