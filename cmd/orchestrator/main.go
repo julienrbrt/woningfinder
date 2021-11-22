@@ -43,10 +43,11 @@ func main() {
 	emailClient := bootstrap.CreateEmailClient()
 
 	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, mapboxClient)
-	corporationService := corporationService.NewService(logger, dbClient, city.NewSuggester(connectorProvider.GetCities()))
+	citySuggester := city.NewSuggester(connectorProvider.GetCities())
+	corporationService := corporationService.NewService(logger, dbClient, citySuggester)
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(city.NewSuggester(connectorProvider.GetCities())), connectorProvider)
+	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(citySuggester), connectorProvider)
 
 	// set location to the netherlands
 	nl, err := time.LoadLocation("Europe/Amsterdam")
