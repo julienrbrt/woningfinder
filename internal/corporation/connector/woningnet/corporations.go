@@ -240,6 +240,7 @@ var MiddenHollandInfo = corporation.Corporation{
 		city.NieuwerkerkAanDenIJssel,
 		city.Moerkapelle,
 		city.Reeuwijk,
+		city.Boskoop,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -330,6 +331,7 @@ var HuiswaartsInfo = corporation.Corporation{
 		city.Stroe,
 		city.Voorthuizen,
 		city.Zwartebroek,
+		city.Renswoude,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -390,6 +392,8 @@ var WoongaardInfo = corporation.Corporation{
 		city.Zoelen,
 		city.Ameide,
 		city.Wamel,
+		city.Ammerzoden,
+		city.Haaften,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

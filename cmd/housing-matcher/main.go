@@ -8,6 +8,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
@@ -37,11 +38,11 @@ func main() {
 	emailClient := bootstrap.CreateEmailClient()
 	spacesClient := bootstrap.CreateDOSpacesClient(logger)
 
-	clientProvider := bootstrapCorporation.CreateClientProvider(logger, nil) // mapboxClient not required in the matcher
-	corporationService := corporationService.NewService(logger, dbClient)
-	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, nil) // mapboxClient not required in the matcher
+	corporationService := corporationService.NewService(logger, dbClient, city.NewSuggester(connectorProvider.GetCities()))
+	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(), clientProvider)
+	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(city.NewSuggester(connectorProvider.GetCities())), connectorProvider)
 
 	// subscribe to offers queue inside a new go routine
 	ch := make(chan corporation.Offers)

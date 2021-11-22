@@ -11,6 +11,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/auth"
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
@@ -41,11 +42,11 @@ func main() {
 	spacesClient := bootstrap.CreateDOSpacesClient(logger)
 	emailClient := bootstrap.CreateEmailClient()
 
-	clientProvider := bootstrapCorporation.CreateClientProvider(logger, mapboxClient)
-	corporationService := corporationService.NewService(logger, dbClient)
-	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, mapboxClient)
+	corporationService := corporationService.NewService(logger, dbClient, city.NewSuggester(connectorProvider.GetCities()))
+	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(), clientProvider)
+	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(city.NewSuggester(connectorProvider.GetCities())), connectorProvider)
 
 	// set location to the netherlands
 	nl, err := time.LoadLocation("Europe/Amsterdam")
@@ -59,7 +60,7 @@ func main() {
 
 	// populate crons
 	job.CleanupUnconfirmedCustomer(c)
-	job.HousingFinder(c, clientProvider)
+	job.HousingFinder(c, connectorProvider)
 	job.SendWeeklyUpdate(c)
 	job.SendCorporationCredentialsMissingReminder(c)
 

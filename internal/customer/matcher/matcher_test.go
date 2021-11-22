@@ -4,10 +4,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer"
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
+	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 var user = customer.User{
@@ -52,11 +54,16 @@ var offer = corporation.Offer{
 	},
 }
 
+var (
+	cities = bootstrapCorporation.CreateConnectorProvider(logging.NewZapLoggerWithoutSentry(), nil).GetCities()
+	m      = matcher.NewMatcher(city.NewSuggester(cities))
+)
+
 func Test_MatchOffer(t *testing.T) {
 	a := assert.New(t)
 	offer := offer
 
-	matcher := matcher.NewMatcher()
+	matcher := m
 	a.True(matcher.MatchOffer(user, offer))
 }
 
@@ -64,7 +71,7 @@ func Test_MatchCriteria_Age(t *testing.T) {
 	a := assert.New(t)
 	offer := offer
 
-	matcher := matcher.NewMatcher()
+	matcher := m
 	a.True(matcher.MatchOffer(user, offer))
 	offer.MinAge = 55
 	a.False(matcher.MatchOffer(user, offer))
@@ -76,7 +83,7 @@ func Test_MatchCriteria_FamilySize(t *testing.T) {
 	a := assert.New(t)
 	offer := offer
 
-	matcher := matcher.NewMatcher()
+	matcher := m
 	a.True(matcher.MatchOffer(user, offer))
 	offer.MaxFamilySize = 2
 	a.False(matcher.MatchOffer(user, offer))
@@ -86,7 +93,7 @@ func Test_MatchCriteria_PassendToewijzen(t *testing.T) {
 	a := assert.New(t)
 	user := user
 
-	matcher := matcher.NewMatcher()
+	matcher := m
 	a.True(matcher.MatchOffer(user, offer))
 	user.YearlyIncome = 40000
 	a.False(matcher.MatchOffer(user, offer))
@@ -97,7 +104,7 @@ func Test_MatchCriteria_Incomes(t *testing.T) {
 	user := user
 	offer := offer
 
-	matcher := matcher.NewMatcher()
+	matcher := m
 	offer.Housing.Price = 950
 	offer.MinimumIncome = 45000
 	a.False(matcher.MatchOffer(user, offer))
@@ -111,7 +118,7 @@ func Test_MatchPreferences_Location(t *testing.T) {
 	a := assert.New(t)
 	user := user
 
-	matcher := matcher.NewMatcher()
+	matcher := m
 	a.True(matcher.MatchOffer(user, offer))
 
 	// change city preferences
@@ -149,8 +156,7 @@ func Test_MatchPreferences_Location(t *testing.T) {
 func Test_MatchPreferences_HousingType(t *testing.T) {
 	a := assert.New(t)
 
-	matcher := matcher.NewMatcher()
-
+	matcher := m
 	a.True(matcher.MatchOffer(user, offer))
 	offer := offer
 	offer.Housing.Type = corporation.HousingTypeUndefined
@@ -162,8 +168,8 @@ func Test_MatchPreferences_HousingType(t *testing.T) {
 
 func Test_MatchPreferences_Price(t *testing.T) {
 	a := assert.New(t)
-	matcher := matcher.NewMatcher()
 
+	matcher := m
 	a.True(matcher.MatchOffer(user, offer))
 	offer := offer
 	offer.Housing.Price = 1000
@@ -174,8 +180,8 @@ func Test_MatchPreferences_Criteria(t *testing.T) {
 	a := assert.New(t)
 	offer := offer
 	user := user
-	matcher := matcher.NewMatcher()
 
+	matcher := m
 	a.True(matcher.MatchOffer(user, offer))
 	offer.Housing.Garden = true
 	user.HousingPreferences.HasGarden = false

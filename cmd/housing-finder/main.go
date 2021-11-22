@@ -9,6 +9,7 @@ import (
 	"github.com/woningfinder/woningfinder/internal/bootstrap"
 	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
 	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/woningfinder/woningfinder/internal/corporation/city"
 	"github.com/woningfinder/woningfinder/internal/customer/matcher"
 	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
 	emailService "github.com/woningfinder/woningfinder/internal/services/email"
@@ -39,23 +40,23 @@ func main() {
 	spacesClient := bootstrap.CreateDOSpacesClient(logger)
 	emailClient := bootstrap.CreateEmailClient()
 
-	clientProvider := bootstrapCorporation.CreateClientProvider(logger, mapboxClient)
-	corporationService := corporationService.NewService(logger, dbClient)
-	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), clientProvider, corporationService)
+	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, mapboxClient)
+	corporationService := corporationService.NewService(logger, dbClient, city.NewSuggester(connectorProvider.GetCities()))
+	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(), clientProvider)
+	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(city.NewSuggester(connectorProvider.GetCities())), connectorProvider)
 
 	if len(os.Args) != 2 {
 		logger.Fatal("usage: housing-finder <corporation-name>")
 	}
 
 	// get corporation client
-	corp, err := clientProvider.GetCorporation(os.Args[1])
+	corp, err := connectorProvider.GetCorporation(os.Args[1])
 	if err != nil {
 		logger.Fatal("error while getting corporation", zap.String("got", os.Args[1]), zap.Error(err))
 	}
 
-	client, err := clientProvider.Get(os.Args[1])
+	client, err := connectorProvider.GetClient(os.Args[1])
 	if err != nil {
 		logger.Fatal("error while getting corporation client", zap.String("got", os.Args[1]), zap.Error(err))
 	}
