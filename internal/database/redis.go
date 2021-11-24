@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	redis "github.com/go-redis/redis/v8"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 )
 
 type RedisClient interface {

@@ -1,4 +1,4 @@
-module github.com/woningfinder/woningfinder
+module github.com/julienrbrt/woningfinder
 
 go 1.17
 

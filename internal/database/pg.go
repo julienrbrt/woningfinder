@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/go-pg/pg/v10"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 )
 
 type DBClient interface {

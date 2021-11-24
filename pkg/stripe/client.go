@@ -1,8 +1,8 @@
 package stripe
 
 import (
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 	stripe "github.com/stripe/stripe-go/v72"
-	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 // Client for Stripe

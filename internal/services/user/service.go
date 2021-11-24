@@ -1,12 +1,12 @@
 package user
 
 import (
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/internal/customer"
-	"github.com/woningfinder/woningfinder/internal/database"
-	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/database"
+	corporationService "github.com/julienrbrt/woningfinder/internal/services/corporation"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 )
 
 // Service permits to handle the persistence of an user

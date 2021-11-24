@@ -3,8 +3,8 @@ package connector
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 )
 
 // Provider provides all housing corporation data (client, cities, ...)

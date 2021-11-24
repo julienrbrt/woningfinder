@@ -6,12 +6,12 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/extensions"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/mapbox"
-	"github.com/woningfinder/woningfinder/pkg/networking"
-	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/mapbox"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking/middleware"
 	"go.uber.org/zap"
 )
 

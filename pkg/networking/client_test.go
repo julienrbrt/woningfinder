@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/julienrbrt/woningfinder/pkg/networking"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
 type mockHTTPClient struct {

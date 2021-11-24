@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
 )
 
 const methodReact = "ReageerOpWoning"

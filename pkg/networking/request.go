@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/woningfinder/woningfinder/pkg/networking/query"
+	"github.com/julienrbrt/woningfinder/pkg/networking/query"
 )
 
 // Request defines a request

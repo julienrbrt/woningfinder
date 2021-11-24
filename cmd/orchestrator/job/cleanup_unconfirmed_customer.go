@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/go-pg/pg/v10"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 	"github.com/robfig/cron/v3"
-	"github.com/woningfinder/woningfinder/internal/customer"
 	"go.uber.org/zap"
 )
 

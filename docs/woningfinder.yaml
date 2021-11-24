@@ -83,7 +83,7 @@ jobs:
     github:
       branch: main
       deploy_on_push: true
-      repo: WoningFinder/woningfinder
+      repo: julienrbrt/woningfinder
     instance_count: 1
     instance_size_slug: professional-xs
     kind: PRE_DEPLOY
@@ -93,7 +93,7 @@ jobs:
     github:
       branch: main
       deploy_on_push: true
-      repo: WoningFinder/woningfinder
+      repo: julienrbrt/woningfinder
     instance_count: 1
     instance_size_slug: professional-xs
     kind: POST_DEPLOY
@@ -112,7 +112,7 @@ services:
     github:
       branch: main
       deploy_on_push: true
-      repo: WoningFinder/woningfinder
+      repo: julienrbrt/woningfinder
     http_port: 8080
     instance_count: 1
     instance_size_slug: professional-xs
@@ -130,7 +130,7 @@ static_sites:
     github:
       branch: main
       deploy_on_push: true
-      repo: WoningFinder/woningfinder.nl
+      repo: julienrbrt/woningfinder.nl
     name: woningfinder-nl
     output_dir: dist
     routes:
@@ -145,7 +145,7 @@ workers:
     github:
       branch: main
       deploy_on_push: true
-      repo: WoningFinder/woningfinder
+      repo: julienrbrt/woningfinder
     instance_count: 1
     instance_size_slug: professional-xs
     name: woningfinder-housing-matcher
@@ -159,7 +159,7 @@ workers:
     github:
       branch: main
       deploy_on_push: true
-      repo: WoningFinder/woningfinder
+      repo: julienrbrt/woningfinder
     instance_count: 1
     instance_size_slug: professional-xs
     name: woningfinder-orchestrator

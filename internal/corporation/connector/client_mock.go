@@ -1,7 +1,7 @@
 package connector
 
 import (
-	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
 )
 
 type clientMock struct {

@@ -3,15 +3,15 @@ package matcher
 import (
 	"context"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/internal/customer/matcher"
-	"github.com/woningfinder/woningfinder/internal/database"
-	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	emailService "github.com/woningfinder/woningfinder/internal/services/email"
-	userService "github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/digitalocean/spaces"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/customer/matcher"
+	"github.com/julienrbrt/woningfinder/internal/database"
+	corporationService "github.com/julienrbrt/woningfinder/internal/services/corporation"
+	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
+	userService "github.com/julienrbrt/woningfinder/internal/services/user"
+	"github.com/julienrbrt/woningfinder/pkg/digitalocean/spaces"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 )
 
 // offersQueue defines on which queue the corporation offers are sent via redis

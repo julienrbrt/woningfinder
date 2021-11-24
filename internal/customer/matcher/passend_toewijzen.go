@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 )
 
 // last updated in april 2021

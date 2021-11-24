@@ -7,12 +7,12 @@ import (
 
 	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
+	"github.com/julienrbrt/woningfinder/internal/auth"
+	"github.com/julienrbrt/woningfinder/internal/customer"
+	handlerErrors "github.com/julienrbrt/woningfinder/internal/handler/errors"
 	stripe "github.com/stripe/stripe-go/v72"
 	stripeCustomer "github.com/stripe/stripe-go/v72/customer"
 	"github.com/stripe/stripe-go/v72/sub"
-	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/customer"
-	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
 	"go.uber.org/zap"
 )
 

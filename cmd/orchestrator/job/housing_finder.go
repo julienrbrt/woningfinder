@@ -3,10 +3,10 @@ package job
 import (
 	"time"
 
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/corporation/scheduler"
 	"github.com/robfig/cron/v3"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 	"go.uber.org/zap"
 )
 

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/julienrbrt/woningfinder/internal/customer"
 	"github.com/robfig/cron/v3"
-	"github.com/woningfinder/woningfinder/internal/customer"
 	"go.uber.org/zap"
 )
 

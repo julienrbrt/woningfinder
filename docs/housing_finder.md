@@ -11,7 +11,7 @@ For that WoningFinder uses Mapbox Geocoding API.
 
 ### Adding Housing Corporation / Connectors
 
-- Add new housing corporation in database (check documentation [here](https://github.com/WoningFinder/woningfinder/blob/main/docs/architecture.md))
+- Add new housing corporation in database (check documentation [here](https://github.com/julienrbrt/woningfinder/blob/main/docs/architecture.md))
   - Write database migration
   - Update client_provider with its client
   - If a new city is supported add all suggested city districts for that city and add the city in the city table

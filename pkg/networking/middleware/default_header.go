@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/woningfinder/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
 )
 
 // CreateDefaultHeadersMiddleware adds a list of headers to the request

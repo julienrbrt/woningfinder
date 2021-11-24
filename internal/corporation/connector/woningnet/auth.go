@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly/v2"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
 )
 
 func (c *client) Login(username, password string) error {

@@ -8,7 +8,7 @@ import (
 
 	pg "github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 	"go.uber.org/zap"
 )
 

@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/go-chi/render"
-	"github.com/woningfinder/woningfinder/internal/customer"
-	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
-	userService "github.com/woningfinder/woningfinder/internal/services/user"
+	"github.com/julienrbrt/woningfinder/internal/customer"
+	handlerErrors "github.com/julienrbrt/woningfinder/internal/handler/errors"
+	userService "github.com/julienrbrt/woningfinder/internal/services/user"
 	"go.uber.org/zap"
 )
 

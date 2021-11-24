@@ -5,16 +5,16 @@ import (
 	"errors"
 	"testing"
 
+	bootstrapCorporation "github.com/julienrbrt/woningfinder/internal/bootstrap/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/customer/matcher"
+	"github.com/julienrbrt/woningfinder/internal/database"
+	corporationService "github.com/julienrbrt/woningfinder/internal/services/corporation"
+	matcherService "github.com/julienrbrt/woningfinder/internal/services/matcher"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 	"github.com/stretchr/testify/assert"
-	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/internal/customer/matcher"
-	"github.com/woningfinder/woningfinder/internal/database"
-	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
-	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 type mockCorporationService struct {

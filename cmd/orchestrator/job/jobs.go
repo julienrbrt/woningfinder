@@ -1,11 +1,11 @@
 package job
 
 import (
-	"github.com/woningfinder/woningfinder/internal/database"
-	emailService "github.com/woningfinder/woningfinder/internal/services/email"
-	matcherService "github.com/woningfinder/woningfinder/internal/services/matcher"
-	userService "github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/internal/database"
+	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
+	matcherService "github.com/julienrbrt/woningfinder/internal/services/matcher"
+	userService "github.com/julienrbrt/woningfinder/internal/services/user"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 )
 
 type Jobs struct {

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/woningfinder/woningfinder/pkg/networking"
-	"github.com/woningfinder/woningfinder/pkg/util"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/util"
 )
 
 const DefaultRequestTimeout = 25 * time.Second

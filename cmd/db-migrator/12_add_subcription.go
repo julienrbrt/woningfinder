@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/joho/godotenv"
-	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/julienrbrt/woningfinder/pkg/config"
 )
 
 func init() {

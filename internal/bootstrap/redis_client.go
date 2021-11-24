@@ -1,9 +1,9 @@
 package bootstrap
 
 import (
-	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/internal/database"
+	"github.com/julienrbrt/woningfinder/pkg/config"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 	"go.uber.org/zap"
 )
 

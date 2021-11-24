@@ -3,8 +3,8 @@ package user
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 )
 
 func (s *service) GetHousingPreferencesMatchingCorporation(userID uint) ([]*corporation.Corporation, error) {

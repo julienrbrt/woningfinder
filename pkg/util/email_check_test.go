@@ -3,8 +3,8 @@ package util_test
 import (
 	"testing"
 
+	"github.com/julienrbrt/woningfinder/pkg/util"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 func TestEmailCheck(t *testing.T) {

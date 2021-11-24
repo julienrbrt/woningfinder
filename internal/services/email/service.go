@@ -4,10 +4,10 @@ import (
 	"embed"
 
 	jwtauth "github.com/go-chi/jwtauth/v5"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/customer"
-	"github.com/woningfinder/woningfinder/pkg/email"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/pkg/email"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 )
 
 //go:embed templates/*

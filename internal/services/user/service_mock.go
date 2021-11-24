@@ -3,9 +3,9 @@ package user
 import (
 	"time"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 )
 
 type serviceMock struct {

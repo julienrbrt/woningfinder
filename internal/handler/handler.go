@@ -9,13 +9,13 @@ import (
 	"github.com/go-chi/httprate"
 	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
-	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
-	customMiddleware "github.com/woningfinder/woningfinder/internal/handler/middleware"
-	"github.com/woningfinder/woningfinder/internal/services/corporation"
-	emailService "github.com/woningfinder/woningfinder/internal/services/email"
-	"github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/stripe"
+	handlerErrors "github.com/julienrbrt/woningfinder/internal/handler/errors"
+	customMiddleware "github.com/julienrbrt/woningfinder/internal/handler/middleware"
+	"github.com/julienrbrt/woningfinder/internal/services/corporation"
+	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
+	"github.com/julienrbrt/woningfinder/internal/services/user"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/stripe"
 )
 
 type handler struct {

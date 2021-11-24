@@ -3,7 +3,7 @@ package user
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 )
 
 func (s *service) CreateWaitingList(w *customer.WaitingList) error {

@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/julienrbrt/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking/middleware"
+	"github.com/julienrbrt/woningfinder/pkg/util"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/networking"
-	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
-	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 func TestCreateTimeoutMiddleware_Success(t *testing.T) {

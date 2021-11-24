@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
-	"github.com/woningfinder/woningfinder/pkg/util"
+	handlerErrors "github.com/julienrbrt/woningfinder/internal/handler/errors"
+	"github.com/julienrbrt/woningfinder/pkg/util"
 	"go.uber.org/zap"
 )
 

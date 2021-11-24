@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/woningfinder/woningfinder/pkg/util"
+	"github.com/julienrbrt/woningfinder/pkg/util"
 )
 
 // User defines an user of WoningFinder

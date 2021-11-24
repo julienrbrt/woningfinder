@@ -1,11 +1,11 @@
 package corporation
 
 import (
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/mapbox"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/itris"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/mapbox"
 	"go.uber.org/zap"
 )
 

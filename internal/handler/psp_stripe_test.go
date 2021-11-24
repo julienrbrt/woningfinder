@@ -9,12 +9,12 @@ import (
 	"strings"
 	"testing"
 
+	corporationService "github.com/julienrbrt/woningfinder/internal/services/corporation"
+	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
+	userService "github.com/julienrbrt/woningfinder/internal/services/user"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/stripe"
 	"github.com/stretchr/testify/assert"
-	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	emailService "github.com/woningfinder/woningfinder/internal/services/email"
-	userService "github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
 func Test_PaymentProcessor_ErrEmptyRequest(t *testing.T) {

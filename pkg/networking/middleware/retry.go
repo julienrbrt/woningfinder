@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/woningfinder/woningfinder/pkg/networking"
-	"github.com/woningfinder/woningfinder/pkg/networking/retry"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking/retry"
 )
 
 const MaxBackOffCount = 100

@@ -1,6 +1,6 @@
 package corporation
 
-import "github.com/woningfinder/woningfinder/internal/corporation/city"
+import "github.com/julienrbrt/woningfinder/internal/corporation/city"
 
 type serviceMock struct {
 	Service

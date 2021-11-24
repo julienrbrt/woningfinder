@@ -1,8 +1,8 @@
 package email
 
 import (
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 )
 
 type serviceMock struct {

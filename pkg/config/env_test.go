@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/julienrbrt/woningfinder/pkg/config"
 
 	"github.com/stretchr/testify/assert"
 )

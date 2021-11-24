@@ -8,10 +8,10 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
 type Client interface {

@@ -3,8 +3,8 @@ package auth_test
 import (
 	"testing"
 
+	"github.com/julienrbrt/woningfinder/internal/auth"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/auth"
 )
 
 func TestConfig_Encrypt_Decrypt(t *testing.T) {

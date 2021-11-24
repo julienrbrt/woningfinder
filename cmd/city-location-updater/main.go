@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/internal/services/corporation"
-	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/internal/bootstrap"
+	bootstrapCorporation "github.com/julienrbrt/woningfinder/internal/bootstrap/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/services/corporation"
+	"github.com/julienrbrt/woningfinder/pkg/config"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 	"go.uber.org/zap"
 )
 

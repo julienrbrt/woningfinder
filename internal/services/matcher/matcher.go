@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/internal/customer"
-	"github.com/woningfinder/woningfinder/internal/database"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/database"
 	"go.uber.org/zap"
 )
 

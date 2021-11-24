@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/url"
 
-	"github.com/woningfinder/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
 )
 
 // CreateHostMiddleware permits to specify the host of the request
