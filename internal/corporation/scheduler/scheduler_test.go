@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/scheduler"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/scheduler"
 )
 
 func Test_CorporationScheduler(t *testing.T) {

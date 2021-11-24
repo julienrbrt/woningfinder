@@ -6,11 +6,11 @@ import (
 	"strconv"
 
 	"github.com/joho/godotenv"
-	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/customer"
-	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/util"
+	"github.com/julienrbrt/woningfinder/internal/auth"
+	"github.com/julienrbrt/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/pkg/config"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/util"
 	"go.uber.org/zap"
 )
 

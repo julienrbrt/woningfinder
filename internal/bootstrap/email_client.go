@@ -1,8 +1,8 @@
 package bootstrap
 
 import (
-	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/email"
+	"github.com/julienrbrt/woningfinder/pkg/config"
+	"github.com/julienrbrt/woningfinder/pkg/email"
 )
 
 // CreateEmailClient creates an email client

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"html/template"
 
-	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/auth"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 )
 
 func (s *service) SendCorporationCredentialsError(user *customer.User, corporationName string) error {

@@ -7,10 +7,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
+	handlerErrors "github.com/julienrbrt/woningfinder/internal/handler/errors"
+	"github.com/julienrbrt/woningfinder/pkg/stripe"
 	stripeGo "github.com/stripe/stripe-go/v72"
 	"github.com/stripe/stripe-go/v72/webhook"
-	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
-	"github.com/woningfinder/woningfinder/pkg/stripe"
 	"go.uber.org/zap"
 )
 

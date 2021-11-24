@@ -3,12 +3,12 @@ package woningnet_test
 import (
 	"testing"
 
+	bootstrapCorporation "github.com/julienrbrt/woningfinder/internal/bootstrap/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/woningnet"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/mapbox"
 	"github.com/stretchr/testify/assert"
-	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/woningnet"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/mapbox"
 )
 
 func Test_Login_Failed(t *testing.T) {

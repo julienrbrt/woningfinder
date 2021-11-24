@@ -3,8 +3,8 @@ package zig
 import (
 	"net/url"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 )
 
 var RoomspotInfo = corporation.Corporation{

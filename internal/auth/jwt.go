@@ -6,8 +6,8 @@ import (
 	"time"
 
 	jwtauth "github.com/go-chi/jwtauth/v5"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 	"github.com/lestrrat-go/jwx/jwt"
-	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
 const (

@@ -4,14 +4,14 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/internal/services/corporation"
-	userService "github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/util"
+	"github.com/julienrbrt/woningfinder/internal/bootstrap"
+	bootstrapCorporation "github.com/julienrbrt/woningfinder/internal/bootstrap/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/services/corporation"
+	userService "github.com/julienrbrt/woningfinder/internal/services/user"
+	"github.com/julienrbrt/woningfinder/pkg/config"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/util"
 	"go.uber.org/zap"
 )
 

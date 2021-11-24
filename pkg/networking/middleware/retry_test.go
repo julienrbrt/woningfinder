@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/julienrbrt/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking/middleware"
+	"github.com/julienrbrt/woningfinder/pkg/networking/query"
+	"github.com/julienrbrt/woningfinder/pkg/networking/retry"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/networking"
-	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
-	"github.com/woningfinder/woningfinder/pkg/networking/query"
-	"github.com/woningfinder/woningfinder/pkg/networking/retry"
 )
 
 type mockSleeper struct {

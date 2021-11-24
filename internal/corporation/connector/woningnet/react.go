@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly/v2"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
 )
 
 func (c *client) React(offer corporation.Offer) error {

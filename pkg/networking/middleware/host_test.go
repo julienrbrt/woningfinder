@@ -5,10 +5,10 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
+	"github.com/julienrbrt/woningfinder/pkg/networking/middleware"
 
+	"github.com/julienrbrt/woningfinder/pkg/networking"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/networking"
 )
 
 func TestCreateHostMiddleware_Success(t *testing.T) {

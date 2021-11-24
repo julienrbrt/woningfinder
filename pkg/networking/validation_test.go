@@ -6,8 +6,8 @@ import (
 	"net"
 	"testing"
 
+	"github.com/julienrbrt/woningfinder/pkg/util"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 func TestResponseValidator(t *testing.T) {

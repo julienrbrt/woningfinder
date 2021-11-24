@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gocolly/colly/v2"
-	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
 )
 
 // Client defines a housing corporation client

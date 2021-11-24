@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/go-pg/migrations/v8"
 	"github.com/joho/godotenv"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/ikwilhuren"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/woonburo"
-	"github.com/woningfinder/woningfinder/pkg/config"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/ikwilhuren"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/woonburo"
+	"github.com/julienrbrt/woningfinder/pkg/config"
 )
 
 func init() {

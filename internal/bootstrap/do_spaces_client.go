@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/woningfinder/woningfinder/pkg/config"
-	"github.com/woningfinder/woningfinder/pkg/digitalocean/spaces"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/networking"
-	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
-	"github.com/woningfinder/woningfinder/pkg/networking/retry"
+	"github.com/julienrbrt/woningfinder/pkg/config"
+	"github.com/julienrbrt/woningfinder/pkg/digitalocean/spaces"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking/middleware"
+	"github.com/julienrbrt/woningfinder/pkg/networking/retry"
 	"go.uber.org/zap"
 )
 

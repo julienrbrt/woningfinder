@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
 	"go.uber.org/zap"
 )
 

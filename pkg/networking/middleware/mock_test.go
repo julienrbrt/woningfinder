@@ -7,7 +7,7 @@ import (
 	"net/http/httptrace"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
 )
 
 type lastRequest struct {

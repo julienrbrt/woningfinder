@@ -10,15 +10,15 @@ import (
 	"testing"
 
 	jwtauth "github.com/go-chi/jwtauth/v5"
+	"github.com/julienrbrt/woningfinder/internal/auth"
+	"github.com/julienrbrt/woningfinder/internal/customer"
+	handlerErrors "github.com/julienrbrt/woningfinder/internal/handler/errors"
+	corporationService "github.com/julienrbrt/woningfinder/internal/services/corporation"
+	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
+	userService "github.com/julienrbrt/woningfinder/internal/services/user"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/stripe"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/customer"
-	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
-	corporationService "github.com/woningfinder/woningfinder/internal/services/corporation"
-	emailService "github.com/woningfinder/woningfinder/internal/services/email"
-	userService "github.com/woningfinder/woningfinder/internal/services/user"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/stripe"
 )
 
 func Test_GetCorporationCredentials_ErrUnauthorized(t *testing.T) {

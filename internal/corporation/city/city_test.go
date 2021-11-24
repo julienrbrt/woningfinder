@@ -3,10 +3,10 @@ package city_test
 import (
 	"testing"
 
+	bootstrapCorporation "github.com/julienrbrt/woningfinder/internal/bootstrap/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 	"github.com/stretchr/testify/assert"
-	bootstrapCorporation "github.com/woningfinder/woningfinder/internal/bootstrap/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/pkg/logging"
 )
 
 func TestCity_Merge(t *testing.T) {

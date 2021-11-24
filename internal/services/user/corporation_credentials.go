@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/auth"
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/auth"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 )
 
 func (s *service) CreateCorporationCredentials(userID uint, credentials *customer.CorporationCredentials) error {

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/julienrbrt/woningfinder/pkg/networking/query"
+	"github.com/julienrbrt/woningfinder/pkg/util"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/networking/query"
-	"github.com/woningfinder/woningfinder/pkg/util"
 )
 
 type Foo struct {

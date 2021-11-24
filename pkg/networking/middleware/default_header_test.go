@@ -3,9 +3,9 @@ package middleware_test
 import (
 	"testing"
 
+	"github.com/julienrbrt/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking/middleware"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/networking"
-	"github.com/woningfinder/woningfinder/pkg/networking/middleware"
 )
 
 func TestCreateDefaultHeadersMiddleware_AddHeaders(t *testing.T) {

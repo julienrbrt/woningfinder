@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/pkg/networking"
-	"github.com/woningfinder/woningfinder/pkg/networking/query"
+	"github.com/julienrbrt/woningfinder/pkg/networking"
+	"github.com/julienrbrt/woningfinder/pkg/networking/query"
 	"go.uber.org/zap"
 )
 

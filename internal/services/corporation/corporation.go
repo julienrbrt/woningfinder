@@ -3,8 +3,8 @@ package corporation
 import (
 	"fmt"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 )
 
 // CreateOrUpdateCorporation creates or update a housing corporation

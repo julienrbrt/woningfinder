@@ -7,12 +7,12 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
+	"github.com/julienrbrt/woningfinder/internal/customer"
+	handlerErrors "github.com/julienrbrt/woningfinder/internal/handler/errors"
+	"github.com/julienrbrt/woningfinder/pkg/util"
 	stripe "github.com/stripe/stripe-go/v72"
 	checkoutSession "github.com/stripe/stripe-go/v72/checkout/session"
 	stripeCustomer "github.com/stripe/stripe-go/v72/customer"
-	"github.com/woningfinder/woningfinder/internal/customer"
-	handlerErrors "github.com/woningfinder/woningfinder/internal/handler/errors"
-	"github.com/woningfinder/woningfinder/pkg/util"
 	"go.uber.org/zap"
 )
 

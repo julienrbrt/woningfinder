@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/julienrbrt/woningfinder/pkg/networking/query"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/pkg/networking/query"
 )
 
 func TestRequest_GetMethodDefault(t *testing.T) {

@@ -3,8 +3,8 @@ package dewoonplaats
 import (
 	"net/url"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 )
 
 var Info = corporation.Corporation{

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 )
 
 // LinkCities permits to creates a city and when given associate that city to a corporation

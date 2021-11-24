@@ -1,16 +1,16 @@
 package corporation
 
 import (
-	"github.com/woningfinder/woningfinder/internal/corporation/connector"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/dewoonplaats"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/domijn"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/ikwilhuren"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/itris"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/woningnet"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/woonburo"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/zig"
-	"github.com/woningfinder/woningfinder/pkg/logging"
-	"github.com/woningfinder/woningfinder/pkg/mapbox"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/dewoonplaats"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/domijn"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/ikwilhuren"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/itris"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/woningnet"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/woonburo"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/zig"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/mapbox"
 )
 
 // CreateConnectorProvider provides the corporations data

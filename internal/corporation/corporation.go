@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 )
 
 // Corporation defines a housing corporations basic data

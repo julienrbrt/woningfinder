@@ -3,7 +3,7 @@ package matcher
 import (
 	"context"
 
-	"github.com/woningfinder/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
 )
 
 type serviceMock struct {

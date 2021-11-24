@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 	"github.com/stretchr/testify/assert"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/city"
-	"github.com/woningfinder/woningfinder/internal/customer"
 )
 
 func getUser() customer.User {

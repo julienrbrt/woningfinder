@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/go-pg/migrations/v8"
-	"github.com/woningfinder/woningfinder/internal/corporation"
-	"github.com/woningfinder/woningfinder/internal/corporation/connector/woningnet"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector/woningnet"
 )
 
 func init() {

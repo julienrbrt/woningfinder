@@ -3,9 +3,9 @@ package mapbox_test
 import (
 	"testing"
 
-	"github.com/woningfinder/woningfinder/internal/bootstrap"
-	"github.com/woningfinder/woningfinder/internal/database"
-	"github.com/woningfinder/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/internal/bootstrap"
+	"github.com/julienrbrt/woningfinder/internal/database"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"html/template"
 
-	"github.com/woningfinder/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/customer"
 )
 
 func (s *service) SendWeeklyUpdate(user *customer.User, matches []*customer.HousingPreferencesMatch) error {

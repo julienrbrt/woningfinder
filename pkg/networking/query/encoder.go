@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/woningfinder/woningfinder/pkg/util"
+	"github.com/julienrbrt/woningfinder/pkg/util"
 )
 
 const Tag = "query"
