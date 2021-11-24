@@ -280,6 +280,7 @@ var BovenGroningenInfo = corporation.Corporation{
 		city.Uithuizermeeden,
 		city.Bedum,
 		city.Baflo,
+		city.Adorp,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -332,6 +333,7 @@ var HuiswaartsInfo = corporation.Corporation{
 		city.Voorthuizen,
 		city.Zwartebroek,
 		city.Renswoude,
+		city.Garderen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -394,6 +396,12 @@ var WoongaardInfo = corporation.Corporation{
 		city.Wamel,
 		city.Ammerzoden,
 		city.Haaften,
+		city.Meeuwen,
+		city.Hurwenen,
+		city.NieuwLekkerland,
+		city.Alphen,
+		city.Gameren,
+		city.Bleskensgraaf,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

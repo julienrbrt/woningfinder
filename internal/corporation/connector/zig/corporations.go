@@ -38,6 +38,7 @@ var DeWoningZoekerInfo = corporation.Corporation{
 		city.Blokzijl,
 		city.Hasselt,
 		city.Zwartsluis,
+		city.Genemuiden,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
