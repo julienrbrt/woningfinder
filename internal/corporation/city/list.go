@@ -2507,3 +2507,57 @@ var Ammerzoden = City{
 	Latitude:  51.748646,
 	Longitude: 5.224304,
 }
+
+var Adorp = City{
+	Name:      "Adorp",
+	Latitude:  53.275034,
+	Longitude: 6.534939,
+}
+
+var Garderen = City{
+	Name:      "Garderen",
+	Latitude:  52.232848,
+	Longitude: 5.714719,
+}
+
+var Meeuwen = City{
+	Name:      "Meeuwen",
+	Latitude:  51.728665,
+	Longitude: 5.009483,
+}
+
+var Hurwenen = City{
+	Name:      "Hurwenen",
+	Latitude:  51.811617,
+	Longitude: 5.312950,
+}
+
+var NieuwLekkerland = City{
+	Name:      "Nieuw-Lekkerland",
+	Latitude:  51.885938,
+	Longitude: 4.674671,
+}
+
+var Alphen = City{
+	Name:      "Alphen",
+	Latitude:  51.481706,
+	Longitude: 4.956225,
+}
+
+var Gameren = City{
+	Name:      "Gameren",
+	Latitude:  51.799829,
+	Longitude: 5.202508,
+}
+
+var Bleskensgraaf = City{
+	Name:      "Bleskensgraaf",
+	Latitude:  51.869297,
+	Longitude: 4.768432,
+}
+
+var Genemuiden = City{
+	Name:      "Genemuiden",
+	Latitude:  52.623536,
+	Longitude: 6.040693,
+}
