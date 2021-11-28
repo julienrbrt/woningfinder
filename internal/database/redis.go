@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	redis "github.com/go-redis/redis/v8"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
@@ -22,7 +22,7 @@ type redisClient struct {
 func NewRedisClient(logger *logging.Logger, redisURL string) (RedisClient, error) {
 	options, err := redis.ParseURL(redisURL)
 	if err != nil {
-		return nil, errors.New("error connecting to redis with host")
+		return nil, fmt.Errorf("error connecting to redis with host: %w", err)
 	}
 
 	// retry query 3 times (instead of not)
@@ -32,7 +32,7 @@ func NewRedisClient(logger *logging.Logger, redisURL string) (RedisClient, error
 
 	_, err = rdb.Ping(context.Background()).Result()
 	if err != nil {
-		return nil, errors.New("error connecting to redis")
+		return nil, fmt.Errorf("error connecting to redis: %w", err)
 	}
 
 	if rdb != nil {
