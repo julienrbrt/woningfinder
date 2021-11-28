@@ -3,17 +3,6 @@ alerts:
   - rule: DOMAIN_LIVE
   - rule: DEPLOYMENT_LIVE
   - rule: DOMAIN_FAILED
-databases:
-  - cluster_name: woningfinder-redis
-    engine: REDIS
-    name: woningfinder-redis
-    production: true
-    version: "6"
-  - cluster_name: woningfinder-db
-    engine: PG
-    name: woningfinder-db
-    production: true
-    version: "12"
 domains:
   - domain: woningfinder.nl
     type: PRIMARY
@@ -43,36 +32,38 @@ envs:
   - key: MAPBOX_API_KEY
     scope: RUN_AND_BUILD_TIME
     type: SECRET
-    value: EV[1:5UOPhoYyocEPlDtXzKaRQGiSd8Hhs8Io:84zgfM9uH+yB/rWQpqgG6K5/4zgwkJBN8OGtqM7XYUblZCce/I+jPluN9t4a6MBoeLip7HjA6l3977pC5IKOH17PLBQFz41vuTdJLqbbca5tOQRLjRrh9WmcVsqMuAXue/DlVIBqmwMcAqynaQ==]
+    value: EV[1:dG99WALf5jIp3AMjb2Ulbrp7f96OYmAe:SSFfd8OnIjLMyNfqH9WuqbHvsJXDkFtSj2cc2rrE1mdfNNHupi+K9PbKRhF6UIUu9sUkxmZlTypU33x1grXTyFIJblNtPKCGVh3HPutRN4+B9ln3aOz1hZM4CljWJexZS8wG2CFNpoLFwcXh3w==]
   - key: STRIPE_PUBLISHABLE_KEY
     scope: RUN_AND_BUILD_TIME
     type: SECRET
-    value: EV[1:B3lkVYAojJHVT/dbd+kWTvOTSVPQQrZE:U5LsybKprgoTAWWEzXYMGCryoygpMW7rbKoCLbkM66eKUbPRXFGbo2s2OMimv9MH5S5iKbPJGHUc569P6pc3By6P12IMSyskt0pF+M/zSu2usTfRU3a8lSv7gaMAefwtQSTWf3NkCPz2c7xZcLDOAuHXi0RXQeG9DOHL]
+    value: EV[1:SuEYAR6IY0ILemyeYaksDAwgyR4X2euw:LPKjK3lKo03zGXGjfj5qF1ly9Xn249Wt/6V5mPeV2FPzWbX/4ijfUO4/XARTMA6orLW8/8S/Gc0SpOpFJrust7XkkFRFTBRohYQZAtiC9pjB9o4aMX5mjshPXk4VS3nWDaPXJMgEAOtvkdIn50obdWqHZNQZzSaqx9Qd]
   - key: STRIPE_API_KEY
     scope: RUN_AND_BUILD_TIME
     type: SECRET
-    value: EV[1:cY3QW//DBV3sshG8w24CvNh3k5XMRmMx:S35/u7MD+lvv38++vLL3wA9zZ1X0N2+8OD3uxqMU+C7VnzypfXQb3S7tjkD3uQ+Mr0jzwZrOcs5bYH46zDmB4aql5heRM+CIVplOmf74tkIEUtWvQzuYAIHiTp6XNJhtgP2fpKgu1VV+nt3LzKvJocMaF3lTQAZbuqld]
+    value: EV[1:MpanRT6iI1bvC6pffUVUXb1aVIaxeE6n:UU9L1ETiv9R1fxsf9jgrWdqvTrLBwnKop48TyBf42+mal+yF7fUtU2UllchasEu4DTLLm0AxqCrF+eJgUvUFot/bxf6IBkHYp5scO7lOYVjLnkDH8oSD3xeLjIeIKcegFdNn7lhb/uw2S9Db/49ukWX5lT+3Ygiw8jKs]
   - key: STRIPE_WEBHOOK_SIGNING_KEY
     scope: RUN_AND_BUILD_TIME
     type: SECRET
-    value: EV[1:7lD/Fzd9pKs6wH0lOg/fWeuajnsATIpP:GJHUFMZL24tYyV56wAlaShoDNH0h1XfQ4l28uA9mnWJQAn9OqfJUuvuFdoSbS1VZDl53BdkH]
+    value: EV[1:yGbZ3uT+xlOtqdz51VOtwMBQPLRqGpLi:rb3Tq5ZTrBUnsqlmd8zPZLgm5YCMl0d4oUYEL1tlb+fHoDrxgMHKO1uzv8N/W5kNh314v5SW]
   - key: DO_SPACES_KEY
     scope: RUN_AND_BUILD_TIME
     value: 6HFGIEXLFFAF3ZEU5MAF
   - key: DO_SPACES_SECRET
     scope: RUN_AND_BUILD_TIME
     type: SECRET
-    value: EV[1:ufYKg6W8Qx1uYDEDc/FtS2FChgbHl3oe:VzLuvScsHhQnmIgp4IbO16zDFF6GVdIf7Gjd21XvwvSXaw1dkFqfUWfvyKZU1emLN//p3IeVk11ZJgw=]
+    value: EV[1:VRvb21DrTwTSK4v5F/lFc5YeDcT6f1AU:5Wz1xsdX3GELWHz9B6wSLMGEIfPI7MUWUiz66OrTY2U8VPej]
   - key: POSTMARK_SERVER_KEY
     scope: RUN_AND_BUILD_TIME
     type: SECRET
-    value: EV[1:JXgqgjIsGuinhdZilO0bl32ZYOu1G5hx:4scP3dByJvVm1OjjPdnXPn8vabqFtorzdKc1aMNaZWi8BidbjbLsVRwaQEKx2UUNXAVjvw==]
+    value: EV[1:ktwv/fk3TIYqork7ErAqbtAfTwPuChiP:Yssk5R8QCA/EeI1C/MHhJ5HJCVvY6kN9phRY50iFqGa5aHb92Jc4rxckRAYWort9g4deFA==]
   - key: DATABASE_URL
     scope: RUN_AND_BUILD_TIME
-    value: postgres://${woningfinder-db.USERNAME}:${woningfinder-db.PASSWORD}@${woningfinder-db.HOSTNAME}:${woningfinder-db.PORT}/woningfinder?sslmode=require
+    type: SECRET
+    value: EV[1:UVnPlICrhOzoejjpgAFIvH7a+E2vgSCn:yxC20D2A9czNNNTVJjkNu2mlQfckA8dd8QsQtLv2FUGH8LRrfYdZWRbjb+ljl2KiY+uJVw2HCRofjtysqaDdbAotzax1laZMDVWc36AdWiO11yNhm9NtEpXgangLasUfO7vPVcXnoFfoana/4Sk83fVla3S8cMebJQPv/F6M]
   - key: REDIS_URL
     scope: RUN_AND_BUILD_TIME
-    value: ${woningfinder-redis.DATABASE_URL}
+    type: SECRET
+    value: EV[1:cXRzt0g07yABspL7SL2yV8zvN/knZxDC:6svIP0SQGEzvssOecnQTy2p8i69k4cDiEQjdZppEbbr3b1YezjAuqB8QcFeRiaMoIor6zsnAJI3d6Tdgnu4HfkU8X+ymCoPZuzJBff2y553GKBZp0BmtdzRizTSXSnuGgr0gb+86WNlQ/Gl8DlvsHztMxC4NXjHLjRsZh9Oo3mWSl+hdLxqzLkoUEY5LGghKhaAaUkoe]
 jobs:
   - alerts:
       - operator: GREATER_THAN
@@ -85,7 +76,7 @@ jobs:
       deploy_on_push: true
       repo: julienrbrt/woningfinder
     instance_count: 1
-    instance_size_slug: professional-xs
+    instance_size_slug: basic-xs
     kind: PRE_DEPLOY
     name: woningfinder-db-migration
     run_command: bin/db-migrator
@@ -95,7 +86,7 @@ jobs:
       deploy_on_push: true
       repo: julienrbrt/woningfinder
     instance_count: 1
-    instance_size_slug: professional-xs
+    instance_size_slug: basic-xs
     kind: POST_DEPLOY
     name: woningfinder-city-updater
     run_command: bin/city-location-updater
@@ -115,7 +106,7 @@ services:
       repo: julienrbrt/woningfinder
     http_port: 8080
     instance_count: 1
-    instance_size_slug: professional-xs
+    instance_size_slug: basic-xs
     name: woningfinder
     routes:
       - path: /api
@@ -135,6 +126,7 @@ static_sites:
     output_dir: dist
     routes:
       - path: /
+    source_dir: /
 workers:
   - alerts:
       - operator: GREATER_THAN
@@ -147,7 +139,7 @@ workers:
       deploy_on_push: true
       repo: julienrbrt/woningfinder
     instance_count: 1
-    instance_size_slug: professional-xs
+    instance_size_slug: basic-xs
     name: woningfinder-housing-matcher
     run_command: bin/housing-matcher
   - alerts:
@@ -161,6 +153,6 @@ workers:
       deploy_on_push: true
       repo: julienrbrt/woningfinder
     instance_count: 1
-    instance_size_slug: professional-xs
+    instance_size_slug: basic-xs
     name: woningfinder-orchestrator
     run_command: bin/orchestrator
