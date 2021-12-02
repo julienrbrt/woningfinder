@@ -24,7 +24,8 @@ func Test_FetchOffers(t *testing.T) {
 		// verify housing validity
 		a.NotEmpty(offer.Housing.Type)
 		if offer.Housing.Type == corporation.HousingTypeUndefined {
-			continue
+			a.FailNow("should not be undefined")
+
 		}
 
 		a.NotEmpty(offer.Housing.Address)
