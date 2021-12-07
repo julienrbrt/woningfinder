@@ -15,7 +15,6 @@ import (
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
 	userService "github.com/julienrbrt/woningfinder/internal/services/user"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
-	"github.com/julienrbrt/woningfinder/pkg/stripe"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,7 +25,7 @@ func Test_GetOffering(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
 	// pass 'nil' as the third parameter.
@@ -58,7 +57,7 @@ func Test_GetOffering_ErrCorporationService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(errors.New("foo"))
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodGet, "/offering", nil)

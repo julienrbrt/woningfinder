@@ -15,7 +15,6 @@ import (
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
 	userService "github.com/julienrbrt/woningfinder/internal/services/user"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
-	"github.com/julienrbrt/woningfinder/pkg/stripe"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,7 +25,7 @@ func Test_ContactForm_ErrEmptyRequest(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/contact", nil)
@@ -53,7 +52,7 @@ func Test_ContactForm_Spam(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/contact-request-spam.json")
@@ -84,7 +83,7 @@ func Test_ContactForm_MalformedEmail(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/contact-request-bad-email.json")
@@ -114,7 +113,7 @@ func Test_ContactForm_ErrEmailClient(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(errors.New("foo"))
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/contact-request.json")
@@ -147,7 +146,7 @@ func Test_ContactForm_Success(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/contact-request.json")

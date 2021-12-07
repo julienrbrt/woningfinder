@@ -14,7 +14,6 @@ import (
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
 	userService "github.com/julienrbrt/woningfinder/internal/services/user"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
-	"github.com/julienrbrt/woningfinder/pkg/stripe"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,7 +24,7 @@ func Test_Register_ErrEmptyRequest(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/register", nil)
@@ -52,10 +51,10 @@ func Test_Register_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/register-request-pro.json")
+	data, err := ioutil.ReadFile("testdata/register-request.json")
 	a.NoError(err)
 
 	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
@@ -78,34 +77,6 @@ func Test_Register_ErrUserService(t *testing.T) {
 	a.Equal(string(expected), strings.Trim(rr.Body.String(), "\n"))
 }
 
-func Test_Register_InvalidPlan(t *testing.T) {
-	a := assert.New(t)
-	logger := logging.NewZapLoggerWithoutSentry()
-
-	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(nil)
-	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
-
-	// create request
-	data, err := ioutil.ReadFile("testdata/register-invalid-plan-request.json")
-	a.NoError(err)
-
-	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
-	req.Header.Set("Content-Type", "application/json")
-	a.NoError(err)
-
-	// record response
-	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.Register)
-
-	// server request
-	h.ServeHTTP(rr, req)
-
-	// verify status code
-	a.Equal(http.StatusBadRequest, rr.Code)
-}
-
 func Test_Register_ErrEmailService(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
@@ -113,10 +84,10 @@ func Test_Register_ErrEmailService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(errors.New("foo"))
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/register-request-pro.json")
+	data, err := ioutil.ReadFile("testdata/register-request.json")
 	a.NoError(err)
 
 	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
@@ -141,7 +112,7 @@ func Test_Register_InvalidHousingType(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/register-invalid-housing-type-request.json")
@@ -162,46 +133,17 @@ func Test_Register_InvalidHousingType(t *testing.T) {
 	a.Equal(http.StatusBadRequest, rr.Code)
 }
 
-func Test_Register_Basis(t *testing.T) {
+func Test_Register(t *testing.T) {
 	a := assert.New(t)
 	logger := logging.NewZapLoggerWithoutSentry()
 
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
-	data, err := ioutil.ReadFile("testdata/register-request-basis.json")
-	a.NoError(err)
-
-	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))
-	req.Header.Set("Content-Type", "application/json")
-	a.NoError(err)
-
-	// record response
-	rr := httptest.NewRecorder()
-	h := http.HandlerFunc(handler.Register)
-
-	// server request
-	h.ServeHTTP(rr, req)
-
-	// verify status code
-	a.Equal(http.StatusOK, rr.Code)
-	a.Empty(rr.Body.String())
-}
-
-func Test_Register_Pro(t *testing.T) {
-	a := assert.New(t)
-	logger := logging.NewZapLoggerWithoutSentry()
-
-	corporationServiceMock := corporationService.NewServiceMock(nil)
-	userServiceMock := userService.NewServiceMock(nil)
-	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
-
-	// create request
-	data, err := ioutil.ReadFile("testdata/register-request-pro.json")
+	data, err := ioutil.ReadFile("testdata/register-request.json")
 	a.NoError(err)
 
 	req, err := http.NewRequest(http.MethodPost, "/register", strings.NewReader(string(data)))

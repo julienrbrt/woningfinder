@@ -1,8 +1,6 @@
 package user
 
 import (
-	"time"
-
 	"github.com/julienrbrt/woningfinder/internal/corporation"
 	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 	"github.com/julienrbrt/woningfinder/internal/customer"
@@ -34,12 +32,6 @@ func (s *serviceMock) GetUser(email string) (*customer.User, error) {
 		BirthYear:    1990,
 		YearlyIncome: 30000,
 		FamilySize:   3,
-		Plan: customer.UserPlan{
-			CreatedAt:        time.Date(2021, 12, 31, 1, 1, 0, 0, time.UTC),
-			Name:             "test-ugly-woningfinder-plan",
-			StripeCustomerID: "cus_KQoZm6zke6gelu",
-			ActivatedAt:      time.Date(2099, 12, 31, 15, 1, 0, 0, time.UTC),
-		},
 		HousingPreferences: customer.HousingPreferences{
 			Type: []corporation.HousingType{
 				corporation.HousingTypeHouse,
@@ -88,18 +80,6 @@ func (s *serviceMock) GetCorporationCredentials(_ uint, _ string) (*customer.Cor
 }
 
 func (s *serviceMock) CreateWaitingList(_ *customer.WaitingList) error {
-	return s.err
-}
-
-func (s *serviceMock) ConfirmSubscription(_ string) error {
-	return s.err
-}
-
-func (s *serviceMock) SetStripeCustomerID(_ *customer.User, _ string) error {
-	return s.err
-}
-
-func (s *serviceMock) UpdateSubscriptionStatus(_ string, _ bool) error {
 	return s.err
 }
 

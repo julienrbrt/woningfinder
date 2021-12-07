@@ -33,9 +33,7 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 		// delete unconfirmed account
 		err := j.dbClient.Conn().
 			Model(&users).
-			Relation("Plan").
-			Join("INNER JOIN user_plans up ON id = up.user_id").
-			Where("up.activated_at IS NULL").
+			Where("activated_at IS NULL").
 			Select()
 		if err != nil && !errors.Is(err, pg.ErrNoRows) {
 			j.logger.Error("failed getting unconfirmed users", zap.Error(err))
@@ -45,7 +43,7 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 			j.sendEmailConfirmationReminder(user)
 
 			// delete only unsubcribed user that did confirm their email since 30 days
-			if !user.Plan.IsSubscribed() && time.Until(user.CreatedAt.Add(maxUnconfirmedTime)) <= 0 {
+			if !user.IsActivated() && time.Until(user.CreatedAt.Add(maxUnconfirmedTime)) <= 0 {
 				if err := j.userService.DeleteUser(user.Email); err != nil {
 					j.logger.Error("failed deleting user", zap.String("email", user.Email), zap.Error(err))
 				}

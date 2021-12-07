@@ -36,7 +36,6 @@ func (h *HousingPreferences) HasMinimal() error {
 		}
 	}
 
-	// the maximum price of the basis plan is 0 euro, it should be accepted as their maximum price is calculated from the yearly incomes
 	if h.MaximumPrice < 0 {
 		return errors.New("error housing preferences invalid: maximum price must be greater than 0")
 	}

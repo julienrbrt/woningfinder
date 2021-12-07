@@ -33,8 +33,8 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 	for _, user := range users {
 		wg.Add(1)
 
-		// skip user with invalid plan
-		if !user.Plan.IsValid() {
+		// skip inacive user
+		if !user.IsActivated() {
 			continue
 		}
 

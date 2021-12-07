@@ -15,7 +15,6 @@ import (
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
 	"github.com/julienrbrt/woningfinder/internal/services/user"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
-	"github.com/julienrbrt/woningfinder/pkg/stripe"
 )
 
 type handler struct {
@@ -23,17 +22,15 @@ type handler struct {
 	corporationService corporation.Service
 	userService        user.Service
 	emailService       emailService.Service
-	stripeClient       stripe.Client
 }
 
 // NewHandler creates a WoningFinder API router
-func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationService corporation.Service, userService user.Service, emailService emailService.Service, stripeClient stripe.Client) http.Handler {
+func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationService corporation.Service, userService user.Service, emailService emailService.Service) http.Handler {
 	handler := &handler{
 		logger:             logger,
 		corporationService: corporationService,
 		userService:        userService,
 		emailService:       emailService,
-		stripeClient:       stripeClient,
 	}
 
 	// router configuration
@@ -66,8 +63,6 @@ func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationSer
 		r.Post("/waitinglist", handler.WaitingListForm)
 		r.Post("/login", handler.Login)
 		r.Post("/register", handler.Register)
-		r.Post("/payment", handler.PaymentProcessor)
-		r.Post("/stripe-webhook", handler.StripeWebhook)
 	})
 
 	// protected routes
