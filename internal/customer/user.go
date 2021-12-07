@@ -11,6 +11,7 @@ import (
 type User struct {
 	ID           uint      `json:"-"`
 	CreatedAt    time.Time `pg:"default:now()" json:"created_at,omitempty"`
+	ActivatedAt  time.Time `json:"activated_at,omitempty"`
 	DeletedAt    time.Time `json:"-"`
 	Name         string    `json:"name"`
 	Email        string    `pg:",unique" json:"email"`
@@ -20,7 +21,6 @@ type User struct {
 	// only used when the user is less than 23, housing allowance depends on age
 	HasChildrenSameHousing  bool                       `json:"has_children_same_housing"`
 	HasAlertsEnabled        bool                       `json:"has_alerts_enabled"`
-	Plan                    UserPlan                   `pg:"rel:has-one,fk:id,join_fk:user_id" json:"plan,omitempty"`
 	HousingPreferences      HousingPreferences         `pg:"rel:has-one,fk:id,join_fk:user_id" json:"housing_preferences,omitempty"`
 	HousingPreferencesMatch []*HousingPreferencesMatch `pg:"rel:has-many,join_fk:user_id" json:"housing_preferences_match,omitempty"`
 	CorporationCredentials  []*CorporationCredentials  `pg:"rel:has-many,join_fk:user_id" json:"corporation_credentials,omitempty"`
@@ -48,18 +48,13 @@ func (u *User) HasMinimal() error {
 		return fmt.Errorf("user family size invalid")
 	}
 
-	plan, err := PlanFromName(u.Plan.Name)
-	if err != nil {
-		return err
-	}
-
-	if u.YearlyIncome > plan.MaximumIncome {
-		return fmt.Errorf("error plan %s not allowed: yearly incomes too high", plan.Name)
-	}
-
 	if err := u.HousingPreferences.HasMinimal(); err != nil {
 		return fmt.Errorf("user housing preferences invalid: %w", err)
 	}
 
 	return nil
+}
+
+func (u *User) IsActivated() bool {
+	return u.ActivatedAt != (time.Time{})
 }

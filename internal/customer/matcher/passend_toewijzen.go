@@ -15,10 +15,11 @@ const (
 	aow   = 67
 	young = 23
 
-	Kwaliteitskortingsgrens = 442.46
-	Aftoppingsgrenslaag     = 633.25
-	Aftoppingsgrenshoog     = 678.66
-	Maximalehuurgrens       = 752.33
+	MaximumIncomeSocialHouse = 44655
+	Kwaliteitskortingsgrens  = 442.46
+	Aftoppingsgrenslaag      = 633.25
+	Aftoppingsgrenshoog      = 678.66
+	Maximalehuurgrens        = 752.33
 )
 
 // PassendToewijzen determines the rent range to which an user can react
@@ -29,7 +30,7 @@ func (m *matcher) passendToewijzen(user customer.User) (float64, float64) {
 	age := time.Now().Year() - user.BirthYear
 
 	// if too rich free sector only allowed
-	if user.YearlyIncome > customer.MaximumIncomeSocialHouse {
+	if user.YearlyIncome > MaximumIncomeSocialHouse {
 		return Maximalehuurgrens, math.MaxInt32
 	}
 

@@ -4,9 +4,6 @@
   "birth_year": 2000,
   "yearly_income": 8000,
   "family_size": 2,
-  "plan": {
-    "name": "basis"
-  },
   "housing_preferences": {
     "type": [
       "appartement",

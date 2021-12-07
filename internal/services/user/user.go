@@ -23,9 +23,8 @@ func (s *service) CreateUser(user *customer.User) error {
 		return fmt.Errorf("error user %s invalid: %w", user.Email, err)
 	}
 
-	// a user cannot have paid when being created so reset by security
-	user.Plan.ActivatedAt = (time.Time{})
-	user.Plan.SubscriptionStartedAt = (time.Time{})
+	// a user cannot be activated at creation
+	user.ActivatedAt = (time.Time{})
 
 	// create user - if exist throw error
 	if _, err := db.Model(user).Insert(); err != nil {
@@ -34,16 +33,6 @@ func (s *service) CreateUser(user *customer.User) error {
 		}
 
 		return fmt.Errorf("failing creating user: %w", err)
-	}
-
-	// create user plan
-	if _, err := db.Model(&customer.UserPlan{UserID: user.ID, Name: user.Plan.Name}).Insert(); err != nil {
-		// rollback
-		if err2 := s.DeleteUser(user.Email); err2 != nil {
-			s.logger.Error("error when rolling back user creation", zap.Any("originalErr", err), zap.Error(err2))
-		}
-
-		return fmt.Errorf("error when creating user plan: %w", err)
 	}
 
 	// create user housing preferences
@@ -65,7 +54,6 @@ func (s *service) GetUser(email string) (*customer.User, error) {
 	var user customer.User
 	if err := db.Model(&user).
 		Where("email ILIKE ?", email).
-		Relation("Plan").
 		Relation("HousingPreferencesMatch").
 		Select(); err != nil {
 		return nil, fmt.Errorf("failed getting user %s: %w", email, err)
@@ -92,39 +80,11 @@ func (s *service) ConfirmUser(email string) error {
 
 	// activate user account
 	if _, err := s.dbClient.Conn().
-		Model((*customer.UserPlan)(nil)).
+		Model((*customer.User)(nil)).
 		Set("activated_at = now()").
 		Where("user_id = ?", user.ID).
 		Update(); err != nil {
-		return fmt.Errorf("error when updating user plan: %w", err)
-	}
-
-	return nil
-}
-
-// SetStripeCustomerID adds a stripe customer id to the user
-func (s *service) SetStripeCustomerID(user *customer.User, stripeID string) error {
-	if _, err := s.dbClient.Conn().
-		Model((*customer.UserPlan)(nil)).
-		Set("stripe_customer_id = ?", stripeID).
-		Where("user_id = ?", user.ID).
-		Update(); err != nil {
-		return fmt.Errorf("error when adding stripe customer id in user plan: %w", err)
-	}
-
-	return nil
-}
-
-// ConfirmSubscription set that the user has starting its paid subscription
-func (s *service) ConfirmSubscription(stripeID string) error {
-	// set that user is subscribed
-	if _, err := s.dbClient.Conn().
-		Model((*customer.UserPlan)(nil)).
-		Set("subscription_started_at = now()").
-		Set("last_payment_succeeded = ?", true).
-		Where("stripe_customer_id = ?", stripeID).
-		Update(); err != nil {
-		return fmt.Errorf("error when confirming subscription in user plan: %w", err)
+		return fmt.Errorf("error when activating user: %w", err)
 	}
 
 	return nil
@@ -146,26 +106,11 @@ func (s *service) UpdateUser(user *customer.User) error {
 	return nil
 }
 
-// UpdateSubscriptionStatus update the subcription last payment status
-func (s *service) UpdateSubscriptionStatus(stripeID string, status bool) error {
-	// set that user is subscribed
-	if _, err := s.dbClient.Conn().
-		Model((*customer.UserPlan)(nil)).
-		Set("last_payment_succeeded = ?", status).
-		Where("stripe_customer_id = ?", stripeID).
-		Update(); err != nil {
-		return fmt.Errorf("error when updating subscription status in user plan: %w", err)
-	}
-
-	return nil
-}
-
 // GetUsersWithGivenCorporationCredentials gets all the users with a given corporation credentials
 func (s *service) GetUsersWithGivenCorporationCredentials(corporationName string) ([]*customer.User, error) {
 	var users []*customer.User
 	if err := s.dbClient.Conn().
 		Model(&users).
-		Relation("Plan").
 		Relation("CorporationCredentials", func(q *orm.Query) (*orm.Query, error) {
 			return q.Where("corporation_name = ?", corporationName), nil
 		}).
@@ -184,7 +129,6 @@ func (s *service) GetWeeklyUpdateUsers() ([]*customer.User, error) {
 	var users []*customer.User
 	if err := s.dbClient.Conn().
 		Model(&users).
-		Relation("Plan").
 		Relation("CorporationCredentials").
 		Relation("HousingPreferencesMatch", func(q *orm.Query) (*orm.Query, error) {
 			return q.Where("created_at >= now() - interval '7 day'"), nil
@@ -218,10 +162,6 @@ func (s *service) DeleteUser(email string) error {
 	}
 
 	// delete user
-	if _, err := db.Model((*customer.UserPlan)(nil)).Where("user_id = ?", user.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
-		return fmt.Errorf("failed delete user plan for %s: %w", email, err)
-	}
-
 	if _, err := db.Model((*customer.User)(nil)).Where("id = ?", user.ID).Delete(); err != nil && !errors.Is(err, pg.ErrNoRows) {
 		return fmt.Errorf("failed delete user for %s: %w", email, err)
 	}

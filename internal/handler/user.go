@@ -10,9 +10,6 @@ import (
 	"github.com/julienrbrt/woningfinder/internal/auth"
 	"github.com/julienrbrt/woningfinder/internal/customer"
 	handlerErrors "github.com/julienrbrt/woningfinder/internal/handler/errors"
-	stripe "github.com/stripe/stripe-go/v72"
-	stripeCustomer "github.com/stripe/stripe-go/v72/customer"
-	"github.com/stripe/stripe-go/v72/sub"
 	"go.uber.org/zap"
 )
 
@@ -41,7 +38,7 @@ func (h *handler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// confirm user for first login
-	if !user.Plan.IsActivated() {
+	if !user.IsActivated() {
 		if err := h.userService.ConfirmUser(user.Email); err != nil {
 			errorMsg := "error while activating user"
 			h.logger.Error(errorMsg, zap.Error(err))
@@ -59,12 +56,9 @@ func (h *handler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(struct {
 		*customer.User
-		ValidPlan     bool `json:"valid_plan"`
-		TotalReaction int  `json:"total_reaction"`
+		TotalReaction int `json:"total_reaction"`
 	}{
 		user,
-		// consider a plan valid if user not activated for not displaying the invalid plan alert at first login of an user
-		!user.Plan.IsActivated() || user.Plan.IsValid(),
 		totalReaction,
 	})
 }
@@ -200,13 +194,6 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// cancel plan if subscribed
-	if user.Plan.IsSubscribed() {
-		if err := h.cancelStripeSubscription(user.Plan.StripeCustomerID); err != nil {
-			h.logger.Error("failed to cancel stripe subscription", zap.Error(err))
-		}
-	}
-
 	// delete user
 	if err := h.userService.DeleteUser(user.Email); err != nil {
 		h.logger.Error(errorMsg, zap.Error(err))
@@ -214,19 +201,4 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-}
-
-func (h *handler) cancelStripeSubscription(stripeCustomerID string) error {
-	customer, err := stripeCustomer.Get(stripeCustomerID, &stripe.CustomerParams{})
-	if err != nil {
-		return fmt.Errorf("failed to get stripe customer: %w", err)
-	}
-
-	if len(customer.Subscriptions.Data) > 0 {
-		if _, err := sub.Cancel(customer.Subscriptions.Data[0].ID, nil); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }

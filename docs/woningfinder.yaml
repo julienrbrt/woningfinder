@@ -33,18 +33,6 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:dG99WALf5jIp3AMjb2Ulbrp7f96OYmAe:SSFfd8OnIjLMyNfqH9WuqbHvsJXDkFtSj2cc2rrE1mdfNNHupi+K9PbKRhF6UIUu9sUkxmZlTypU33x1grXTyFIJblNtPKCGVh3HPutRN4+B9ln3aOz1hZM4CljWJexZS8wG2CFNpoLFwcXh3w==]
-  - key: STRIPE_PUBLISHABLE_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:SuEYAR6IY0ILemyeYaksDAwgyR4X2euw:LPKjK3lKo03zGXGjfj5qF1ly9Xn249Wt/6V5mPeV2FPzWbX/4ijfUO4/XARTMA6orLW8/8S/Gc0SpOpFJrust7XkkFRFTBRohYQZAtiC9pjB9o4aMX5mjshPXk4VS3nWDaPXJMgEAOtvkdIn50obdWqHZNQZzSaqx9Qd]
-  - key: STRIPE_API_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:MpanRT6iI1bvC6pffUVUXb1aVIaxeE6n:UU9L1ETiv9R1fxsf9jgrWdqvTrLBwnKop48TyBf42+mal+yF7fUtU2UllchasEu4DTLLm0AxqCrF+eJgUvUFot/bxf6IBkHYp5scO7lOYVjLnkDH8oSD3xeLjIeIKcegFdNn7lhb/uw2S9Db/49ukWX5lT+3Ygiw8jKs]
-  - key: STRIPE_WEBHOOK_SIGNING_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:yGbZ3uT+xlOtqdz51VOtwMBQPLRqGpLi:rb3Tq5ZTrBUnsqlmd8zPZLgm5YCMl0d4oUYEL1tlb+fHoDrxgMHKO1uzv8N/W5kNh314v5SW]
   - key: DO_SPACES_KEY
     scope: RUN_AND_BUILD_TIME
     value: 6HFGIEXLFFAF3ZEU5MAF

@@ -32,8 +32,8 @@ func (j *Jobs) SendCorporationCredentialsMissingReminder(c *cron.Cron) {
 
 		// send confirmation email to each user
 		for _, user := range users {
-			// skip user with invalid plan and users with corporation credentials
-			if !user.Plan.IsValid() || len(user.CorporationCredentials) > 0 {
+			// skip inactive users and users with corporation credentials
+			if !user.IsActivated() || len(user.CorporationCredentials) > 0 {
 				continue
 			}
 

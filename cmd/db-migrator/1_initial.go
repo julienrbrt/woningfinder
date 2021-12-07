@@ -13,7 +13,6 @@ func init() {
 	models := []interface{}{
 		(*city.City)(nil),
 		(*customer.User)(nil),
-		(*customer.UserPlan)(nil),
 		(*corporation.Corporation)(nil),
 		(*corporation.CorporationCity)(nil),
 		(*customer.HousingPreferences)(nil),
