@@ -4,12 +4,8 @@ alerts:
   - rule: DEPLOYMENT_LIVE
   - rule: DOMAIN_FAILED
 domains:
-  - domain: woningfinder.nl
+  - domain: api.woningfinder.nl
     type: PRIMARY
-    zone: woningfinder.nl
-  - domain: www.woningfinder.nl
-    type: ALIAS
-    zone: woningfinder.nl
 envs:
   - key: APP_NAME
     scope: RUN_AND_BUILD_TIME
@@ -36,10 +32,6 @@ envs:
   - key: DO_SPACES_KEY
     scope: RUN_AND_BUILD_TIME
     value: 6HFGIEXLFFAF3ZEU5MAF
-  - key: DO_SPACES_SECRET
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:VRvb21DrTwTSK4v5F/lFc5YeDcT6f1AU:5Wz1xsdX3GELWHz9B6wSLMGEIfPI7MUWUiz66OrTY2U8VPej]
   - key: POSTMARK_SERVER_KEY
     scope: RUN_AND_BUILD_TIME
     type: SECRET
@@ -52,6 +44,10 @@ envs:
     scope: RUN_AND_BUILD_TIME
     type: SECRET
     value: EV[1:cXRzt0g07yABspL7SL2yV8zvN/knZxDC:6svIP0SQGEzvssOecnQTy2p8i69k4cDiEQjdZppEbbr3b1YezjAuqB8QcFeRiaMoIor6zsnAJI3d6Tdgnu4HfkU8X+ymCoPZuzJBff2y553GKBZp0BmtdzRizTSXSnuGgr0gb+86WNlQ/Gl8DlvsHztMxC4NXjHLjRsZh9Oo3mWSl+hdLxqzLkoUEY5LGghKhaAaUkoe]
+  - key: DO_SPACES_SECRET
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:hem4yOq1fENGi4j5vx8G6Gs+nnRLltc8:c4YlWtai7pUEOhWL2g99XjvRqmzR9R6L5VBPiIMSZIStj7HZBQsXI/8QcrZ9g+8tmopYeb1gGsRafgI=]
 jobs:
   - alerts:
       - operator: GREATER_THAN
@@ -94,27 +90,11 @@ services:
       repo: julienrbrt/woningfinder
     http_port: 8080
     instance_count: 1
-    instance_size_slug: basic-xs
+    instance_size_slug: basic-xxs
     name: woningfinder
     routes:
       - path: /api
     run_command: ./bin/woningfinder-api
-static_sites:
-  - build_command: npm run generate --fail-on-error
-    environment_slug: node-js
-    envs:
-      - key: SENTRY_DSN
-        scope: BUILD_TIME
-        value: https://77b9fd4657304ec49bf0ecc49f742e64@o496598.ingest.sentry.io/6050841
-    github:
-      branch: main
-      deploy_on_push: true
-      repo: julienrbrt/woningfinder.nl
-    name: woningfinder-nl
-    output_dir: dist
-    routes:
-      - path: /
-    source_dir: /
 workers:
   - alerts:
       - operator: GREATER_THAN
@@ -127,7 +107,7 @@ workers:
       deploy_on_push: true
       repo: julienrbrt/woningfinder
     instance_count: 1
-    instance_size_slug: basic-xs
+    instance_size_slug: basic-xxs
     name: woningfinder-housing-matcher
     run_command: bin/housing-matcher
   - alerts:
@@ -141,6 +121,6 @@ workers:
       deploy_on_push: true
       repo: julienrbrt/woningfinder
     instance_count: 1
-    instance_size_slug: basic-xs
+    instance_size_slug: basic-xxs
     name: woningfinder-orchestrator
     run_command: bin/orchestrator
