@@ -14,7 +14,6 @@ import (
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
 	userService "github.com/julienrbrt/woningfinder/internal/services/user"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
-	"github.com/julienrbrt/woningfinder/pkg/stripe"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,7 +24,7 @@ func Test_GetUserInfo_ErrUnauthorized(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodGet, "/me", nil)
@@ -52,7 +51,7 @@ func Test_GetUserInfo_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodGet, "/me", nil)
@@ -81,7 +80,7 @@ func Test_GetUserInfo(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodGet, "/me", nil)
@@ -111,7 +110,7 @@ func Test_UpdateUserInfo_BadRequestError(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me", nil)
@@ -138,7 +137,7 @@ func Test_UpdateUserInfo_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// request data
 	data, err := ioutil.ReadFile("testdata/update-user-info-request.json")
@@ -172,7 +171,7 @@ func Test_UpdateUserInfo(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// request data
 	data, err := ioutil.ReadFile("testdata/update-user-info-request.json")
@@ -201,7 +200,7 @@ func Test_DeleteUser_ErrEmptyRequest(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/me/delete", nil)
@@ -228,7 +227,7 @@ func Test_DeleteUser_BadRequestError(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// request data
 	data, err := ioutil.ReadFile("testdata/delete-user-invalid-request.json")
@@ -257,7 +256,7 @@ func Test_DeleteUser_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// request data
 	data, err := ioutil.ReadFile("testdata/delete-user-request.json")
@@ -291,7 +290,7 @@ func Test_DeleteUser(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, stripe.NewClientMock(false)}
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
 
 	// request data
 	data, err := ioutil.ReadFile("testdata/delete-user-request.json")

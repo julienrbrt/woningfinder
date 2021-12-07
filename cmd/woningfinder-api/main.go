@@ -32,13 +32,12 @@ func main() {
 	dbClient := bootstrap.CreateDBClient(logger)
 	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
 	emailClient := bootstrap.CreateEmailClient()
-	stripeClient := bootstrap.CreateSripeClient(logger) // init stripe library
 
 	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, nil) // mapboxClient not required in the api
 	corporationService := corporation.NewService(logger, dbClient, city.NewSuggester(connectorProvider.GetCities()))
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	router := handler.NewHandler(logger, jwtAuth, corporationService, userService, emailService, stripeClient)
+	router := handler.NewHandler(logger, jwtAuth, corporationService, userService, emailService)
 
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
 		logger.Fatal("failed to start server", zap.Error(err))
