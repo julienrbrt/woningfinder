@@ -72,17 +72,10 @@ func (s *service) GetUser(email string) (*customer.User, error) {
 
 // ConfirmUser validate user account
 func (s *service) ConfirmUser(email string) error {
-	// get user
-	var user customer.User
-	if err := s.dbClient.Conn().Model(&user).Where("email ILIKE ?", email).Select(); err != nil {
-		return fmt.Errorf("failed getting user %s: %w", email, err)
-	}
-
-	// activate user account
 	if _, err := s.dbClient.Conn().
 		Model((*customer.User)(nil)).
 		Set("activated_at = now()").
-		Where("user_id = ?", user.ID).
+		Where("email ILIKE ?", email).
 		Update(); err != nil {
 		return fmt.Errorf("error when activating user: %w", err)
 	}
