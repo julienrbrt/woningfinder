@@ -1,11 +1,11 @@
 alerts:
   - rule: DEPLOYMENT_FAILED
-  - rule: DOMAIN_LIVE
   - rule: DEPLOYMENT_LIVE
   - rule: DOMAIN_FAILED
 domains:
-  - domain: api.woningfinder.nl
+  - domain: woningfinder.nl
     type: PRIMARY
+    zone: woningfinder.nl
 envs:
   - key: APP_NAME
     scope: RUN_AND_BUILD_TIME
@@ -83,6 +83,21 @@ services:
         rule: CPU_UTILIZATION
         value: 75
         window: TEN_MINUTES
+    cors:
+      allow_headers:
+        - "*"
+      allow_methods:
+        - GET
+        - PUT
+        - CONNECT
+        - OPTIONS
+        - PATCH
+        - POST
+        - DELETE
+        - TRACE
+        - HEAD
+      allow_origins:
+        - exact: https://woningfinder.nl
     environment_slug: go
     github:
       branch: main
@@ -95,6 +110,17 @@ services:
     routes:
       - path: /api
     run_command: ./bin/woningfinder-api
+static_sites:
+  - build_command: npm run generate
+    environment_slug: node-js
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: julienrbrt/woningfinder.nl
+    name: woningfinder-nl
+    routes:
+      - path: /
+    source_dir: /
 workers:
   - alerts:
       - operator: GREATER_THAN
