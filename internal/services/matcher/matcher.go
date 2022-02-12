@@ -33,7 +33,7 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 	for _, user := range users {
 		wg.Add(1)
 
-		// skip inacive user
+		// skip inactive user
 		if !user.IsActivated() {
 			continue
 		}

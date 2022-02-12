@@ -1,7 +1,7 @@
 package mapbox
 
 import (
-	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"net/http"
 	"strings"
@@ -31,7 +31,7 @@ func (c *client) CityDistrictFromAddress(address string) (string, error) {
 	uuid := c.buildAddressUUID(address)
 
 	// check if district is in cache
-	if district, err := c.redisClient.Get(uuid); err == nil {
+	if district, err := c.redisClient.Get(address); err == nil {
 		return district, nil
 	}
 
@@ -50,7 +50,7 @@ func (c *client) CityDistrictFromAddress(address string) (string, error) {
 }
 
 func (c *client) buildAddressUUID(address string) string {
-	return base64.StdEncoding.EncodeToString([]byte(address))
+	return hex.EncodeToString([]byte(address))
 }
 
 func (c *client) getCityDistrict(search string) (string, error) {
