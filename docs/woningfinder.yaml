@@ -1,152 +1,163 @@
 alerts:
-  - rule: DEPLOYMENT_FAILED
-  - rule: DEPLOYMENT_LIVE
-  - rule: DOMAIN_FAILED
+- rule: DEPLOYMENT_FAILED
+- rule: DEPLOYMENT_LIVE
+- rule: DOMAIN_FAILED
+databases:
+- cluster_name: woningfinder-redis
+  engine: REDIS
+  name: woningfinder-redis
+  production: true
+  version: "6"
+- cluster_name: woningfinder-db
+  db_name: woningfinder
+  db_user: doadmin
+  engine: PG
+  name: woningfinder-db
+  production: true
+  version: "13"
 domains:
-  - domain: woningfinder.nl
-    type: PRIMARY
-    zone: woningfinder.nl
+- domain: woningfinder.nl
+  type: PRIMARY
+  zone: woningfinder.nl
 envs:
-  - key: APP_NAME
-    scope: RUN_AND_BUILD_TIME
-    value: WoningFinder
-  - key: APP_PORT
-    scope: RUN_AND_BUILD_TIME
-    value: "8080"
-  - key: APP_DEBUG
-    scope: RUN_AND_BUILD_TIME
-    value: "false"
-  - key: JWT_SECRET
-    scope: RUN_AND_BUILD_TIME
-    value: ioreh98r34fujceirjgeoijgjeujhgoi732yevjn209pr2kwjknewl02
-  - key: AES_SECRET
-    scope: RUN_AND_BUILD_TIME
-    value: 3b01eb9846cc2136be82c0b9d736a5f8cb5ed19bcd733815013b428f9cc90c5e
-  - key: SENTRY_DSN
-    scope: RUN_AND_BUILD_TIME
-    value: https://5e1d3d3280b8462bb170b8cb04227c6a@o496598.ingest.sentry.io/5571559
-  - key: MAPBOX_API_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:dG99WALf5jIp3AMjb2Ulbrp7f96OYmAe:SSFfd8OnIjLMyNfqH9WuqbHvsJXDkFtSj2cc2rrE1mdfNNHupi+K9PbKRhF6UIUu9sUkxmZlTypU33x1grXTyFIJblNtPKCGVh3HPutRN4+B9ln3aOz1hZM4CljWJexZS8wG2CFNpoLFwcXh3w==]
-  - key: DO_SPACES_KEY
-    scope: RUN_AND_BUILD_TIME
-    value: 6HFGIEXLFFAF3ZEU5MAF
-  - key: POSTMARK_SERVER_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:ktwv/fk3TIYqork7ErAqbtAfTwPuChiP:Yssk5R8QCA/EeI1C/MHhJ5HJCVvY6kN9phRY50iFqGa5aHb92Jc4rxckRAYWort9g4deFA==]
-  - key: DATABASE_URL
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:UVnPlICrhOzoejjpgAFIvH7a+E2vgSCn:yxC20D2A9czNNNTVJjkNu2mlQfckA8dd8QsQtLv2FUGH8LRrfYdZWRbjb+ljl2KiY+uJVw2HCRofjtysqaDdbAotzax1laZMDVWc36AdWiO11yNhm9NtEpXgangLasUfO7vPVcXnoFfoana/4Sk83fVla3S8cMebJQPv/F6M]
-  - key: REDIS_URL
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:cXRzt0g07yABspL7SL2yV8zvN/knZxDC:6svIP0SQGEzvssOecnQTy2p8i69k4cDiEQjdZppEbbr3b1YezjAuqB8QcFeRiaMoIor6zsnAJI3d6Tdgnu4HfkU8X+ymCoPZuzJBff2y553GKBZp0BmtdzRizTSXSnuGgr0gb+86WNlQ/Gl8DlvsHztMxC4NXjHLjRsZh9Oo3mWSl+hdLxqzLkoUEY5LGghKhaAaUkoe]
-  - key: DO_SPACES_SECRET
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:hem4yOq1fENGi4j5vx8G6Gs+nnRLltc8:c4YlWtai7pUEOhWL2g99XjvRqmzR9R6L5VBPiIMSZIStj7HZBQsXI/8QcrZ9g+8tmopYeb1gGsRafgI=]
+- key: APP_NAME
+  scope: RUN_AND_BUILD_TIME
+  value: WoningFinder
+- key: APP_PORT
+  scope: RUN_AND_BUILD_TIME
+  value: "8080"
+- key: APP_DEBUG
+  scope: RUN_AND_BUILD_TIME
+  value: "false"
+- key: JWT_SECRET
+  scope: RUN_AND_BUILD_TIME
+  value: ioreh98r34fujceirjgeoijgjeujhgoi732yevjn209pr2kwjknewl02
+- key: AES_SECRET
+  scope: RUN_AND_BUILD_TIME
+  value: 3b01eb9846cc2136be82c0b9d736a5f8cb5ed19bcd733815013b428f9cc90c5e
+- key: SENTRY_DSN
+  scope: RUN_AND_BUILD_TIME
+  value: https://5e1d3d3280b8462bb170b8cb04227c6a@o496598.ingest.sentry.io/5571559
+- key: MAPBOX_API_KEY
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:dG99WALf5jIp3AMjb2Ulbrp7f96OYmAe:SSFfd8OnIjLMyNfqH9WuqbHvsJXDkFtSj2cc2rrE1mdfNNHupi+K9PbKRhF6UIUu9sUkxmZlTypU33x1grXTyFIJblNtPKCGVh3HPutRN4+B9ln3aOz1hZM4CljWJexZS8wG2CFNpoLFwcXh3w==]
+- key: DO_SPACES_KEY
+  scope: RUN_AND_BUILD_TIME
+  value: 6HFGIEXLFFAF3ZEU5MAF
+- key: POSTMARK_SERVER_KEY
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:ktwv/fk3TIYqork7ErAqbtAfTwPuChiP:Yssk5R8QCA/EeI1C/MHhJ5HJCVvY6kN9phRY50iFqGa5aHb92Jc4rxckRAYWort9g4deFA==]
+- key: DO_SPACES_SECRET
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:hem4yOq1fENGi4j5vx8G6Gs+nnRLltc8:c4YlWtai7pUEOhWL2g99XjvRqmzR9R6L5VBPiIMSZIStj7HZBQsXI/8QcrZ9g+8tmopYeb1gGsRafgI=]
+- key: REDIS_URL
+  scope: RUN_AND_BUILD_TIME
+  value: ${woningfinder-redis.DATABASE_URL}
+- key: DATABASE_URL
+  scope: RUN_AND_BUILD_TIME
+  value: ${woningfinder-db.DATABASE_URL}
 jobs:
-  - alerts:
-      - operator: GREATER_THAN
-        rule: CPU_UTILIZATION
-        value: 75
-        window: TEN_MINUTES
-    environment_slug: go
-    github:
-      branch: main
-      deploy_on_push: true
-      repo: julienrbrt/woningfinder
-    instance_count: 1
-    instance_size_slug: basic-xs
-    kind: PRE_DEPLOY
-    name: woningfinder-db-migration
-    run_command: bin/db-migrator
-  - environment_slug: go
-    github:
-      branch: main
-      deploy_on_push: true
-      repo: julienrbrt/woningfinder
-    instance_count: 1
-    instance_size_slug: basic-xs
-    kind: POST_DEPLOY
-    name: woningfinder-city-updater
-    run_command: bin/city-location-updater
-    source_dir: /
+- alerts:
+  - operator: GREATER_THAN
+    rule: CPU_UTILIZATION
+    value: 75
+    window: TEN_MINUTES
+  environment_slug: go
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: julienrbrt/woningfinder
+  instance_count: 1
+  instance_size_slug: basic-xs
+  kind: PRE_DEPLOY
+  name: woningfinder-db-migration
+  run_command: bin/db-migrator
+- environment_slug: go
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: julienrbrt/woningfinder
+  instance_count: 1
+  instance_size_slug: basic-xs
+  kind: POST_DEPLOY
+  name: woningfinder-city-updater
+  run_command: bin/city-location-updater
+  source_dir: /
 name: woningfinder
 region: ams
 services:
-  - alerts:
-      - operator: GREATER_THAN
-        rule: CPU_UTILIZATION
-        value: 75
-        window: TEN_MINUTES
-    cors:
-      allow_headers:
-        - "*"
-      allow_methods:
-        - GET
-        - PUT
-        - CONNECT
-        - OPTIONS
-        - PATCH
-        - POST
-        - DELETE
-        - TRACE
-        - HEAD
-      allow_origins:
-        - exact: https://woningfinder.nl
-    environment_slug: go
-    github:
-      branch: main
-      deploy_on_push: true
-      repo: julienrbrt/woningfinder
-    http_port: 8080
-    instance_count: 1
-    instance_size_slug: basic-xxs
-    name: woningfinder
-    routes:
-      - path: /api
-    run_command: ./bin/woningfinder-api
+- alerts:
+  - operator: GREATER_THAN
+    rule: CPU_UTILIZATION
+    value: 75
+    window: TEN_MINUTES
+  cors:
+    allow_headers:
+    - '*'
+    allow_methods:
+    - GET
+    - PUT
+    - CONNECT
+    - OPTIONS
+    - PATCH
+    - POST
+    - DELETE
+    - TRACE
+    - HEAD
+    allow_origins:
+    - exact: https://woningfinder.nl
+  environment_slug: go
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: julienrbrt/woningfinder
+  http_port: 8080
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: woningfinder
+  routes:
+  - path: /api
+  run_command: ./bin/woningfinder-api
 static_sites:
-  - build_command: npm run generate
-    environment_slug: node-js
-    github:
-      branch: main
-      deploy_on_push: true
-      repo: julienrbrt/woningfinder.nl
-    name: woningfinder-nl
-    routes:
-      - path: /
-    source_dir: /
+- build_command: npm run generate
+  environment_slug: node-js
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: julienrbrt/woningfinder.nl
+  name: woningfinder-nl
+  routes:
+  - path: /
+  source_dir: /
 workers:
-  - alerts:
-      - operator: GREATER_THAN
-        rule: CPU_UTILIZATION
-        value: 75
-        window: TEN_MINUTES
-    environment_slug: go
-    github:
-      branch: main
-      deploy_on_push: true
-      repo: julienrbrt/woningfinder
-    instance_count: 1
-    instance_size_slug: basic-xxs
-    name: woningfinder-housing-matcher
-    run_command: bin/housing-matcher
-  - alerts:
-      - operator: GREATER_THAN
-        rule: CPU_UTILIZATION
-        value: 75
-        window: TEN_MINUTES
-    environment_slug: go
-    github:
-      branch: main
-      deploy_on_push: true
-      repo: julienrbrt/woningfinder
-    instance_count: 1
-    instance_size_slug: basic-xxs
-    name: woningfinder-orchestrator
-    run_command: bin/orchestrator
+- alerts:
+  - operator: GREATER_THAN
+    rule: CPU_UTILIZATION
+    value: 75
+    window: TEN_MINUTES
+  environment_slug: go
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: julienrbrt/woningfinder
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: woningfinder-housing-matcher
+  run_command: bin/housing-matcher
+- alerts:
+  - operator: GREATER_THAN
+    rule: CPU_UTILIZATION
+    value: 75
+    window: TEN_MINUTES
+  environment_slug: go
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: julienrbrt/woningfinder
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: woningfinder-orchestrator
+  run_command: bin/orchestrator
