@@ -31,7 +31,7 @@ func (c *client) CityDistrictFromAddress(address string) (string, error) {
 	uuid := c.buildAddressUUID(address)
 
 	// check if district is in cache
-	if district, err := c.redisClient.Get(address); err == nil {
+	if district, err := c.redisClient.Get(uuid); err == nil {
 		return district, nil
 	}
 
