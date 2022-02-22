@@ -14,7 +14,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/joho/godotenv v1.4.0
-	github.com/lestrrat-go/jwx v1.2.18
+	github.com/lestrrat-go/jwx v1.2.19
 	github.com/mattevans/postmark-go v0.1.5
 	github.com/minio/minio-go/v7 v7.0.22
 	github.com/robfig/cron/v3 v3.0.1
