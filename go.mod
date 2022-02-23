@@ -16,7 +16,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/lestrrat-go/jwx v1.2.18
 	github.com/mattevans/postmark-go v0.1.5
-	github.com/minio/minio-go/v7 v7.0.22
+	github.com/minio/minio-go/v7 v7.0.23
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.21.0
