@@ -59,7 +59,7 @@ func Test_SendOffers_Success_EmptyOffer(t *testing.T) {
 	redisMock := database.NewRedisClientMock("", nil, nil)
 	matcherService := matcherService.NewService(logger, redisMock, nil, nil, nil, nil, m, connector.NewConnectorProvider([]connector.Provider{{Corporation: corporationInfo}}))
 
-	a.Nil(matcherService.SendOffers(corporation.Offers{}))
+	a.Error(matcherService.SendOffers(corporation.Offers{}))
 }
 
 func Test_SendOffers_Success(t *testing.T) {
