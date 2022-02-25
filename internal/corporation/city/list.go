@@ -2561,3 +2561,87 @@ var Genemuiden = City{
 	Latitude:  52.623536,
 	Longitude: 6.040693,
 }
+
+var Scheerwolde = City{
+	Name:      "Scheerwolde",
+	Latitude:  52.756309,
+	Longitude: 6.015324,
+}
+
+var Ens = City{
+	Name:      "Ens",
+	Latitude:  52.639381,
+	Longitude: 5.827124,
+}
+
+var Kootwijkerbroek = City{
+	Name:      "Kootwijkerbroek",
+	Latitude:  52.150151,
+	Longitude: 5.668347,
+}
+
+var Nigtevecht = City{
+	Name:      "Nigtevecht",
+	Latitude:  52.273992,
+	Longitude: 5.028319,
+}
+
+var Giessenburg = City{
+	Name:      "Giessenburg",
+	Latitude:  51.849957,
+	Longitude: 4.889952,
+}
+
+var Ophemert = City{
+	Name:      "Ophemert",
+	Latitude:  51.844867,
+	Longitude: 5.387551,
+}
+
+var Almkerk = City{
+	Name:      "Almkerk",
+	Latitude:  51.772258,
+	Longitude: 4.961199,
+}
+
+var Kesteren = City{
+	Name:      "Kesteren",
+	Latitude:  51.934530,
+	Longitude: 5.574136,
+}
+
+var Hilvarenbeek = City{
+	Name:      "Hilvarenbeek",
+	Latitude:  51.484484,
+	Longitude: 5.137224,
+}
+
+var Burgum = City{
+	Name:      "Burgum",
+	Latitude:  53.192440,
+	Longitude: 5.992191,
+}
+
+var Rijen = City{
+	Name:      "Rijen",
+	Latitude:  51.587735,
+	Longitude: 4.919162,
+}
+
+var Lent = City{
+	Name:      "Lent",
+	Latitude:  51.862804,
+	Longitude: 5.860659,
+}
+
+var Hellevoetsluis = City{
+	Name:      "Hellevoetsluis",
+	Latitude:  51.830802,
+	Longitude: 4.145309,
+}
+
+var Colmschate = City{
+	Name:      "Colmschate",
+	Latitude:  52.248876,
+	Longitude: 6.223910,
+}
