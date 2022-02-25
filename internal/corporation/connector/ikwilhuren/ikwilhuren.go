@@ -183,7 +183,6 @@ var Info = corporation.Corporation{
 		city.Hellevoetsluis,
 		city.Colmschate,
 		city.Leerdam,
-		city.CapelleAanDenIJssel,
 		city.Helmond,
 		city.DenHam,
 	},
