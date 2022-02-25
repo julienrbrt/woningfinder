@@ -50,6 +50,10 @@ func (c *City) Merge() City {
 		return Haren
 	case strings.Contains(c.Name, "Bleskensgraaf"):
 		return Bleskensgraaf
+	case strings.EqualFold(c.Name, "Krimpen a:d IJssel"):
+		return KrimpenAanDenIJssel
+	case strings.EqualFold(c.Name, "WijkbijDuurstede"):
+		return WijkBijDuurstede
 	}
 
 	return *c

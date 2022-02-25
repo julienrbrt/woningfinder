@@ -74,6 +74,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.Waverveen,
 		city.Werkhoven,
 		city.HoefEnHaag,
+		city.Nigtevecht,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
@@ -222,6 +223,7 @@ var MercatusInfo = corporation.Corporation{
 		city.Nagele,
 		city.Kraggenburg,
 		city.Luttelgeest,
+		city.Ens,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -334,6 +336,7 @@ var HuiswaartsInfo = corporation.Corporation{
 		city.Zwartebroek,
 		city.Renswoude,
 		city.Garderen,
+		city.Kootwijkerbroek,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -402,6 +405,10 @@ var WoongaardInfo = corporation.Corporation{
 		city.Alphen,
 		city.Gameren,
 		city.Bleskensgraaf,
+		city.Giessenburg,
+		city.Ophemert,
+		city.Almkerk,
+		city.Kesteren,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
