@@ -75,6 +75,7 @@ var UtrechtInfo = corporation.Corporation{
 		city.Werkhoven,
 		city.HoefEnHaag,
 		city.Nigtevecht,
+		city.Austerlitz,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
