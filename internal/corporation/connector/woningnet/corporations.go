@@ -125,6 +125,7 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Cruquius,
 		city.Weteringbrug,
 		city.Duivendrecht,
+		city.Abbenes,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
