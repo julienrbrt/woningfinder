@@ -409,6 +409,8 @@ var WoongaardInfo = corporation.Corporation{
 		city.Ophemert,
 		city.Almkerk,
 		city.Kesteren,
+		city.Lexmond,
+		city.Well,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
