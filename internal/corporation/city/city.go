@@ -54,6 +54,8 @@ func (c *City) Merge() City {
 		return KrimpenAanDenIJssel
 	case strings.EqualFold(c.Name, "WijkbijDuurstede"):
 		return WijkBijDuurstede
+	case strings.EqualFold(c.Name, CapelleAanDenIJssel.Name):
+		return CapelleAanDenIJssel
 	}
 
 	return *c
