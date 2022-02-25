@@ -2675,3 +2675,9 @@ var Austerlitz = City{
 	Latitude:  52.079635,
 	Longitude: 5.315225,
 }
+
+var Abbenes = City{
+	Name:      "Abbenes",
+	Latitude:  52.233326,
+	Longitude: 4.591129,
+}
