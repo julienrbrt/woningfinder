@@ -2669,3 +2669,9 @@ var Well = City{
 	Latitude:  51.744677,
 	Longitude: 5.204526,
 }
+
+var Austerlitz = City{
+	Name:      "Austerlitz",
+	Latitude:  52.079635,
+	Longitude: 5.315225,
+}
