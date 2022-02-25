@@ -184,6 +184,8 @@ var Info = corporation.Corporation{
 		city.Colmschate,
 		city.Leerdam,
 		city.CapelleAanDenIJssel,
+		city.Helmond,
+		city.DenHam,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

@@ -2645,3 +2645,27 @@ var Colmschate = City{
 	Latitude:  52.248876,
 	Longitude: 6.223910,
 }
+
+var Helmond = City{
+	Name:      "Helmond",
+	Latitude:  51.479570,
+	Longitude: 5.655587,
+}
+
+var Lexmond = City{
+	Name:      "Lexmond",
+	Latitude:  51.963022,
+	Longitude: 5.036509,
+}
+
+var DenHam = City{
+	Name:      "Den Ham",
+	Latitude:  52.466257,
+	Longitude: 6.495750,
+}
+
+var Well = City{
+	Name:      "Well",
+	Latitude:  51.744677,
+	Longitude: 5.204526,
+}
