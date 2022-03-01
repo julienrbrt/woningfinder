@@ -126,6 +126,8 @@ var AmsterdamInfo = corporation.Corporation{
 		city.Weteringbrug,
 		city.Duivendrecht,
 		city.Abbenes,
+		city.Zwaanshoek,
+		city.Burgerveen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,
@@ -158,6 +160,7 @@ var WoonkeusInfo = corporation.Corporation{
 		city.Sliedrecht,
 		city.Zwijndrecht,
 		city.HendrikIdoAmbacht,
+		city.Heerjansdam,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -245,6 +248,7 @@ var MiddenHollandInfo = corporation.Corporation{
 		city.Moerkapelle,
 		city.Reeuwijk,
 		city.Boskoop,
+		city.Moordrecht,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -260,6 +264,7 @@ var GroningenInfo = corporation.Corporation{
 		city.TenBoer,
 		city.Haren,
 		city.TenPost,
+		city.Leens,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
@@ -413,6 +418,8 @@ var WoongaardInfo = corporation.Corporation{
 		city.Kesteren,
 		city.Lexmond,
 		city.Well,
+		city.Giessen,
+		city.EckEnWiel,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
