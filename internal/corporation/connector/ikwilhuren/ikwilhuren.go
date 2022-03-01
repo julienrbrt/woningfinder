@@ -183,6 +183,11 @@ var Info = corporation.Corporation{
 		city.Colmschate,
 		city.Helmond,
 		city.DenHam,
+		city.Nunspeet,
+		city.Paterswolde,
+		city.Veendam,
+		city.Leek,
+		city.Sassenheim,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionFirstComeFirstServed,

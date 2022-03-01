@@ -2681,3 +2681,81 @@ var Abbenes = City{
 	Latitude:  52.233326,
 	Longitude: 4.591129,
 }
+
+var Leens = City{
+	Name:      "Leens",
+	Latitude:  53.359240,
+	Longitude: 6.380255,
+}
+
+var Nunspeet = City{
+	Name:      "Nunspeet",
+	Latitude:  52.375389,
+	Longitude: 5.783134,
+}
+
+var Paterswolde = City{
+	Name:      "Paterswolde",
+	Latitude:  53.146571,
+	Longitude: 6.560971,
+}
+
+var Veendam = City{
+	Name:      "Veendam",
+	Latitude:  53.106134,
+	Longitude: 6.878302,
+}
+
+var Leek = City{
+	Name:      "Leek",
+	Latitude:  53.161454,
+	Longitude: 6.391591,
+}
+
+var Sassenheim = City{
+	Name:      "Sassenheim",
+	Latitude:  52.226276,
+	Longitude: 4.522678,
+}
+
+var Giessen = City{
+	Name:      "Giessen",
+	Latitude:  51.790247,
+	Longitude: 5.031790,
+}
+
+var EckEnWiel = City{
+	Name:      "Eck en Wiel",
+	Latitude:  51.969531,
+	Longitude: 5.457189,
+}
+
+var Zwaanshoek = City{
+	Name:      "Zwaanshoek",
+	Latitude:  52.311755,
+	Longitude: 4.619843,
+}
+
+var Burgerveen = City{
+	Name:      "Burgerveen",
+	Latitude:  52.240478,
+	Longitude: 4.678466,
+}
+
+var Moordrecht = City{
+	Name:      "Moordrecht",
+	Latitude:  51.986996,
+	Longitude: 4.669564,
+}
+
+var Heerjansdam = City{
+	Name:      "Heerjansdam",
+	Latitude:  51.828014,
+	Longitude: 4.572515,
+}
+
+var Windesheim = City{
+	Name:      "Windesheim",
+	Latitude:  52.447635,
+	Longitude: 6.131339,
+}
