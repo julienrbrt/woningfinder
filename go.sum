@@ -71,8 +71,8 @@ github.com/go-check/check v0.0.0-20180628173108-788fd7840127/go.mod h1:9ES+weclK
 github.com/go-chi/chi/v5 v5.0.4/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
 github.com/go-chi/chi/v5 v5.0.7 h1:rDTPXLDHGATaeHvVlLcR4Qe0zftYethFucbjVQ1PxU8=
 github.com/go-chi/chi/v5 v5.0.7/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
-github.com/go-chi/httprate v0.5.2 h1:pynJZu4jbSSHFRjpbT7EJJf8b9qt2CLZnqqKy0F+jH4=
-github.com/go-chi/httprate v0.5.2/go.mod h1:kYR4lorHX3It9tTh4eTdHhcF2bzrYnCrRNlv5+IBm2M=
+github.com/go-chi/httprate v0.5.3 h1:5HPWb0N6ymIiuotMtCfOGpQKiKeqXVzMexHh1W1yXPc=
+github.com/go-chi/httprate v0.5.3/go.mod h1:kYR4lorHX3It9tTh4eTdHhcF2bzrYnCrRNlv5+IBm2M=
 github.com/go-chi/jwtauth/v5 v5.0.2 h1:CSKtr+b6Jnfy5T27sMaiBPxaVE/bjnjS3ramFQ0526w=
 github.com/go-chi/jwtauth/v5 v5.0.2/go.mod h1:TeA7vmPe3uYThvHw8O8W13HOOpOd4MTgToxL41gZyjs=
 github.com/go-chi/render v1.0.1 h1:4/5tis2cKaNdnv9zFLfXzcquC9HbeZgCnxGnKrltBS8=
