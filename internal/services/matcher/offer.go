@@ -20,9 +20,9 @@ func (s *service) SendOffers(offers corporation.Offers) error {
 		return fmt.Errorf("error pushing %s offers to queue: %w", offers.CorporationName, err)
 	}
 
-	if err := s.verifyCorporationCities(offers); err != nil {
-		return fmt.Errorf("error verifying %s cities: %w", offers.CorporationName, err)
-	}
+	// if err := s.verifyCorporationCities(offers); err != nil {
+	// 	return fmt.Errorf("error verifying %s cities: %w", offers.CorporationName, err)
+	// }
 
 	return nil
 }
