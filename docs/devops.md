@@ -22,8 +22,15 @@ The environment variables are loaded from the `.env` first. If not present, it w
 ### Useful queries
 
 Find cities to add in WoningFinder
+
 ```sql
 select *
 from corporation_cities cc 
 where lower(cc.city_name) in (select lower(name) from cities where cities.latitude is NULL)
+```
+
+```sql
+select *
+from cities c 
+where lower(c.name) not in (select lower(cc.city_name) from corporation_cities cc)
 ```
