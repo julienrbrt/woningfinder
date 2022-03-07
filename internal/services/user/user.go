@@ -26,6 +26,9 @@ func (s *service) CreateUser(user *customer.User) error {
 	// a user cannot be activated at creation
 	user.ActivatedAt = (time.Time{})
 
+	// activate failed reaction email alert by default
+	user.HasAlertsEnabled = true
+
 	// create user - if exist throw error
 	if _, err := db.Model(user).Insert(); err != nil {
 		if strings.Contains(err.Error(), "duplicate key value violates unique constraint \"users_email_key\"") {

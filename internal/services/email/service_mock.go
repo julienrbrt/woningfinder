@@ -50,14 +50,14 @@ func (s *serviceMock) SendBye(_ *customer.User) error {
 	return s.err
 }
 
-func (s *serviceMock) ContactFormSubmission(name, email, message string) error {
+func (s *serviceMock) ContactFormSubmission(_, _, _ string) error {
 	return s.err
 }
 
-func (s *serviceMock) SendWaitingListConfirmation(email, city string) error {
+func (s *serviceMock) SendWaitingListConfirmation(_, _ string) error {
 	return s.err
 }
 
-func (s *serviceMock) SendReactionFailure(user *customer.User, corporationName string, offer corporation.Offer) error {
+func (s *serviceMock) SendReactionFailure(_ *customer.User, _ string, _ []corporation.Offer) error {
 	return s.err
 }

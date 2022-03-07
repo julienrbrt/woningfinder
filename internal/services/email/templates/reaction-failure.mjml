@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Er is iets misgegaan met een reactie</mj-title>
+    <mj-title>Er is iets misgegaan met automatisch reageren bij {{ .CorporationName }}</mj-title>
     <mj-font name="Inter" href="https://fonts.googleapis.com/css?family=Inter:400,700"></mj-font>
     <mj-attributes>
       <mj-all font-family="Inter, Helvetica, Arial, sans-serif" padding="0px"></mj-all>
@@ -15,7 +15,7 @@
       <mj-column width="570px">
         <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
-        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Er is iets misgegaan met een reactie
+        <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Er is iets misgegaan met automatisch reageren
         </mj-text>
         <mj-text align="left" padding="0 20px"><strong> <span style="font-size: 40px">⚊</span></strong> <br /><br />
         </mj-text>
@@ -28,8 +28,15 @@
           Hi {{ .Name }},
           <br /><br />
 
-          We hebben 8 keer geprobeerd je automatisch te laten reageren op <strong>{{ .Address }}</strong> van <strong>{{ .CorporationName }}</strong>, maar er is iets misgegaan... 😮
-          <br /><br />
+          Er is iets misgegaan met automatisch reageren voor de volgende woningen 😮:<br />
+
+          <ul>
+            {{ range $index, $offer := .Offers }}
+            <li>
+              <a href="{{ $offer.URL }}">{{ $offer.Housing.Address }}</a>
+            </li>
+            {{ end }}
+          </ul>
 
           Het kan zijn doordat je het maximaal aantal reacties dat je tegelijk mag hebben hebt bereikt bij {{ .CorporationName }}.
           <br /> <br />
@@ -44,7 +51,7 @@
 
     <mj-section padding="0 20px" background-color="#FFFFFF">
       <mj-column>
-        <mj-button href="{{ .OfferURL }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Zelf reageren</mj-button>
+        <mj-button href="{{ .URL }}" background-color="#E46948" color="white" padding="0px 20px 10px 20px" border-radius="20px">Mijn zoekopdracht</mj-button>
       </mj-column>
     </mj-section>
 
