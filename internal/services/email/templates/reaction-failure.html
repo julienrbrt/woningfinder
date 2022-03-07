@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
-  <title> Er is iets misgegaan met een reactie </title>
+  <title> Er is iets misgegaan met automatisch reageren bij {{ .CorporationName }}
+  </title>
   <!--[if !mso]><!-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!--<![endif]-->
@@ -151,7 +152,7 @@
                             </tr>
                             <tr>
                               <td align="left" style="font-size:0px;padding:0 20px;word-break:break-word;">
-                                <div style="font-family:Inter, Helvetica, Arial, sans-serif;font-size:36px;font-weight:400;line-height:40px;text-align:left;color:#28003A;">Er is iets misgegaan met een reactie</div>
+                                <div style="font-family:Inter, Helvetica, Arial, sans-serif;font-size:36px;font-weight:400;line-height:40px;text-align:left;color:#28003A;">Er is iets misgegaan met automatisch reageren</div>
                               </td>
                             </tr>
                             <tr>
@@ -188,7 +189,16 @@
                           <tbody>
                             <tr>
                               <td align="left" style="font-size:0px;padding:0 20px 30px 20px;word-break:break-word;">
-                                <div style="font-family:Inter, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:21px;text-align:left;color:#000000;">Hi {{ .Name }}, <br /><br /> We hebben 8 keer geprobeerd je automatisch te laten reageren op <strong>{{ .Address }}</strong> van <strong>{{ .CorporationName }}</strong>, maar er is iets misgegaan... 😮 <br /><br /> Het kan zijn doordat je het maximaal aantal reacties dat je tegelijk mag hebben hebt bereikt bij {{ .CorporationName }}. <br /> <br /> Wil je hier geen e-mail meer over ontvangen? Je kunt deze alerts uitschakelen via je zoekopdracht.</div>
+                                <div style="font-family:Inter, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:21px;text-align:left;color:#000000;">Hi {{ .Name }}, <br /><br /> Er is iets misgegaan met automatisch reageren voor de volgende woningen 😮:<br />
+                                  <ul>
+                                    {{ range $index, $offer := .Offers }}
+                                    <li>
+                                      <a href="{{ $offer.URL }}">{{ $offer.Housing.Address }}</a>
+                                    </li>
+                                    {{ end }}
+                                  </ul>
+                                  Het kan zijn doordat je het maximaal aantal reacties dat je tegelijk mag hebben hebt bereikt bij {{ .CorporationName }}. <br /> <br /> Wil je hier geen e-mail meer over ontvangen? Je kunt deze alerts uitschakelen via je zoekopdracht.
+                                </div>
                               </td>
                             </tr>
                           </tbody>
@@ -252,7 +262,7 @@
                                   <tbody>
                                     <tr>
                                       <td align="center" bgcolor="#E46948" role="presentation" style="border:none;border-radius:20px;cursor:auto;mso-padding-alt:10px 25px;background:#E46948;" valign="middle">
-                                        <a href="{{ .OfferURL }}" style="display:inline-block;background:#E46948;color:white;font-family:Inter, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:20px;" target="_blank"> Zelf reageren </a>
+                                        <a href="{{ .URL }}" style="display:inline-block;background:#E46948;color:white;font-family:Inter, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:20px;" target="_blank"> Mijn zoekopdracht </a>
                                       </td>
                                     </tr>
                                   </tbody>

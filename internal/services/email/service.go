@@ -23,7 +23,7 @@ type Service interface {
 	SendCorporationCredentialsFirstTimeAdded(user *customer.User) error
 	SendCorporationCredentialsMissing(user *customer.User) error
 	SendCorporationCredentialsError(user *customer.User, corporationName string) error
-	SendReactionFailure(user *customer.User, corporationName string, offer corporation.Offer) error
+	SendReactionFailure(user *customer.User, corporationName string, offers []corporation.Offer) error
 	SendBye(user *customer.User) error
 
 	SendWaitingListConfirmation(email, city string) error

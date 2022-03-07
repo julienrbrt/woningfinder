@@ -91,6 +91,9 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 		return
 	}
 
+	// failedReaction keeps track of the fail reaction in order to send a bulk alert
+	failedReaction := []corporation.Offer{}
+
 	for uuid, offer := range matchingOffers {
 		// react to offer
 		if err := client.React(offer); err != nil {
@@ -99,13 +102,7 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 			// check if we retry next time or mark the offer as checked
 			if ok := s.retryReactNextTime(uuid); !ok {
 				s.redisClient.SetUUID(uuid)
-
-				// alert user
-				if user.HasAlertsEnabled {
-					if err := s.emailService.SendReactionFailure(user, offers.CorporationName, offer); err != nil {
-						s.logger.Error("failed to send email", zap.Error(err))
-					}
-				}
+				failedReaction = append(failedReaction, offer)
 			}
 
 			continue
@@ -123,6 +120,13 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 		s.redisClient.SetUUID(uuid)
 
 		s.logger.Info("🎉🎉🎉 WoningFinder has successfully reacted to a house", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.CorporationName), zap.String("email", user.Email), zap.Error(err))
+	}
+
+	// alert user in case of failed reaction
+	if user.HasAlertsEnabled && len(failedReaction) > 0 {
+		if err := s.emailService.SendReactionFailure(user, offers.CorporationName, failedReaction); err != nil {
+			s.logger.Error("failed to send reaction failure email", zap.Error(err))
+		}
 	}
 }
 
