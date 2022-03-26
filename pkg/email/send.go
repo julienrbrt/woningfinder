@@ -2,21 +2,22 @@ package email
 
 import (
 	"fmt"
+	"net/smtp"
 
-	"github.com/mattevans/postmark-go"
+	"github.com/jordan-wright/email"
 )
 
 func (c *client) Send(subject, htmlBody, to string) error {
-	emailReq := &postmark.Email{
-		From:       "WoningFinder <contact@woningfinder.nl>",
-		To:         to,
-		Subject:    subject,
-		HTMLBody:   htmlBody,
-		TrackOpens: true,
+	e := &email.Email{
+		To:      []string{to},
+		Bcc:     []string{c.from},
+		From:    fmt.Sprintf("WoningFinder <%s>", c.from),
+		Subject: subject,
+		HTML:    []byte(htmlBody),
 	}
 
-	if _, response, err := c.postmark.Email.Send(emailReq); err != nil {
-		return fmt.Errorf("failed to send email, got response %v: %w", response, err)
+	if err := e.Send(fmt.Sprintf("%s:%d", c.server, c.port), smtp.PlainAuth("", c.from, c.password, c.server)); err != nil {
+		return fmt.Errorf("error while sending mail to %s: %w", to, err)
 	}
 
 	return nil

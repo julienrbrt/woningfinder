@@ -2,13 +2,15 @@
 
 More information can be found here [docs](docs/).
 
-## Stack & Services
+## Stack
 
 - [Go](https://golang.org)
 - [Nuxt.js](nuxtjs.org)
 - [TailwindCSS](https://tailwindcss.com)
 - PostgreSQL
 - Redis
+
+## Services
 
 - DigitalOcean
 - Sentry
