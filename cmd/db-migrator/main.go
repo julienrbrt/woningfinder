@@ -30,7 +30,7 @@ func init() {
 		_ = config.MustGetString("APP_NAME")
 	}
 
-	logger = logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
+	logger = logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.GetStringOrDefault("SENTRY_DSN", ""))
 	dbClient = bootstrap.CreateDBClient(logger)
 	connectorProvider = bootstrapCorporation.CreateConnectorProvider(logger, nil)
 	corporationService = corporation.NewService(logger, dbClient, city.NewSuggester(connectorProvider.GetCities()))

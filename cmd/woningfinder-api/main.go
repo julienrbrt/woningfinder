@@ -28,7 +28,7 @@ func init() {
 }
 
 func main() {
-	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.MustGetString("SENTRY_DSN"))
+	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.GetStringOrDefault("SENTRY_DSN", ""))
 	dbClient := bootstrap.CreateDBClient(logger)
 	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
 	emailClient := bootstrap.CreateEmailClient()
