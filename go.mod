@@ -15,7 +15,7 @@ require (
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/joho/godotenv v1.4.0
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
-	github.com/lestrrat-go/jwx v1.2.20
+	github.com/lestrrat-go/jwx v1.2.21
 	github.com/minio/minio-go/v7 v7.0.23
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/stretchr/testify v1.7.1
@@ -35,7 +35,7 @@ require (
 	github.com/getsentry/sentry-go v0.12.0 // indirect
 	github.com/go-pg/zerochecker v0.2.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
-	github.com/goccy/go-json v0.9.4 // indirect
+	github.com/goccy/go-json v0.9.6 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
