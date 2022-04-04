@@ -10,7 +10,6 @@ import (
 func (c *client) Send(subject, htmlBody, to string) error {
 	e := &email.Email{
 		To:      []string{to},
-		Bcc:     []string{c.from},
 		From:    fmt.Sprintf("WoningFinder <%s>", c.from),
 		Subject: subject,
 		HTML:    []byte(htmlBody),
