@@ -15,7 +15,7 @@ require (
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/joho/godotenv v1.4.0
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
-	github.com/lestrrat-go/jwx v1.2.21
+	github.com/lestrrat-go/jwx v1.2.22
 	github.com/minio/minio-go/v7 v7.0.23
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/stretchr/testify v1.7.1
@@ -46,7 +46,7 @@ require (
 	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.0 // indirect
-	github.com/lestrrat-go/httpcc v1.0.0 // indirect
+	github.com/lestrrat-go/httpcc v1.0.1 // indirect
 	github.com/lestrrat-go/iter v1.0.1 // indirect
 	github.com/lestrrat-go/option v1.0.0 // indirect
 	github.com/minio/md5-simd v1.1.2 // indirect
