@@ -52,6 +52,6 @@ func updatePictureURL(matches []*customer.HousingPreferencesMatch) {
 			continue
 		}
 
-		match.PictureURL = fmt.Sprintf("https://static.woningfinder.nl/%s", match.PictureURL)
+		match.PictureURL = fmt.Sprintf("https://api.woningfinder.nl/match/%s", match.PictureURL)
 	}
 }

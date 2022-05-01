@@ -13,7 +13,7 @@
 
     <mj-section padding-top="40px" background-color="#FFFFFF">
       <mj-column width="570px">
-        <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
+        <mj-image src="https://woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
         <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">WoningFinder Contact Submission
         </mj-text>
@@ -43,13 +43,13 @@
         </mj-text>
       </mj-column>
       <mj-column width="200px">
-        <mj-image src="https://static.woningfinder.nl/email/icon-1.png" alt="" padding-bottom="30px" width="200px" align="center" border="none"></mj-image>
+        <mj-image src="https://woningfinder.nl/icon-1.png" alt="" padding-bottom="30px" width="200px" align="center" border="none"></mj-image>
       </mj-column>
     </mj-section>
 
     <mj-section padding="20px 20px" background-color="#FFFFFF">
       <mj-column width="100%">
-        <mj-image src="https://static.woningfinder.nl/logo-black.png" alt="" width="130px" align="center" border="none"></mj-image>
+        <mj-image src="https://woningfinder.nl/logo-black.png" alt="" width="130px" align="center" border="none"></mj-image>
       </mj-column>
     </mj-section>
 

@@ -13,7 +13,7 @@
 
     <mj-section padding-top="40px" background-color="#FFFFFF">
       <mj-column width="570px">
-        <mj-image src="https://static.woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
+        <mj-image src="https://woningfinder.nl/logo.png" alt="" align="center" border="none" padding-bottom="20px" width="200px"></mj-image>
 
         <mj-text align="left" padding="0 20px" color="#28003A" font-size="36px" line-height="40px" font-family="Inter, Helvetica, Arial, sans-serif">Wekelijkse update
         </mj-text>
@@ -35,7 +35,7 @@
         </mj-text>
       </mj-column>
       <mj-column width="200px">
-        <mj-image src="https://static.woningfinder.nl/email/icon-1.png" alt="" padding-bottom="30px" width="200px" align="center" border="none"></mj-image>
+        <mj-image src="https://woningfinder.nl/icon-1.png" alt="" padding-bottom="30px" width="200px" align="center" border="none"></mj-image>
       </mj-column>
     </mj-section>
 
@@ -44,7 +44,7 @@
       <mj-column width="40%" background-color="#FFFFFF">
         <mj-text color="#28003A" align="center" padding="10px 0 20px 0" font-size="24px" line-height="30px" font-family="Inter, Helvetica, Arial, sans-serif">– {{ $match.CorporationName }} –</mj-text>
 
-        <mj-image src="https://static.woningfinder.nl/{{ $match.PictureURL }}" width="256px" alt="" align="center"></mj-image>
+        <mj-image src="https://woningfinder.nl/{{ $match.PictureURL }}" width="256px" alt="" align="center"></mj-image>
       </mj-column>
       <mj-column width="60%">
 
@@ -58,7 +58,7 @@
 
     <mj-section padding="0 20px 20px 0" background-color="#FFFFFF">
       <mj-column width="100%">
-        <mj-image src="https://static.woningfinder.nl/email/symbol-1.png" alt="" width="213px" align="right" border="none"></mj-image>
+        <mj-image src="https://woningfinder.nl/symbol-1.png" alt="" width="213px" align="right" border="none"></mj-image>
       </mj-column>
     </mj-section>
     {{ end }}
@@ -75,7 +75,7 @@
 
           Hulp nodig of vragen? Beantwoord deze e-mail, we helpen je graag.
         </mj-text>
-        <mj-image src="https://static.woningfinder.nl/email/icon-2.png" alt="" padding="30px 0 10px 0" width="50px" align="center" border="none"></mj-image>
+        <mj-image src="https://woningfinder.nl/icon-2.png" alt="" padding="30px 0 10px 0" width="50px" align="center" border="none"></mj-image>
         <mj-text align="left" padding="0 20px 0 20px">
           Groetjes,
           <br />
@@ -86,7 +86,7 @@
 
     <mj-section padding="20px 20px" background-color="#FFFFFF">
       <mj-column width="100%">
-        <mj-image src="https://static.woningfinder.nl/logo-black.png" alt="" width="130px" align="center" border="none"></mj-image>
+        <mj-image src="https://woningfinder.nl/logo-black.png" alt="" width="130px" align="center" border="none"></mj-image>
       </mj-column>
     </mj-section>
 
