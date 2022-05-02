@@ -8,7 +8,7 @@ jobs:
       MAPBOX_API_KEY: ${{ secrets.MAPBOX_API_KEY }}
     strategy:
       matrix:
-        go: ["1.17"]
+        go: ["1.18"]
     steps:
       - name: Set up Go ${{ matrix.go }}
         uses: actions/setup-go@v3
