@@ -12,7 +12,6 @@ More information can be found here [docs](docs/).
 
 ## Services
 
-- DigitalOcean
 - Sentry
 - Mapbox
 

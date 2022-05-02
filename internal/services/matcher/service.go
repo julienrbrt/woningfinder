@@ -10,7 +10,7 @@ import (
 	corporationService "github.com/julienrbrt/woningfinder/internal/services/corporation"
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
 	userService "github.com/julienrbrt/woningfinder/internal/services/user"
-	"github.com/julienrbrt/woningfinder/pkg/digitalocean/spaces"
+	"github.com/julienrbrt/woningfinder/pkg/downloader"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
 )
 
@@ -31,20 +31,20 @@ type service struct {
 	userService        userService.Service
 	emailService       emailService.Service
 	corporationService corporationService.Service
-	spacesClient       spaces.Client
+	imgClient          downloader.Client
 	matcher            matcher.Matcher
 	connectorProvider  connector.ConnectorProvider
 }
 
 // NewService instantiate the matcher service
-func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, emailService emailService.Service, corporationService corporationService.Service, spacesClient spaces.Client, matcher matcher.Matcher, connectorProvider connector.ConnectorProvider) Service {
+func NewService(logger *logging.Logger, redisClient database.RedisClient, userService userService.Service, emailService emailService.Service, corporationService corporationService.Service, imgClient downloader.Client, matcher matcher.Matcher, connectorProvider connector.ConnectorProvider) Service {
 	return &service{
 		logger:             logger,
 		redisClient:        redisClient,
 		userService:        userService,
 		emailService:       emailService,
 		corporationService: corporationService,
-		spacesClient:       spacesClient,
+		imgClient:          imgClient,
 		matcher:            matcher,
 		connectorProvider:  connectorProvider,
 	}

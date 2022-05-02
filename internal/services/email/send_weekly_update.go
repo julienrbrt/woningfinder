@@ -44,11 +44,9 @@ func (s *service) SendWeeklyUpdate(user *customer.User, matches []*customer.Hous
 }
 
 func updatePictureURL(matches []*customer.HousingPreferencesMatch) {
-	defaultPictureURL := "email/img-1.png"
-
 	for _, match := range matches {
 		if match.PictureURL == "" {
-			match.PictureURL = defaultPictureURL
+			match.PictureURL = "https://woningfinder.nl/img-1.png"
 			continue
 		}
 

@@ -1,7 +1,7 @@
 package job
 
 import (
-	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"time"
 
@@ -46,7 +46,7 @@ func (j *Jobs) SendCorporationCredentialsMissingReminder(c *cron.Cron) {
 func (j *Jobs) sendEmailCorporationCredentialsMissingReminder(user *customer.User) {
 	for count, duration := range corporationCredentialsMissingReminderTime {
 		// check if reminder already sent
-		uuid := base64.StdEncoding.EncodeToString([]byte(user.Email + fmt.Sprintf("customer corporation credentials missing reminder %d sent", count)))
+		uuid := hex.EncodeToString([]byte(user.Email + fmt.Sprintf("customer corporation credentials missing reminder %d sent", count)))
 		if j.redisClient.HasUUID(uuid) {
 			continue
 		}

@@ -6,6 +6,7 @@ import (
 	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/julienrbrt/woningfinder/internal/corporation"
 	"github.com/julienrbrt/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/pkg/downloader"
 	"github.com/julienrbrt/woningfinder/pkg/email"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
 )
@@ -34,13 +35,15 @@ type service struct {
 	logger      *logging.Logger
 	emailClient email.Client
 	jwtAuth     *jwtauth.JWTAuth
+	imgClient   downloader.Client
 }
 
 // NewService instantiate the email service
-func NewService(logger *logging.Logger, emailClient email.Client, jwtAuth *jwtauth.JWTAuth) Service {
+func NewService(logger *logging.Logger, emailClient email.Client, jwtAuth *jwtauth.JWTAuth, imgClient downloader.Client) Service {
 	return &service{
 		logger:      logger,
 		emailClient: emailClient,
 		jwtAuth:     jwtAuth,
+		imgClient:   imgClient,
 	}
 }

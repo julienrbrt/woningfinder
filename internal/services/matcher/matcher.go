@@ -2,7 +2,7 @@ package matcher
 
 import (
 	"context"
-	"encoding/base64"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"strconv"
@@ -175,7 +175,7 @@ func (s *service) getMatchingOffers(user *customer.User, offers corporation.Offe
 }
 
 func (s *service) uploadHousingPicture(offer corporation.Offer) string {
-	fileName, err := s.spacesClient.UploadPicture("offers", offer.Housing.Address, offer.RawPictureURL)
+	fileName, err := s.imgClient.Download(offer.Housing.Address, offer.RawPictureURL)
 	if err != nil {
 		s.logger.Error("failed to upload picture", zap.Error(err))
 	}
@@ -215,5 +215,5 @@ func (s *service) retryReactNextTime(uuid string) bool {
 }
 
 func buildReactionUUID(user *customer.User, offer corporation.Offer) string {
-	return base64.StdEncoding.EncodeToString([]byte(user.Email + offer.Housing.Address))
+	return hex.EncodeToString([]byte(user.Email + offer.Housing.Address))
 }

@@ -1,7 +1,7 @@
 package job
 
 import (
-	"encoding/base64"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"time"
@@ -56,7 +56,7 @@ func (j *Jobs) CleanupUnconfirmedCustomer(c *cron.Cron) {
 func (j *Jobs) sendEmailConfirmationReminder(user *customer.User) {
 	for count, duration := range unconfirmedReminderTime {
 		// check if reminder already sent
-		uuid := base64.StdEncoding.EncodeToString([]byte(user.Email + fmt.Sprintf("customer confirmation email reminder %d sent", count)))
+		uuid := hex.EncodeToString([]byte(user.Email + fmt.Sprintf("customer confirmation email reminder %d sent", count)))
 		if j.redisClient.HasUUID(uuid) {
 			continue
 		}

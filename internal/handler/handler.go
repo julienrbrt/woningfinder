@@ -14,6 +14,7 @@ import (
 	"github.com/julienrbrt/woningfinder/internal/services/corporation"
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
 	"github.com/julienrbrt/woningfinder/internal/services/user"
+	"github.com/julienrbrt/woningfinder/pkg/downloader"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
 )
 
@@ -22,15 +23,17 @@ type handler struct {
 	corporationService corporation.Service
 	userService        user.Service
 	emailService       emailService.Service
+	imgClient          downloader.Client
 }
 
 // NewHandler creates a WoningFinder API router
-func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationService corporation.Service, userService user.Service, emailService emailService.Service) http.Handler {
+func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationService corporation.Service, userService user.Service, emailService emailService.Service, imgClient downloader.Client) http.Handler {
 	handler := &handler{
 		logger:             logger,
 		corporationService: corporationService,
 		userService:        userService,
 		emailService:       emailService,
+		imgClient:          imgClient,
 	}
 
 	// router configuration
@@ -63,6 +66,7 @@ func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationSer
 		r.Post("/waitinglist", handler.WaitingListForm)
 		r.Post("/login", handler.Login)
 		r.Post("/register", handler.Register)
+		r.Post("/match", handler.GetOfferImage)
 	})
 
 	// protected routes

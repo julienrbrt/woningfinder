@@ -37,15 +37,15 @@ func main() {
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
 	mapboxClient := bootstrap.CreateMapboxClient(logger, redisClient)
-	spacesClient := bootstrap.CreateDOSpacesClient(logger)
+	imgClient := bootstrap.CreateImgDownloader(logger)
 	emailClient := bootstrap.CreateEmailClient()
 
 	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, mapboxClient)
 	citySuggester := city.NewSuggester(connectorProvider.GetCities())
 	corporationService := corporationService.NewService(logger, dbClient, citySuggester)
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
-	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(citySuggester), connectorProvider)
+	emailService := emailService.NewService(logger, emailClient, jwtAuth, imgClient)
+	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, imgClient, matcher.NewMatcher(citySuggester), connectorProvider)
 
 	if len(os.Args) != 2 {
 		logger.Fatal("usage: housing-finder <corporation-name>")

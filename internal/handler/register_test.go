@@ -13,6 +13,7 @@ import (
 	corporationService "github.com/julienrbrt/woningfinder/internal/services/corporation"
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
 	userService "github.com/julienrbrt/woningfinder/internal/services/user"
+	"github.com/julienrbrt/woningfinder/pkg/downloader"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
 	"github.com/stretchr/testify/assert"
 )
@@ -24,7 +25,8 @@ func Test_Register_ErrEmptyRequest(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
+	imgClientMock := downloader.NewClientMock(nil, "")
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
 	req, err := http.NewRequest(http.MethodPost, "/register", nil)
@@ -51,7 +53,8 @@ func Test_Register_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
+	imgClientMock := downloader.NewClientMock(nil, "")
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/register-request.json")
@@ -84,7 +87,8 @@ func Test_Register_ErrEmailService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(errors.New("foo"))
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
+	imgClientMock := downloader.NewClientMock(nil, "")
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/register-request.json")
@@ -112,7 +116,8 @@ func Test_Register_InvalidHousingType(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
+	imgClientMock := downloader.NewClientMock(nil, "")
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/register-invalid-housing-type-request.json")
@@ -140,7 +145,8 @@ func Test_Register(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock}
+	imgClientMock := downloader.NewClientMock(nil, "")
+	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
 	data, err := ioutil.ReadFile("testdata/register-request.json")

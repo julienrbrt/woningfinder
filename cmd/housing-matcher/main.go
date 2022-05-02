@@ -36,14 +36,14 @@ func main() {
 	dbClient := bootstrap.CreateDBClient(logger)
 	redisClient := bootstrap.CreateRedisClient(logger)
 	emailClient := bootstrap.CreateEmailClient()
-	spacesClient := bootstrap.CreateDOSpacesClient(logger)
+	imgClient := bootstrap.CreateImgDownloader(logger)
 
 	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, nil) // mapboxClient not required in the matcher
 	citySuggester := city.NewSuggester(connectorProvider.GetCities())
 	corporationService := corporationService.NewService(logger, dbClient, citySuggester)
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
-	emailService := emailService.NewService(logger, emailClient, jwtAuth)
-	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, spacesClient, matcher.NewMatcher(citySuggester), connectorProvider)
+	emailService := emailService.NewService(logger, emailClient, jwtAuth, imgClient)
+	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, imgClient, matcher.NewMatcher(citySuggester), connectorProvider)
 
 	// subscribe to offers queue inside a new go routine
 	ch := make(chan corporation.Offers)

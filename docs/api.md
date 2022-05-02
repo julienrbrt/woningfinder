@@ -13,8 +13,9 @@ Following is a list of endpoint supported the WoningFinder API. The API works ex
 | /me/delete                  | POST       | Let user delete its account                                                              |
 | /contact                    | POST       | Handles the contact form to send an email to _contact@woningfinder.nl_                   |
 | /waitinglist                | POST       | Handles the city waiting list                                                            |
+| /match                      | GET        | Get the matching offer images                                                            |
 
-WoningFinder's API is available at https://woningfinder.nl/api.
+WoningFinder's API is available at <https://api.woningfinder.nl>.
 
 ### Authentication
 
