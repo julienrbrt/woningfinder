@@ -25,7 +25,7 @@ func Test_Register_ErrEmptyRequest(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
@@ -53,7 +53,7 @@ func Test_Register_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
@@ -87,7 +87,7 @@ func Test_Register_ErrEmailService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(errors.New("foo"))
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
@@ -116,7 +116,7 @@ func Test_Register_InvalidHousingType(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
@@ -145,7 +145,7 @@ func Test_Register(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request

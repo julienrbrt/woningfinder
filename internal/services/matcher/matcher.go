@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/julienrbrt/woningfinder/internal/corporation"
@@ -175,8 +176,8 @@ func (s *service) getMatchingOffers(user *customer.User, offers corporation.Offe
 }
 
 func (s *service) uploadHousingPicture(offer corporation.Offer) string {
-	fileName, err := s.imgClient.Download(offer.Housing.Address, offer.RawPictureURL)
-	if err != nil {
+	fileName := strings.ToLower(hex.EncodeToString([]byte(offer.Housing.Address)))
+	if err := s.imgClient.Download(fileName, offer.RawPictureURL); err != nil {
 		s.logger.Error("failed to upload picture", zap.Error(err))
 	}
 

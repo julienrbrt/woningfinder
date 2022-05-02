@@ -3,24 +3,18 @@ package downloader
 import "net/url"
 
 type mockClient struct {
-	err    error
-	output string
+	err error
 }
 
 // NewClientMock creates a mock client for the file downloader
-func NewClientMock(err error, output string) Client {
+func NewClientMock(err error) Client {
 	return &mockClient{
-		err:    err,
-		output: output,
+		err: err,
 	}
 }
 
-func (m *mockClient) Download(originalName string, fileURL *url.URL) (string, error) {
-	if m.err != nil {
-		return m.output, m.err
-	}
-
-	return m.output, nil
+func (m *mockClient) Download(originalName string, fileURL *url.URL) error {
+	return m.err
 }
 
 func (m *mockClient) Get(originalName string) ([]byte, error) {

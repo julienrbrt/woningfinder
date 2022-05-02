@@ -26,7 +26,7 @@ func Test_GetOffering(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
@@ -59,7 +59,7 @@ func Test_GetOffering_ErrCorporationService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(errors.New("foo"))
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request

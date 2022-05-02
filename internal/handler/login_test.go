@@ -25,7 +25,7 @@ func Test_Login_ErrBadRequest(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// create request
@@ -53,7 +53,7 @@ func Test_Login_ErrUserService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(errors.New("foo"))
 	emailServiceMock := emailService.NewServiceMock(nil)
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// request data
@@ -88,7 +88,7 @@ func Test_Login_ErremailService(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(errors.New("foo"))
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// request data
@@ -123,7 +123,7 @@ func Test_Login(t *testing.T) {
 	corporationServiceMock := corporationService.NewServiceMock(nil)
 	userServiceMock := userService.NewServiceMock(nil)
 	emailServiceMock := emailService.NewServiceMock(nil)
-	imgClientMock := downloader.NewClientMock(nil, "")
+	imgClientMock := downloader.NewClientMock(nil)
 	handler := &handler{logger, corporationServiceMock, userServiceMock, emailServiceMock, imgClientMock}
 
 	// request data
