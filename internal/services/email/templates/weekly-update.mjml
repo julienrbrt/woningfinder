@@ -44,7 +44,7 @@
       <mj-column width="40%" background-color="#FFFFFF">
         <mj-text color="#28003A" align="center" padding="10px 0 20px 0" font-size="24px" line-height="30px" font-family="Inter, Helvetica, Arial, sans-serif">– {{ $match.CorporationName }} –</mj-text>
 
-        <mj-image src="https://woningfinder.nl/{{ $match.PictureURL }}" width="256px" alt="" align="center"></mj-image>
+        <mj-image src="{{ $match.PictureURL }}" width="256px" alt="" align="center"></mj-image>
       </mj-column>
       <mj-column width="60%">
 
