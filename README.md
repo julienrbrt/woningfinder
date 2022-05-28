@@ -1,6 +1,6 @@
 # WoningFinder
 
-More information can be found here [docs](docs/).
+More information can be found in the [docs](docs/).
 
 ## Stack
 
