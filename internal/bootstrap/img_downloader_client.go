@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/julienrbrt/woningfinder/pkg/config"
 	"github.com/julienrbrt/woningfinder/pkg/downloader"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
 	"github.com/julienrbrt/woningfinder/pkg/networking"
@@ -21,7 +22,7 @@ func CreateImgDownloader(logger *logging.Logger) downloader.Client {
 	}
 
 	httpClient := networking.NewClient(http.DefaultClient, defaultMiddleWare...)
-	client, err := downloader.NewClient(logger, httpClient, "offers")
+	client, err := downloader.NewClient(logger, httpClient, config.MustGetString("APP_IMG_DOWNLOADER"))
 	if err != nil {
 		logger.Fatal("error when creating image downloader client", zap.Error(err))
 	}
