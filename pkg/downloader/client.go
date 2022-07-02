@@ -25,15 +25,10 @@ type client struct {
 }
 
 func NewClient(logger *logging.Logger, networkingClient networking.Client, path string) (Client, error) {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get user home directory: %w", err)
-	}
-
 	return &client{
 		logger:           logger,
 		networkingClient: networkingClient,
-		downloadPath:     fmt.Sprintf("%s/woningfinder/%s", homeDir, path),
+		downloadPath:     path,
 	}, nil
 }
 
