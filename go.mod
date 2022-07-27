@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/TheZeroSlave/zapsentry v1.11.0
 	github.com/go-chi/chi/v5 v5.0.7
-	github.com/go-chi/httprate v0.5.3
+	github.com/go-chi/httprate v0.6.0
 	github.com/go-chi/jwtauth/v5 v5.0.2
 	github.com/go-chi/render v1.0.1
 	github.com/go-pg/migrations/v8 v8.1.0
