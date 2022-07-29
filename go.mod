@@ -8,7 +8,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-chi/httprate v0.6.0
 	github.com/go-chi/jwtauth/v5 v5.0.2
-	github.com/go-chi/render v1.0.1
+	github.com/go-chi/render v1.0.2
 	github.com/go-pg/migrations/v8 v8.1.0
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-redis/redis/v8 v8.11.5
@@ -22,6 +22,7 @@ require (
 )
 
 require (
+	github.com/ajg/form v1.5.1 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.2.4 // indirect
 	github.com/antchfx/xmlquery v1.3.9 // indirect
