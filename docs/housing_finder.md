@@ -33,7 +33,7 @@ Housing Corporations are supported in WoningFinder by _connectors_. Those connec
 - [x] [Zig](https://zig.nl)
 - [x] [WoningNet WRB](https://www.woningnet.nl)
 
-Some housing corporation (or group of housing corporation) sometimes have their homemade system, the _connectors_ supports then that system and no specific ERPs (e.g. [De Woonplaats](http://www.dewoonplaats.nl)).
+Some housing corporation (or group of housing corporation) sometimes have their homemade system, the _connectors_ supports then that system and no specific ERPs ([In the past, Domijn, OnsHuis or De Woonplaats before their move to Zig](https://github.com/julienrbrt/woningfinder/commit/c4038bc77f2b7f009a4ce0324e4b62ecf90c4798)).
 
 The definition of corporation is something done offline, once a corporation is supported and a client is created.
 The mapping of the corporation and the client is made in the `client_provider` using the name of the housing corporation.
