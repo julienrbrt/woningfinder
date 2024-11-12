@@ -1,17 +1,5 @@
 # WoningFinder
 
-> WoningFinder was a project that I had during the COVID lockdown, while trying to find a house in the Netherlands.
-> It automates the process of finding a rent house by searching and reacting automatically to houses matching your preferences (think of number of bedrooms, city and neighborhood).
-> More information about the project can be found on [woningfinder.nl](https://woningfinder.nl) (in Dutch).
->
-> Having found my house thanks to this tool, I have decided to make WoningFinder backend open-source.
-> If you want it to support more websites feel free to submit a PR that adds a connector for a housing website.
-> Please don't hesitate to submit a PR to this repository if you have any other suggestions or improvements.
-> Keep in mind that this project was in its early stage, so the code was not yet optimized nor pretty.
-> I am not actively maintening this project, but I am happy to help if you have any questions.
-
-More information can be found in the [docs](docs/).
-
 ## Stack
 
 - [Go](https://golang.org)
@@ -42,6 +30,4 @@ WoningFinder is split in multiple components:
 - _[impersonate](cmd/impersonate)_ gets a JWT token for an user in order to impersonate it.
 - _[customer-delete](cmd/customer-delete)_ deletes customers given their email.
 
-## Issue names
-
-- feature and bug: `Implement [Issue Name] (closes #issue)`
+More information can be found in the [docs](docs/).

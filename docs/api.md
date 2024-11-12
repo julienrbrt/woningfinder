@@ -1,4 +1,4 @@
-## API
+# API
 
 Following is a list of endpoint supported the WoningFinder API. The API works exclusively with JSON. Validation is obviously performed in the frontend and the backend.
 
@@ -17,7 +17,7 @@ Following is a list of endpoint supported the WoningFinder API. The API works ex
 
 WoningFinder's API is available at <https://api.woningfinder.nl>.
 
-### Authentication
+## Authentication
 
 The authentication works with JWT. The token are generated in the sent mail and valid for 6h.
 One can use the token as header (`Authorization`) and as query parameter (`jwt`).

@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* autocomplete style */
+.autocomplete-input {
+  @apply bg-white input input-bordered w-full focus:ring-wf-orange focus:border-wf-orange;
+}
+
+.autocomplete-result-list {
+  @apply origin-top-right absolute right-0 mt-2 mb-2 w-56 rounded-md shadow-md bg-white ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 overflow-y-auto;
+}
+
+.autocomplete-result {
+  @apply cursor-pointer text-gray-500 block px-4 py-2 text-base hover:text-gray-900 hover:bg-gray-100;
+}
+
+.autocomplete-result[aria-selected='true'] {
+  @apply text-gray-900 bg-gray-100;
+}

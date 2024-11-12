@@ -3,14 +3,19 @@
 
 version: 2
 updates:
+  # Maintain dependencies for Nuxt.js
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
 
-  # Maintain dependencies for Go 
+  # Maintain dependencies for Go
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
       interval: "daily"
-      
-  # Maintain dependencies for GitHub Actions      
+
+  # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
