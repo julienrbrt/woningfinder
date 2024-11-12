@@ -15,6 +15,7 @@ func Test_FetchOffer(t *testing.T) {
 	a := assert.New(t)
 
 	corporations := []corporation.Corporation{
+		zig.WoningHurenInfo,
 		zig.RoomspotInfo,
 		zig.DeWoningZoekerInfo,
 		zig.WoonnetHaaglanden,

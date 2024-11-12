@@ -11,7 +11,6 @@ import (
 )
 
 var clientList = []corporation.Corporation{
-	itris.OnsHuisInfo,
 	itris.MijandeWonenInfo,
 }
 

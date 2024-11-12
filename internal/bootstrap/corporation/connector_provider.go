@@ -2,10 +2,7 @@ package corporation
 
 import (
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
-	"github.com/julienrbrt/woningfinder/internal/corporation/connector/dewoonplaats"
-	"github.com/julienrbrt/woningfinder/internal/corporation/connector/domijn"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector/ikwilhuren"
-	"github.com/julienrbrt/woningfinder/internal/corporation/connector/itris"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector/woningnet"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector/woonburo"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector/zig"
@@ -17,16 +14,8 @@ import (
 func CreateConnectorProvider(logger *logging.Logger, mapboxClient mapbox.Client) connector.ConnectorProvider {
 	providers := []connector.Provider{
 		{
-			Corporation: dewoonplaats.Info,
-			Connector:   CreateDeWoonplaatsClient(logger, mapboxClient),
-		},
-		{
-			Corporation: itris.OnsHuisInfo,
-			Connector:   CreateItrisClient(logger, mapboxClient, itris.OnsHuisInfo),
-		},
-		{
-			Corporation: domijn.Info,
-			Connector:   CreateDomijnClient(logger, mapboxClient),
+			Corporation: zig.WoningHurenInfo,
+			Connector:   CreateZigClient(logger, mapboxClient, zig.WoningHurenInfo),
 		},
 		{
 			Corporation: zig.RoomspotInfo,
@@ -39,10 +28,6 @@ func CreateConnectorProvider(logger *logging.Logger, mapboxClient mapbox.Client)
 		{
 			Corporation: zig.WoonnetHaaglanden,
 			Connector:   CreateZigClient(logger, mapboxClient, zig.WoonnetHaaglanden),
-		},
-		{
-			Corporation: woningnet.HengeloBorneInfo,
-			Connector:   CreateWoningNetClient(logger, mapboxClient, woningnet.HengeloBorneInfo),
 		},
 		{
 			Corporation: woningnet.UtrechtInfo,

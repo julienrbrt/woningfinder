@@ -7,6 +7,42 @@ import (
 	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 )
 
+var WoningHurenInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woninghuren.nl"},
+	Name:        "WoningHuren",
+	URL:         "https://www.woninghuren.nl",
+	Cities: []city.City{
+		city.Hengelo,
+		city.Borne,
+		city.Hertme,
+		city.Zenderen,
+		city.Overdinkel,
+		city.Haaksbergen,
+		city.Losser,
+		city.DeLutte,
+		city.Enschede,
+		city.Zwolle,
+		city.Dinxperlo,
+		city.Winterswijk,
+		city.Neede,
+		city.Wehl,
+		city.Aalten,
+		city.Groenlo,
+		city.Bussum,
+		city.Bredevoort,
+		city.Ulft,
+		city.Hengelo,
+		city.Almelo,
+		city.Apeldoorn,
+		city.Heerenberg,
+		city.Oldenzaal,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRandom,
+		corporation.SelectionFirstComeFirstServed,
+	},
+}
+
 var RoomspotInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.roomspot.nl"},
 	Name:        "Roomspot",
@@ -17,6 +53,7 @@ var RoomspotInfo = corporation.Corporation{
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
+		corporation.SelectionRegistrationDate,
 		corporation.SelectionRegistrationDate,
 	},
 }

@@ -14,7 +14,7 @@ func Test_Login_Failed(t *testing.T) {
 	a := assert.New(t)
 	mockMapbox := mapbox.NewClientMock(nil, "district")
 
-	client, err := itris.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox, itris.OnsHuisInfo)
+	client, err := itris.NewClient(logging.NewZapLoggerWithoutSentry(), mockMapbox, itris.MijandeWonenInfo)
 	a.NoError(err)
 
 	err = client.Login("example", "unexesting")

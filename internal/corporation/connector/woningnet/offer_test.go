@@ -16,7 +16,6 @@ func Test_FetchOffers(t *testing.T) {
 
 	corporations := []corporation.Corporation{
 		woningnet.UtrechtInfo,
-		woningnet.HengeloBorneInfo,
 		woningnet.AmsterdamInfo,
 		woningnet.AlmereInfo,
 		woningnet.WoonkeusInfo,
