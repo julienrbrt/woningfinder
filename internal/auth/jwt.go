@@ -7,7 +7,7 @@ import (
 
 	jwtauth "github.com/go-chi/jwtauth/v5"
 	"github.com/julienrbrt/woningfinder/internal/customer"
-	"github.com/lestrrat-go/jwx/jwt"
+	"github.com/lestrrat-go/jwx/v2/jwt"
 )
 
 const (
