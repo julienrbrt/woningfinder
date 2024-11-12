@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"testing"
 	"time"
 
 	"github.com/julienrbrt/woningfinder/pkg/networking"
@@ -39,15 +40,19 @@ type response struct {
 
 // CityDistrictFromAddress obtains the city district name of a given address
 func (c *client) CityDistrictFromAddress(address string) (string, error) {
-	uuid := c.buildAddressUUID(address)
+	// skip db request (useful for tests)
+	if testing.Testing() {
+		return c.getCityDistrict(address)
+	}
 
+	uuid := c.buildAddressUUID(address)
 	// check if district is in cache
 	var d AddressCityDistrict
 	if err := c.dbClient.Conn().Model(&d).Where("uuid = ?", uuid).Select(); err == nil {
 		return d.Name, nil
 	}
 
-	// make request from mapbox
+	// make request to mapbox
 	district, err := c.getCityDistrict(address)
 	if err != nil {
 		return district, nil
