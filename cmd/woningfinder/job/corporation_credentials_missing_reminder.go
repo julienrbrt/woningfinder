@@ -1,8 +1,6 @@
 package job
 
 import (
-	"encoding/hex"
-	"fmt"
 	"time"
 
 	"github.com/julienrbrt/woningfinder/internal/customer"
@@ -44,10 +42,15 @@ func (j *Jobs) SendCorporationCredentialsMissingReminder(c *cron.Cron) {
 
 // send reminder to users that still does not have corporation credentials
 func (j *Jobs) sendEmailCorporationCredentialsMissingReminder(user *customer.User) {
+	userReminderCount, err := j.userService.GetReminderCount(user.Email)
+	if err != nil {
+		j.logger.Error("error getting reminder counts", zap.String("email", user.Email), zap.Error(err))
+		return
+	}
+
 	for count, duration := range corporationCredentialsMissingReminderTime {
 		// check if reminder already sent
-		uuid := hex.EncodeToString([]byte(user.Email + fmt.Sprintf("customer corporation credentials missing reminder %d sent", count)))
-		if j.redisClient.HasUUID(uuid) {
+		if userReminderCount.CorporationCredentialsMissingReminderCount >= count {
 			continue
 		}
 
@@ -58,7 +61,12 @@ func (j *Jobs) sendEmailCorporationCredentialsMissingReminder(user *customer.Use
 				return
 			}
 
-			j.redisClient.SetUUID(uuid)
+			// update reminder count
+			userReminderCount.CorporationCredentialsMissingReminderCount = count
+			if err := j.userService.UpdateReminderCount(user.Email, userReminderCount); err != nil {
+				j.logger.Error("error updating reminder count", zap.String("email", user.Email), zap.Error(err))
+			}
+
 			return
 		}
 	}

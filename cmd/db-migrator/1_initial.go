@@ -6,12 +6,16 @@ import (
 	"github.com/julienrbrt/woningfinder/internal/corporation"
 	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 	"github.com/julienrbrt/woningfinder/internal/customer"
+	"github.com/julienrbrt/woningfinder/internal/services/matcher"
+	"github.com/julienrbrt/woningfinder/pkg/mapbox"
 )
 
 func init() {
 	// models
 	models := []interface{}{
 		(*city.City)(nil),
+		(*mapbox.AddressCityDistrict)(nil),
+		(*matcher.MatcherCounter)(nil),
 		(*customer.User)(nil),
 		(*corporation.Corporation)(nil),
 		(*corporation.CorporationCity)(nil),
@@ -21,6 +25,8 @@ func init() {
 		(*customer.HousingPreferencesCityDistrict)(nil),
 		(*customer.HousingPreferencesMatch)(nil),
 		(*customer.CorporationCredentials)(nil),
+		(*customer.ReminderCounter)(nil),
+		(*customer.WaitingList)(nil),
 	}
 
 	migrations.MustRegisterTx(func(db migrations.DB) error {

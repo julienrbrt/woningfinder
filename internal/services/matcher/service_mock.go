@@ -15,14 +15,6 @@ func NewServiceMock(err error) Service {
 	return &serviceMock{err: err}
 }
 
-func (s *serviceMock) MatchOffer(_ context.Context, _ corporation.Offers) error {
-	return s.err
-}
-
-func (s *serviceMock) SendOffers(offers corporation.Offers) error {
-	return s.err
-}
-
-func (s *serviceMock) RetrieveOffers(ch chan<- corporation.Offers) error {
+func (s *serviceMock) Match(_ context.Context, _ corporation.Offers) error {
 	return s.err
 }

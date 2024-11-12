@@ -1,17 +1,21 @@
 package main
 
 import (
+	"context"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/julienrbrt/woningfinder/cmd/orchestrator/job"
+	"github.com/julienrbrt/woningfinder/cmd/woningfinder/job"
 	"github.com/julienrbrt/woningfinder/internal/auth"
 	"github.com/julienrbrt/woningfinder/internal/bootstrap"
 	bootstrapCorporation "github.com/julienrbrt/woningfinder/internal/bootstrap/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation"
 	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 	"github.com/julienrbrt/woningfinder/internal/customer/matcher"
+	"github.com/julienrbrt/woningfinder/internal/handler"
 	corporationService "github.com/julienrbrt/woningfinder/internal/services/corporation"
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
 	matcherService "github.com/julienrbrt/woningfinder/internal/services/matcher"
@@ -37,8 +41,7 @@ func main() {
 	jwtAuth := auth.CreateJWTAuthenticationToken(config.MustGetString("JWT_SECRET"))
 
 	dbClient := bootstrap.CreateDBClient(logger)
-	redisClient := bootstrap.CreateRedisClient(logger)
-	mapboxClient := bootstrap.CreateMapboxClient(logger, redisClient)
+	mapboxClient := bootstrap.CreateMapboxClient(logger, dbClient)
 	imgClient := bootstrap.CreateImgDownloader(logger)
 	emailClient := bootstrap.CreateEmailClient()
 
@@ -47,7 +50,7 @@ func main() {
 	corporationService := corporationService.NewService(logger, dbClient, citySuggester)
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth, imgClient)
-	matcherService := matcherService.NewService(logger, redisClient, userService, emailService, corporationService, imgClient, matcher.NewMatcher(citySuggester), connectorProvider)
+	matcherService := matcherService.NewService(logger, dbClient, userService, emailService, corporationService, imgClient, matcher.NewMatcher(citySuggester), connectorProvider)
 
 	// set location to the netherlands
 	nl, err := time.LoadLocation("Europe/Amsterdam")
@@ -55,8 +58,19 @@ func main() {
 		logger.Fatal("error when loading location", zap.Error(err))
 	}
 
+	// housing matcher
+	go func(ch chan corporation.Offers) {
+		for offers := range ch {
+			logger.Info("received offers", zap.String("corporation", offers.CorporationName), zap.Int("count", len(offers.Offer)))
+
+			if err := matcherService.Match(context.Background(), offers); err != nil {
+				logger.Error("error while maching offers", zap.String("corporation", offers.CorporationName), zap.Error(err))
+			}
+		}
+	}(job.OffersChan)
+
 	// instantiate job and cron
-	job := job.NewJobs(logger, dbClient, redisClient, userService, matcherService, emailService)
+	job := job.NewJobs(logger, dbClient, userService, matcherService, emailService)
 	c := cron.New(cron.WithLocation(nl), cron.WithSeconds(), cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
 
 	// populate crons
@@ -65,6 +79,12 @@ func main() {
 	job.SendWeeklyUpdate(c)
 	job.SendCorporationCredentialsMissingReminder(c)
 
-	// start cron scheduler
-	c.Run()
+	// start cron scheduler in a new go routine
+	c.Start()
+
+	// instantiate http server
+	router := handler.NewHandler(logger, jwtAuth, corporationService, userService, emailService, imgClient)
+	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
+		logger.Fatal("failed to start server", zap.Error(err))
+	}
 }

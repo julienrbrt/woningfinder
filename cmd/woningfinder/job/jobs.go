@@ -11,17 +11,15 @@ import (
 type Jobs struct {
 	logger         *logging.Logger
 	dbClient       database.DBClient
-	redisClient    database.RedisClient
 	userService    userService.Service
 	matcherService matcherService.Service
 	emailService   emailService.Service
 }
 
-func NewJobs(logger *logging.Logger, dbClient database.DBClient, redisClient database.RedisClient, userService userService.Service, matcherService matcherService.Service, emailService emailService.Service) *Jobs {
+func NewJobs(logger *logging.Logger, dbClient database.DBClient, userService userService.Service, matcherService matcherService.Service, emailService emailService.Service) *Jobs {
 	return &Jobs{
 		logger:         logger,
 		dbClient:       dbClient,
-		redisClient:    redisClient,
 		userService:    userService,
 		matcherService: matcherService,
 		emailService:   emailService,

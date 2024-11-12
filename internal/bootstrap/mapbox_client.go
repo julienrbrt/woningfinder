@@ -14,7 +14,7 @@ import (
 )
 
 // CreateMapboxClient creates a Mapbox client
-func CreateMapboxClient(logger *logging.Logger, redisClient database.RedisClient) mapbox.Client {
+func CreateMapboxClient(logger *logging.Logger, dbClient database.DBClient) mapbox.Client {
 	defaultMiddleWare := []networking.ClientMiddleware{
 		middleware.CreateHostMiddleware(&mapbox.APIEndpoint),
 		middleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}),
@@ -24,5 +24,5 @@ func CreateMapboxClient(logger *logging.Logger, redisClient database.RedisClient
 
 	httpClient := networking.NewClient(http.DefaultClient, defaultMiddleWare...)
 
-	return mapbox.NewClient(logger, httpClient, redisClient, config.MustGetString("MAPBOX_API_KEY"))
+	return mapbox.NewClient(logger, httpClient, dbClient, config.MustGetString("MAPBOX_API_KEY"))
 }

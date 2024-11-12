@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/url"
 	"os"
 
@@ -73,7 +72,7 @@ func (c *client) Get(originalName string) ([]byte, error) {
 		return nil, errors.New("file not found")
 	}
 
-	buf, err := ioutil.ReadFile(fileName)
+	buf, err := os.ReadFile(fileName)
 	if err != nil {
 		return nil, err
 	}

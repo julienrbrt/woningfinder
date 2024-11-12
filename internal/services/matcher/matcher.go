@@ -5,19 +5,23 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 	"sync"
 
 	"github.com/julienrbrt/woningfinder/internal/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/city"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
 	"github.com/julienrbrt/woningfinder/internal/customer"
-	"github.com/julienrbrt/woningfinder/internal/database"
 	"go.uber.org/zap"
 )
 
-// MatcherOffer matcher a corporation offer with customer housing preferences
-func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) error {
+// Match matches corporation offers with customer housing preferences
+func (s *service) Match(ctx context.Context, offers corporation.Offers) error {
+	// add missing cities to corporations
+	if err := s.verifyCorporationCities(offers); err != nil {
+		return fmt.Errorf("error verifying %s cities: %w", offers.CorporationName, err)
+	}
+
 	// create housing corporation client
 	client, err := s.connectorProvider.GetClient(offers.CorporationName)
 	if err != nil {
@@ -40,7 +44,6 @@ func (s *service) MatchOffer(ctx context.Context, offers corporation.Offers) err
 		}
 
 		// use one housing corporation client per user
-		client := client // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 		go s.matchOffers(&wg, client, user, offers)
 	}
 
@@ -102,7 +105,6 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 
 			// check if we retry next time or mark the offer as checked
 			if ok := s.retryReactNextTime(uuid); !ok {
-				s.redisClient.SetUUID(uuid)
 				failedReaction = append(failedReaction, offer)
 			}
 
@@ -118,7 +120,7 @@ func (s *service) matchOffers(wg *sync.WaitGroup, client connector.Client, user 
 		}
 
 		// mark the offer as checked
-		s.redisClient.SetUUID(uuid)
+		s.setMatch(&MatcherCounter{UUID: uuid, Reacted: true})
 
 		s.logger.Info("🎉🎉🎉 WoningFinder has successfully reacted to a house", zap.String("address", offer.Housing.Address), zap.String("corporation", offers.CorporationName), zap.String("email", user.Email), zap.Error(err))
 	}
@@ -165,7 +167,7 @@ func (s *service) getMatchingOffers(user *customer.User, offers corporation.Offe
 			continue
 		}
 
-		if s.redisClient.HasUUID(uuid) {
+		if _, err := s.getMatch(uuid); err != nil {
 			continue
 		}
 
@@ -184,37 +186,70 @@ func (s *service) uploadHousingPicture(offer corporation.Offer) string {
 	return fileName
 }
 
-// retryReactNextTime checks if a offer can still be retried in a next check
-// after 3 retries it returns false as the maximum of retries reaches 8
+// retryReactNextTime checks if an offer can still be retried in a next check.
+// After 3 retries it returns false as the maximum of retries reaches 8
 func (s *service) retryReactNextTime(uuid string) bool {
-	failedUUID := "failed" + uuid
-
-	failureCount, err := s.redisClient.Get(failedUUID)
+	match, err := s.getMatch(uuid)
 	if err != nil {
-		if !errors.Is(err, database.ErrRedisKeyNotFound) {
-			s.logger.Error("error when getting reaction failure count from redis", zap.Error(err))
-			return true
-		}
-
-		s.redisClient.Set(failedUUID, 1)
-		return true
-	}
-
-	failureCountInt, err := strconv.Atoi(failureCount)
-	if err != nil {
-		s.logger.Error("error when converting reaction failure count to int", zap.Error(err))
+		s.logger.Error("error when getting reaction match from database", zap.Error(err))
 		return true
 	}
 
 	// stop reacting to house after 8 failures
-	if failureCountInt < 8 {
-		s.redisClient.Set(failedUUID, failureCountInt+1)
+	if match.FailureCount < 8 {
+		match.FailureCount++
+		s.setMatch(match)
 		return true
 	}
 
+	// mark the offer as checked to not retry again
+	match.Reacted = true
+	s.setMatch(match)
 	return false
 }
 
 func buildReactionUUID(user *customer.User, offer corporation.Offer) string {
 	return hex.EncodeToString([]byte(user.Email + offer.Housing.Address))
+}
+
+// gets and verify if all cities from the offers are present the supported cities by the corporation
+func (s *service) verifyCorporationCities(offers corporation.Offers) error {
+	corp, err := s.connectorProvider.GetCorporation(offers.CorporationName)
+	if err != nil {
+		return err
+	}
+
+	cities := make(map[string]city.City)
+
+	// get cities from offers
+	for _, offer := range offers.Offer {
+		// merge city names
+		city := (&city.City{Name: offer.Housing.CityName}).Merge()
+		cities[city.Name] = city
+	}
+
+	// check against cities from housing corporation
+	for _, city := range corp.Cities {
+		delete(cities, city.Name)
+	}
+
+	// no cities to add
+	if len(cities) == 0 {
+		return nil
+	}
+
+	// transform map to array
+	var notFound []city.City
+	for _, city := range cities {
+		notFound = append(notFound, city)
+	}
+
+	// add cities and cities relation
+	if err := s.corporationService.LinkCities(notFound, false, corp); err != nil {
+		return fmt.Errorf("failing adding cities to corporation: %w", err)
+	}
+
+	s.logger.Warn(fmt.Sprintf("new cities added in %s corporation", corp.Name), zap.Int("count", len(notFound)), zap.Any("cities", notFound), zap.String("corporation", corp.Name))
+
+	return nil
 }

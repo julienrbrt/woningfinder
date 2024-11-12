@@ -10,12 +10,13 @@ import (
 	"go.uber.org/zap"
 )
 
+// OffersChan is a channel to receive corporation offers
+var OffersChan = make(chan corporation.Offers)
+
 // HousingFinder populates the housing-finder cron jobs
 func (j *Jobs) HousingFinder(c *cron.Cron, connectorProvider connector.ConnectorProvider) {
 	// populate crons
 	for _, corp := range connectorProvider.GetCorporations() {
-		corp := corp // https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
-
 		// get corporation client
 		client, err := connectorProvider.GetClient(corp.Name)
 		if err != nil {
@@ -56,10 +57,7 @@ func (j *Jobs) HousingFinder(c *cron.Cron, connectorProvider connector.Connector
 						}
 
 						j.logger.Info("housing-finder job sending offers", zap.String("corporation", corp.Name), zap.Int("offers", len(offers.Offer)))
-
-						if err := j.matcherService.SendOffers(offers); err != nil {
-							j.logger.Error("error while sending offer to redis queue", zap.String("corporation", offers.CorporationName), zap.Error(err))
-						}
+						OffersChan <- offers
 
 						counter += len(offers.Offer)
 						offers.Offer = []corporation.Offer{}

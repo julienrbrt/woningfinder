@@ -5,11 +5,22 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/julienrbrt/woningfinder/pkg/networking"
 	"github.com/julienrbrt/woningfinder/pkg/networking/query"
 	"go.uber.org/zap"
 )
+
+// AddressCityDistrict links an address to a district
+// It avoids to query the maps API too many time.
+// For respecting the map provider's terms of service this table is short lived.
+type AddressCityDistrict struct {
+	CreatedAt time.Time `pg:"default:now()"`
+	UUID      string    `pg:",pk"`
+	Address   string
+	Name      string
+}
 
 // response from a Mapbox geocoding request
 type response struct {
@@ -31,8 +42,9 @@ func (c *client) CityDistrictFromAddress(address string) (string, error) {
 	uuid := c.buildAddressUUID(address)
 
 	// check if district is in cache
-	if district, err := c.redisClient.Get(uuid); err == nil {
-		return district, nil
+	var d AddressCityDistrict
+	if err := c.dbClient.Conn().Model(&d).Where("uuid = ?", uuid).Select(); err == nil {
+		return d.Name, nil
 	}
 
 	// make request from mapbox
@@ -42,8 +54,12 @@ func (c *client) CityDistrictFromAddress(address string) (string, error) {
 	}
 
 	// cache district
-	if err := c.redisClient.Set(uuid, district); err != nil {
-		c.logger.Error("failed saving address district in redis", zap.String("address", address), zap.Error(err))
+	if _, err := c.dbClient.Conn().Model(&AddressCityDistrict{
+		UUID:    uuid,
+		Name:    district,
+		Address: address,
+	}).Insert(); err != nil {
+		c.logger.Error("failed saving address district in db", zap.String("address", address), zap.Error(err))
 	}
 
 	return district, nil

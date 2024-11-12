@@ -19,16 +19,16 @@ type Client interface {
 type client struct {
 	logger           *logging.Logger
 	networkingClient networking.Client
-	redisClient      database.RedisClient
+	dbClient         database.DBClient
 	apiKey           string
 }
 
 // NewClient creates a client for Mapbox
-func NewClient(logger *logging.Logger, c networking.Client, redisClient database.RedisClient, apiKey string) Client {
+func NewClient(logger *logging.Logger, c networking.Client, dbClient database.DBClient, apiKey string) Client {
 	return &client{
 		logger:           logger,
 		networkingClient: c,
-		redisClient:      redisClient,
+		dbClient:         dbClient,
 		apiKey:           apiKey,
 	}
 }

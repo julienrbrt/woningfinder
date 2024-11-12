@@ -21,6 +21,10 @@ type Service interface {
 	GetUsersWithGivenCorporationCredentials(corporationName string) ([]*customer.User, error)
 	GetWeeklyUpdateUsers() ([]*customer.User, error)
 
+	// User Reminders
+	GetReminderCount(email string) (*customer.ReminderCounter, error)
+	UpdateReminderCount(email string, reminder *customer.ReminderCounter) error
+
 	// Housing Preferences
 	CreateHousingPreferences(userID uint, preferences *customer.HousingPreferences) error
 	GetHousingPreferences(userID uint) (customer.HousingPreferences, error)
