@@ -44,7 +44,7 @@ func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationSer
 		"Content-Type":                 "application/json",
 		"Access-Control-Allow-Origin":  "https://woningfinder.nl",
 		"Access-Control-Allow-Method":  "GET, POST, PUT, DELETE, OPTIONS",
-		"Access-Control-Allow-Headers": "Accept, Authorization, Content-Type, X-CSRF-Token",
+		"Access-Control-Allow-Headers": "Accept, Authorization, Content-Type",
 		"Access-Control-Max-Age":       "86400",
 	}))
 	r.Use(customMiddleware.CreateZapMiddleware(logger))
