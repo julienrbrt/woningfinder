@@ -12,6 +12,11 @@ var WoningHurenInfo = corporation.Corporation{
 	Name:        "WoningHuren",
 	URL:         "https://www.woninghuren.nl",
 	Cities: []city.City{
+		city.Aadorp,
+		city.Ootmarsum,
+		city.Vriezenveen,
+		city.Bornerbroek,
+		city.Denekamp,
 		city.Hengelo,
 		city.Borne,
 		city.Hertme,

@@ -11,7 +11,7 @@ import (
 )
 
 var clientList = []corporation.Corporation{
-	itris.MijandeWonenInfo,
+	// no itris client anymore (previviously mijande and onshuis)
 }
 
 func Test_FetchOffers(t *testing.T) {

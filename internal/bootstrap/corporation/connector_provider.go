@@ -4,7 +4,6 @@ import (
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector/ikwilhuren"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector/woningnet"
-	"github.com/julienrbrt/woningfinder/internal/corporation/connector/woonburo"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector/zig"
 	"github.com/julienrbrt/woningfinder/pkg/logging"
 	"github.com/julienrbrt/woningfinder/pkg/mapbox"
@@ -80,10 +79,6 @@ func CreateConnectorProvider(logger *logging.Logger, mapboxClient mapbox.Client)
 		{
 			Corporation: woningnet.WoongaardInfo,
 			Connector:   CreateWoningNetClient(logger, mapboxClient, woningnet.WoongaardInfo),
-		},
-		{
-			Corporation: woonburo.AlmeloInfo,
-			Connector:   CreateWoonburoClient(logger, mapboxClient, woonburo.AlmeloInfo),
 		},
 		{
 			Corporation: ikwilhuren.Info,

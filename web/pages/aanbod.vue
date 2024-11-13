@@ -2,13 +2,7 @@
   <Hero>
     <div class="mt-6 sm:max-w-xl">
       <h1
-        class="
-          text-3xl
-          font-extrabold
-          text-wf-purple
-          tracking-tight
-          sm:text-4xl
-        "
+        class="text-3xl font-extrabold text-wf-purple tracking-tight sm:text-4xl"
       >
         {{ title }}
       </h1>
@@ -32,13 +26,7 @@
 
       <h2 class="mt-4 mb-2 text-xl text-gray-900">Heel Nederland</h2>
       <div
-        class="
-          mt-8
-          grid grid-cols-2
-          gap-0.5
-          md:grid-cols-3
-          lg:mt-0 lg:grid-cols-2
-        "
+        class="mt-8 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-0 lg:grid-cols-2"
       >
         <LandingCorporationLogo
           name="Ikwilhuren"
@@ -54,43 +42,17 @@
 
       <h2 class="mt-4 mb-2 text-xl text-gray-900">Regio Overijssel</h2>
       <div
-        class="
-          mt-8
-          grid grid-cols-2
-          gap-0.5
-          md:grid-cols-3
-          lg:mt-0 lg:grid-cols-2
-        "
+        class="mt-8 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-0 lg:grid-cols-2"
       >
         <LandingCorporationLogo
-          name="De Woonplaats"
-          image="dewoonplaats.png"
-          website="https://www.dewoonplaats.nl"
-        />
-        <LandingCorporationLogo
-          name="Domijn"
-          image="domijn.png"
-          website="https://www.domijn.nl"
-        />
-        <LandingCorporationLogo
-          name="OnsHuis"
-          image="onshuis.png"
-          website="https://www.onshuis.com"
-        />
-        <LandingCorporationLogo
-          name="Mijande Wonen"
-          image="mijande_wonen.png"
-          website="https://www.mijande.nl"
+          name="WoningHuren"
+          image="woninghuren.png"
+          website="https://www.woninghuren.nl"
         />
         <LandingCorporationLogo
           name="De WoningZoeker"
           image="dewoningzoeker.png"
           website="https://www.dewoningzoeker.nl"
-        />
-        <LandingCorporationLogo
-          name="Woonburo Almelo"
-          image="woonburoalmelo.png"
-          website="https://www.woonburoalmelo.nl"
         />
         <LandingCorporationLogo
           name="Roomspot"
@@ -101,13 +63,7 @@
 
       <h2 class="mt-4 mb-2 text-xl text-gray-900">Regio Zuid-Holland</h2>
       <div
-        class="
-          mt-8
-          grid grid-cols-2
-          gap-0.5
-          md:grid-cols-3
-          lg:mt-0 lg:grid-cols-2
-        "
+        class="mt-8 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-0 lg:grid-cols-2"
       >
         <LandingCorporationLogo
           name="Woonnet Haaglanden"
@@ -125,16 +81,7 @@
       </AlertInfo>
 
       <div
-        class="
-          mt-4
-          inline-flex
-          flex-col
-          sm:flex-row
-          w-max
-          items-start
-          sm:items-center
-          justify-center
-        "
+        class="mt-4 inline-flex flex-col sm:flex-row w-max items-start sm:items-center justify-center"
       >
         <p class="text-gray-500">Reageer je nog steeds niet automatisch?</p>
         <NuxtLink
