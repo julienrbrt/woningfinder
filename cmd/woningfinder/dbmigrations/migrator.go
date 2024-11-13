@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/go-pg/migrations/v8"
+	"github.com/joho/godotenv"
 	"github.com/julienrbrt/woningfinder/internal/bootstrap"
 	bootstrapCorporation "github.com/julienrbrt/woningfinder/internal/bootstrap/corporation"
 	"github.com/julienrbrt/woningfinder/internal/corporation/city"
@@ -23,6 +24,11 @@ var (
 )
 
 func init() {
+	// load env variables
+	if err := godotenv.Load(); err != nil {
+		_ = config.MustGetString("DATABASE_URL")
+	}
+
 	logger := logging.NewZapLogger(config.GetBoolOrDefault("APP_DEBUG", false), config.GetStringOrDefault("SENTRY_DSN", ""))
 	connectorProvider = bootstrapCorporation.CreateConnectorProvider(logger, mapbox.NewClientMock(nil, ""))
 	migrationsDbClient = bootstrap.CreateDBClient(logger)

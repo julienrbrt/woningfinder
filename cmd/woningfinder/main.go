@@ -31,9 +31,7 @@ import (
 )
 
 func init() {
-	// loads values from .env into the system
-	// fallback to system env if unexisting
-	// if not defined on system, panics
+	// load env variables
 	if err := godotenv.Load(); err != nil {
 		_ = config.MustGetString("DATABASE_URL")
 	}
