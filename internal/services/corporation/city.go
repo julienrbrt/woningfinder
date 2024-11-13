@@ -9,12 +9,12 @@ import (
 )
 
 // LinkCities permits to creates a city and when given associate that city to a corporation
-// Note the corporation will not be check when doing the association, always ensure the corporation exists
+// Note the corporation will not be checked when doing the association, always ensure the corporation exists
 func (s *service) LinkCities(cities []city.City, hasLocation bool, corporations ...corporation.Corporation) error {
-	onConflict := "(name) DO UPDATE"
-	if !hasLocation {
-		onConflict = "(name) DO NOTHING"
-	}
+	// onConflict := "(name) DO UPDATE"
+	// if !hasLocation {
+	onConflict := "(name) DO NOTHING"
+	// }
 
 	_, err := s.dbClient.Conn().Model(&cities).OnConflict(onConflict).Insert()
 	if err != nil {
