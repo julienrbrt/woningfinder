@@ -6,12 +6,13 @@ type Client interface {
 
 type client struct {
 	from     string
+	username string
 	password string
 	server   string
 	port     int
 }
 
 // NewClient permits to send an email
-func NewClient(from, password, server string, port int) Client {
-	return &client{from, password, server, port}
+func NewClient(from, username, password, server string, port int) Client {
+	return &client{from, username, password, server, port}
 }
