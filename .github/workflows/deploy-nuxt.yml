@@ -1,0 +1,41 @@
+on:
+  push:
+    branches:
+      - main
+name: Deploy
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      MAPBOX_API_KEY: ${{ secrets.MAPBOX_API_KEY }}
+    strategy:
+      matrix:
+        node: [16]
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v4
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+
+      - name: Generate website 👨🏻‍💻
+        run: |
+          cd web
+          npm install --force
+          npm run generate --fail-on-error
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.6.9
+        with:
+          branch: gh-pages
+          folder: web/dist
+          single-commit: true
