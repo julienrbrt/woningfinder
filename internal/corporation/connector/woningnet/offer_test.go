@@ -21,7 +21,6 @@ func Test_FetchOffers(t *testing.T) {
 		woningnet.WoonkeusInfo,
 		woningnet.EemvalleiInfo,
 		woningnet.WoonserviceInfo,
-		woningnet.MercatusInfo,
 		woningnet.MiddenHollandInfo,
 		woningnet.BovenGroningenInfo,
 		woningnet.GooiVechtstreekInfo,

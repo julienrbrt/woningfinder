@@ -9,7 +9,7 @@ import (
 
 var UtrechtInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregioutrecht.nl", Path: "/webapi"},
-	Name:        "WoningNet Utrecht",
+	Name:        "DAK WoningNet Utrecht",
 	URL:         "https://www.woningnetregioutrecht.nl",
 	Cities: []city.City{
 		city.Utrecht,
@@ -69,7 +69,7 @@ var UtrechtInfo = corporation.Corporation{
 
 var AmsterdamInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregioamsterdam.nl", Path: "/webapi"},
-	Name:        "WoningNet Stadsregio Amsterdam",
+	Name:        "DĀK WoningNet Stadsregio Amsterdam",
 	URL:         "https://www.woningnetregioamsterdam.nl",
 	Cities: []city.City{
 		city.Amsterdam,
@@ -121,7 +121,7 @@ var AmsterdamInfo = corporation.Corporation{
 
 var AlmereInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetalmere.nl", Path: "/webapi"},
-	Name:        "WoningNet Almere",
+	Name:        "DĀK WoningNet Almere",
 	URL:         "https://www.woningnetalmere.nl",
 	Cities: []city.City{
 		city.Almere,
@@ -134,7 +134,7 @@ var AlmereInfo = corporation.Corporation{
 
 var WoonkeusInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woonkeus.nl", Path: "/webapi"},
-	Name:        "WoningNet Woonkeus Drechtsteden",
+	Name:        "DĀK WoningNet Woonkeus Drechtsteden",
 	URL:         "https://www.woonkeus.nl",
 	Cities: []city.City{
 		city.Alblasserdam,
@@ -153,7 +153,7 @@ var WoonkeusInfo = corporation.Corporation{
 
 var EemvalleiInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningneteemvallei.nl", Path: "/webapi"},
-	Name:        "WoningNet Eemvallei",
+	Name:        "DĀK WoningNet Eemvallei",
 	URL:         "https://www.woningneteemvallei.nl",
 	Cities: []city.City{
 		city.Achterveld,
@@ -180,7 +180,7 @@ var EemvalleiInfo = corporation.Corporation{
 
 var WoonserviceInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.mijnwoonservice.nl", Path: "/webapi"},
-	Name:        "WoningNet Woonservice",
+	Name:        "DĀK WoningNet Woonservice",
 	URL:         "https://www.mijnwoonservice.nl",
 	Cities: []city.City{
 		city.Beverwijk,
@@ -201,26 +201,9 @@ var WoonserviceInfo = corporation.Corporation{
 	},
 }
 
-var MercatusInfo = corporation.Corporation{
-	APIEndpoint: &url.URL{Scheme: "https", Host: "www.mercatuswoningaanbod.nl", Path: "/webapi"},
-	Name:        "WoningNet Mercatus",
-	URL:         "https://www.mercatuswoningaanbod.nl",
-	Cities: []city.City{
-		city.Bant,
-		city.Emmeloord,
-		city.Nagele,
-		city.Kraggenburg,
-		city.Luttelgeest,
-		city.Ens,
-	},
-	SelectionMethod: []corporation.SelectionMethod{
-		corporation.SelectionRegistrationDate,
-	},
-}
-
 var MiddenHollandInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetregiomiddenholland.nl", Path: "/webapi"},
-	Name:        "WoningNet Midden-Holland",
+	Name:        "DĀK WoningNet Midden-Holland",
 	URL:         "https://www.woningnetregiomiddenholland.nl",
 	Cities: []city.City{
 		city.Bodegraven,
@@ -240,7 +223,7 @@ var MiddenHollandInfo = corporation.Corporation{
 
 var GroningenInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetgroningen.nl", Path: "/webapi"},
-	Name:        "WoningNet Groningen",
+	Name:        "DĀK WoningNet Groningen",
 	URL:         "https://www.woningnetgroningen.nl",
 	Cities: []city.City{
 		city.Groningen,
@@ -257,7 +240,7 @@ var GroningenInfo = corporation.Corporation{
 
 var BovenGroningenInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetbovengroningen.nl", Path: "/webapi"},
-	Name:        "WoningNet Boven Groningen",
+	Name:        "DĀK WoningNet Boven Groningen",
 	URL:         "https://www.woningnetbovengroningen.nl",
 	Cities: []city.City{
 		city.Eenrum,
@@ -281,7 +264,7 @@ var BovenGroningenInfo = corporation.Corporation{
 
 var GooiVechtstreekInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woningnetgooienvechtstreek.nl", Path: "/webapi"},
-	Name:        "WoningNet Gooi en Vechtstreek",
+	Name:        "DĀK WoningNet Gooi en Vechtstreek",
 	URL:         "https://www.woningnetgooienvechtstreek.nl",
 	Cities: []city.City{
 		city.Graveland,
@@ -307,7 +290,7 @@ var GooiVechtstreekInfo = corporation.Corporation{
 
 var HuiswaartsInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.huiswaarts.nu", Path: "/webapi"},
-	Name:        "WoningNet Huiswaarts",
+	Name:        "DĀK WoningNet Huiswaarts",
 	URL:         "https://www.huiswaarts.nu",
 	Cities: []city.City{
 		city.Barneveld,
@@ -337,7 +320,7 @@ var HuiswaartsInfo = corporation.Corporation{
 
 var WoongaardInfo = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woongaard.com", Path: "/webapi"},
-	Name:        "WoningNet Woongaard",
+	Name:        "DĀK WoningNet Woongaard",
 	URL:         "https://www.woongaard.com",
 	Cities: []city.City{
 		city.Arkel,

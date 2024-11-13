@@ -34,8 +34,8 @@
           website="https://ikwilhuren.nu"
         />
         <LandingCorporationLogo
-          name="WoningNet"
-          image="woningnet.png"
+          name="DĀK WoningNet"
+          image="dak.png"
           website="https://www.woningnet.nl"
         />
       </div>

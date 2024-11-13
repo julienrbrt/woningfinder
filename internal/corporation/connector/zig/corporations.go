@@ -90,6 +90,23 @@ var DeWoningZoekerInfo = corporation.Corporation{
 	},
 }
 
+var MercatusInfo = corporation.Corporation{
+	APIEndpoint: &url.URL{Scheme: "https", Host: "woningaanbod.mercatus.nl"},
+	Name:        "Mercatus",
+	URL:         "https://woningaanbod.mercatus.nl",
+	Cities: []city.City{
+		city.Bant,
+		city.Emmeloord,
+		city.Nagele,
+		city.Kraggenburg,
+		city.Luttelgeest,
+		city.Ens,
+	},
+	SelectionMethod: []corporation.SelectionMethod{
+		corporation.SelectionRegistrationDate,
+	},
+}
+
 var WoonnetHaaglanden = corporation.Corporation{
 	APIEndpoint: &url.URL{Scheme: "https", Host: "www.woonnet-haaglanden.nl"},
 	Name:        "Woonnet Haaglanden",

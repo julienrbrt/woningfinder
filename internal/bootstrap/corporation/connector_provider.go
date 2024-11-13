@@ -29,6 +29,10 @@ func CreateConnectorProvider(logger *logging.Logger, mapboxClient mapbox.Client)
 			Connector:   CreateZigClient(logger, mapboxClient, zig.WoonnetHaaglanden),
 		},
 		{
+			Corporation: zig.MercatusInfo,
+			Connector:   CreateZigClient(logger, mapboxClient, zig.MercatusInfo),
+		},
+		{
 			Corporation: woningnet.UtrechtInfo,
 			Connector:   CreateWoningNetClient(logger, mapboxClient, woningnet.UtrechtInfo),
 		},
@@ -51,10 +55,6 @@ func CreateConnectorProvider(logger *logging.Logger, mapboxClient mapbox.Client)
 		{
 			Corporation: woningnet.WoonserviceInfo,
 			Connector:   CreateWoningNetClient(logger, mapboxClient, woningnet.WoonserviceInfo),
-		},
-		{
-			Corporation: woningnet.MercatusInfo,
-			Connector:   CreateWoningNetClient(logger, mapboxClient, woningnet.MercatusInfo),
 		},
 		{
 			Corporation: woningnet.MiddenHollandInfo,
