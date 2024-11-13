@@ -38,10 +38,15 @@ func NewHandler(logger *logging.Logger, jwtAuth *jwtauth.JWTAuth, corporationSer
 
 	// router configuration
 	r := chi.NewRouter()
-	// add middlewares (order matters!)
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
-	r.Use(customMiddleware.CreateDefaultHeadersMiddleware(map[string]string{"Content-Type": "application/json"}))
+	r.Use(customMiddleware.CreateDefaultHeadersMiddleware(map[string]string{
+		"Content-Type":                 "application/json",
+		"Access-Control-Allow-Origin":  "https://woningfinder.nl",
+		"Access-Control-Allow-Method":  "GET, POST, PUT, DELETE, OPTIONS",
+		"Access-Control-Allow-Headers": "Accept, Authorization, Content-Type, X-CSRF-Token",
+		"Access-Control-Max-Age":       "86400",
+	}))
 	r.Use(customMiddleware.CreateZapMiddleware(logger))
 	r.Use(middleware.StripSlashes)                                                                             //strip any trailing slash from the request
 	r.Use(middleware.Recoverer)                                                                                // recovers from panics and returns 500
