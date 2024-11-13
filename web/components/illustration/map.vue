@@ -35,7 +35,7 @@ export default {
     return {
       accessToken: process.env.mapboxKey,
       mapStyle:
-        'mapbox://styles/woningfinder/cm3g1d075003m01si7tgt8llc',
+        'mapbox://styles/woningfinder/cm3g1d075003m01si7tgt8llc?optimize=true',
     }
   },
 }
