@@ -6,6 +6,7 @@
 *.dylib
 deploy.sh
 bin/*
+*-bin
 
 # Test binary, built with `go test -c`
 *.test

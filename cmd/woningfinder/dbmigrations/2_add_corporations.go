@@ -1,4 +1,4 @@
-package main
+package dbmigrations
 
 import (
 	"github.com/go-pg/migrations/v8"

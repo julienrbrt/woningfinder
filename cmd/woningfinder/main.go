@@ -2,19 +2,23 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/julienrbrt/woningfinder/cmd/woningfinder/dbmigrations"
 	"github.com/julienrbrt/woningfinder/cmd/woningfinder/job"
 	"github.com/julienrbrt/woningfinder/internal/auth"
 	"github.com/julienrbrt/woningfinder/internal/bootstrap"
 	bootstrapCorporation "github.com/julienrbrt/woningfinder/internal/bootstrap/corporation"
 	"github.com/julienrbrt/woningfinder/internal/corporation"
 	"github.com/julienrbrt/woningfinder/internal/corporation/city"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
 	"github.com/julienrbrt/woningfinder/internal/customer/matcher"
+	"github.com/julienrbrt/woningfinder/internal/database"
 	"github.com/julienrbrt/woningfinder/internal/handler"
 	corporationService "github.com/julienrbrt/woningfinder/internal/services/corporation"
 	emailService "github.com/julienrbrt/woningfinder/internal/services/email"
@@ -46,7 +50,8 @@ func main() {
 	emailClient := bootstrap.CreateEmailClient()
 
 	connectorProvider := bootstrapCorporation.CreateConnectorProvider(logger, mapboxClient)
-	citySuggester := city.NewSuggester(connectorProvider.GetCities())
+	cityTable := connectorProvider.GetCities()
+	citySuggester := city.NewSuggester(cityTable)
 	corporationService := corporationService.NewService(logger, dbClient, citySuggester)
 	userService := userService.NewService(logger, dbClient, config.MustGetString("AES_SECRET"), connectorProvider, corporationService)
 	emailService := emailService.NewService(logger, emailClient, jwtAuth, imgClient)
@@ -56,6 +61,16 @@ func main() {
 	nl, err := time.LoadLocation("Europe/Amsterdam")
 	if err != nil {
 		logger.Fatal("error when loading location", zap.Error(err))
+	}
+
+	// run db migrations
+	if err := dbmigrations.RunMigrations(logger, dbClient, len(os.Args) > 1 && os.Args[1] == "init"); err != nil {
+		logger.Fatal("error when running migrations", zap.Error(err))
+	}
+
+	// update city location (when a city has been added automatically and then updated in code)
+	if err := updateCityLocation(logger, dbClient, cityTable, connectorProvider, corporationService); err != nil {
+		logger.Fatal("error when updating city location", zap.Error(err))
 	}
 
 	// housing matcher
@@ -87,4 +102,41 @@ func main() {
 	if err := http.ListenAndServe(":"+config.MustGetString("APP_PORT"), router); err != nil {
 		logger.Fatal("failed to start server", zap.Error(err))
 	}
+}
+
+// updateCityLocation updates the city location in the database.
+// it is used because cities are defined in the code as well.
+func updateCityLocation(
+	logger *logging.Logger,
+	dbClient database.DBClient,
+	cityTable map[string]city.City,
+	connectorProvider connector.ConnectorProvider,
+	corporationService corporationService.Service,
+) error {
+	var cities []city.City
+	if err := dbClient.Conn().Model(&cities).Where("latitude IS NULL OR longitude IS NULL").Select(); err != nil {
+		return fmt.Errorf("error while getting cities without location: %w", err)
+	}
+
+	for _, c := range cities {
+		city, ok := cityTable[c.Name]
+		if !ok {
+			logger.Warn("failed finding city", zap.String("city", c.Name))
+			continue
+		}
+
+		logger.Info("updating city", zap.String("city", city.Name))
+		if _, err := dbClient.Conn().Model(&city).OnConflict("(name) DO UPDATE").Insert(); err != nil {
+			return fmt.Errorf("failed updating city %s: %w", city.Name, err)
+		}
+	}
+
+	// update corporations cities
+	for _, corp := range connectorProvider.GetCorporations() {
+		if err := corporationService.LinkCities(corp.Cities, true, corp); err != nil {
+			return fmt.Errorf("failed updating corporation %s: %w", corp.Name, err)
+		}
+	}
+
+	return nil
 }
