@@ -41,13 +41,13 @@ func (m *matcher) passendToewijzen(user customer.User) (float64, float64) {
 		if user.YearlyIncome <= 27725 {
 			return 0, Aftoppingsgrenslaag
 		} else if user.YearlyIncome <= 47699 {
-			return Aftoppingsgrenslaag, Aftoppingsgrenshoog
+			return Aftoppingsgrenslaag, Maximalehuurgrens
 		}
 	case user.FamilySize == 2:
 		if user.YearlyIncome <= 37625 {
 			return 0, Aftoppingsgrenslaag
 		} else if user.YearlyIncome <= 52671 {
-			return Aftoppingsgrenslaag, Aftoppingsgrenshoog
+			return Aftoppingsgrenslaag, Maximalehuurgrens
 		}
 	case user.FamilySize >= 3:
 		if user.YearlyIncome <= 37625 {
