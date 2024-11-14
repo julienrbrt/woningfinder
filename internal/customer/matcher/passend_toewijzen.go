@@ -7,18 +7,19 @@ import (
 	"github.com/julienrbrt/woningfinder/internal/customer"
 )
 
-// last updated in april 2021
+// last updated in november 2024
 
-// https://www.woningmarktbeleid.nl/onderwerpen/huurtoeslag
+// https://www.volkshuisvestingnederland.nl/onderwerpen/huurtoeslag
+// https://www.volkshuisvestingnederland.nl/onderwerpen/dossier-woningtoewijzing/documenten/publicaties/2020/12/18/infographic-toewijzen-van-woningen
 const (
 	aow   = 67
 	young = 23
 
-	MaximumIncomeSocialHouse = 43082
-	Kwaliteitskortingsgrens  = 442.46
-	Aftoppingsgrenslaag      = 633.25
-	Aftoppingsgrenshoog      = 678.66
-	Maximalehuurgrens        = 763.47
+	MaximumIncomeSocialHouse = 51136
+	Kwaliteitskortingsgrens  = 454.47
+	Aftoppingsgrenslaag      = 650.43
+	Aftoppingsgrenshoog      = 697.07
+	Maximalehuurgrens        = 879.66
 )
 
 // PassendToewijzen determines the rent range to which an user can react
@@ -37,23 +38,21 @@ func (m *matcher) passendToewijzen(user customer.User) (float64, float64) {
 
 	switch {
 	case user.FamilySize <= 1:
-		if user.YearlyIncome <= 23725 {
+		if user.YearlyIncome <= 27725 {
 			return 0, Aftoppingsgrenslaag
-		} else if user.YearlyIncome <= 32200 {
-			return 0, Aftoppingsgrenshoog
-		} else if user.YearlyIncome <= 40024 {
-			return Aftoppingsgrenshoog, Maximalehuurgrens
+		} else if user.YearlyIncome <= 47699 {
+			return Aftoppingsgrenslaag, Aftoppingsgrenshoog
 		}
 	case user.FamilySize == 2:
-		if user.YearlyIncome <= 32200 {
+		if user.YearlyIncome <= 37625 {
 			return 0, Aftoppingsgrenslaag
-		} else if user.YearlyIncome <= 40024 {
-			return Aftoppingsgrenshoog, Maximalehuurgrens
+		} else if user.YearlyIncome <= 52671 {
+			return Aftoppingsgrenslaag, Aftoppingsgrenshoog
 		}
 	case user.FamilySize >= 3:
-		if user.YearlyIncome <= 32200 {
+		if user.YearlyIncome <= 37625 {
 			return 0, Aftoppingsgrenshoog
-		} else if user.YearlyIncome <= 40024 {
+		} else if user.YearlyIncome <= 52671 {
 			return Aftoppingsgrenshoog, Maximalehuurgrens
 		}
 	}
