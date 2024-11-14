@@ -105,7 +105,7 @@ func Test_MatchCriteria_Incomes(t *testing.T) {
 	offer.Housing.Price = 950
 	offer.MinimumIncome = 45000
 	a.False(matcher.MatchOffer(user, offer))
-	user.YearlyIncome = 50000
+	user.YearlyIncome = 55000
 	a.True(matcher.MatchOffer(user, offer))
 	offer.MaximumIncome = 48000
 	a.False(matcher.MatchOffer(user, offer))
