@@ -2759,3 +2759,51 @@ var Windesheim = City{
 	Latitude:  52.447635,
 	Longitude: 6.131339,
 }
+
+var Enter = City{
+	Name:      "Enter",
+	Latitude:  52.294167,
+	Longitude: 6.5775,
+}
+
+var Nieuwleusen = City{
+	Name:      "Nieuwleusen",
+	Latitude:  52.583333,
+	Longitude: 6.283333,
+}
+
+var Wijhe = City{
+	Name:      "Wijhe",
+	Latitude:  52.386389,
+	Longitude: 6.133333,
+}
+
+var Ommen = City{
+	Name:      "Ommen",
+	Latitude:  52.516667,
+	Longitude: 6.416667,
+}
+
+var Dedemsvaart = City{
+	Name:      "Dedemsvaart",
+	Latitude:  52.599722,
+	Longitude: 6.458333,
+}
+
+var Heeten = City{
+	Name:      "Heeten",
+	Latitude:  52.331667,
+	Longitude: 6.280556,
+}
+
+var Slagharen = City{
+	Name:      "Slagharen",
+	Latitude:  52.6275,
+	Longitude: 6.554444,
+}
+
+var Maasdijk = City{
+	Name:      "Maasdijk",
+	Latitude:  51.966667,
+	Longitude: 4.216667,
+}
