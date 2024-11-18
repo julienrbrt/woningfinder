@@ -2807,3 +2807,9 @@ var Maasdijk = City{
 	Latitude:  51.966667,
 	Longitude: 4.216667,
 }
+
+var Tollebeek = City{
+	Name:      "Tollebeek",
+	Latitude:  52.677778,
+	Longitude: 5.675278,
+}

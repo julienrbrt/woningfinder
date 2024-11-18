@@ -42,6 +42,7 @@ var WoningHurenInfo = corporation.Corporation{
 		city.Oldenzaal,
 		city.Enter,
 		city.Vroomshoop,
+		city.Rijssen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -110,6 +111,7 @@ var MercatusInfo = corporation.Corporation{
 		city.Kraggenburg,
 		city.Luttelgeest,
 		city.Ens,
+		city.Tollebeek,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,
