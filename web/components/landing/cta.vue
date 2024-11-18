@@ -41,16 +41,7 @@
       class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div
-        class="
-          relative
-          rounded-2xl
-          px-6
-          py-10
-          bg-wf-orange-light
-          overflow-hidden
-          shadow-xl
-          sm:px-12 sm:py-20
-        "
+        class="relative rounded-2xl px-6 py-10 bg-wf-orange-light overflow-hidden shadow-xl sm:px-12 sm:py-20"
       >
         <div
           aria-hidden="true"
@@ -78,19 +69,13 @@
         <div class="relative">
           <div class="sm:text-center">
             <h2
-              class="
-                text-3xl
-                font-extrabold
-                text-white
-                tracking-tight
-                sm:text-4xl
-              "
+              class="text-3xl font-extrabold text-white tracking-tight sm:text-4xl"
             >
-              Allemaal duidelijk?
+              Klaar om te beginnen?
             </h2>
             <p class="mt-6 mx-auto max-w-2xl text-lg text-white">
-              Begin nu met je zoekopdracht instellen. Iets niet duidelijk of heb
-              je een vraag? Neem contact met ons op!
+              Stel nu je zoekopdracht in en laat WoningFinder voor je werken.
+              Iets niet duidelijk of heb je een vraag? Neem contact met ons op!
             </p>
           </div>
           <div

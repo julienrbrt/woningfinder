@@ -1,24 +1,10 @@
 <template>
   <div
-    class="
-      mt-5
-      pt-16
-      pb-8
-      bg-gray-50
-      overflow-hidden
-      rounded-l-3xl rounded-r-3xl
-    "
+    class="mt-5 pt-16 pb-8 bg-gray-50 overflow-hidden rounded-l-3xl rounded-r-3xl"
   >
     <div class="relative max-w-xl mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-7xl">
       <svg
-        class="
-          hidden
-          lg:block
-          absolute
-          left-full
-          transform
-          -translate-x-1/2 -translate-y-1/4
-        "
+        class="hidden lg:block absolute left-full transform -translate-x-1/2 -translate-y-1/4"
         width="404"
         height="784"
         fill="none"
@@ -53,63 +39,38 @@
 
       <div class="relative text-center">
         <h2
-          class="
-            text-lg
-            leading-6
-            font-semibold
-            text-gray-700
-            uppercase
-            tracking-wider
-          "
+          class="text-lg leading-6 font-semibold text-gray-700 uppercase tracking-wider"
         >
           Hoe werkt het
         </h2>
         <p
-          class="
-            tracking-tight
-            text-3xl
-            font-extrabold
-            text-gray-900
-            sm:text-4xl
-          "
+          class="tracking-tight text-3xl font-extrabold text-gray-900 sm:text-4xl"
         >
           Nooit meer een woning missen
         </p>
       </div>
 
       <div
-        class="
-          relative
-          mt-12
-          lg:mt-24 lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center
-        "
+        class="relative mt-12 lg:mt-24 lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center"
       >
         <div class="relative">
           <h3
-            class="
-              text-2xl
-              font-extrabold
-              text-gray-900
-              tracking-tight
-              sm:text-3xl
-            "
+            class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl"
           >
             Persoonlijke zoekopdracht
           </h3>
           <p class="mt-3 text-lg text-gray-500">
-            Zoek je een huis met 2+ slaapkamers, wil je een tuin hebben of in
-            een specifieke wijk wonen? Met je WoningFinder zoekopdracht reageer
-            je automatisch op alle woningen die aan je wensen voldoen.
+            Ben je op zoek naar een huis met 2+ slaapkamers, een fijne tuin, of
+            een plek in jouw favoriete wijk? Met jouw WoningFinder-profiel
+            reageer je automatisch op alle woningen die aansluiten bij jouw
+            wensen.
           </p>
 
           <dl class="mt-10 space-y-10">
             <!-- using html tag here -->
             <LandingFeatureItem
               title="Altijd eerst"
-              description="Sommige verhuurders werken met „Wie het eerst komt, die
-                het eerst maalt”. WoningFinder zal precies na dat het aanbod is
-                gepubliceerd automatisch reageren. Je hebt zo dus heel veel kans
-                 dat je de eerste bent. Handig toch?"
+              description="Sommige verhuurders werken met „Wie het eerst komt, die het eerst maalt”. Met WoningFinder reageer je direct nadat het aanbod is gepubliceerd, waardoor je sneller bent dan anderen. Zo vergroot je je kansen aanzienlijk. Handig, toch?"
             >
               <FastForwardIcon class="h-6 w-6" />
             </LandingFeatureItem>
@@ -127,14 +88,7 @@
 
         <div class="mt-10 -mx-4 relative lg:mt-0" aria-hidden="true">
           <svg
-            class="
-              absolute
-              left-1/2
-              transform
-              -translate-x-1/2
-              translate-y-16
-              lg:hidden
-            "
+            class="absolute left-1/2 transform -translate-x-1/2 translate-y-16 lg:hidden"
             width="784"
             height="404"
             fill="none"
@@ -175,14 +129,7 @@
       </div>
 
       <svg
-        class="
-          hidden
-          lg:block
-          absolute
-          right-full
-          transform
-          translate-x-1/2 translate-y-12
-        "
+        class="hidden lg:block absolute right-full transform translate-x-1/2 translate-y-12"
         width="404"
         height="784"
         fill="none"
@@ -217,23 +164,11 @@
 
       <div class="relative mt-12 sm:mt-16 lg:mt-24">
         <div
-          class="
-            lg:grid
-            lg:grid-flow-row-dense
-            lg:grid-cols-2
-            lg:gap-8
-            lg:items-center
-          "
+          class="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:gap-8 lg:items-center"
         >
           <div class="lg:col-start-2">
             <h3
-              class="
-                text-2xl
-                font-extrabold
-                text-gray-900
-                tracking-tight
-                sm:text-3xl
-              "
+              class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl"
             >
               Bespaar tijd met WoningFinder
             </h3>
@@ -269,23 +204,10 @@
           </div>
 
           <div
-            class="
-              mt-10
-              flex
-              items-center
-              justify-center
-              lg:mt-0 lg:col-start-1
-            "
+            class="mt-10 flex items-center justify-center lg:mt-0 lg:col-start-1"
           >
             <svg
-              class="
-                absolute
-                left-1/2
-                transform
-                -translate-x-1/2
-                translate-y-16
-                lg:hidden
-              "
+              class="absolute left-1/2 transform -translate-x-1/2 translate-y-16 lg:hidden"
               width="784"
               height="404"
               fill="none"

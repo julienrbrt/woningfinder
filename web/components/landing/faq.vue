@@ -1,14 +1,6 @@
 <template>
   <div
-    class="
-      max-w-7xl
-      mx-auto
-      py-12
-      px-4
-      divide-y-2 divide-gray-200
-      sm:px-6
-      lg:py-16 lg:px-8
-    "
+    class="max-w-7xl mx-auto py-12 px-4 divide-y-2 divide-gray-200 sm:px-6 lg:py-16 lg:px-8"
   >
     <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
       Veelgestelde vragen
@@ -48,9 +40,14 @@ export default {
             'Na dat je jouw zoekopdracht hebt gemaakt, sturen we een e-mail met de passende woningaanbod websites. Je kunt via deze e-mail inloggen op elke website waarin je wilt reageren. Daarna gebruikt WoningFinder je inlog gegevens om voor jou automatisch te reageren.',
         },
         {
+          question: 'Kan ik reageren op alle woningen zonder voorkeuren?',
+          answer:
+            'Ja, dat kan! Als je geen specifieke voorkeuren hebt, kun je ervoor kiezen om automatisch op alle beschikbare woningen te reageren. Dit vergroot je kansen om snel een woning te vinden.',
+        },
+        {
           question: 'Is dat veilig?',
           answer:
-            'Zeker! We gebruiken versleuteling om je gegevens veilig te houden. Dat betekent dat we je inlog gegevens zelf ook niet kunnen zien.',
+            'Zeker! Je gegevens zijn bij ons veilig dankzij sterke versleuteling. Hierdoor worden je inloggegevens beschermd en zijn ze zelfs voor ons niet zichtbaar. Veiligheid staat bij ons voorop!',
         },
         {
           question: 'Ik heb een woning gevonden hoe stop ik WoningFinder?',

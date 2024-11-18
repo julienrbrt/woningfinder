@@ -4,7 +4,7 @@
       class="my-4"
       v-if="submitted"
       @click="hideAlert"
-      alert="Login link succesvol verstuurd!"
+      alert="Loginlink succesvol verstuurd!"
     />
 
     <AlertError
@@ -15,20 +15,13 @@
     />
 
     <h1
-      class="
-        mt-6
-        text-3xl
-        font-extrabold
-        text-wf-purple
-        tracking-tight
-        sm:text-4xl
-      "
+      class="mt-6 text-3xl font-extrabold text-wf-purple tracking-tight sm:text-4xl"
     >
       {{ title }}
     </h1>
     <p class="mt-6 text-lg text-gray-500">
-      Inloggen met alleen jouw e-mailadres. Je krijgt een e-mail van ons met een
-      linkje.
+      Voer je e-mailadres in, en je ontvangt van ons een e-mail met een
+      loginlink.
     </p>
 
     <input
@@ -38,16 +31,7 @@
       type="email"
       autocomplete="email"
       placeholder="E-mailadres"
-      class="
-        my-4
-        py-4
-        shadow-sm
-        focus:ring-wf-orange focus:border-wf-orange
-        w-full
-        text-base
-        border-gray-300
-        rounded-md
-      "
+      class="my-4 py-4 shadow-sm focus:ring-wf-orange focus:border-wf-orange w-full text-base border-gray-300 rounded-md"
     />
 
     <button
@@ -57,12 +41,7 @@
     >
       <span class="absolute left-0 inset-y-0 flex items-center pl-3">
         <LockClosedIcon
-          class="
-            h-5
-            w-5
-            text-wf-orange-light
-            group-hover:text-wf-orange-lightest
-          "
+          class="h-5 w-5 text-wf-orange-light group-hover:text-wf-orange-lightest"
         />
       </span>
       Inloggen
