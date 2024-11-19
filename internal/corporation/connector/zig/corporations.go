@@ -43,6 +43,10 @@ var WoningHurenInfo = corporation.Corporation{
 		city.Enter,
 		city.Vroomshoop,
 		city.Rijssen,
+		city.Nijverdal,
+		city.Hellendoorn,
+		city.Goor,
+		city.Wierden,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -93,6 +97,8 @@ var DeWoningZoekerInfo = corporation.Corporation{
 		city.Hardenberg,
 		city.Slagharen,
 		city.Raalte,
+		city.Staphorst,
+		city.Dalfsen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,

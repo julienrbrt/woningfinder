@@ -2813,3 +2813,33 @@ var Tollebeek = City{
 	Latitude:  52.677778,
 	Longitude: 5.675278,
 }
+
+var Nijverdal = City{
+	Name:      "Nijverdal",
+	Latitude:  52.363056,
+	Longitude: 6.461667,
+}
+
+var Hellendoorn = City{
+	Name:      "Hellendoorn",
+	Latitude:  52.35,
+	Longitude: 6.45,
+}
+
+var Goor = City{
+	Name:      "Goor",
+	Latitude:  52.232222,
+	Longitude: 6.586667,
+}
+
+var Staphorst = City{
+	Name:      "Staphorst",
+	Latitude:  52.646389,
+	Longitude: 6.208611,
+}
+
+var Dalfsen = City{
+	Name:      "Dalfsen",
+	Latitude:  52.5,
+	Longitude: 6.25,
+}
