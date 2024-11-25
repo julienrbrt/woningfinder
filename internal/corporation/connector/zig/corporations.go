@@ -47,6 +47,7 @@ var WoningHurenInfo = corporation.Corporation{
 		city.Hellendoorn,
 		city.Goor,
 		city.Wierden,
+		city.Lochem,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -99,6 +100,9 @@ var DeWoningZoekerInfo = corporation.Corporation{
 		city.Raalte,
 		city.Staphorst,
 		city.Dalfsen,
+		city.Heino,
+		city.DeKrim,
+		city.Lutten,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -118,6 +122,7 @@ var MercatusInfo = corporation.Corporation{
 		city.Luttelgeest,
 		city.Ens,
 		city.Tollebeek,
+		city.Marknesse,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,

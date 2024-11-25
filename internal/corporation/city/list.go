@@ -2843,3 +2843,33 @@ var Dalfsen = City{
 	Latitude:  52.5,
 	Longitude: 6.25,
 }
+
+var Lochem = City{
+	Name:      "Lochem",
+	Latitude:  52.160556,
+	Longitude: 6.415833,
+}
+
+var Heino = City{
+	Name:      "Heino",
+	Latitude:  52.435833,
+	Longitude: 6.233889,
+}
+
+var DeKrim = City{
+	Name:      "De Krim",
+	Latitude:  52.65,
+	Longitude: 6.618611,
+}
+
+var Lutten = City{
+	Name:      "Lutten",
+	Latitude:  52.611111,
+	Longitude: 6.573333,
+}
+
+var Marknesse = City{
+	Name:      "Marknesse",
+	Latitude:  52.708889,
+	Longitude: 5.862222,
+}
