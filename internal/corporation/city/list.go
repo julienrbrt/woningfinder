@@ -2873,3 +2873,21 @@ var Marknesse = City{
 	Latitude:  52.708889,
 	Longitude: 5.862222,
 }
+
+var Olst = City{
+	Name:      "Olst",
+	Latitude:  52.337778,
+	Longitude: 6.110833,
+}
+
+var Bergentheim = City{
+	Name:      "Bergentheim",
+	Latitude:  52.526389,
+	Longitude: 6.613889,
+}
+
+var Lemele = City{
+	Name:      "Lemele",
+	Latitude:  52.452222,
+	Longitude: 6.414722,
+}
