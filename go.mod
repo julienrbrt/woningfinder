@@ -7,7 +7,7 @@ require (
 	github.com/TheZeroSlave/zapsentry v1.23.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-chi/httprate v0.14.1
-	github.com/go-chi/jwtauth/v5 v5.3.1
+	github.com/go-chi/jwtauth/v5 v5.3.2
 	github.com/go-chi/render v1.0.3
 	github.com/go-pg/migrations/v8 v8.1.0
 	github.com/go-pg/pg/v10 v10.13.0
