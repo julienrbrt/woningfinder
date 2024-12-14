@@ -23,7 +23,7 @@
         </h1>
         <p class="mt-6 text-xl text-gray-500">
           Mis nooit meer een kans op jouw droomhuis. Vind je perfecte huurwoning
-          zonder dagelijks alle woningwebsites azelf te bezoeken. WoningFinder
+          zonder dagelijks alle woningwebsites zelf te bezoeken. WoningFinder
           reageert automatisch op woningen die passen bij jouw zoekopdracht.
         </p>
       </div>

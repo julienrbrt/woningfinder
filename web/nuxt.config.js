@@ -36,10 +36,7 @@ export default {
     ],
   },
   css: ['@/assets/css/main.css'],
-  plugins: [
-    { src: '~/plugins/vue-autocomplete.js', ssr: false },
-    { src: '~/plugins/vue-mapbox.js', ssr: false },
-  ],
+  plugins: [{ src: '~/plugins/vue-autocomplete.js', ssr: false }],
   components: true,
   buildModules: ['@nuxtjs/tailwindcss'],
   modules: [

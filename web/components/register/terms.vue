@@ -1,7 +1,7 @@
 <template>
   <div class="sm:max-w-xl">
     <p class="mt-6 text-lg text-gray-500">
-      Je zoekopdracht is bijna ingesteld, hier is wat jij moet weten
+      Je zoekopdracht is bijna ingesteld, dit is wat jij moet weten
     </p>
 
     <AlertInfo

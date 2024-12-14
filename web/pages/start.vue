@@ -13,14 +13,6 @@
       :alert="errorMsg"
     />
 
-    <!-- map -->
-    <template v-slot:illustration>
-      <IllustrationMap
-        v-if="offering && currentStep == 1"
-        :cities="citiesSelection"
-      />
-    </template>
-
     <RegisterCity
       ref="registerCity"
       v-show="currentStep == 1"
