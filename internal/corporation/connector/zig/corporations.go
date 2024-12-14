@@ -49,6 +49,12 @@ var WoningHurenInfo = corporation.Corporation{
 		city.Wierden,
 		city.Lochem,
 		city.DenHam,
+		city.Geesteren,
+		city.Hengevelde,
+		city.Bentelo,
+		city.Delden,
+		city.WesterhaarVriezenveensewijk,
+		city.Albergen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -107,6 +113,8 @@ var DeWoningZoekerInfo = corporation.Corporation{
 		city.Olst,
 		city.Bergentheim,
 		city.Lemele,
+		city.BeltSchutsloot,
+		city.Kloosterhaar,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -127,6 +135,7 @@ var MercatusInfo = corporation.Corporation{
 		city.Ens,
 		city.Tollebeek,
 		city.Marknesse,
+		city.Rutten,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRegistrationDate,

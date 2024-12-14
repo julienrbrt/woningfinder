@@ -2891,3 +2891,57 @@ var Lemele = City{
 	Latitude:  52.452222,
 	Longitude: 6.414722,
 }
+
+var Rutten = City{
+	Name:      "Rutten",
+	Latitude:  52.805,
+	Longitude: 5.697778,
+}
+
+var Geesteren = City{
+	Name:      "Geesteren",
+	Latitude:  52.420833,
+	Longitude: 6.735833,
+}
+
+var Hengevelde = City{
+	Name:      "Hengevelde",
+	Latitude:  52.199444,
+	Longitude: 6.636667,
+}
+
+var Bentelo = City{
+	Name:      "Bentelo",
+	Latitude:  52.224722,
+	Longitude: 6.683889,
+}
+
+var Delden = City{
+	Name:      "Delden",
+	Latitude:  52.26,
+	Longitude: 6.709167,
+}
+
+var BeltSchutsloot = City{
+	Name:      "Belt-Schutsloot",
+	Latitude:  52.670278,
+	Longitude: 6.062778,
+}
+
+var Kloosterhaar = City{
+	Name:      "Kloosterhaar",
+	Latitude:  52.495556,
+	Longitude: 6.669167,
+}
+
+var Albergen = City{
+	Name:      "Albergen",
+	Latitude:  52.371667,
+	Longitude: 6.761944,
+}
+
+var WesterhaarVriezenveensewijk = City{
+	Name:      "Westerhaar-Vriezenveensewijk",
+	Latitude:  52.460278,
+	Longitude: 6.620278,
+}
