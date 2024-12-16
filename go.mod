@@ -5,7 +5,7 @@ go 1.23
 require (
 	github.com/PuerkitoBio/goquery v1.10.0
 	github.com/TheZeroSlave/zapsentry v1.23.0
-	github.com/go-chi/chi/v5 v5.1.0
+	github.com/go-chi/chi/v5 v5.2.0
 	github.com/go-chi/httprate v0.14.1
 	github.com/go-chi/jwtauth/v5 v5.3.2
 	github.com/go-chi/render v1.0.3
