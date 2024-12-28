@@ -2945,3 +2945,27 @@ var WesterhaarVriezenveensewijk = City{
 	Latitude:  52.460278,
 	Longitude: 6.620278,
 }
+
+var MariaparochieHarbrinkhoek = City{
+	Name:      "Mariaparochie-Harbrinkhoek",
+	Latitude:  52.385278,
+	Longitude: 6.7175,
+}
+
+var Tubbergen = City{
+	Name:      "Tubbergen",
+	Latitude:  52.4,
+	Longitude: 6.766667,
+}
+
+var Broekland = City{
+	Name:      "Broekland",
+	Latitude:  52.361667,
+	Longitude: 6.2,
+}
+
+var Luttenberg = City{
+	Name:      "Luttenberg",
+	Latitude:  52.405833,
+	Longitude: 6.366111,
+}

@@ -55,6 +55,8 @@ var WoningHurenInfo = corporation.Corporation{
 		city.Delden,
 		city.WesterhaarVriezenveensewijk,
 		city.Albergen,
+		city.MariaparochieHarbrinkhoek,
+		city.Tubbergen,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
@@ -115,6 +117,8 @@ var DeWoningZoekerInfo = corporation.Corporation{
 		city.Lemele,
 		city.BeltSchutsloot,
 		city.Kloosterhaar,
+		city.Broekland,
+		city.Luttenberg,
 	},
 	SelectionMethod: []corporation.SelectionMethod{
 		corporation.SelectionRandom,
