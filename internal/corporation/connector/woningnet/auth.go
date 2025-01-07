@@ -6,6 +6,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"go.uber.org/zap"
 )
 
 func (c *client) Login(username, password string) error {
@@ -37,7 +38,9 @@ func (c *client) Login(username, password string) error {
 		loginRequest["__RequestVerificationToken"] = []byte(el.ChildAttr("input[name=__RequestVerificationToken]", "value"))
 
 		// send request
-		collector.PostMultipart(loginURL, loginRequest)
+		if err := collector.PostMultipart(loginURL, loginRequest); err != nil {
+			c.logger.Error("error sending login request", logConnector, zap.Error(err))
+		}
 	})
 
 	// parse login error (from second collector)

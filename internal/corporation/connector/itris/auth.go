@@ -7,6 +7,7 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"go.uber.org/zap"
 )
 
 var errItrisBlocked = errors.New("error itris authentication: woningfinder blocked")
@@ -46,7 +47,9 @@ func (c *client) Login(username, password string) error {
 		loginRequest["post0"] = []byte(el.ChildAttr("input[name=post0]", "value"))
 
 		// send request
-		collector.PostMultipart(loginURL, loginRequest)
+		if err := collector.PostMultipart(loginURL, loginRequest); err != nil {
+			c.logger.Error("error sending login request", logConnector, zap.Error(err))
+		}
 	})
 
 	// parse login error (from second collector)

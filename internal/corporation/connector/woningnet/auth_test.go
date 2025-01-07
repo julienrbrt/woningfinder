@@ -11,11 +11,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Login_Failed(t *testing.T) {
+func Test_LoginFailed(t *testing.T) {
 	a := assert.New(t)
 
 	client := bootstrapCorporation.CreateWoningNetClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"), woningnet.UtrechtInfo)
 
 	err := client.Login("example@example.com", "unexesting")
-	a.Error(connector.ErrAuthFailed, err)
+	a.ErrorIs(err, connector.ErrAuthFailed)
 }
