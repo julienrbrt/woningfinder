@@ -7,6 +7,7 @@ import (
 	"github.com/gocolly/colly/v2"
 	"github.com/julienrbrt/woningfinder/internal/corporation"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"go.uber.org/zap"
 )
 
 func (c *client) React(offer corporation.Offer) error {
@@ -35,7 +36,9 @@ func (c *client) React(offer corporation.Offer) error {
 		reactRequest["__RequestVerificationToken"] = []byte(el.ChildAttr("input[name=__RequestVerificationToken]", "value"))
 
 		// send request
-		collector.PostMultipart(reactURL, reactRequest)
+		if err := collector.PostMultipart(reactURL, reactRequest); err != nil {
+			c.logger.Error("error sending login request", logConnector, zap.Error(err))
+		}
 	})
 
 	// parse react error (from second collector)

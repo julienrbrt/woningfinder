@@ -1,15 +1,20 @@
-package ikwilhuren
+package ikwilhuren_test
 
 import (
 	"testing"
 
+	bootstrapCorporation "github.com/julienrbrt/woningfinder/internal/bootstrap/corporation"
+	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
+	"github.com/julienrbrt/woningfinder/pkg/logging"
+	"github.com/julienrbrt/woningfinder/pkg/mapbox"
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_LoginRequest(t *testing.T) {
+func Test_LoginFailed(t *testing.T) {
 	a := assert.New(t)
-	req := loginRequest("username", "password")
-	body, err := req.CopyBody()
-	a.NoError(err)
-	a.Equal("isAjax=true&password=password&username=username", string(body))
+
+	client := bootstrapCorporation.CreateIkWilHurenClient(logging.NewZapLoggerWithoutSentry(), mapbox.NewClientMock(nil, "district"))
+
+	err := client.Login("example@example.com", "unexesting")
+	a.ErrorIs(err, connector.ErrAuthFailed)
 }

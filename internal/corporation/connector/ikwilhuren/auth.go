@@ -1,55 +1,71 @@
 package ikwilhuren
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
-	"net/url"
 	"strings"
 
+	"github.com/gocolly/colly/v2"
 	"github.com/julienrbrt/woningfinder/internal/corporation/connector"
-	"github.com/julienrbrt/woningfinder/pkg/networking"
+	"go.uber.org/zap"
 )
 
-type loginResponse struct {
-	Username            string `json:"username"`
-	IsPayedAccount      bool   `json:"is_payed_account"`
-	StartSessionAt      string `json:"start_session_at"`
-	ExpirationSessionAt string `json:"expiration_session_at"`
-}
-
 func (c *client) Login(username, password string) error {
-	resp, err := c.Send(loginRequest(username, password))
-	if err != nil {
-		// login failed if returns 403
-		if netErr, ok := networking.AsNetworkingError(err); ok {
-			if netErr.Response().StatusCode == http.StatusForbidden {
-				return fmt.Errorf("error authentication: %w", connector.ErrAuthFailed)
-			}
-		}
-
-		return err
+	loginURL := c.corporation.URL + "/login"
+	loginRequest := map[string][]byte{
+		"csrf":          nil,
+		"postrequest":   []byte("login"),
+		"txtEmail":      []byte(username),
+		"txtWachtwoord": []byte(password),
 	}
 
-	var response loginResponse
-	if err := json.Unmarshal(resp, &response); err != nil {
-		return fmt.Errorf("error parsing login result %v: %w", resp, err)
+	// we clone the collector in order to send the request in a different collector than we visit the url
+	// this permit to do not fall in an infinite loop
+	collector := c.collector.Clone()
+
+	// behave like a web browser
+	collector.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("Sec-Fetch-Site", "same-origin")
+		r.Headers.Set("Sec-Fetch-Mode", "navigate")
+		r.Headers.Set("Sec-Fetch-User", "?1")
+		r.Headers.Set("Sec-Fetch-Dest", "document")
+		r.Headers.Set("Upgrade-Insecure-Requests", "1")
+	})
+
+	// parse login page
+	c.collector.OnHTML("form", func(h *colly.HTMLElement) {
+		// fill login form
+		csrf := h.ChildAttr("input[name=csrf]", "value")
+
+		loginRequest["csrf"] = []byte(csrf)
+
+		// send request
+		if err := collector.PostMultipart(loginURL, loginRequest); err != nil {
+			c.logger.Error("error sending login request", logConnector, zap.Error(err))
+		}
+	})
+
+	// parse login error (from second collector)
+	var hasErrLogin error
+	collector.OnScraped(func(resp *colly.Response) {
+		hasErrLogin = c.checkLogin(string(resp.Body))
+	})
+
+	// visit login page
+	if err := c.collector.Visit(loginURL); err != nil {
+		return fmt.Errorf("error visiting login page: %w", err)
+	}
+
+	return hasErrLogin
+}
+
+func (c *client) checkLogin(body string) error {
+	if strings.Contains(body, "De opgegeven login/wachtwoord combinatie is ongeldig.") {
+		return connector.ErrAuthFailed
+	}
+
+	if !strings.Contains(body, "Uitloggen") {
+		return connector.ErrAuthUnknown
 	}
 
 	return nil
-}
-
-func loginRequest(username, password string) networking.Request {
-	body := url.Values{}
-	body.Add("isAjax", "true")
-	body.Add("username", username)
-	body.Add("password", password)
-
-	request := networking.Request{
-		Path:   "/user/login",
-		Method: http.MethodPost,
-		Body:   strings.NewReader(body.Encode()),
-	}
-
-	return request
 }

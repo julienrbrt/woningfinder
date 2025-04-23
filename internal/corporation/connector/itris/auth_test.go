@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Login_Failed(t *testing.T) {
+func Test_LoginFailed(t *testing.T) {
 	t.Skip("no corporation with itris client")
 
 	a := assert.New(t)
@@ -21,5 +21,5 @@ func Test_Login_Failed(t *testing.T) {
 	a.NoError(err)
 
 	err = client.Login("example", "unexesting")
-	a.Error(connector.ErrAuthFailed, err)
+	a.ErrorIs(err, connector.ErrAuthFailed)
 }
